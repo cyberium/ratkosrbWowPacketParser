@@ -14,6 +14,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         byte RaceId { get; }
         byte Sex { get; }
         int Level { get; }
+        int ContentTuningID { get; }
         int ScalingLevelMin { get; }
         int ScalingLevelMax { get; }
         int ScalingLevelDelta { get; }
