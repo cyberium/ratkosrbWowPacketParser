@@ -18,7 +18,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
         [Parser(Opcode.SMSG_MONSTER_MOVE_TRANSPORT)]
         public static void HandleMonsterMove(Packet packet)
         {
-            var guid = packet.ReadPackedGuid("GUID");
+            var guid = packet.ReadPackedGuid("MoverGUID");
 
             Unit obj = null;
             CreatureMovement movementData = null;
@@ -35,10 +35,10 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
 
             if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_MONSTER_MOVE_TRANSPORT, Direction.ServerToClient))
             {
-                packet.ReadPackedGuid("Transport GUID");
+                packet.ReadPackedGuid("TransportGUID");
 
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_0_9767)) // no idea when this was added exactly
-                    packet.ReadByte("Transport Seat");
+                    packet.ReadByte("VehicleSeat");
             }
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_0_9767)) // no idea when this was added exactly
@@ -46,27 +46,37 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
 
             var pos = packet.ReadVector3("Position");
 
-            packet.ReadInt32("Move Ticks");
+            ReadMovementMonsterSpline(movementData, packet, pos, "MovementMonsterSpline");
 
-            var type = packet.ReadByteE<SplineType>("Spline Type");
+            if (obj != null && movementData != null)
+                obj.AddWaypoint(movementData, pos, packet.Time);
+        }
+
+        public static void ReadMovementMonsterSpline(CreatureMovement movementData, Packet packet, Vector3 pos, params object[] indexes)
+        {
+            packet.ReadInt32("Id", indexes);
+            ReadMovementSpline(movementData, packet, pos, indexes, "MovementSpline");
+        }
+
+        public static void ReadMovementSpline(CreatureMovement movementData, Packet packet, Vector3 pos, params object[] indexes)
+        {
+            var type = packet.ReadByteE<SplineType>("Face", indexes);
 
             float orientation = 100;
             switch (type)
             {
                 case SplineType.FacingSpot:
                 {
-                    var faceSpot = packet.ReadVector3("Facing Spot");
+                    var faceSpot = packet.ReadVector3("FaceSpot", indexes);
                     orientation = Utilities.GetAngle(pos.X, pos.Y, faceSpot.X, faceSpot.Y);
                     break;
                 }
                 case SplineType.FacingTarget:
-                {
-                    packet.ReadGuid("Facing GUID");
+                    packet.ReadPackedGuid("FacingGUID", indexes);
                     break;
-                }
                 case SplineType.FacingAngle:
                 {
-                    orientation = packet.ReadSingle("Facing Angle");
+                    orientation = packet.ReadSingle("FaceDirection", indexes);
                     break;
                 }
                 case SplineType.Stop:
@@ -75,48 +85,48 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             if (movementData != null)
                 movementData.Orientation = orientation;
 
-            var flags = packet.ReadInt32E<SplineFlag>("Spline Flags");
+            var flags = packet.ReadInt32E<SplineFlag>("Flags", indexes);
             if (movementData != null)
                 movementData.SplineFlags = (uint)flags;
 
             if (flags.HasAnyFlag(SplineFlag.Animation))
             {
-                packet.ReadByteE<MovementAnimationState>("Animation State");
-                packet.ReadInt32("Asynctime in ms"); // Async-time in ms
+                packet.ReadByteE<MovementAnimationState>("AnimTier", indexes);
+                packet.ReadInt32("TierTransStartTime", indexes); // Async-time in ms
             }
 
-            int movetime = packet.ReadInt32("Move Time");
+            int movetime = packet.ReadInt32("MoveTime", indexes);
             if (movementData != null)
                 movementData.MoveTime = (uint)movetime;
 
             if (flags.HasAnyFlag(SplineFlag.Parabolic))
             {
-                packet.ReadSingle("Vertical Speed");
-                packet.ReadInt32("Async-time in ms");
+                packet.ReadSingle("JumpGravity", indexes);
+                packet.ReadInt32("SpecialTime", indexes);
             }
 
-            var waypoints = packet.ReadInt32("Waypoints");
+            var pointsCount = packet.ReadInt32("PointsCount", indexes);
             if (movementData != null)
             {
-                movementData.SplineCount = (uint)waypoints;
-                if (waypoints > 0)
+                movementData.SplineCount = (uint)pointsCount;
+                if (pointsCount > 0)
                     movementData.SplinePoints = new List<Vector3>();
             }
 
             if (flags.HasAnyFlag(SplineFlag.UncompressedPath))
             {
-                for (var i = 0; i < waypoints; i++)
+                for (var i = 0; i < pointsCount; i++)
                 {
-                    Vector3 vec = packet.ReadVector3("Waypoint", i);
+                    Vector3 vec = packet.ReadVector3("Waypoints", indexes, i);
                     if (movementData != null)
                         movementData.SplinePoints.Add(vec);
                 }   
             }
             else
             {
-                var newpos = packet.ReadVector3("Waypoint Endpoint");
+                var newpos = packet.ReadVector3("Points", indexes);
 
-                if (waypoints > 1)
+                if (pointsCount > 1)
                 {
                     var mid = new Vector3
                     {
@@ -125,7 +135,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
                         Z = (pos.Z + newpos.Z) * 0.5f
                     };
 
-                    for (var i = 0; i < waypoints - 1; ++i)
+                    for (var i = 0; i < pointsCount - 1; ++i)
                     {
                         var vec = packet.ReadPackedVector3();
                         vec.X = mid.X - vec.X;
@@ -135,16 +145,13 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
                         if (movementData != null)
                             movementData.SplinePoints.Add(vec);
 
-                        packet.AddValue("Waypoint", vec, i);
+                        packet.AddValue("Waypoints", vec, indexes, i);
                     }
                 }
 
                 //if (movementData != null)
                 //    movementData.SplinePoints.Add(newpos);
             }
-
-            if (movementData != null)
-                obj.AddWaypoint(movementData, pos, packet.Time);
         }
 
         [HasSniffData]
