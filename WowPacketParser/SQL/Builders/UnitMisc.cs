@@ -1183,14 +1183,13 @@ namespace WowPacketParser.SQL.Builders
                     textValue.Item1.Entry = text.Key;
                     var count = entryCount.ContainsKey(text.Key) ? entryCount[text.Key] : 0;
 
-                    var sameTextList = rows.Where(text2 => text2.Data.Text == textValue.Item1.Text && text2.Data.Entry == textValue.Item1.Entry);
+                    var sameTextList = rows.Where(text2 => text2.Data.Entry == text.Key && text2.Data.Text == textValue.Item1.Text);
                     if (sameTextList.Count() != 0)
                     {
                         foreach (var textRow in sameTextList)
                         {
                             textValue.Item1.GroupId = textRow.Data.GroupId;
                         }
-                        continue;
                     }
 
                     var row = new Row<CreatureTextTemplate>
@@ -1202,7 +1201,6 @@ namespace WowPacketParser.SQL.Builders
                             Text = textValue.Item1.Text,
                             Type = textValue.Item1.Type,
                             Language = textValue.Item1.Language,
-                            Language801 = textValue.Item1.Language801,
                             Emote = (textValue.Item1.Emote != null ? textValue.Item1.Emote : 0),
                             Sound = (textValue.Item1.Sound != null ? textValue.Item1.Sound : 0),
                             BroadcastTextID = textValue.Item1.BroadcastTextID,

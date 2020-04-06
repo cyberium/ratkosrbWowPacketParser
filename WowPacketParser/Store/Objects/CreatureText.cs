@@ -42,11 +42,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Type")]
         public ChatMessageType? Type;
 
-        [DBFieldName("Language", TargetedDatabase.Zero, TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("Language")]
         public Language? Language;
-
-        [DBFieldName("Language", TargetedDatabase.Classic)]
-        public Language801? Language801;
 
         [DBFieldName("Emote")]
         public EmoteType? Emote;
@@ -81,10 +78,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Type")]
         public ChatMessageType? Type;
 
-        [DBFieldName("Language", TargetedDatabase.Zero, TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("Language")]
         public Language? Language;
-
-        [DBFieldName("Language", TargetedDatabase.Classic)]
-        public Language801? Language801;
     }
 }

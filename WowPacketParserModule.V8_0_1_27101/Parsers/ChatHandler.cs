@@ -14,7 +14,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             var text = new CreatureTextTemplate
             {
                 Type = (ChatMessageType)packet.ReadByteE<ChatMessageTypeNew>("SlashCmd"),
-                Language801 = packet.ReadUInt32E<Language801>("Language"),
+                Language = packet.ReadUInt32E<Language>("Language"),
                 SenderGUID = packet.ReadPackedGuid128("SenderGUID")
             };
 
@@ -80,7 +80,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 {
                     UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time),
                     Type = text.Type,
-                    Language801 = text.Language801,
+                    Language = text.Language,
                     Text = text.Text
                 };
                 Storage.WorldTexts.Add(worldText);
