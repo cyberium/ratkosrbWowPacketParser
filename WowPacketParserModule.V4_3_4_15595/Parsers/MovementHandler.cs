@@ -74,7 +74,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
                     break;
                 }
                 case SplineType.FacingTarget:
-                    packet.ReadPackedGuid("FacingGUID", indexes);
+                    packet.ReadGuid("FacingGUID", indexes);
                     break;
                 case SplineType.FacingAngle:
                 {
