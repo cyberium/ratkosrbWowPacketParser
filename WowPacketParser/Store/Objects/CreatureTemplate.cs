@@ -170,6 +170,42 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("KillCredit", 2)]
         public uint?[] KillCredits;
 
+        [DBFieldName("DisplayId1")]
+        public uint DisplayId1;
+
+        [DBFieldName("DisplayId2")]
+        public uint DisplayId2;
+
+        [DBFieldName("DisplayId3")]
+        public uint DisplayId3;
+
+        [DBFieldName("DisplayId4")]
+        public uint DisplayId4;
+
+        [DBFieldName("DisplayScale1")]
+        public float DisplayScale1;
+
+        [DBFieldName("DisplayScale2")]
+        public float DisplayScale2;
+
+        [DBFieldName("DisplayScale3")]
+        public float DisplayScale3;
+
+        [DBFieldName("DisplayScale4")]
+        public float DisplayScale4;
+
+        [DBFieldName("DisplayProbability1")]
+        public float DisplayProbability1;
+
+        [DBFieldName("DisplayProbability2")]
+        public float DisplayProbability2;
+
+        [DBFieldName("DisplayProbability3")]
+        public float DisplayProbability3;
+
+        [DBFieldName("DisplayProbability4")]
+        public float DisplayProbability4;
+
         [DBFieldName("name")]
         public string Name;
 
@@ -220,6 +256,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("ManaModifier")]
         public float? ManaModifier;
+
+        [DBFieldName("Civilian")]
+        public bool? Civilian;
 
         [DBFieldName("RacialLeader")]
         public bool? RacialLeader;

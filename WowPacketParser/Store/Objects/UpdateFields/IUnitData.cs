@@ -15,6 +15,8 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         int ScalingLevelMax { get; }
         int ScalingLevelDelta { get; }
         int FactionTemplate { get; }
+        long MaxHealth { get; }
+        int MaxMana { get; }
         IVisibleItem[] VirtualItems { get; }
         uint Flags { get; }
         uint Flags2 { get; }
