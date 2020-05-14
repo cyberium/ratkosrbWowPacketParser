@@ -62,7 +62,11 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public int FactionTemplate => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_FACTIONTEMPLATE);
 
+        public long CurHealth => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_HEALTH);
+
         public long MaxHealth => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MAXHEALTH);
+
+        public int CurMana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_POWER);
 
         public int MaxMana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MAXPOWER);
 
@@ -107,6 +111,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public float CombatReach => UpdateFields.GetValue<UnitField, float?>(UnitField.UNIT_FIELD_COMBATREACH).GetValueOrDefault(1.5f);
 
         public int MountDisplayID => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MOUNTDISPLAYID);
+        public int EmoteState => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_NPC_EMOTESTATE);
 
         public byte StandState => (byte)(UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) & 0xFF);
 

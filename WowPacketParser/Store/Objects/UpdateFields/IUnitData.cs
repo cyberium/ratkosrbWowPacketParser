@@ -15,7 +15,9 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         int ScalingLevelMax { get; }
         int ScalingLevelDelta { get; }
         int FactionTemplate { get; }
+        long CurHealth { get; }
         long MaxHealth { get; }
+        int CurMana { get; }
         int MaxMana { get; }
         IVisibleItem[] VirtualItems { get; }
         uint Flags { get; }
@@ -26,6 +28,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         float BoundingRadius { get; }
         float CombatReach { get; }
         int MountDisplayID { get; }
+        int EmoteState { get; }
         byte StandState { get; }
         byte PetTalentPoints { get; }
         byte VisFlags { get; }

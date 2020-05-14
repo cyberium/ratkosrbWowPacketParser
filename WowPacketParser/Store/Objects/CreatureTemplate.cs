@@ -13,7 +13,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("KillCredit", 2)]
         public uint?[] KillCredits;
 
-        [DBFieldName("modelid", TargetedDatabase.Zero, TargetedDatabase.BattleForAzeroth, 4)]
+        [DBFieldName("display_id", TargetedDatabase.Zero, TargetedDatabase.BattleForAzeroth, 4)]
         public uint?[] ModelIDs;
 
         [DBFieldName("name")]

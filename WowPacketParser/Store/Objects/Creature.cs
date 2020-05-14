@@ -16,32 +16,26 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("map")]
         public uint? Map;
 
-        [DBFieldName("zoneId")]
+        [DBFieldName("zone_id")]
         public uint? ZoneID;
 
-        [DBFieldName("areaId")]
+        [DBFieldName("area_id")]
         public uint? AreaID;
 
-        [DBFieldName("spawnMask", TargetedDatabase.Zero, TargetedDatabase.Legion)]
+        [DBFieldName("spawn_mask", TargetedDatabase.Zero, TargetedDatabase.Legion)]
         public uint? SpawnMask;
 
-        [DBFieldName("spawnDifficulties", TargetedDatabase.Legion)]
+        [DBFieldName("spawn_difficulties", TargetedDatabase.Legion)]
         public string spawnDifficulties;
 
-        [DBFieldName("phaseMask", TargetedDatabase.Zero, TargetedDatabase.Cataclysm)]
+        [DBFieldName("phase_mask", TargetedDatabase.Zero, TargetedDatabase.Cataclysm)]
         public uint? PhaseMask;
 
-        [DBFieldName("PhaseId", TargetedDatabase.Cataclysm)]
+        [DBFieldName("phase_id", TargetedDatabase.Cataclysm)]
         public string PhaseID;
 
-        [DBFieldName("PhaseGroup")]
+        [DBFieldName("phase_group")]
         public int? PhaseGroup;
-
-        [DBFieldName("modelid")]
-        public uint? ModelID;
-
-        [DBFieldName("equipment_id")]
-        public int EquipmentID;
 
         [DBFieldName("position_x")]
         public float? PositionX;
@@ -55,31 +49,58 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("orientation")]
         public float? Orientation;
 
-        [DBFieldName("spawntimesecs")]
-        public int? SpawnTimeSecs;
-
-        [DBFieldName("spawndist")]
-        public float? SpawnDist;
-
-        [DBFieldName("currentwaypoint")]
-        public uint? CurrentWaypoint;
-
-        [DBFieldName("curhealth")]
-        public uint? CurHealth;
-
-        [DBFieldName("curmana")]
-        public uint? CurMana;
-
-        [DBFieldName("MovementType")]
+        [DBFieldName("movement_type")]
         public uint? MovementType;
 
-        [DBFieldName("npcflag")]
+        [DBFieldName("creator")]
+        public uint? CreatedBy;
+
+        [DBFieldName("summoner")]
+        public uint? SummonedBy;
+
+        [DBFieldName("summon_spell")]
+        public uint? SummonSpell;
+
+        [DBFieldName("display_id")]
+        public uint? DisplayID;
+
+        [DBFieldName("faction")]
+        public uint? FactionTemplate;
+
+        [DBFieldName("level")]
+        public uint? Level;
+
+        [DBFieldName("current_health")]
+        public uint? CurHealth;
+
+        [DBFieldName("max_health")]
+        public uint? MaxHealth;
+
+        [DBFieldName("current_mana")]
+        public uint? CurMana;
+
+        [DBFieldName("max_mana")]
+        public uint? MaxMana;
+
+        [DBFieldName("speed_walk")]
+        public float? SpeedWalk;
+
+        [DBFieldName("speed_run")]
+        public float? SpeedRun;
+
+        [DBFieldName("base_attack_time")]
+        public uint? BaseAttackTime;
+
+        [DBFieldName("ranged_attack_time")]
+        public uint? RangedAttackTime;
+
+        [DBFieldName("npc_flags")]
         public uint? NpcFlag;
 
         [DBFieldName("unit_flags")]
         public uint? UnitFlag;
 
-        [DBFieldName("dynamicflags")]
+        [DBFieldName("dynamic_flags")]
         public uint? DynamicFlag;
 
         [DBFieldName("VerifiedBuild")]

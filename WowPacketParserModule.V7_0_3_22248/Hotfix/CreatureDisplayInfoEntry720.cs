@@ -8,7 +8,7 @@ namespace WowPacketParserModule.V7_2_0_23826.Hotfix
     {
         public uint ID { get; set; }
         public float CreatureModelScale { get; set; }
-        public ushort ModelID { get; set; }
+        public ushort DisplayID { get; set; }
         public ushort NPCSoundID { get; set; }
         public byte SizeClass { get; set; }
         public byte Flags { get; set; }
