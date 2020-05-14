@@ -375,6 +375,30 @@ namespace WowPacketParser.Parsing.Parsers
             uint menuId = packet.ReadUInt32("Menu Id");
             gossip.Entry = menuId;
 
+            if (guid.GetObjectType() == ObjectType.Unit)
+            {
+                bool addPair = true;
+                foreach (var gossip_pair in Storage.CreatureGossips)
+                {
+                    if (gossip_pair.Item1.CreatureId == gossip.ObjectEntry &&
+                        gossip_pair.Item1.GossipMenuId == menuId)
+                    {
+                        addPair = false;
+                        break;
+                    }
+                }
+
+                if (addPair)
+                {
+                    CreatureGossip newGossip = new CreatureGossip
+                    {
+                        CreatureId = gossip.ObjectEntry,
+                        GossipMenuId = menuId,
+                    };
+                    Storage.CreatureGossips.Add(newGossip, packet.TimeSpan);
+                }
+            }
+
             if (ClientVersion.AddedInVersion(ClientType.MistsOfPandaria))
                 packet.ReadUInt32("Friendship Faction");
 

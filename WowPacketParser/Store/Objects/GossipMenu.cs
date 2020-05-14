@@ -22,4 +22,16 @@ namespace WowPacketParser.Store.Objects
 
         //public ICollection<GossipMenuOption> GossipOptions;
     }
+    [DBTableName("creature_gossip")]
+    public class CreatureGossip : IDataModel
+    {
+        [DBFieldName("CreatureId", true)]
+        public uint? CreatureId;
+
+        [DBFieldName("GossipMenuId", true)]
+        public uint? GossipMenuId;
+
+        [DBFieldName("VerifiedBuild")]
+        public int? VerifiedBuild = ClientVersion.BuildInt;
+    }
 }

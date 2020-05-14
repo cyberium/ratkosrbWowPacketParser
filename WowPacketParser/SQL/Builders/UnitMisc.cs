@@ -390,6 +390,11 @@ namespace WowPacketParser.SQL.Builders
 
             var result = "";
 
+            // `creature_gossip`
+            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_gossip))
+                result += SQLUtil.Compare(Storage.CreatureGossips, SQLDatabase.Get(Storage.CreatureGossips),
+                    t => StoreGetters.GetName(StoreNameType.Unit, (int)t.CreatureId)); // BUG: GOs can send gossips too
+
             // `gossip_menu`
             if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gossip_menu))
                 result += SQLUtil.Compare(Storage.Gossips, SQLDatabase.Get(Storage.Gossips),

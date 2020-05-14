@@ -147,6 +147,30 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
                 if (Storage.Objects.ContainsKey(guid))
                     ((Unit)Storage.Objects[guid].Item1).GossipId = menuId;
 
+            if (guid.GetObjectType() == ObjectType.Unit)
+            {
+                bool addPair = true;
+                foreach (var gossip_pair in Storage.CreatureGossips)
+                {
+                    if (gossip_pair.Item1.CreatureId == gossip.ObjectEntry &&
+                        gossip_pair.Item1.GossipMenuId == menuId)
+                    {
+                        addPair = false;
+                        break;
+                    }
+                }
+
+                if (addPair)
+                {
+                    CreatureGossip newGossip = new CreatureGossip
+                    {
+                        CreatureId = gossip.ObjectEntry,
+                        GossipMenuId = menuId,
+                    };
+                    Storage.CreatureGossips.Add(newGossip, packet.TimeSpan);
+                }
+            }
+
             gossipOptions.ForEach(g =>
             {
                 g.MenuId = menuId;
