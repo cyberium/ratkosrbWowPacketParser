@@ -62,11 +62,11 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 ReadGossipQuestTextData(packet, i, "GossipQuestText");
 
             if (guid.GetObjectType() == ObjectType.Unit)
-                if (Storage.Objects.ContainsKey(guid))
-                    ((Unit)Storage.Objects[guid].Item1).GossipId = (uint)menuId;
-
-            if (guid.GetObjectType() == ObjectType.Unit)
             {
+                if (Storage.Objects.ContainsKey(guid))
+                    if (((Unit)Storage.Objects[guid].Item1).GossipId == 0)
+                        ((Unit)Storage.Objects[guid].Item1).GossipId = (uint)menuId;
+
                 bool addPair = true;
                 foreach (var gossip_pair in Storage.CreatureGossips)
                 {

@@ -4,7 +4,7 @@ using WowPacketParser.SQL;
 
 namespace WowPacketParser.Store.Objects
 {
-    [DBTableName("creature_template")]
+    [DBTableName("creature_template_wdb")]
     public sealed class CreatureTemplate : IDataModel
     {
         [DBFieldName("entry", true)]
@@ -161,7 +161,7 @@ namespace WowPacketParser.Store.Objects
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 
-    [DBTableName("creature_template")]
+    [DBTableName("creature_template_wdb")]
     public sealed class CreatureTemplateClassic : IDataModel
     {
         [DBFieldName("entry", true)]

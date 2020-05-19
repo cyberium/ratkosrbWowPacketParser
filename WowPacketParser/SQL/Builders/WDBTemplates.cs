@@ -63,7 +63,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true, Units = true)]
         public static string CreatureTemplate(Dictionary<WowGuid, Unit> units)
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_template))
+            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_template_wdb))
                 return string.Empty;
 
             if (!Storage.CreatureTemplates.IsEmpty() && Settings.TargetedDatabase != TargetedDatabase.Classic)

@@ -101,6 +101,10 @@ namespace WowPacketParserModule.V5_4_1_17538.Parsers
 
             if (guid.GetObjectType() == ObjectType.Unit)
             {
+                if (Storage.Objects.ContainsKey(guid))
+                    if (((Unit)Storage.Objects[guid].Item1).GossipId == 0)
+                        ((Unit)Storage.Objects[guid].Item1).GossipId = menuId;
+
                 bool addPair = true;
                 foreach (var gossip_pair in Storage.CreatureGossips)
                 {
@@ -122,10 +126,6 @@ namespace WowPacketParserModule.V5_4_1_17538.Parsers
                     Storage.CreatureGossips.Add(newGossip, packet.TimeSpan);
                 }
             }
-
-            if (guid.GetObjectType() == ObjectType.Unit)
-                if (Storage.Objects.ContainsKey(guid))
-                    ((Unit)Storage.Objects[guid].Item1).GossipId = menuId;
 
             Storage.Gossips.Add(gossip, packet.TimeSpan);
             var lastGossipOption = CoreParsers.NpcHandler.LastGossipOption;
