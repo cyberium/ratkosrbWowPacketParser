@@ -28,4 +28,31 @@ namespace WowPacketParser.Store.Objects
 
         public string EffectHelper;
     }
+
+    public sealed class SpellCastData : IDataModel
+    {
+        [DBFieldName("casterId")]
+        public uint? CasterID;
+
+        [DBFieldName("casterType")]
+        public string CasterType;
+
+        [DBFieldName("spellId")]
+        public uint? SpellID;
+
+        [DBFieldName("castFlags")]
+        public uint? CastFlags;
+
+        [DBFieldName("castFlagsEx")]
+        public uint? CastFlagsEx;
+
+        [DBFieldName("targetId")]
+        public uint TargetID = 0;
+
+        [DBFieldName("targetType")]
+        public string TargetType = "";
+
+        [DBFieldName("verifiedBuild")]
+        public int? VerifiedBuild = ClientVersion.BuildInt;
+    }
 }

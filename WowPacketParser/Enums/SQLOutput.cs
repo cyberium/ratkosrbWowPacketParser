@@ -46,6 +46,8 @@
         quest_template,
         scene_template,
         scenario_poi,
+        spell_cast_start,
+        spell_cast_go,
         spell_target_position,
         spell_areatrigger,
         SniffData,

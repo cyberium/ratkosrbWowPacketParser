@@ -109,7 +109,9 @@ namespace WowPacketParser.Store
         public static readonly DataBag<QuestRequestItemsLocale> LocalesQuestRequestItems = new DataBag<QuestRequestItemsLocale>(new List<SQLOutput> { SQLOutput.locales_quest });
         public static readonly DataBag<PageTextLocale> LocalesPageText = new DataBag<PageTextLocale>(new List<SQLOutput> { SQLOutput.page_text_locale });
 
-        // Spell Target Position
+        // Spell Casts
+        public static readonly DataBag<SpellCastData> SpellCastStart = new DataBag<SpellCastData>(new List<SQLOutput> { SQLOutput.spell_cast_start });
+        public static readonly DataBag<SpellCastData> SpellCastGo = new DataBag<SpellCastData>(new List<SQLOutput> { SQLOutput.spell_cast_go });
         public static readonly DataBag<SpellTargetPosition> SpellTargetPositions = new DataBag<SpellTargetPosition>(new List<SQLOutput> { SQLOutput.spell_target_position });
 
         public static readonly DataBag<HotfixData> HotfixDatas = new DataBag<HotfixData>(new List<SQLOutput> { SQLOutput.hotfix_data });
@@ -193,6 +195,8 @@ namespace WowPacketParser.Store
             NpcSpellClicks.Clear();
             SpellClicks.Clear();
 
+            SpellCastStart.Clear();
+            SpellCastGo.Clear();
             SpellTargetPositions.Clear();
 
             LocalesCreatures.Clear();

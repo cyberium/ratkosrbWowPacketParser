@@ -412,7 +412,7 @@ namespace WowPacketParser.SQL.Builders
             return result;
         }
 
-        //                      entry, <minlevel, maxlevel>
+        //                      entry, <level_min, level_max>
         public static Dictionary<uint, Tuple<uint, uint>> GetLevels(Dictionary<WowGuid, Unit> units)
         {
             if (units.Count == 0)
@@ -508,6 +508,7 @@ namespace WowPacketParser.SQL.Builders
             public Dictionary<uint, uint> NpcFlags2 = new Dictionary<uint, uint>();
             public Dictionary<float, uint> RunSpeeds = new Dictionary<float, uint>();
             public Dictionary<float, uint> WalkSpeeds = new Dictionary<float, uint>();
+            public Dictionary<float, uint> Sizes = new Dictionary<float, uint>();
             public Dictionary<uint, uint> BaseAttackTimes = new Dictionary<uint, uint>();
             public Dictionary<uint, uint> RangedAttackTimes = new Dictionary<uint, uint>();
             public Dictionary<uint, uint> UnitClasses = new Dictionary<uint, uint>();
@@ -547,6 +548,7 @@ namespace WowPacketParser.SQL.Builders
                     data.NpcFlags2.Add(npc.UnitData.NpcFlags[1], 1);
                     data.RunSpeeds.Add(npc.Movement.RunSpeed, 1);
                     data.WalkSpeeds.Add(npc.Movement.WalkSpeed, 1);
+                    data.Sizes.Add(npc.ObjectData.Scale, 1);
                     data.BaseAttackTimes.Add(npc.UnitData.AttackRoundBaseTime[0], 1);
                     data.RangedAttackTimes.Add(npc.UnitData.RangedAttackRoundBaseTime, 1);
                     data.UnitClasses.Add(npc.UnitData.ClassId, 1);
@@ -587,6 +589,11 @@ namespace WowPacketParser.SQL.Builders
                         data.WalkSpeeds[npc.Movement.WalkSpeed]++;
                     else
                         data.WalkSpeeds.Add(npc.Movement.WalkSpeed, 1);
+
+                    if (data.Sizes.ContainsKey(npc.ObjectData.Scale))
+                        data.Sizes[npc.ObjectData.Scale]++;
+                    else
+                        data.Sizes.Add(npc.ObjectData.Scale, 1);
 
                     if (data.BaseAttackTimes.ContainsKey(npc.UnitData.AttackRoundBaseTime[0]))
                         data.BaseAttackTimes[npc.UnitData.AttackRoundBaseTime[0]]++;
@@ -697,6 +704,17 @@ namespace WowPacketParser.SQL.Builders
                     {
                         mostCommonWalkSpeed = walkSpeedPair.Key;
                         mostCommonWalkSpeedCount = walkSpeedPair.Value;
+                    }
+                }
+
+                float mostCommonScaleSize = 0;
+                uint mostCommonScaleSizeCount = 0;
+                foreach (var scaleSizePair in npc.Value.Sizes)
+                {
+                    if (scaleSizePair.Value > mostCommonScaleSizeCount)
+                    {
+                        mostCommonScaleSize = scaleSizePair.Key;
+                        mostCommonScaleSizeCount = scaleSizePair.Value;
                     }
                 }
 
@@ -820,6 +838,7 @@ namespace WowPacketParser.SQL.Builders
                     NpcFlag = (NPCFlags)Utilities.MAKE_PAIR64(mostCommonNpcFlag1, mostCommonNpcFlag2),
                     SpeedRun = mostCommonRunSpeed,
                     SpeedWalk = mostCommonWalkSpeed,
+                    Scale = mostCommonScaleSize,
                     BaseAttackTime = mostCommonBaseAttackTime,
                     RangedAttackTime = mostCommonRangedAttackTime,
                     UnitClass = mostCommonClassId,

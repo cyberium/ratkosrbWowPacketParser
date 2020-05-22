@@ -149,6 +149,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.MaxMana = (uint)creature.UnitData.MaxMana;
                 row.Data.SpeedWalk = creature.Movement.WalkSpeed;
                 row.Data.SpeedRun = creature.Movement.RunSpeed;
+                row.Data.Scale = creature.ObjectData.Scale;
                 row.Data.BaseAttackTime = creature.UnitData.AttackRoundBaseTime[0];
                 row.Data.RangedAttackTime = creature.UnitData.RangedAttackRoundBaseTime;
                 row.Data.NpcFlag = (uint)creature.UnitData.NpcFlags[0]; 

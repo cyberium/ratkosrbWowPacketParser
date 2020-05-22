@@ -78,19 +78,25 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             packet.ReadWoWString("Name", nameLength, idx);
         }
 
-        public static void ReadSpellCastData(Packet packet, params object[] idx)
+        public static void ReadSpellCastData(ref SpellCastData dbdata, Packet packet, params object[] idx)
         {
-            packet.ReadPackedGuid128("CasterGUID", idx);
+            WowGuid casterGuid = packet.ReadPackedGuid128("CasterGUID", idx);
+            dbdata.CasterID = casterGuid.GetEntry();
+            dbdata.CasterType = casterGuid.GetObjectType().ToString();
+
             packet.ReadPackedGuid128("CasterUnit", idx);
 
             packet.ReadPackedGuid128("CastID", idx);
             packet.ReadPackedGuid128("OriginalCastID", idx);
 
             var spellID = packet.ReadUInt32<SpellId>("SpellID", idx);
+            dbdata.SpellID = spellID;
             packet.ReadUInt32("SpellXSpellVisualID", idx);
 
-            packet.ReadUInt32("CastFlags", idx);
-            packet.ReadUInt32("CastFlagsEx", idx);
+            uint castFlags = packet.ReadUInt32("CastFlags", idx);
+            dbdata.CastFlags = castFlags;
+            uint castFlagsEx = packet.ReadUInt32("CastFlagsEx", idx);
+            dbdata.CastFlagsEx = castFlagsEx;
             packet.ReadUInt32("CastTime", idx);
 
             V6_0_2_19033.Parsers.SpellHandler.ReadMissileTrajectoryResult(packet, idx, "MissileTrajectory");
@@ -119,7 +125,11 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             ReadSpellTargetData(packet, spellID, idx, "Target");
 
             for (var i = 0; i < hitTargetsCount; ++i)
-                packet.ReadPackedGuid128("HitTarget", idx, i);
+            {
+                WowGuid hitTarget = packet.ReadPackedGuid128("HitTarget", idx, i);
+                dbdata.TargetID = hitTarget.GetEntry();
+                dbdata.TargetType = hitTarget.GetObjectType().ToString();
+            }
 
             for (var i = 0; i < missTargetsCount; ++i)
                 packet.ReadPackedGuid128("MissTarget", idx, i);
@@ -140,22 +150,53 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 packet.ReadInt32E<InventoryType>("AmmoInventoryType", idx);
         }
 
+        public static void AddSpellCastDataIfShould(SpellCastData castData, DataBag<SpellCastData> storage, Packet packet)
+        {
+            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.spell_cast_start) &&
+                !Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.spell_cast_go))
+                return;
+
+            if (!castData.CasterType.Contains("Unit") &&
+                !castData.CasterType.Contains("Creature") &&
+                !castData.CasterType.Contains("GameObject"))
+                return;
+
+            foreach (var cast_pair in storage)
+            {
+                if (cast_pair.Item1.CasterID == castData.CasterID &&
+                    cast_pair.Item1.CasterType == castData.CasterType &&
+                    cast_pair.Item1.CastFlags == castData.CastFlags &&
+                    cast_pair.Item1.CastFlagsEx == castData.CastFlagsEx &&
+                    cast_pair.Item1.SpellID == castData.SpellID &&
+                    cast_pair.Item1.TargetID == castData.TargetID &&
+                    cast_pair.Item1.TargetType == castData.TargetType)
+                    return;
+            }
+
+            storage.Add(castData, packet.TimeSpan);
+        }
+
         [Parser(Opcode.SMSG_SPELL_START)]
         public static void HandleSpellStart(Packet packet)
         {
-            ReadSpellCastData(packet, "Cast");
+            SpellCastData castData = new SpellCastData();
+            ReadSpellCastData(ref castData, packet, "Cast");
+            AddSpellCastDataIfShould(castData, Storage.SpellCastStart, packet);
         }
 
         [Parser(Opcode.SMSG_SPELL_GO)]
         public static void HandleSpellGo(Packet packet)
         {
-            ReadSpellCastData(packet, "Cast");
+            SpellCastData castData = new SpellCastData();
+            ReadSpellCastData(ref castData, packet, "Cast");
 
             packet.ResetBitReader();
 
             var unkBit = packet.ReadBit();
             if (unkBit)
                 packet.ReadSByte("UnkSByte");
+
+            AddSpellCastDataIfShould(castData, Storage.SpellCastGo, packet);
         }
 
         [HasSniffData]
