@@ -203,24 +203,35 @@ namespace WowPacketParser.SQL.Builders
                     addonRows.Add(addonRow);
                 }
 
-                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_movement))
+                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_movement) &&
+                    unit.Value.Waypoints != null &&
+                    creature.Movement.Position != null)
                 {
-                    float maxDistanceFromSpawn = 0;
-                    foreach (CreatureMovement waypoint in unit.Value.Waypoints)
+                    try
                     {
-                        // Get max wander distance
-                        float distanceFromSpawn = CreatureMovement.GetDistance3D(creature.Movement.Position.X, creature.Movement.Position.Y, creature.Movement.Position.Z, waypoint.PositionX, waypoint.PositionY, waypoint.PositionZ);
-                        if (distanceFromSpawn > maxDistanceFromSpawn)
-                            maxDistanceFromSpawn = distanceFromSpawn;
+                        float maxDistanceFromSpawn = 0;
+                        foreach (CreatureMovement waypoint in unit.Value.Waypoints)
+                        {
+                            if (waypoint == null)
+                                continue;
 
-                        var movementRow = new Row<CreatureMovement>();
-                        movementRow.Data = waypoint;
-                        movementRow.Data.GUID = "@CGUID+" + count;
-                        movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);;
-                        movementRows.Add(movementRow);
+                            // Get max wander distance
+                            float distanceFromSpawn = CreatureMovement.GetDistance3D(creature.Movement.Position.X, creature.Movement.Position.Y, creature.Movement.Position.Z, waypoint.PositionX, waypoint.PositionY, waypoint.PositionZ);
+                            if (distanceFromSpawn > maxDistanceFromSpawn)
+                                maxDistanceFromSpawn = distanceFromSpawn;
+
+                            var movementRow = new Row<CreatureMovement>();
+                            movementRow.Data = waypoint;
+                            movementRow.Data.GUID = "@CGUID+" + count;
+                            movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false); ;
+                            movementRows.Add(movementRow);
+                        }
+                        row.Data.WanderDistance = maxDistanceFromSpawn;
                     }
-
-                    row.Data.WanderDistance = maxDistanceFromSpawn;
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("{0} Exception caught.", e);
+                    }
                 }
 
                 // Likely to be waypoints if distance is big
