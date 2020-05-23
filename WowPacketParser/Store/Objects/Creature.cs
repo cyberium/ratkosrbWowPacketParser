@@ -49,6 +49,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("orientation")]
         public float? Orientation;
 
+        [DBFieldName("wander_distance")]
+        public float? WanderDistance;
+
         [DBFieldName("movement_type")]
         public uint? MovementType;
 
@@ -120,16 +123,25 @@ namespace WowPacketParser.Store.Objects
         public uint Point;
 
         [DBFieldName("position_x")]
-        public float? PositionX;
+        public float PositionX;
 
         [DBFieldName("position_y")]
-        public float? PositionY;
+        public float PositionY;
 
         [DBFieldName("position_z")]
-        public float? PositionZ;
+        public float PositionZ;
 
         [DBFieldName("orientation")]
         public float? Orientation;
+
+        [DBFieldName("distance")]
+        public float? Distance;
+
+        [DBFieldName("timediff")]
+        public uint? TimeDiff;
+
+        [DBFieldName("unixtime")]
+        public uint? UnixTime;
 
         public static float GetAngle(float x1, float y1, float x2, float y2)
         {
@@ -139,6 +151,21 @@ namespace WowPacketParser.Store.Objects
             double ang = System.Math.Atan2(dy, dx);
             ang = (ang >= 0) ? ang : 2 * System.Math.PI + ang;
             return (float)ang;
+        }
+
+        public static float GetDistance3D(float x1, float y1, float z1, float x2, float y2, float z2)
+        {
+            float dx = x1 - x2;
+            float dy = y1 - y2;
+            float dz = z1 - z2;
+            float dist = (float)System.Math.Sqrt((dx * dx) + (dy * dy) + (dz * dz));
+            return (dist > 0 ? dist : 0);
+        }
+
+        public static double DateTimeToUnixTimestamp(System.DateTime dateTime)
+        {
+            return (System.TimeZoneInfo.ConvertTimeToUtc(dateTime) -
+                   new System.DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)).TotalSeconds;
         }
     }
 }

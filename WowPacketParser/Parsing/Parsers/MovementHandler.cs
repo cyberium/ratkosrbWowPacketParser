@@ -254,6 +254,19 @@ namespace WowPacketParser.Parsing.Parsers
                         movementData.PositionY = pos.Y;
                         movementData.PositionZ = pos.Z;
                         movementData.Orientation = orientation;
+                        movementData.UnixTime = (uint)CreatureMovement.DateTimeToUnixTimestamp(packet.Time);
+
+                        if (obj.Waypoints.Count == 0)
+                        {
+                            movementData.TimeDiff = 0;
+                            movementData.Distance = 0;
+                        }
+                        else
+                        {
+                            CreatureMovement previousPoint = obj.Waypoints[obj.Waypoints.Count - 1];
+                            movementData.TimeDiff = movementData.UnixTime - previousPoint.UnixTime;
+                            movementData.Distance = CreatureMovement.GetDistance3D(movementData.PositionX, movementData.PositionY, movementData.PositionZ, previousPoint.PositionX, previousPoint.PositionY, previousPoint.PositionZ);
+                        }
                         obj.Waypoints.Add(movementData);
                     }
                 }

@@ -66,7 +66,7 @@ namespace WowPacketParser.SQL.Builders
                     continue;   // broken entry, nothing to spawn
 
                 uint movementType = 0;
-                int spawnDist = 0;
+                uint spawnDist = 0;
                 row.Data.AreaID = 0;
                 row.Data.ZoneID = 0;
 
@@ -133,7 +133,7 @@ namespace WowPacketParser.SQL.Builders
                 }
 
                 //row.Data.SpawnTimeSecs = creature.GetDefaultSpawnTime(creature.DifficultyID);
-                //row.Data.WanderDistance = spawnDist;
+                row.Data.WanderDistance = spawnDist;
                 row.Data.MovementType = movementType;
 
                 // set some defaults
@@ -203,18 +203,29 @@ namespace WowPacketParser.SQL.Builders
                     addonRows.Add(addonRow);
                 }
 
-                
                 if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_movement))
                 {
+                    float maxDistanceFromSpawn = 0;
                     foreach (CreatureMovement waypoint in unit.Value.Waypoints)
                     {
+                        // Get max wander distance
+                        float distanceFromSpawn = CreatureMovement.GetDistance3D(creature.Movement.Position.X, creature.Movement.Position.Y, creature.Movement.Position.Z, waypoint.PositionX, waypoint.PositionY, waypoint.PositionZ);
+                        if (distanceFromSpawn > maxDistanceFromSpawn)
+                            maxDistanceFromSpawn = distanceFromSpawn;
+
                         var movementRow = new Row<CreatureMovement>();
                         movementRow.Data = waypoint;
                         movementRow.Data.GUID = "@CGUID+" + count;
                         movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);;
                         movementRows.Add(movementRow);
                     }
+
+                    row.Data.WanderDistance = maxDistanceFromSpawn;
                 }
+
+                // Likely to be waypoints if distance is big
+                if (row.Data.WanderDistance > 20)
+                    row.Data.MovementType = 2;
 
                 if (creature.IsTemporarySpawn() && !Settings.SaveTempSpawns)
                 {
