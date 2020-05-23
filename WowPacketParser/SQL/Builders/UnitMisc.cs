@@ -565,6 +565,9 @@ namespace WowPacketParser.SQL.Builders
                 {
                     CreatureTemplateNonWdbExport data = creatureExportData[unit.Key.GetEntry()];
 
+                    if (data.GossipMenuId == 0 && npc.GossipId != 0)
+                        data.GossipMenuId = npc.GossipId;
+
                     if (data.Factions.ContainsKey((uint)npc.UnitData.FactionTemplate))
                         data.Factions[(uint)npc.UnitData.FactionTemplate]++;
                     else
