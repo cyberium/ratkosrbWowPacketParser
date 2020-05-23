@@ -64,7 +64,7 @@ namespace WowPacketParser.Store.Objects
 
     public sealed class SpellPetCooldown : IDataModel
     {
-        [DBFieldName("CasterId", true)]
+        [DBFieldName("CreatureId", true)]
         public uint? CasterID;
 
         [DBFieldName("Flags")]
@@ -88,10 +88,10 @@ namespace WowPacketParser.Store.Objects
 
     public sealed class SpellPetActions : IDataModel
     {
-        [DBFieldName("CasterId", true)]
+        [DBFieldName("CreatureId", true)]
         public uint? CasterID;
 
-        [DBFieldName("SpellID", 10)]
+        [DBFieldName("SpellId", 10)]
         public uint[] SpellID = new uint[10];
 
         [DBFieldName("VerifiedBuild")]
