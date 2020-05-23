@@ -45,6 +45,7 @@ namespace WowPacketParser.SQL.Builders
             uint count = 0;
             var rows = new RowList<Creature>();
             var addonRows = new RowList<CreatureAddon>();
+            var movementRows = new RowList<CreatureMovement>();
             foreach (var unit in units)
             {
                 Row<Creature> row = new Row<Creature>();
@@ -202,6 +203,19 @@ namespace WowPacketParser.SQL.Builders
                     addonRows.Add(addonRow);
                 }
 
+                
+                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_movement))
+                {
+                    foreach (CreatureMovement waypoint in unit.Value.Waypoints)
+                    {
+                        var movementRow = new Row<CreatureMovement>();
+                        movementRow.Data = waypoint;
+                        movementRow.Data.GUID = "@CGUID+" + count;
+                        movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);;
+                        movementRows.Add(movementRow);
+                    }
+                }
+
                 if (creature.IsTemporarySpawn() && !Settings.SaveTempSpawns)
                 {
                     row.CommentOut = true;
@@ -247,6 +261,14 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(addonDelete.Build());
                 var addonSql = new SQLInsert<CreatureAddon>(addonRows, false);
                 result.Append(addonSql.Build());
+            }
+
+            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_movement))
+            {
+                var movementDelete = new SQLDelete<CreatureMovement>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
+                result.Append(movementDelete.Build());
+                var movementSql = new SQLInsert<CreatureMovement>(movementRows, false);
+                result.Append(movementSql.Build());
             }
 
             return result.ToString();

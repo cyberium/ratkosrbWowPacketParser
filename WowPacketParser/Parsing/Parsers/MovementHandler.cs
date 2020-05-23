@@ -217,11 +217,13 @@ namespace WowPacketParser.Parsing.Parsers
 
             var type = packet.ReadByteE<SplineType>("Spline Type");
 
+            float orientation = 100;
             switch (type)
             {
                 case SplineType.FacingSpot:
                 {
-                    packet.ReadVector3("Facing Spot");
+                    var faceSpot = packet.ReadVector3("Facing Spot");
+                    orientation = CreatureMovement.GetAngle(pos.X, pos.Y, faceSpot.X, faceSpot.Y);
                     break;
                 }
                 case SplineType.FacingTarget:
@@ -231,11 +233,30 @@ namespace WowPacketParser.Parsing.Parsers
                 }
                 case SplineType.FacingAngle:
                 {
-                    packet.ReadSingle("Facing Angle");
+                    orientation = packet.ReadSingle("Facing Angle");
                     break;
                 }
                 case SplineType.Stop:
                     return;
+            }
+
+            if (guid.GetHighType() == HighGuidType.Creature && Storage.Objects != null && Storage.Objects.ContainsKey(guid) &&
+                packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_ON_MONSTER_MOVE, Direction.ServerToClient))
+            {
+                var obj = Storage.Objects[guid].Item1 as Unit;
+                if (obj.UpdateFields != null)
+                {
+                    if ((obj.UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0) // movement could be because of aggro so ignore that
+                    {
+                        CreatureMovement movementData = new CreatureMovement();
+                        movementData.Point = (uint)obj.Waypoints.Count;
+                        movementData.PositionX = pos.X;
+                        movementData.PositionY = pos.Y;
+                        movementData.PositionZ = pos.Z;
+                        movementData.Orientation = orientation;
+                        obj.Waypoints.Add(movementData);
+                    }
+                }
             }
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V5_1_0_16309))

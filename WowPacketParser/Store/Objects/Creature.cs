@@ -109,4 +109,36 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("VerifiedBuild")]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
+
+    [DBTableName("creature_movement")]
+    public sealed class CreatureMovement : IDataModel
+    {
+        [DBFieldName("id", true, true)]
+        public string GUID;
+
+        [DBFieldName("point", true)]
+        public uint Point;
+
+        [DBFieldName("position_x")]
+        public float? PositionX;
+
+        [DBFieldName("position_y")]
+        public float? PositionY;
+
+        [DBFieldName("position_z")]
+        public float? PositionZ;
+
+        [DBFieldName("orientation")]
+        public float? Orientation;
+
+        public static float GetAngle(float x1, float y1, float x2, float y2)
+        {
+            float dx = x1 - x2;
+            float dy = y1 - y2;
+
+            double ang = System.Math.Atan2(dy, dx);
+            ang = (ang >= 0) ? ang : 2 * System.Math.PI + ang;
+            return (float)ang;
+        }
+    }
 }

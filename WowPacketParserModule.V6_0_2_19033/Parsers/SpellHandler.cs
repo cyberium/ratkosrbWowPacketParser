@@ -820,14 +820,23 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_SPELL_COOLDOWN)]
         public static void HandleSpellCooldown(Packet packet)
         {
-            packet.ReadPackedGuid128("Caster");
-            packet.ReadByte("Flags");
+            WowGuid casterGuid = packet.ReadPackedGuid128("Caster");
+            byte flags = packet.ReadByte("Flags");
 
             var count = packet.ReadInt32("SpellCooldownsCount");
             for (int i = 0; i < count; i++)
             {
-                packet.ReadInt32("SrecID", i);
-                packet.ReadInt32("ForcedCooldown", i);
+                SpellPetCooldown petCooldown = new SpellPetCooldown();
+                petCooldown.SpellID = (uint)packet.ReadInt32("SrecID", i);
+                petCooldown.Cooldown = (uint)packet.ReadInt32("ForcedCooldown", i);
+                if (casterGuid.GetObjectType() == ObjectType.Unit)
+                {
+                    petCooldown.CasterID = casterGuid.GetEntry();
+                    petCooldown.Flags = flags;
+                    petCooldown.Index = (byte)i;
+                    petCooldown.ModRate = 1;
+                    Storage.SpellPetCooldown.Add(petCooldown);
+                }
             }
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Store.Objects;
+using System.Linq;
 
 namespace WowPacketParser.Store
 {
@@ -112,6 +113,46 @@ namespace WowPacketParser.Store
         // Spell Casts
         public static readonly DataBag<SpellCastData> SpellCastStart = new DataBag<SpellCastData>(new List<SQLOutput> { SQLOutput.spell_cast_start });
         public static readonly DataBag<SpellCastData> SpellCastGo = new DataBag<SpellCastData>(new List<SQLOutput> { SQLOutput.spell_cast_go });
+        public static void AddSpellCastDataIfShould(SpellCastData castData, DataBag<SpellCastData> storage, Packet packet)
+        {
+            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.spell_cast_start) &&
+                !Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.spell_cast_go))
+                return;
+
+            if (!castData.CasterType.Contains("Unit") &&
+                !castData.CasterType.Contains("Creature") &&
+                !castData.CasterType.Contains("GameObject"))
+                return;
+
+            if (castData.MainTargetID != 0 &&
+                castData.MainTargetType.Contains("Player"))
+                castData.MainTargetID = 0;
+
+            for (uint i = 0; i < SpellCastData.MAX_SPELL_HIT_TARGETS_DB; i++)
+            {
+                if (castData.HitTargetID[i] != 0 &&
+                    castData.HitTargetType[i].Contains("Player"))
+                    castData.HitTargetID[i] = 0;
+            }
+
+            foreach (var cast_pair in storage)
+            {
+                if (cast_pair.Item1.CasterID == castData.CasterID &&
+                    cast_pair.Item1.CasterType == castData.CasterType &&
+                    cast_pair.Item1.CastFlags == castData.CastFlags &&
+                    cast_pair.Item1.CastFlagsEx == castData.CastFlagsEx &&
+                    cast_pair.Item1.SpellID == castData.SpellID &&
+                    cast_pair.Item1.MainTargetID == castData.MainTargetID &&
+                    cast_pair.Item1.MainTargetType == castData.MainTargetType &&
+                    cast_pair.Item1.HitTargetID.SequenceEqual(castData.HitTargetID) &&
+                    cast_pair.Item1.HitTargetType.SequenceEqual(castData.HitTargetType))
+                    return;
+            }
+
+            storage.Add(castData, packet.TimeSpan);
+        }
+        public static readonly DataBag<SpellPetCooldown> SpellPetCooldown = new DataBag<SpellPetCooldown>(new List<SQLOutput> { SQLOutput.spell_pet_cooldown });
+        public static readonly DataBag<SpellPetActions> SpellPetActions = new DataBag<SpellPetActions>(new List<SQLOutput> { SQLOutput.spell_pet_action });
         public static readonly DataBag<SpellTargetPosition> SpellTargetPositions = new DataBag<SpellTargetPosition>(new List<SQLOutput> { SQLOutput.spell_target_position });
 
         public static readonly DataBag<HotfixData> HotfixDatas = new DataBag<HotfixData>(new List<SQLOutput> { SQLOutput.hotfix_data });
@@ -197,6 +238,8 @@ namespace WowPacketParser.Store
 
             SpellCastStart.Clear();
             SpellCastGo.Clear();
+            SpellPetActions.Clear();
+            SpellPetCooldown.Clear();
             SpellTargetPositions.Clear();
 
             LocalesCreatures.Clear();

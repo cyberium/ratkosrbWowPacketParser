@@ -16,6 +16,8 @@ namespace WowPacketParser.Store.Objects
 
         public uint GossipId;
 
+        public List<CreatureMovement> Waypoints;
+
         public ushort? AIAnimKit;
         public ushort? MovementAnimKit;
         public ushort? MeleeAnimKit;
@@ -31,6 +33,7 @@ namespace WowPacketParser.Store.Objects
         public Unit() : base()
         {
             UnitData = new UnitData(this);
+            Waypoints = new List<CreatureMovement>();
         }
 
         public override bool IsTemporarySpawn()

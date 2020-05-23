@@ -5,6 +5,8 @@ using WowPacketParser.DBC;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 using WowPacketParserModule.V7_0_3_22248.Enums;
 using MovementFlag = WowPacketParserModule.V6_0_2_19033.Enums.MovementFlag;
 using SplineFlag = WowPacketParserModule.V7_0_3_22248.Enums.SplineFlag;
@@ -69,7 +71,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadBits("Type", 2, idx);
         }
 
-        public static void ReadMovementMonsterSpline(Packet packet, Vector3 pos, params object[] indexes)
+        public static float ReadMovementMonsterSpline(Packet packet, Vector3 pos, params object[] indexes)
         {
             packet.ReadUInt32("Id", indexes);
             packet.ReadVector3("Destination", indexes);
@@ -79,7 +81,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadBit("CrzTeleport", indexes);
             packet.ReadBits("StopDistanceTolerance", 3, indexes);
 
-            ReadMovementSpline(packet, pos, indexes, "MovementSpline");
+            return ReadMovementSpline(packet, pos, indexes, "MovementSpline");
         }
 
         public static void ReadMonsterSplineFilter(Packet packet, params object[] indexes)
@@ -108,8 +110,9 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadUInt32("ParabolicCurveID", indexes);
         }
 
-        public static void ReadMovementSpline(Packet packet, Vector3 pos, params object[] indexes)
+        public static float ReadMovementSpline(Packet packet, Vector3 pos, params object[] indexes)
         {
+            float orientation = 100;
             packet.ReadInt32E<SplineFlag>("Flags", indexes);
             packet.ReadByte("AnimTier", indexes);
             packet.ReadUInt32("TierTransStartTime", indexes);
@@ -138,14 +141,15 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             switch (type)
             {
                 case 1:
-                    packet.ReadVector3("FaceSpot", indexes);
+                    var faceSpot = packet.ReadVector3("FaceSpot", indexes);
+                    orientation = CreatureMovement.GetAngle(pos.X, pos.Y, faceSpot.X, faceSpot.Y);
                     break;
                 case 2:
-                    packet.ReadSingle("FaceDirection", indexes);
+                    orientation = packet.ReadSingle("FaceDirection", indexes);
                     packet.ReadPackedGuid128("FacingGUID", indexes);
                     break;
                 case 3:
-                    packet.ReadSingle("FaceDirection", indexes);
+                    orientation = packet.ReadSingle("FaceDirection", indexes);
                     break;
             }
 
@@ -191,15 +195,35 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 };
                 packet.AddValue("WayPoints", vec, indexes, i);
             }
+
+            return orientation;
         }
 
         [Parser(Opcode.SMSG_ON_MONSTER_MOVE)]
         public static void HandleOnMonsterMove(Packet packet)
         {
-            packet.ReadPackedGuid128("MoverGUID");
+            WowGuid guid = packet.ReadPackedGuid128("MoverGUID");
             var pos = packet.ReadVector3("Position");
 
-            ReadMovementMonsterSpline(packet, pos, "MovementMonsterSpline");
+            float orientation = ReadMovementMonsterSpline(packet, pos, "MovementMonsterSpline");
+
+            if (guid.GetHighType() == HighGuidType.Creature && Storage.Objects != null && Storage.Objects.ContainsKey(guid))
+            {
+                var obj = Storage.Objects[guid].Item1 as Unit;
+                if (obj.UpdateFields != null)
+                {
+                    if ((obj.UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0) // movement could be because of aggro so ignore that
+                    {
+                        CreatureMovement movementData = new CreatureMovement();
+                        movementData.Point = (uint)obj.Waypoints.Count;
+                        movementData.PositionX = pos.X;
+                        movementData.PositionY = pos.Y;
+                        movementData.PositionZ = pos.Z;
+                        movementData.Orientation = orientation;
+                        obj.Waypoints.Add(movementData);
+                    }
+                }
+            }
         }
 
         [Parser(Opcode.CMSG_MOVE_CHANGE_TRANSPORT)]
