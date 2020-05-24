@@ -4,7 +4,7 @@ using WowPacketParser.SQL;
 
 namespace WowPacketParser.Store.Objects
 {
-    [DBTableName("creature_template")]
+    [DBTableName("creature_template_wdb")]
     public sealed class CreatureTemplate : IDataModel
     {
         [DBFieldName("entry", true)]
@@ -13,7 +13,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("KillCredit", 2)]
         public uint?[] KillCredits;
 
-        [DBFieldName("modelid", TargetedDatabase.Zero, TargetedDatabase.BattleForAzeroth, 4)]
+        [DBFieldName("display_id", TargetedDatabase.Zero, TargetedDatabase.BattleForAzeroth, 4)]
         public uint?[] ModelIDs;
 
         [DBFieldName("name")]
@@ -95,16 +95,16 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("gossip_menu_id")]
         public uint? GossipMenuId;
 
-        [DBFieldName("minlevel")]
+        [DBFieldName("level_min")]
         public int? MinLevel;
 
-        [DBFieldName("maxlevel")]
+        [DBFieldName("level_max")]
         public int? MaxLevel;
 
         [DBFieldName("faction")]
         public uint? Faction;
 
-        [DBFieldName("npcflag")]
+        [DBFieldName("npc_flags")]
         public NPCFlags? NpcFlag;
 
         [DBFieldName("speed_walk")]
@@ -113,10 +113,13 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("speed_run")]
         public float? SpeedRun;
 
-        [DBFieldName("BaseAttackTime")]
+        [DBFieldName("scale")]
+        public float? Scale;
+
+        [DBFieldName("base_attack_time")]
         public uint? BaseAttackTime;
 
-        [DBFieldName("RangeAttackTime")]
+        [DBFieldName("ranged_attack_time")]
         public uint? RangedAttackTime;
 
         [DBFieldName("unit_class", TargetedDatabase.Zero, TargetedDatabase.BattleForAzeroth)]
@@ -131,16 +134,16 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("unit_flags3", TargetedDatabase.Legion)]
         public UnitFlags3? UnitFlags3;
 
-        [DBFieldName("dynamicflags", TargetedDatabase.Zero, TargetedDatabase.WarlordsOfDraenor)]
+        [DBFieldName("dynamic_flags", TargetedDatabase.Zero, TargetedDatabase.WarlordsOfDraenor)]
         public UnitDynamicFlags? DynamicFlags;
 
-        [DBFieldName("dynamicflags", TargetedDatabase.WarlordsOfDraenor)]
+        [DBFieldName("dynamic_flags", TargetedDatabase.WarlordsOfDraenor)]
         public UnitDynamicFlagsWOD? DynamicFlagsWod;
 
-        [DBFieldName("VehicleId")]
+        [DBFieldName("vehicle_id")]
         public uint? VehicleID;
 
-        [DBFieldName("HoverHeight")]
+        [DBFieldName("hover_height")]
         public float? HoverHeight;
 
     }
@@ -161,7 +164,7 @@ namespace WowPacketParser.Store.Objects
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 
-    [DBTableName("creature_template")]
+    [DBTableName("creature_template_wdb")]
     public sealed class CreatureTemplateClassic : IDataModel
     {
         [DBFieldName("entry", true)]
@@ -169,6 +172,42 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("KillCredit", 2)]
         public uint?[] KillCredits;
+
+        [DBFieldName("DisplayId1")]
+        public uint DisplayId1;
+
+        [DBFieldName("DisplayId2")]
+        public uint DisplayId2;
+
+        [DBFieldName("DisplayId3")]
+        public uint DisplayId3;
+
+        [DBFieldName("DisplayId4")]
+        public uint DisplayId4;
+
+        [DBFieldName("DisplayScale1")]
+        public float DisplayScale1;
+
+        [DBFieldName("DisplayScale2")]
+        public float DisplayScale2;
+
+        [DBFieldName("DisplayScale3")]
+        public float DisplayScale3;
+
+        [DBFieldName("DisplayScale4")]
+        public float DisplayScale4;
+
+        [DBFieldName("DisplayProbability1")]
+        public float DisplayProbability1;
+
+        [DBFieldName("DisplayProbability2")]
+        public float DisplayProbability2;
+
+        [DBFieldName("DisplayProbability3")]
+        public float DisplayProbability3;
+
+        [DBFieldName("DisplayProbability4")]
+        public float DisplayProbability4;
 
         [DBFieldName("name")]
         public string Name;
@@ -220,6 +259,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("ManaModifier")]
         public float? ManaModifier;
+
+        [DBFieldName("Civilian")]
+        public bool? Civilian;
 
         [DBFieldName("RacialLeader")]
         public bool? RacialLeader;

@@ -27,8 +27,8 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             uint titleLen = packet.ReadBits(11);
             uint titleAltLen = packet.ReadBits(11);
             uint cursorNameLen = packet.ReadBits(6);
+            creature.Civilian = packet.ReadBit("Civilian");
             creature.RacialLeader = packet.ReadBit("Leader");
-            packet.ReadBit("UnkBit");
 
             var stringLens = new int[4][];
             for (int i = 0; i < 4; i++)
@@ -65,22 +65,38 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             for (int i = 0; i < 2; ++i)
                 creature.KillCredits[i] = (uint)packet.ReadInt32("ProxyCreatureID", i);
 
-            var displayIdCount = packet.ReadUInt32("DisplayIdCount");
+            uint displayIdCount = packet.ReadUInt32("DisplayIdCount");
             packet.ReadSingle("TotalProbability");
 
-            for (var i = 0; i < displayIdCount; ++i)
+            for (uint i = 0; i < displayIdCount; ++i)
             {
-                CreatureTemplateModel model = new CreatureTemplateModel
+                if (i == 0)
                 {
-                    CreatureID = (uint)entry.Key,
-                    Idx = (uint)i
-                };
+                    creature.DisplayId1 = (uint)packet.ReadInt32("DisplayId1", i);
+                    creature.DisplayScale1 = packet.ReadSingle("DisplayScale1", i);
+                    creature.DisplayProbability1 = packet.ReadSingle("DisplayProbability1", i);
+                }
+                if (i == 1)
+                {
+                    creature.DisplayId2 = (uint)packet.ReadInt32("DisplayId2", i);
+                    creature.DisplayScale2 = packet.ReadSingle("DisplayScale2", i);
+                    creature.DisplayProbability3 = packet.ReadSingle("DisplayProbability2", i);
+                }
 
-                model.CreatureDisplayID = (uint)packet.ReadInt32("CreatureDisplayID", i);
-                model.DisplayScale = packet.ReadSingle("DisplayScale", i);
-                model.Probability = packet.ReadSingle("Probability", i);
+                if (i == 2)
+                {
+                    creature.DisplayId3 = (uint)packet.ReadInt32("DisplayId3", i);
+                    creature.DisplayScale3 = packet.ReadSingle("DisplayScale3", i);
+                    creature.DisplayProbability3 = packet.ReadSingle("DisplayProbability3", i);
+                }
 
-                Storage.CreatureTemplateModels.Add(model, packet.TimeSpan);
+                if (i == 3)
+                {
+                    creature.DisplayId4 = (uint)packet.ReadInt32("DisplayId4", i);
+                    creature.DisplayScale4 = packet.ReadSingle("DisplayScale4", i);
+                    creature.DisplayProbability4 = packet.ReadSingle("DisplayProbability4", i);
+                }
+
             }
 
             creature.HealthModifier = packet.ReadSingle("HpMulti");

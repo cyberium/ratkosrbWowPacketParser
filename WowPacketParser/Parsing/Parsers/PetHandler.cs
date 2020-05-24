@@ -4,6 +4,8 @@ using System.Linq;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParser.Parsing.Parsers
 {
@@ -38,6 +40,8 @@ namespace WowPacketParser.Parsing.Parsers
             bool isPet = guid.GetHighType() == HighGuidType.Pet;
             bool isVehicle = guid.GetHighType() == HighGuidType.Vehicle;
             bool isMinion = guid.GetHighType() == HighGuidType.Creature;
+            SpellPetActions petActions = new SpellPetActions();
+            petActions.CasterID = guid.GetEntry();
             const int maxCreatureSpells = 10;
             var spells = new List<uint?>(maxCreatureSpells);
             for (int i = 0; i < maxCreatureSpells; i++) // Read pet/vehicle spell ids
@@ -51,6 +55,10 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.AddValue("Action", spellId, i);
                 else
                     packet.AddValue("Spell", StoreGetters.GetName(StoreNameType.Spell, spellId), i);
+
+                petActions.SpellID[i] = (uint)spellId;
+                if (isMinion)
+                    Storage.SpellPetActions.Add(petActions);
 
                 // Spells for pets are on DBCs; also no entry in guid
                 // We don't need the actions sent for minions (slots lower than 8)

@@ -7,10 +7,10 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("gossip_menu")]
     public class GossipMenu : IDataModel
     {
-        [DBFieldName("MenuId", true)]
+        [DBFieldName("entry", true)]
         public uint? Entry;
 
-        [DBFieldName("TextId", true)]
+        [DBFieldName("text_id", true)]
         public uint? TextID;
 
         [DBFieldName("VerifiedBuild")]
@@ -21,5 +21,17 @@ namespace WowPacketParser.Store.Objects
         public uint ObjectEntry;
 
         //public ICollection<GossipMenuOption> GossipOptions;
+    }
+    [DBTableName("creature_gossip")]
+    public class CreatureGossip : IDataModel
+    {
+        [DBFieldName("CreatureId", true)]
+        public uint? CreatureId;
+
+        [DBFieldName("GossipMenuId", true)]
+        public uint? GossipMenuId;
+
+        [DBFieldName("VerifiedBuild")]
+        public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 }

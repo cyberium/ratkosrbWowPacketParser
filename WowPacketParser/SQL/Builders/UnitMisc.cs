@@ -390,6 +390,11 @@ namespace WowPacketParser.SQL.Builders
 
             var result = "";
 
+            // `creature_gossip`
+            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_gossip))
+                result += SQLUtil.Compare(Storage.CreatureGossips, SQLDatabase.Get(Storage.CreatureGossips),
+                    t => StoreGetters.GetName(StoreNameType.Unit, (int)t.CreatureId)); // BUG: GOs can send gossips too
+
             // `gossip_menu`
             if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gossip_menu))
                 result += SQLUtil.Compare(Storage.Gossips, SQLDatabase.Get(Storage.Gossips),
@@ -407,7 +412,7 @@ namespace WowPacketParser.SQL.Builders
             return result;
         }
 
-        //                      entry, <minlevel, maxlevel>
+        //                      entry, <level_min, level_max>
         public static Dictionary<uint, Tuple<uint, uint>> GetLevels(Dictionary<WowGuid, Unit> units)
         {
             if (units.Count == 0)
@@ -492,6 +497,28 @@ namespace WowPacketParser.SQL.Builders
             return 0;
         }
 
+        class CreatureTemplateNonWdbExport
+        {
+            public uint Entry = 0;
+            // Count how many times each value has been seen
+            public Dictionary<uint, uint> Factions = new Dictionary<uint, uint>();
+            public Dictionary<uint, uint> NpcFlags1 = new Dictionary<uint, uint>();
+            public Dictionary<uint, uint> NpcFlags2 = new Dictionary<uint, uint>();
+            public Dictionary<float, uint> RunSpeeds = new Dictionary<float, uint>();
+            public Dictionary<float, uint> WalkSpeeds = new Dictionary<float, uint>();
+            public Dictionary<float, uint> Sizes = new Dictionary<float, uint>();
+            public Dictionary<uint, uint> BaseAttackTimes = new Dictionary<uint, uint>();
+            public Dictionary<uint, uint> RangedAttackTimes = new Dictionary<uint, uint>();
+            public Dictionary<uint, uint> UnitClasses = new Dictionary<uint, uint>();
+            public Dictionary<UnitFlags, uint> UnitFlags1 = new Dictionary<UnitFlags, uint>();
+            public Dictionary<UnitFlags2, uint> UnitFlags2 = new Dictionary<UnitFlags2, uint>();
+            public Dictionary<UnitFlags3, uint> UnitFlags3 = new Dictionary<UnitFlags3, uint>();
+            public Dictionary<UnitDynamicFlags, uint> DynamicFlags = new Dictionary<UnitDynamicFlags, uint>();
+            public Dictionary<UnitDynamicFlagsWOD, uint> DynamicFlagsWod = new Dictionary<UnitDynamicFlagsWOD, uint>();
+            public Dictionary<uint, uint> VehicleIds = new Dictionary<uint, uint>();
+            public Dictionary<float, uint> HoverHeights = new Dictionary<float, uint>();
+        }
+
         [BuilderMethod(true, Units = true)]
         public static string CreatureTemplateNonWDB(Dictionary<WowGuid, Unit> units)
         {
@@ -503,43 +530,332 @@ namespace WowPacketParser.SQL.Builders
 
             var levels = GetLevels(units);
 
+            // Get most common value for fields
+            Dictionary<uint, CreatureTemplateNonWdbExport> creatureExportData = new Dictionary<uint, CreatureTemplateNonWdbExport>();
+
             foreach (var unit in units)
             {
-                if (Storage.CreatureTemplatesNonWDB.Any(creature => creature.Item1.Entry == unit.Key.GetEntry()))
+                var npc = unit.Value;
+                if (!creatureExportData.ContainsKey(unit.Key.GetEntry()))
+                {
+                    CreatureTemplateNonWdbExport data = new CreatureTemplateNonWdbExport();
+                    data.Entry = unit.Key.GetEntry();
+                    data.Factions.Add((uint)npc.UnitData.FactionTemplate, 1);
+                    data.NpcFlags1.Add(npc.UnitData.NpcFlags[0], 1);
+                    data.NpcFlags2.Add(npc.UnitData.NpcFlags[1], 1);
+                    data.RunSpeeds.Add(npc.Movement.RunSpeed, 1);
+                    data.WalkSpeeds.Add(npc.Movement.WalkSpeed, 1);
+                    data.Sizes.Add(npc.ObjectData.Scale, 1);
+                    data.BaseAttackTimes.Add(npc.UnitData.AttackRoundBaseTime[0], 1);
+                    data.RangedAttackTimes.Add(npc.UnitData.RangedAttackRoundBaseTime, 1);
+                    data.UnitClasses.Add(npc.UnitData.ClassId, 1);
+                    data.UnitFlags1.Add((UnitFlags)npc.UnitData.Flags, 1);
+                    data.UnitFlags2.Add((UnitFlags2)npc.UnitData.Flags2, 1);
+                    data.UnitFlags3.Add((UnitFlags3)npc.UnitData.Flags3, 1);
+                    data.DynamicFlags.Add(npc.DynamicFlags.GetValueOrDefault(UnitDynamicFlags.None), 1);
+                    data.DynamicFlagsWod.Add(npc.DynamicFlagsWod.GetValueOrDefault(UnitDynamicFlagsWOD.None), 1);
+                    data.VehicleIds.Add(npc.Movement.VehicleId, 1);
+                    data.HoverHeights.Add(npc.UnitData.HoverHeight, 1);
+                    creatureExportData.Add(unit.Key.GetEntry(), data);
+                }
+                else
+                {
+                    CreatureTemplateNonWdbExport data = creatureExportData[unit.Key.GetEntry()];
+
+                    if (data.Factions.ContainsKey((uint)npc.UnitData.FactionTemplate))
+                        data.Factions[(uint)npc.UnitData.FactionTemplate]++;
+                    else
+                        data.Factions.Add((uint)npc.UnitData.FactionTemplate, 1);
+
+                    if (data.NpcFlags1.ContainsKey((uint)npc.UnitData.NpcFlags[0]))
+                        data.NpcFlags1[(uint)npc.UnitData.NpcFlags[0]]++;
+                    else
+                        data.NpcFlags1.Add((uint)npc.UnitData.NpcFlags[0], 1);
+
+                    if (data.NpcFlags2.ContainsKey((uint)npc.UnitData.NpcFlags[1]))
+                        data.NpcFlags2[(uint)npc.UnitData.NpcFlags[1]]++;
+                    else
+                        data.NpcFlags2.Add((uint)npc.UnitData.NpcFlags[1], 1);
+
+                    if (data.RunSpeeds.ContainsKey(npc.Movement.RunSpeed))
+                        data.RunSpeeds[npc.Movement.RunSpeed]++;
+                    else
+                        data.RunSpeeds.Add(npc.Movement.RunSpeed, 1);
+
+                    if (data.WalkSpeeds.ContainsKey(npc.Movement.WalkSpeed))
+                        data.WalkSpeeds[npc.Movement.WalkSpeed]++;
+                    else
+                        data.WalkSpeeds.Add(npc.Movement.WalkSpeed, 1);
+
+                    if (data.Sizes.ContainsKey(npc.ObjectData.Scale))
+                        data.Sizes[npc.ObjectData.Scale]++;
+                    else
+                        data.Sizes.Add(npc.ObjectData.Scale, 1);
+
+                    if (data.BaseAttackTimes.ContainsKey(npc.UnitData.AttackRoundBaseTime[0]))
+                        data.BaseAttackTimes[npc.UnitData.AttackRoundBaseTime[0]]++;
+                    else
+                        data.BaseAttackTimes.Add(npc.UnitData.AttackRoundBaseTime[0], 1);
+
+                    if (data.RangedAttackTimes.ContainsKey(npc.UnitData.RangedAttackRoundBaseTime))
+                        data.RangedAttackTimes[npc.UnitData.RangedAttackRoundBaseTime]++;
+                    else
+                        data.RangedAttackTimes.Add(npc.UnitData.RangedAttackRoundBaseTime, 1);
+
+                    if (data.UnitClasses.ContainsKey(npc.UnitData.ClassId))
+                        data.UnitClasses[npc.UnitData.ClassId]++;
+                    else
+                        data.UnitClasses.Add(npc.UnitData.ClassId, 1);
+
+                    if (data.UnitFlags1.ContainsKey((UnitFlags)npc.UnitData.Flags))
+                        data.UnitFlags1[(UnitFlags)npc.UnitData.Flags]++;
+                    else
+                        data.UnitFlags1.Add((UnitFlags)npc.UnitData.Flags, 1);
+
+                    if (data.UnitFlags2.ContainsKey((UnitFlags2)npc.UnitData.Flags2))
+                        data.UnitFlags2[(UnitFlags2)npc.UnitData.Flags2]++;
+                    else
+                        data.UnitFlags2.Add((UnitFlags2)npc.UnitData.Flags2, 1);
+
+                    if (data.UnitFlags3.ContainsKey((UnitFlags3)npc.UnitData.Flags3))
+                        data.UnitFlags3[(UnitFlags3)npc.UnitData.Flags3]++;
+                    else
+                        data.UnitFlags3.Add((UnitFlags3)npc.UnitData.Flags3, 1);
+
+                    if (data.DynamicFlags.ContainsKey(npc.DynamicFlags.GetValueOrDefault(UnitDynamicFlags.None)))
+                        data.DynamicFlags[npc.DynamicFlags.GetValueOrDefault(UnitDynamicFlags.None)]++;
+                    else
+                        data.DynamicFlags.Add(npc.DynamicFlags.GetValueOrDefault(UnitDynamicFlags.None), 1);
+
+                    if (data.DynamicFlagsWod.ContainsKey(npc.DynamicFlagsWod.GetValueOrDefault(UnitDynamicFlagsWOD.None)))
+                        data.DynamicFlagsWod[npc.DynamicFlagsWod.GetValueOrDefault(UnitDynamicFlagsWOD.None)]++;
+                    else
+                        data.DynamicFlagsWod.Add(npc.DynamicFlagsWod.GetValueOrDefault(UnitDynamicFlagsWOD.None), 1);
+
+                    if (data.VehicleIds.ContainsKey(npc.Movement.VehicleId))
+                        data.VehicleIds[npc.Movement.VehicleId]++;
+                    else
+                        data.VehicleIds.Add(npc.Movement.VehicleId, 1);
+
+                    if (data.HoverHeights.ContainsKey(npc.UnitData.HoverHeight))
+                        data.HoverHeights[npc.UnitData.HoverHeight]++;
+                    else
+                        data.HoverHeights.Add(npc.UnitData.HoverHeight, 1);
+                }
+            }
+
+            foreach (var npc in creatureExportData)
+            {
+                if (Storage.CreatureTemplatesNonWDB.Any(creature => creature.Item1.Entry == npc.Key))
                     continue;
 
-                var npc = unit.Value;
+                uint mostCommonFaction = 0;
+                uint mostCommonFactionCount = 0;
+                foreach (var factionPair in npc.Value.Factions)
+                {
+                    if (factionPair.Value > mostCommonFactionCount)
+                    {
+                        mostCommonFaction = factionPair.Key;
+                        mostCommonFactionCount = factionPair.Value;
+                    }
+                }
+
+                uint mostCommonNpcFlag1 = 0;
+                uint mostCommonNpcFlag1Count = 0;
+                foreach (var npcFlag1Pair in npc.Value.NpcFlags1)
+                {
+                    if (npcFlag1Pair.Value > mostCommonNpcFlag1Count)
+                    {
+                        mostCommonNpcFlag1 = npcFlag1Pair.Key;
+                        mostCommonNpcFlag1Count = npcFlag1Pair.Value;
+                    }
+                }
+
+                uint mostCommonNpcFlag2 = 0;
+                uint mostCommonNpcFlag2Count = 0;
+                foreach (var npcFlag2Pair in npc.Value.NpcFlags2)
+                {
+                    if (npcFlag2Pair.Value > mostCommonNpcFlag2Count)
+                    {
+                        mostCommonNpcFlag2 = npcFlag2Pair.Key;
+                        mostCommonNpcFlag2Count = npcFlag2Pair.Value;
+                    }
+                }
+
+                float mostCommonRunSpeed = 0;
+                uint mostCommonRunSpeedCount = 0;
+                foreach (var runSpeedPair in npc.Value.RunSpeeds)
+                {
+                    if (runSpeedPair.Value > mostCommonRunSpeedCount)
+                    {
+                        mostCommonRunSpeed = runSpeedPair.Key;
+                        mostCommonRunSpeedCount = runSpeedPair.Value;
+                    }
+                }
+
+                float mostCommonWalkSpeed = 0;
+                uint mostCommonWalkSpeedCount = 0;
+                foreach (var walkSpeedPair in npc.Value.WalkSpeeds)
+                {
+                    if (walkSpeedPair.Value > mostCommonWalkSpeedCount)
+                    {
+                        mostCommonWalkSpeed = walkSpeedPair.Key;
+                        mostCommonWalkSpeedCount = walkSpeedPair.Value;
+                    }
+                }
+
+                float mostCommonScaleSize = 0;
+                uint mostCommonScaleSizeCount = 0;
+                foreach (var scaleSizePair in npc.Value.Sizes)
+                {
+                    if (scaleSizePair.Value > mostCommonScaleSizeCount)
+                    {
+                        mostCommonScaleSize = scaleSizePair.Key;
+                        mostCommonScaleSizeCount = scaleSizePair.Value;
+                    }
+                }
+
+                uint mostCommonBaseAttackTime = 0;
+                uint mostCommonBaseAttackTimeCount = 0;
+                foreach (var baseAttackTimePair in npc.Value.BaseAttackTimes)
+                {
+                    if (baseAttackTimePair.Value > mostCommonBaseAttackTimeCount)
+                    {
+                        mostCommonBaseAttackTime = baseAttackTimePair.Key;
+                        mostCommonBaseAttackTimeCount = baseAttackTimePair.Value;
+                    }
+                }
+
+                uint mostCommonRangedAttackTime = 0;
+                uint mostCommonRangedAttackTimeCount = 0;
+                foreach (var rangedAttackTimePair in npc.Value.RangedAttackTimes)
+                {
+                    if (rangedAttackTimePair.Value > mostCommonRangedAttackTimeCount)
+                    {
+                        mostCommonRangedAttackTime = rangedAttackTimePair.Key;
+                        mostCommonRangedAttackTimeCount = rangedAttackTimePair.Value;
+                    }
+                }
+
+                uint mostCommonClassId = 0;
+                uint mostCommonClassIdCount = 0;
+                foreach (var classIdPair in npc.Value.UnitClasses)
+                {
+                    if (classIdPair.Value > mostCommonClassIdCount)
+                    {
+                        mostCommonClassId = classIdPair.Key;
+                        mostCommonClassIdCount = classIdPair.Value;
+                    }
+                }
+
+                UnitFlags mostCommonUnitFlag1 = 0;
+                uint mostCommonUnitFlag1Count = 0;
+                foreach (var unitFlagPair in npc.Value.UnitFlags1)
+                {
+                    if (unitFlagPair.Value > mostCommonUnitFlag1Count)
+                    {
+                        mostCommonUnitFlag1 = unitFlagPair.Key;
+                        mostCommonUnitFlag1Count = unitFlagPair.Value;
+                    }
+                }
+
+                UnitFlags2 mostCommonUnitFlag2 = 0;
+                uint mostCommonUnitFlag2Count = 0;
+                foreach (var unitFlagPair in npc.Value.UnitFlags2)
+                {
+                    if (unitFlagPair.Value > mostCommonUnitFlag2Count)
+                    {
+                        mostCommonUnitFlag2 = unitFlagPair.Key;
+                        mostCommonUnitFlag2Count = unitFlagPair.Value;
+                    }
+                }
+
+                UnitFlags3 mostCommonUnitFlag3 = 0;
+                uint mostCommonUnitFlag3Count = 0;
+                foreach (var unitFlagPair in npc.Value.UnitFlags3)
+                {
+                    if (unitFlagPair.Value > mostCommonUnitFlag3Count)
+                    {
+                        mostCommonUnitFlag3 = unitFlagPair.Key;
+                        mostCommonUnitFlag3Count = unitFlagPair.Value;
+                    }
+                }
+
+                UnitDynamicFlags mostCommonDynamicFlag = 0;
+                uint mostCommonDynamicFlagCount = 0;
+                foreach (var unitFlagPair in npc.Value.DynamicFlags)
+                {
+                    if (unitFlagPair.Value > mostCommonDynamicFlagCount)
+                    {
+                        mostCommonDynamicFlag = unitFlagPair.Key;
+                        mostCommonDynamicFlagCount = unitFlagPair.Value;
+                    }
+                }
+
+                UnitDynamicFlagsWOD mostCommonDynamicFlagWod = 0;
+                uint mostCommonDynamicFlagWodCount = 0;
+                foreach (var dynamicFlagPair in npc.Value.DynamicFlagsWod)
+                {
+                    if (dynamicFlagPair.Value > mostCommonDynamicFlagWodCount)
+                    {
+                        mostCommonDynamicFlagWod = dynamicFlagPair.Key;
+                        mostCommonDynamicFlagWodCount = dynamicFlagPair.Value;
+                    }
+                }
+
+                uint mostCommonVehicleId = 0;
+                uint mostCommonVehicleIdCount = 0;
+                foreach (var vehicleIdPair in npc.Value.VehicleIds)
+                {
+                    if (vehicleIdPair.Value > mostCommonVehicleIdCount)
+                    {
+                        mostCommonVehicleId = vehicleIdPair.Key;
+                        mostCommonVehicleIdCount = vehicleIdPair.Value;
+                    }
+                }
+
+                float mostCommonHoverHeight = 0;
+                uint mostCommonHoverHeightCount = 0;
+                foreach (var hoverHeightPair in npc.Value.HoverHeights)
+                {
+                    if (hoverHeightPair.Value > mostCommonHoverHeightCount)
+                    {
+                        mostCommonHoverHeight = hoverHeightPair.Key;
+                        mostCommonHoverHeightCount = hoverHeightPair.Value;
+                    }
+                }
 
                 var template = new CreatureTemplateNonWDB
                 {
-                    Entry = unit.Key.GetEntry(),
-                    GossipMenuId = npc.GossipId,
-                    MinLevel = (int)levels[unit.Key.GetEntry()].Item1,
-                    MaxLevel = (int)levels[unit.Key.GetEntry()].Item2,
-                    Faction = (uint)npc.UnitData.FactionTemplate,
-                    NpcFlag = (NPCFlags)Utilities.MAKE_PAIR64(npc.UnitData.NpcFlags[0], npc.UnitData.NpcFlags[1]),
-                    SpeedRun = npc.Movement.RunSpeed,
-                    SpeedWalk = npc.Movement.WalkSpeed,
-                    BaseAttackTime = npc.UnitData.AttackRoundBaseTime[0],
-                    RangedAttackTime = npc.UnitData.RangedAttackRoundBaseTime,
-                    UnitClass = npc.UnitData.ClassId,
-                    UnitFlags = (UnitFlags)npc.UnitData.Flags,
-                    UnitFlags2 = (UnitFlags2)npc.UnitData.Flags2,
-                    UnitFlags3 = (UnitFlags3)npc.UnitData.Flags3,
-                    DynamicFlags = npc.DynamicFlags.GetValueOrDefault(UnitDynamicFlags.None),
-                    DynamicFlagsWod = npc.DynamicFlagsWod.GetValueOrDefault(UnitDynamicFlagsWOD.None),
-                    VehicleID = npc.Movement.VehicleId,
-                    HoverHeight = npc.UnitData.HoverHeight
+                    Entry = npc.Value.Entry,
+                    GossipMenuId = Storage.CreatureDefaultGossips.ContainsKey(npc.Value.Entry) ? Storage.CreatureDefaultGossips[npc.Value.Entry] : 0,
+                    MinLevel = (int)levels[npc.Value.Entry].Item1,
+                    MaxLevel = (int)levels[npc.Value.Entry].Item2,
+                    Faction = mostCommonFaction,
+                    NpcFlag = (NPCFlags)Utilities.MAKE_PAIR64(mostCommonNpcFlag1, mostCommonNpcFlag2),
+                    SpeedRun = mostCommonRunSpeed,
+                    SpeedWalk = mostCommonWalkSpeed,
+                    Scale = mostCommonScaleSize,
+                    BaseAttackTime = mostCommonBaseAttackTime,
+                    RangedAttackTime = mostCommonRangedAttackTime,
+                    UnitClass = mostCommonClassId,
+                    UnitFlags = mostCommonUnitFlag1,
+                    UnitFlags2 = mostCommonUnitFlag2,
+                    UnitFlags3 = mostCommonUnitFlag3,
+                    DynamicFlags = mostCommonDynamicFlag,
+                    DynamicFlagsWod = mostCommonDynamicFlagWod,
+                    VehicleID = mostCommonVehicleId,
+                    HoverHeight = mostCommonHoverHeight
                 };
 
                 if (Settings.UseDBC)
                 {
-                    var creatureDiff = DBC.DBC.CreatureDifficulty.Where(diff => diff.Value.CreatureID == unit.Key.GetEntry());
+                    var creatureDiff = DBC.DBC.CreatureDifficulty.Where(diff => diff.Value.CreatureID == npc.Value.Entry);
                     if (creatureDiff.Any())
                     {
                         template.MinLevel = creatureDiff.Select(lv => lv.Value.MinLevel).First();
                         template.MaxLevel = creatureDiff.Select(lv => lv.Value.MaxLevel).First();
-                        template.Faction  = creatureDiff.Select(lv => lv.Value.FactionTemplateID).First();
+                        template.Faction = creatureDiff.Select(lv => lv.Value.FactionTemplateID).First();
                     }
                 }
 
@@ -575,15 +891,15 @@ namespace WowPacketParser.SQL.Builders
                     ((template.NpcFlag & NPCFlags.ProfessionTrainer) == 0 ||
                      (template.NpcFlag & NPCFlags.ClassTrainer) == 0))
                 {
-                    var subname = GetSubName((int)unit.Key.GetEntry(), false); // Fall back
-                    var entry = Storage.CreatureTemplates.Where(creature => creature.Item1.Entry == unit.Key.GetEntry());
+                    var subname = GetSubName((int)npc.Value.Entry, false); // Fall back
+                    var entry = Storage.CreatureTemplates.Where(creature => creature.Item1.Entry == npc.Value.Entry);
                     if (entry.Any())
                     {
                         var sub = entry.Select(creature => creature.Item1.SubName).First();
                         if (sub.Length > 0)
                         {
                             template.NpcFlag |= ProcessNpcFlags(sub);
-                            Trace.WriteLine($"Entry: { unit.Key.GetEntry() } NpcFlag: { template.NpcFlag }");
+                            Trace.WriteLine($"Entry: { npc.Value.Entry } NpcFlag: { template.NpcFlag }");
                         }
                         else // If the SubName doesn't exist or is cached, fall back to DB method
                             template.NpcFlag |= ProcessNpcFlags(subname);

@@ -62,8 +62,31 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 ReadGossipQuestTextData(packet, i, "GossipQuestText");
 
             if (guid.GetObjectType() == ObjectType.Unit)
-                if (Storage.Objects.ContainsKey(guid))
-                    ((Unit)Storage.Objects[guid].Item1).GossipId = (uint)menuId;
+            {
+                if (!Storage.CreatureDefaultGossips.ContainsKey(guid.GetEntry()))
+                    Storage.CreatureDefaultGossips.Add(guid.GetEntry(), (uint)menuId);
+
+                bool addPair = true;
+                foreach (var gossip_pair in Storage.CreatureGossips)
+                {
+                    if (gossip_pair.Item1.CreatureId == gossip.ObjectEntry &&
+                        gossip_pair.Item1.GossipMenuId == menuId)
+                    {
+                        addPair = false;
+                        break;
+                    }
+                }
+
+                if (addPair)
+                {
+                    CreatureGossip newGossip = new CreatureGossip
+                    {
+                        CreatureId = gossip.ObjectEntry,
+                        GossipMenuId = (uint)menuId,
+                    };
+                    Storage.CreatureGossips.Add(newGossip, packet.TimeSpan);
+                }
+            }
 
             Storage.Gossips.Add(gossip, packet.TimeSpan);
             var lastGossipOption = CoreParsers.NpcHandler.LastGossipOption;

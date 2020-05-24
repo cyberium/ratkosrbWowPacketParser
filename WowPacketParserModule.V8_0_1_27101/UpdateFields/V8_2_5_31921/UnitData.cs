@@ -32,8 +32,11 @@ namespace WowPacketParserModule.V8_0_1_27101.UpdateFields.V8_2_5_31921
         public byte DisplayPower { get; set; }
         public uint OverrideDisplayPowerID { get; set; }
         public long Health { get; set; }
+        public long CurHealth => Health;
         public int[] Power { get; } = new int[6];
         public int[] MaxPower { get; } = new int[6];
+        public int CurMana => Power[0];
+        public int MaxMana => MaxPower[0];
         public float[] PowerRegenFlatModifier { get; } = new float[6];
         public float[] PowerRegenInterruptedFlatModifier { get; } = new float[6];
         public long MaxHealth { get; set; }

@@ -45,6 +45,7 @@ namespace WowPacketParser.SQL.Builders
             uint count = 0;
             var rows = new RowList<Creature>();
             var addonRows = new RowList<CreatureAddon>();
+            var movementRows = new RowList<CreatureMovement>();
             foreach (var unit in units)
             {
                 Row<Creature> row = new Row<Creature>();
@@ -65,7 +66,7 @@ namespace WowPacketParser.SQL.Builders
                     continue;   // broken entry, nothing to spawn
 
                 uint movementType = 0;
-                int spawnDist = 0;
+                uint spawnDist = 0;
                 row.Data.AreaID = 0;
                 row.Data.ZoneID = 0;
 
@@ -131,19 +132,30 @@ namespace WowPacketParser.SQL.Builders
                     row.Data.Orientation = creature.Movement.TransportOffset.O;
                 }
 
-                row.Data.SpawnTimeSecs = creature.GetDefaultSpawnTime(creature.DifficultyID);
-                row.Data.SpawnDist = spawnDist;
+                //row.Data.SpawnTimeSecs = creature.GetDefaultSpawnTime(creature.DifficultyID);
+                row.Data.WanderDistance = spawnDist;
                 row.Data.MovementType = movementType;
 
                 // set some defaults
                 row.Data.PhaseGroup = 0;
-                row.Data.ModelID = 0;
-                row.Data.CurrentWaypoint = 0;
-                row.Data.CurHealth = 0;
-                row.Data.CurMana = 0;
-                row.Data.NpcFlag = 0;
-                row.Data.UnitFlag = 0;
-                row.Data.DynamicFlag = 0;
+                row.Data.CreatedBy = creature.UnitData.CreatedBy.GetEntry();
+                row.Data.SummonedBy = creature.UnitData.SummonedBy.GetEntry();
+                row.Data.SummonSpell = (uint)creature.UnitData.CreatedBySpell;
+                row.Data.DisplayID = (uint)creature.UnitData.DisplayID;
+                row.Data.FactionTemplate = (uint)creature.UnitData.FactionTemplate;
+                row.Data.Level = (uint)creature.UnitData.Level;
+                row.Data.CurHealth = (uint)creature.UnitData.CurHealth;
+                row.Data.CurMana = (uint)creature.UnitData.CurMana;
+                row.Data.MaxHealth = (uint)creature.UnitData.MaxHealth;
+                row.Data.MaxMana = (uint)creature.UnitData.MaxMana;
+                row.Data.SpeedWalk = creature.Movement.WalkSpeed;
+                row.Data.SpeedRun = creature.Movement.RunSpeed;
+                row.Data.Scale = creature.ObjectData.Scale;
+                row.Data.BaseAttackTime = creature.UnitData.AttackRoundBaseTime[0];
+                row.Data.RangedAttackTime = creature.UnitData.RangedAttackRoundBaseTime;
+                row.Data.NpcFlag = (uint)creature.UnitData.NpcFlags[0]; 
+                row.Data.UnitFlag = (uint)creature.UnitData.Flags;
+                row.Data.DynamicFlag = (uint)creature.DynamicFlags.GetValueOrDefault(UnitDynamicFlags.None);
 
                 row.Comment = StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
                 row.Comment += " (Area: " + StoreGetters.GetName(StoreNameType.Area, creature.Area, false) + " - ";
@@ -180,7 +192,7 @@ namespace WowPacketParser.SQL.Builders
                     addonRow.Data.Mount = (uint)creature.UnitData.MountDisplayID;
                     addonRow.Data.Bytes1 = creature.Bytes1;
                     addonRow.Data.Bytes2 = creature.Bytes2;
-                    addonRow.Data.Emote = 0;
+                    addonRow.Data.Emote = (uint)creature.UnitData.EmoteState;
                     addonRow.Data.Auras = auras;
                     addonRow.Data.AIAnimKit = creature.AIAnimKit.GetValueOrDefault(0);
                     addonRow.Data.MovementAnimKit = creature.MovementAnimKit.GetValueOrDefault(0);
@@ -191,7 +203,43 @@ namespace WowPacketParser.SQL.Builders
                     addonRows.Add(addonRow);
                 }
 
-                if (creature.IsTemporarySpawn())
+                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_movement) &&
+                    creature.Waypoints != null &&
+                    creature.Movement.Position != null)
+                {
+                    try
+                    {
+                        float maxDistanceFromSpawn = 0;
+                        foreach (CreatureMovement waypoint in creature.Waypoints)
+                        {
+                            if (waypoint == null)
+                                break;
+
+                            // Get max wander distance
+                            float distanceFromSpawn = CreatureMovement.GetDistance3D(creature.Movement.Position.X, creature.Movement.Position.Y, creature.Movement.Position.Z, waypoint.PositionX, waypoint.PositionY, waypoint.PositionZ);
+                            if (distanceFromSpawn > maxDistanceFromSpawn)
+                                maxDistanceFromSpawn = distanceFromSpawn;
+
+                            var movementRow = new Row<CreatureMovement>();
+                            movementRow.Data = waypoint;
+                            movementRow.Data.GUID = "@CGUID+" + count;
+                            movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false); ;
+                            movementRows.Add(movementRow);
+                        }
+                        row.Data.WanderDistance = maxDistanceFromSpawn;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("{0} Exception caught while parsing waypoints.", e);
+                        Console.WriteLine(WowPacketParser.Program.currentSniffFile);
+                    }
+                }
+
+                // Likely to be waypoints if distance is big
+                if (row.Data.WanderDistance > 20)
+                    row.Data.MovementType = 2;
+
+                if (creature.IsTemporarySpawn() && !Settings.SaveTempSpawns)
                 {
                     row.CommentOut = true;
                     row.Comment += " - !!! might be temporary spawn !!!";
@@ -236,6 +284,14 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(addonDelete.Build());
                 var addonSql = new SQLInsert<CreatureAddon>(addonRows, false);
                 result.Append(addonSql.Build());
+            }
+
+            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_movement))
+            {
+                var movementDelete = new SQLDelete<CreatureMovement>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
+                result.Append(movementDelete.Build());
+                var movementSql = new SQLInsert<CreatureMovement>(movementRows, false);
+                result.Append(movementSql.Build());
             }
 
             return result.ToString();
@@ -360,7 +416,8 @@ namespace WowPacketParser.SQL.Builders
                         addonRows.Add(addonRow);
                 }
 
-                row.Data.SpawnTimeSecs = go.GetDefaultSpawnTime(go.DifficultyID);
+                row.Data.CreatedBy = go.GameObjectData.CreatedBy.GetEntry();
+                //row.Data.SpawnTimeSecs = go.GetDefaultSpawnTime(go.DifficultyID);
                 row.Data.AnimProgress = go.GameObjectData.PercentHealth;
                 row.Data.State = (uint)go.GameObjectData.State;
 
@@ -371,7 +428,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Comment += " (Area: " + StoreGetters.GetName(StoreNameType.Area, go.Area, false) + " - ";
                 row.Comment += "Difficulty: " + StoreGetters.GetName(StoreNameType.Difficulty, (int)go.DifficultyID, false) + ")";
 
-                if (go.IsTemporarySpawn())
+                if (go.IsTemporarySpawn() && !Settings.SaveTempSpawns)
                 {
                     row.CommentOut = true;
                     row.Comment += " - !!! might be temporary spawn !!!";

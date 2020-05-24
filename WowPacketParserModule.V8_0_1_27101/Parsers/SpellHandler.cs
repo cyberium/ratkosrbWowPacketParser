@@ -11,7 +11,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
 {
     public static class SpellHandler
     {
-        public static void ReadSpellTargetData(Packet packet, uint spellID, params object[] idx)
+        public static void ReadSpellTargetData(SpellCastData dbdata, Packet packet, uint spellID, params object[] idx)
         {
             packet.ResetBitReader();
 
@@ -26,7 +26,9 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             var hasMapID = packet.ReadBit("hasMapID ", idx);
             var nameLength = packet.ReadBits(7);
 
-            packet.ReadPackedGuid128("Unit", idx);
+            WowGuid unitGuid = packet.ReadPackedGuid128("Unit", idx);
+            dbdata.MainTargetID = unitGuid.GetEntry();
+            dbdata.MainTargetType = unitGuid.GetObjectType().ToString();
             packet.ReadPackedGuid128("Item", idx);
 
             if (hasSrcLoc)
@@ -109,19 +111,28 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             ReadTalentInfoUpdate(packet, "Info");
         }
 
-        public static void ReadSpellCastData(Packet packet, params object[] idx)
+        public static void ReadSpellCastData(SpellCastData dbdata, Packet packet, params object[] idx)
         {
-            packet.ReadPackedGuid128("CasterGUID", idx);
+            WowGuid casterGuid = packet.ReadPackedGuid128("CasterGUID", idx);
+            dbdata.CasterID = casterGuid.GetEntry();
+            if (casterGuid.GetHighType() == HighGuidType.Pet)
+                dbdata.CasterType = "Pet";
+            else
+                dbdata.CasterType = casterGuid.GetObjectType().ToString();
+
             packet.ReadPackedGuid128("CasterUnit", idx);
 
             packet.ReadPackedGuid128("CastID", idx);
             packet.ReadPackedGuid128("OriginalCastID", idx);
 
             var spellID = packet.ReadUInt32<SpellId>("SpellID", idx);
+            dbdata.SpellID = spellID;
             packet.ReadUInt32("SpellXSpellVisualID", idx);
 
-            packet.ReadUInt32("CastFlags", idx);
-            packet.ReadUInt32("CastFlagsEx", idx);
+            uint castFlags = packet.ReadUInt32("CastFlags", idx);
+            dbdata.CastFlags = castFlags;
+            uint castFlagsEx = packet.ReadUInt32("CastFlagsEx", idx);
+            dbdata.CastFlagsEx = castFlagsEx;
             packet.ReadUInt32("CastTime", idx);
 
             V6_0_2_19033.Parsers.SpellHandler.ReadMissileTrajectoryResult(packet, idx, "MissileTrajectory");
@@ -137,6 +148,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             packet.ResetBitReader();
 
             var hitTargetsCount = packet.ReadBits("HitTargetsCount", 16, idx);
+            dbdata.HitTargetsCount = hitTargetsCount;
             var missTargetsCount = packet.ReadBits("MissTargetsCount", 16, idx);
             uint hitStatusCount = 0;
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_1_0_28724))
@@ -150,10 +162,30 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             for (var i = 0; i < missStatusCount; ++i)
                 V6_0_2_19033.Parsers.SpellHandler.ReadSpellMissStatus(packet, idx, "MissStatus", i);
 
-            ReadSpellTargetData(packet, spellID, idx, "Target");
+            ReadSpellTargetData(dbdata, packet, spellID, idx, "Target");
 
             for (var i = 0; i < hitTargetsCount; ++i)
-                packet.ReadPackedGuid128("HitTarget", idx, i);
+            {
+                WowGuid hitTarget = packet.ReadPackedGuid128("HitTarget", idx, i);
+                for (uint j = 0; j < SpellCastData.MAX_SPELL_HIT_TARGETS_DB; j++)
+                {
+                    if (hitTarget.GetObjectType() == ObjectType.Player &&
+                        dbdata.HitTargetType[j].Contains("Player"))
+                        break;
+
+                    if (dbdata.HitTargetID[j] == hitTarget.GetEntry() &&
+                        dbdata.HitTargetType[j] == hitTarget.GetObjectType().ToString())
+                        break;
+
+                    if (dbdata.HitTargetID[j] == 0 &&
+                        dbdata.HitTargetType[j] == "")
+                    {
+                        dbdata.HitTargetID[j] = hitTarget.GetEntry();
+                        dbdata.HitTargetType[j] = hitTarget.GetObjectType().ToString();
+                        break;
+                    }
+                }
+            }
 
             for (var i = 0; i < missTargetsCount; ++i)
                 packet.ReadPackedGuid128("MissTarget", idx, i);
@@ -191,23 +223,28 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 packet.ReadInt32("Cost", idx, i);
             }
         }
-
+        
         [Parser(Opcode.SMSG_SPELL_START)]
         public static void HandleSpellStart(Packet packet)
         {
-            ReadSpellCastData(packet, "Cast");
+            SpellCastData castData = new SpellCastData();
+            ReadSpellCastData(castData, packet, "Cast");
+            Storage.AddSpellCastDataIfShould(castData, Storage.SpellCastStart, packet);
         }
 
         [Parser(Opcode.SMSG_SPELL_GO)]
         public static void HandleSpellGo(Packet packet)
         {
-            ReadSpellCastData(packet, "Cast");
+            SpellCastData castData = new SpellCastData();
+            ReadSpellCastData(castData, packet, "Cast");
 
             packet.ResetBitReader();
 
             var hasLogData = packet.ReadBit();
             if (hasLogData)
                 ReadSpellCastLogData(packet, "LogData");
+
+            Storage.AddSpellCastDataIfShould(castData, Storage.SpellCastGo, packet);
         }
 
         public static void ReadContentTuningParams(Packet packet, params object[] idx)

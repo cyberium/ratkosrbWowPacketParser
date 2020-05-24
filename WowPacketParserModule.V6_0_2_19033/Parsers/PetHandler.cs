@@ -1,6 +1,8 @@
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParserModule.V6_0_2_19033.Parsers
 {
@@ -36,7 +38,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadWoWString("Pet name", len);
         }
 
-        public static void ReadPetAction(Packet packet, params object[] indexes)
+        public static uint ReadPetAction(Packet packet, params object[] indexes)
         {
             var action = packet.ReadUInt32();
             var spellID = action & 0xFFFFFF;
@@ -44,6 +46,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
 
             packet.AddValue("Action", slot, indexes);
             packet.AddValue("SpellID", StoreGetters.GetName(StoreNameType.Spell, (int)spellID), indexes);
+            return spellID;
         }
 
         public static void ReadPetFlags(Packet packet, params object[] indexes)
@@ -76,15 +79,19 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_PET_SPELLS_MESSAGE)]
         public static void HandlePetSpells(Packet packet)
         {
-            packet.ReadPackedGuid128("PetGUID");
+            WowGuid petGuid = packet.ReadPackedGuid128("PetGUID");
             packet.ReadInt16<CreatureFamilyId>("CreatureFamily");
             packet.ReadInt16("Specialization");
             packet.ReadInt32("TimeLimit");
             ReadPetFlags(packet, "PetModeAndOrders");
 
+            SpellPetActions petActions = new SpellPetActions();
+            petActions.CasterID = petGuid.GetEntry();
             const int maxCreatureSpells = 10;
             for (var i = 0; i < maxCreatureSpells; i++) // Read pet / vehicle spell ids
-                ReadPetAction(packet, "ActionButtons", i);
+                petActions.SpellID[i] = ReadPetAction(packet, "ActionButtons", i);
+            if (petGuid.GetHighType() == HighGuidType.Creature)
+                Storage.SpellPetActions.Add(petActions);
 
             var actionsCount = packet.ReadInt32("ActionsCount");
             var cooldownsCount = packet.ReadUInt32("CooldownsCount");

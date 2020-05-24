@@ -7,7 +7,7 @@ namespace WowPacketParser.DBC.Structures.Legion
     {
         public uint ID;
         public float CreatureModelScale;
-        public short ModelID;
+        public short DisplayID;
         public short NPCSoundID;
         public byte SizeClass;
         public byte Flags;

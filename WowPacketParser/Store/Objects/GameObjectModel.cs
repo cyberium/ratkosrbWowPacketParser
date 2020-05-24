@@ -16,25 +16,25 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("map")]
         public uint? Map;
 
-        [DBFieldName("zoneId")]
+        [DBFieldName("zone_id")]
         public uint? ZoneID;
 
-        [DBFieldName("areaId")]
+        [DBFieldName("area_id")]
         public uint? AreaID;
 
-        [DBFieldName("spawnMask", TargetedDatabase.Zero, TargetedDatabase.Legion)]
+        [DBFieldName("spawn_mask", TargetedDatabase.Zero, TargetedDatabase.Legion)]
         public uint? SpawnMask;
 
-        [DBFieldName("spawnDifficulties", TargetedDatabase.Legion)]
+        [DBFieldName("spawn_difficulties", TargetedDatabase.Legion)]
         public string spawnDifficulties;
 
-        [DBFieldName("phaseMask", TargetedDatabase.Zero, TargetedDatabase.Cataclysm)]
+        [DBFieldName("phase_mask", TargetedDatabase.Zero, TargetedDatabase.Cataclysm)]
         public uint? PhaseMask;
 
-        [DBFieldName("PhaseId", TargetedDatabase.Cataclysm)]
+        [DBFieldName("phase_id", TargetedDatabase.Cataclysm)]
         public string PhaseID;
 
-        [DBFieldName("PhaseGroup")]
+        [DBFieldName("phase_group")]
         public uint? PhaseGroup;
 
         [DBFieldName("position_x")]
@@ -52,8 +52,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("rotation", 4, true)]
         public float?[] Rotation;
 
-        [DBFieldName("spawntimesecs")]
-        public int? SpawnTimeSecs;
+        [DBFieldName("creator")]
+        public uint? CreatedBy;
 
         [DBFieldName("animprogress")]
         public uint? AnimProgress;

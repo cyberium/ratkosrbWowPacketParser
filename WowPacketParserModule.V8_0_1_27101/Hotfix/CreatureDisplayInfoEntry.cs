@@ -7,7 +7,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Hotfix
     public class CreatureDisplayInfoEntry
     {
         public uint ID { get; set; }
-        public ushort ModelID { get; set; }
+        public ushort DisplayID { get; set; }
         public ushort SoundID { get; set; }
         public sbyte SizeClass { get; set; }
         public float CreatureModelScale { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Store.Objects;
+using System.Linq;
 
 namespace WowPacketParser.Store
 {
@@ -32,8 +33,8 @@ namespace WowPacketParser.Store
         public static readonly DataBag<QuestTemplate> QuestTemplates = new DataBag<QuestTemplate>(new List<SQLOutput> { SQLOutput.quest_template });
         public static readonly DataBag<QuestObjective> QuestObjectives = new DataBag<QuestObjective>(new List<SQLOutput> { SQLOutput.quest_template });
         public static readonly DataBag<QuestVisualEffect> QuestVisualEffects = new DataBag<QuestVisualEffect>(new List<SQLOutput> { SQLOutput.quest_template });
-        public static readonly DataBag<CreatureTemplate> CreatureTemplates = new DataBag<CreatureTemplate>(new List<SQLOutput> { SQLOutput.creature_template });
-        public static readonly DataBag<CreatureTemplateClassic> CreatureTemplatesClassic = new DataBag<CreatureTemplateClassic>(new List<SQLOutput> { SQLOutput.creature_template });
+        public static readonly DataBag<CreatureTemplate> CreatureTemplates = new DataBag<CreatureTemplate>(new List<SQLOutput> { SQLOutput.creature_template_wdb });
+        public static readonly DataBag<CreatureTemplateClassic> CreatureTemplatesClassic = new DataBag<CreatureTemplateClassic>(new List<SQLOutput> { SQLOutput.creature_template_wdb });
         public static readonly DataBag<CreatureTemplateNonWDB> CreatureTemplatesNonWDB = new DataBag<CreatureTemplateNonWDB>(new List<SQLOutput> { SQLOutput.creature_template });
         public static readonly DataBag<CreatureTemplateQuestItem> CreatureTemplateQuestItems = new DataBag<CreatureTemplateQuestItem>(new List<SQLOutput> { SQLOutput.creature_template });
         public static readonly DataBag<CreatureTemplateScaling> CreatureTemplateScalings = new DataBag<CreatureTemplateScaling>(new List<SQLOutput> { SQLOutput.creature_template_scaling });
@@ -71,6 +72,8 @@ namespace WowPacketParser.Store
         public static readonly DataBag<PlayerCreateInfo> StartPositions = new DataBag<PlayerCreateInfo>(new List<SQLOutput> { SQLOutput.playercreateinfo });
 
         // Gossips (MenuId, TextId)
+        public static readonly Dictionary<uint, uint> CreatureDefaultGossips = new Dictionary<uint, uint>();
+        public static readonly DataBag<CreatureGossip> CreatureGossips = new DataBag<CreatureGossip>(new List<SQLOutput> { SQLOutput.creature_gossip });
         public static readonly DataBag<GossipMenu> Gossips = new DataBag<GossipMenu>(new List<SQLOutput> { SQLOutput.gossip_menu });
         public static readonly DataBag<GossipMenuOption> GossipMenuOptions = new DataBag<GossipMenuOption>(new List<SQLOutput> { SQLOutput.gossip_menu_option });
         public static readonly DataBag<GossipMenuOptionAction> GossipMenuOptionActions = new DataBag<GossipMenuOptionAction>(new List<SQLOutput> { SQLOutput.gossip_menu_option });
@@ -108,7 +111,49 @@ namespace WowPacketParser.Store
         public static readonly DataBag<QuestRequestItemsLocale> LocalesQuestRequestItems = new DataBag<QuestRequestItemsLocale>(new List<SQLOutput> { SQLOutput.locales_quest });
         public static readonly DataBag<PageTextLocale> LocalesPageText = new DataBag<PageTextLocale>(new List<SQLOutput> { SQLOutput.page_text_locale });
 
-        // Spell Target Position
+        // Spell Casts
+        public static readonly DataBag<SpellCastData> SpellCastStart = new DataBag<SpellCastData>(new List<SQLOutput> { SQLOutput.spell_cast_start });
+        public static readonly DataBag<SpellCastData> SpellCastGo = new DataBag<SpellCastData>(new List<SQLOutput> { SQLOutput.spell_cast_go });
+        public static void AddSpellCastDataIfShould(SpellCastData castData, DataBag<SpellCastData> storage, Packet packet)
+        {
+            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.spell_cast_start) &&
+                !Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.spell_cast_go))
+                return;
+
+            if (!castData.CasterType.Contains("Unit") &&
+                !castData.CasterType.Contains("Creature") &&
+                !castData.CasterType.Contains("GameObject"))
+                return;
+
+            if (castData.MainTargetID != 0 &&
+                castData.MainTargetType.Contains("Player"))
+                castData.MainTargetID = 0;
+
+            for (uint i = 0; i < SpellCastData.MAX_SPELL_HIT_TARGETS_DB; i++)
+            {
+                if (castData.HitTargetID[i] != 0 &&
+                    castData.HitTargetType[i].Contains("Player"))
+                    castData.HitTargetID[i] = 0;
+            }
+
+            foreach (var cast_pair in storage)
+            {
+                if (cast_pair.Item1.CasterID == castData.CasterID &&
+                    cast_pair.Item1.CasterType == castData.CasterType &&
+                    cast_pair.Item1.CastFlags == castData.CastFlags &&
+                    cast_pair.Item1.CastFlagsEx == castData.CastFlagsEx &&
+                    cast_pair.Item1.SpellID == castData.SpellID &&
+                    cast_pair.Item1.MainTargetID == castData.MainTargetID &&
+                    cast_pair.Item1.MainTargetType == castData.MainTargetType &&
+                    cast_pair.Item1.HitTargetID.SequenceEqual(castData.HitTargetID) &&
+                    cast_pair.Item1.HitTargetType.SequenceEqual(castData.HitTargetType))
+                    return;
+            }
+
+            storage.Add(castData, packet.TimeSpan);
+        }
+        public static readonly DataBag<SpellPetCooldown> SpellPetCooldown = new DataBag<SpellPetCooldown>(new List<SQLOutput> { SQLOutput.spell_pet_cooldown });
+        public static readonly DataBag<SpellPetActions> SpellPetActions = new DataBag<SpellPetActions>(new List<SQLOutput> { SQLOutput.spell_pet_action });
         public static readonly DataBag<SpellTargetPosition> SpellTargetPositions = new DataBag<SpellTargetPosition>(new List<SQLOutput> { SQLOutput.spell_target_position });
 
         public static readonly DataBag<HotfixData> HotfixDatas = new DataBag<HotfixData>(new List<SQLOutput> { SQLOutput.hotfix_data });
@@ -179,6 +224,7 @@ namespace WowPacketParser.Store
             StartActions.Clear();
             StartPositions.Clear();
 
+            CreatureGossips.Clear();
             Gossips.Clear();
             GossipMenuOptions.Clear();
             GossipMenuOptionActions.Clear();
@@ -201,6 +247,10 @@ namespace WowPacketParser.Store
             NpcSpellClicks.Clear();
             SpellClicks.Clear();
 
+            SpellCastStart.Clear();
+            SpellCastGo.Clear();
+            SpellPetActions.Clear();
+            SpellPetCooldown.Clear();
             SpellTargetPositions.Clear();
 
             LocalesCreatures.Clear();

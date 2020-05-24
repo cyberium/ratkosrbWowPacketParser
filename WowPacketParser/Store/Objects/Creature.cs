@@ -16,32 +16,26 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("map")]
         public uint? Map;
 
-        [DBFieldName("zoneId")]
+        [DBFieldName("zone_id")]
         public uint? ZoneID;
 
-        [DBFieldName("areaId")]
+        [DBFieldName("area_id")]
         public uint? AreaID;
 
-        [DBFieldName("spawnMask", TargetedDatabase.Zero, TargetedDatabase.Legion)]
+        [DBFieldName("spawn_mask", TargetedDatabase.Zero, TargetedDatabase.Legion)]
         public uint? SpawnMask;
 
-        [DBFieldName("spawnDifficulties", TargetedDatabase.Legion)]
+        [DBFieldName("spawn_difficulties", TargetedDatabase.Legion)]
         public string spawnDifficulties;
 
-        [DBFieldName("phaseMask", TargetedDatabase.Zero, TargetedDatabase.Cataclysm)]
+        [DBFieldName("phase_mask", TargetedDatabase.Zero, TargetedDatabase.Cataclysm)]
         public uint? PhaseMask;
 
-        [DBFieldName("PhaseId", TargetedDatabase.Cataclysm)]
+        [DBFieldName("phase_id", TargetedDatabase.Cataclysm)]
         public string PhaseID;
 
-        [DBFieldName("PhaseGroup")]
+        [DBFieldName("phase_group")]
         public int? PhaseGroup;
-
-        [DBFieldName("modelid")]
-        public uint? ModelID;
-
-        [DBFieldName("equipment_id")]
-        public int EquipmentID;
 
         [DBFieldName("position_x")]
         public float? PositionX;
@@ -55,34 +49,123 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("orientation")]
         public float? Orientation;
 
-        [DBFieldName("spawntimesecs")]
-        public int? SpawnTimeSecs;
+        [DBFieldName("wander_distance")]
+        public float? WanderDistance;
 
-        [DBFieldName("spawndist")]
-        public float? SpawnDist;
-
-        [DBFieldName("currentwaypoint")]
-        public uint? CurrentWaypoint;
-
-        [DBFieldName("curhealth")]
-        public uint? CurHealth;
-
-        [DBFieldName("curmana")]
-        public uint? CurMana;
-
-        [DBFieldName("MovementType")]
+        [DBFieldName("movement_type")]
         public uint? MovementType;
 
-        [DBFieldName("npcflag")]
+        [DBFieldName("creator")]
+        public uint? CreatedBy;
+
+        [DBFieldName("summoner")]
+        public uint? SummonedBy;
+
+        [DBFieldName("summon_spell")]
+        public uint? SummonSpell;
+
+        [DBFieldName("display_id")]
+        public uint? DisplayID;
+
+        [DBFieldName("faction")]
+        public uint? FactionTemplate;
+
+        [DBFieldName("level")]
+        public uint? Level;
+
+        [DBFieldName("current_health")]
+        public uint? CurHealth;
+
+        [DBFieldName("max_health")]
+        public uint? MaxHealth;
+
+        [DBFieldName("current_mana")]
+        public uint? CurMana;
+
+        [DBFieldName("max_mana")]
+        public uint? MaxMana;
+
+        [DBFieldName("speed_walk")]
+        public float? SpeedWalk;
+
+        [DBFieldName("speed_run")]
+        public float? SpeedRun;
+
+        [DBFieldName("scale")]
+        public float? Scale;
+
+        [DBFieldName("base_attack_time")]
+        public uint? BaseAttackTime;
+
+        [DBFieldName("ranged_attack_time")]
+        public uint? RangedAttackTime;
+
+        [DBFieldName("npc_flags")]
         public uint? NpcFlag;
 
         [DBFieldName("unit_flags")]
         public uint? UnitFlag;
 
-        [DBFieldName("dynamicflags")]
+        [DBFieldName("dynamic_flags")]
         public uint? DynamicFlag;
 
         [DBFieldName("VerifiedBuild")]
         public int? VerifiedBuild = ClientVersion.BuildInt;
+    }
+
+    [DBTableName("creature_movement")]
+    public sealed class CreatureMovement : IDataModel
+    {
+        [DBFieldName("id", true, true)]
+        public string GUID;
+
+        [DBFieldName("point", true)]
+        public uint Point;
+
+        [DBFieldName("position_x")]
+        public float PositionX;
+
+        [DBFieldName("position_y")]
+        public float PositionY;
+
+        [DBFieldName("position_z")]
+        public float PositionZ;
+
+        [DBFieldName("orientation")]
+        public float? Orientation;
+
+        [DBFieldName("distance")]
+        public float? Distance;
+
+        [DBFieldName("timediff")]
+        public uint? TimeDiff;
+
+        [DBFieldName("unixtime")]
+        public uint? UnixTime;
+
+        public static float GetAngle(float x1, float y1, float x2, float y2)
+        {
+            float dx = x1 - x2;
+            float dy = y1 - y2;
+
+            double ang = System.Math.Atan2(dy, dx);
+            ang = (ang >= 0) ? ang : 2 * System.Math.PI + ang;
+            return (float)ang;
+        }
+
+        public static float GetDistance3D(float x1, float y1, float z1, float x2, float y2, float z2)
+        {
+            float dx = x1 - x2;
+            float dy = y1 - y2;
+            float dz = z1 - z2;
+            float dist = (float)System.Math.Sqrt((dx * dx) + (dy * dy) + (dz * dz));
+            return (dist > 0 ? dist : 0);
+        }
+
+        public static double DateTimeToUnixTimestamp(System.DateTime dateTime)
+        {
+            return (System.TimeZoneInfo.ConvertTimeToUtc(dateTime) -
+                   new System.DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)).TotalSeconds;
+        }
     }
 }
