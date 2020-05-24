@@ -28,6 +28,7 @@ namespace WowPacketParser.Enums.Version
         {
             UpdateFieldDictionary.Clear();
             UpdateFieldNameDictionary.Clear();
+            UpdateFieldsHandlers.Clear();
         }
 
         public static bool LoadUFDictionaries(Assembly asm, ClientVersionBuild build)
@@ -574,8 +575,24 @@ namespace WowPacketParser.Enums.Version
                 case ClientVersionBuild.V8_2_5_32265:
                 case ClientVersionBuild.V8_2_5_32294:
                 case ClientVersionBuild.V8_2_5_32305:
+                case ClientVersionBuild.V8_2_5_32494:
+                case ClientVersionBuild.V8_2_5_32580:
+                case ClientVersionBuild.V8_2_5_32638:
+                case ClientVersionBuild.V8_2_5_32722:
+                case ClientVersionBuild.V8_2_5_32750:
+                case ClientVersionBuild.V8_2_5_32978:
                 {
                     return "V8_2_5_31921";
+                }
+                case ClientVersionBuild.V8_3_0_33062:
+                case ClientVersionBuild.V8_3_0_33073:
+                case ClientVersionBuild.V8_3_0_33084:
+                case ClientVersionBuild.V8_3_0_33095:
+                case ClientVersionBuild.V8_3_0_33115:
+                case ClientVersionBuild.V8_3_0_33169:
+                case ClientVersionBuild.V8_3_0_33237:
+                {
+                    return "V8_3_0_32861";
                 }
                 case ClientVersionBuild.V1_13_2_31446:
                 case ClientVersionBuild.V1_13_2_31650:

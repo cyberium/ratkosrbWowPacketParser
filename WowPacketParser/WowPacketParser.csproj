@@ -385,6 +385,8 @@
     <Compile Include="Enums\TrainerSpellState.cs" />
     <Compile Include="Enums\TrainerType.cs" />
     <Compile Include="Enums\TransferAbortReason.cs" />
+    <Compile Include="Enums\TrophyLockCode.cs" />
+    <Compile Include="Enums\TrophyType.cs" />
     <Compile Include="Enums\Tutorial.cs" />
     <Compile Include="Enums\TutorialAction.cs" />
     <Compile Include="Enums\TwitterResults.cs" />
@@ -469,6 +471,7 @@
     <Compile Include="Enums\Version\V8_1_5_29620\Opcodes.cs" />
     <Compile Include="Enums\Version\V8_2_0_30898\Opcodes.cs" />
     <Compile Include="Enums\Version\V8_2_5_31921\Opcodes.cs" />
+    <Compile Include="Enums\Version\V8_3_0_32861\Opcodes.cs" />
     <Compile Include="Enums\VictimStates.cs" />
     <Compile Include="Enums\VoidTransferError.cs" />
     <Compile Include="Enums\WardenCheckType.cs" />
@@ -616,6 +619,7 @@
     <Compile Include="Store\Objects\CreatureTemplateLocale.cs" />
     <Compile Include="Store\Objects\CreatureTemplateScaling.cs" />
     <Compile Include="Store\Objects\CreatureText.cs" />
+    <Compile Include="Store\Objects\ItemInstance.cs" />
     <Compile Include="Store\Objects\UpdateFields\IQuestSession.cs" />
     <Compile Include="Store\Objects\UpdateFields\IReplayedQuest.cs" />
     <Compile Include="Store\Objects\UpdateFields\ISelectedAzeriteEssences.cs" />
@@ -668,6 +672,8 @@
     <Compile Include="Store\Objects\ScenarioPOIPoints.cs" />
     <Compile Include="Store\Objects\SceneTemplate.cs" />
     <Compile Include="Store\Objects\SniffData.cs" />
+    <Compile Include="Store\Objects\PlayerChoice.cs" />
+    <Compile Include="Store\Objects\PlayerChoiceLocale.cs" />
     <Compile Include="Store\Objects\PlayerCreateInfoAction.cs" />
     <Compile Include="Store\Objects\PlayerCreateInfo.cs" />
     <Compile Include="Store\Objects\SpellTargetPosition.cs" />

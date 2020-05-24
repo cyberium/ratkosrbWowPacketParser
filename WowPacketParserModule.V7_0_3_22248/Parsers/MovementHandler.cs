@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using WowPacketParser.DBC;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
@@ -8,6 +6,7 @@ using WowPacketParser.Parsing;
 using WowPacketParser.Store;
 using WowPacketParser.Store.Objects;
 using WowPacketParserModule.V7_0_3_22248.Enums;
+using CoreParsers = WowPacketParser.Parsing.Parsers;
 using MovementFlag = WowPacketParserModule.V6_0_2_19033.Enums.MovementFlag;
 using SplineFlag = WowPacketParserModule.V7_0_3_22248.Enums.SplineFlag;
 
@@ -15,8 +14,6 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
 {
     public static class MovementHandler
     {
-        public static readonly IDictionary<ushort, bool> ActivePhases = new ConcurrentDictionary<ushort, bool>();
-
         public static void ReadMovementStats(Packet packet, params object[] idx)
         {
             packet.ReadPackedGuid128("MoverGUID", idx);
@@ -553,7 +550,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
         [Parser(Opcode.SMSG_PHASE_SHIFT_CHANGE)]
         public static void HandlePhaseShift(Packet packet)
         {
-            ActivePhases.Clear();
+            CoreParsers.MovementHandler.ActivePhases.Clear();
 
             packet.ReadPackedGuid128("Client");
 
@@ -565,12 +562,12 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             {
                 var flags = packet.ReadUInt16("PhaseFlags", i);
                 var id = packet.ReadUInt16("Id", i);
-                ActivePhases.Add(id, true);
+                CoreParsers.MovementHandler.ActivePhases.Add(id, true);
             }
 
             if (DBC.Phases.Any())
             {
-                foreach (var phaseGroup in DBC.GetPhaseGroups(ActivePhases.Keys))
+                foreach (var phaseGroup in DBC.GetPhaseGroups(CoreParsers.MovementHandler.ActivePhases.Keys))
                     packet.WriteLine($"PhaseGroup: { phaseGroup } Phases: { string.Join(" - ", DBC.Phases[phaseGroup]) }");
             }
 
