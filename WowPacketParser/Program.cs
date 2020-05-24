@@ -14,6 +14,7 @@ namespace WowPacketParser
 {
     public static class Program
     {
+        public static string currentSniffFile = "";
         private static void Main(string[] args)
         {
             SetUpConsole();
@@ -65,6 +66,7 @@ namespace WowPacketParser
                 ClientVersion.SetVersion(Settings.ClientBuild);
                 try
                 {
+                    currentSniffFile = file;
                     var sf = new SniffFile(file, Settings.DumpFormat, Tuple.Create(++count, files.Count));
                     sf.ProcessFile();
                 }

@@ -204,16 +204,16 @@ namespace WowPacketParser.SQL.Builders
                 }
 
                 if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_movement) &&
-                    unit.Value.Waypoints != null &&
+                    creature.Waypoints != null &&
                     creature.Movement.Position != null)
                 {
                     try
                     {
                         float maxDistanceFromSpawn = 0;
-                        foreach (CreatureMovement waypoint in unit.Value.Waypoints)
+                        foreach (CreatureMovement waypoint in creature.Waypoints)
                         {
                             if (waypoint == null)
-                                continue;
+                                break;
 
                             // Get max wander distance
                             float distanceFromSpawn = CreatureMovement.GetDistance3D(creature.Movement.Position.X, creature.Movement.Position.Y, creature.Movement.Position.Z, waypoint.PositionX, waypoint.PositionY, waypoint.PositionZ);
@@ -230,7 +230,8 @@ namespace WowPacketParser.SQL.Builders
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("{0} Exception caught.", e);
+                        Console.WriteLine("{0} Exception caught while parsing waypoints.", e);
+                        Console.WriteLine(WowPacketParser.Program.currentSniffFile);
                     }
                 }
 
