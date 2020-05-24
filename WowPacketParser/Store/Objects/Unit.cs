@@ -14,8 +14,6 @@ namespace WowPacketParser.Store.Objects
 
         public BlockingCollection<List<Aura>> AddedAuras = new BlockingCollection<List<Aura>>();
 
-        public uint GossipId;
-
         public List<CreatureMovement> Waypoints;
 
         public ushort? AIAnimKit;

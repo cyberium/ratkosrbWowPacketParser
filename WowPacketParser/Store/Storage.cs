@@ -72,6 +72,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<PlayerCreateInfo> StartPositions = new DataBag<PlayerCreateInfo>(new List<SQLOutput> { SQLOutput.playercreateinfo });
 
         // Gossips (MenuId, TextId)
+        public static readonly Dictionary<uint, uint> CreatureDefaultGossips = new Dictionary<uint, uint>();
         public static readonly DataBag<CreatureGossip> CreatureGossips = new DataBag<CreatureGossip>(new List<SQLOutput> { SQLOutput.creature_gossip });
         public static readonly DataBag<GossipMenu> Gossips = new DataBag<GossipMenu>(new List<SQLOutput> { SQLOutput.gossip_menu });
         public static readonly DataBag<GossipMenuOption> GossipMenuOptions = new DataBag<GossipMenuOption>(new List<SQLOutput> { SQLOutput.gossip_menu_option });

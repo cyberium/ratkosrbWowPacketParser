@@ -145,9 +145,8 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
 
             if (guid.GetObjectType() == ObjectType.Unit)
             {
-                if (Storage.Objects.ContainsKey(guid))
-                    if (((Unit)Storage.Objects[guid].Item1).GossipId == 0)
-                        ((Unit)Storage.Objects[guid].Item1).GossipId = menuId;
+                if (!Storage.CreatureDefaultGossips.ContainsKey(guid.GetEntry()))
+                    Storage.CreatureDefaultGossips.Add(guid.GetEntry(), menuId);
 
                 bool addPair = true;
                 foreach (var gossip_pair in Storage.CreatureGossips)
