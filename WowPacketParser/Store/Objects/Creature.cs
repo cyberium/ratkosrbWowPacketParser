@@ -55,6 +55,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("movement_type")]
         public uint? MovementType;
 
+        [DBFieldName("temporary_spawn")]
+        public byte? TemporarySpawn;
+
         [DBFieldName("creator")]
         public uint? CreatedBy;
 

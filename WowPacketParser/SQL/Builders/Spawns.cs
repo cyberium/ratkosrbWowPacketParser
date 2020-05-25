@@ -138,6 +138,7 @@ namespace WowPacketParser.SQL.Builders
 
                 // set some defaults
                 row.Data.PhaseGroup = 0;
+                row.Data.TemporarySpawn = 0;
                 row.Data.CreatedBy = creature.UnitData.CreatedBy.GetEntry();
                 row.Data.SummonedBy = creature.UnitData.SummonedBy.GetEntry();
                 row.Data.SummonSpell = (uint)creature.UnitData.CreatedBySpell;
@@ -238,6 +239,9 @@ namespace WowPacketParser.SQL.Builders
                 // Likely to be waypoints if distance is big
                 if (row.Data.WanderDistance > 20)
                     row.Data.MovementType = 2;
+
+                if (creature.IsTemporarySpawn())
+                    row.Data.TemporarySpawn = 1;
 
                 if (creature.IsTemporarySpawn() && !Settings.SaveTempSpawns)
                 {

@@ -152,8 +152,8 @@ namespace WowPacketParser.Parsing.Parsers
             for (int i = 0; i < 4; i++)
                 creature.ModelIDs[i] = packet.ReadUInt32("Model ID", i);
 
-            creature.HealthModifier = packet.ReadSingle("Modifier 1");
-            creature.ManaModifier = packet.ReadSingle("Modifier 2");
+            creature.HealthMultiplier = packet.ReadSingle("Modifier 1");
+            creature.ManaMultiplier = packet.ReadSingle("Modifier 2");
 
             creature.RacialLeader = packet.ReadBool("Racial Leader");
 

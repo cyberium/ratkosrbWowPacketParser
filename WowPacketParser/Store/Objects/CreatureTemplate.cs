@@ -70,11 +70,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("PetSpellDataId", TargetedDatabase.Zero, TargetedDatabase.Cataclysm)]
         public uint? PetSpellDataID;
 
-        [DBFieldName("HealthModifier")]
-        public float? HealthModifier;
+        [DBFieldName("HealthMultiplier")]
+        public float? HealthMultiplier;
 
-        [DBFieldName("ManaModifier")]
-        public float? ManaModifier;
+        [DBFieldName("ManaMultiplier")]
+        public float? ManaMultiplier;
 
         [DBFieldName("RacialLeader")]
         public bool? RacialLeader;
@@ -170,67 +170,67 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("entry", true)]
         public uint? Entry;
 
-        [DBFieldName("KillCredit", 2)]
+        [DBFieldName("kill_credit", 2)]
         public uint?[] KillCredits;
 
-        [DBFieldName("DisplayId1")]
+        [DBFieldName("display_id1")]
         public uint DisplayId1;
 
-        [DBFieldName("DisplayId2")]
+        [DBFieldName("display_id2")]
         public uint DisplayId2;
 
-        [DBFieldName("DisplayId3")]
+        [DBFieldName("display_id3")]
         public uint DisplayId3;
 
-        [DBFieldName("DisplayId4")]
+        [DBFieldName("display_id4")]
         public uint DisplayId4;
 
-        [DBFieldName("DisplayScale1")]
+        [DBFieldName("display_scale1")]
         public float DisplayScale1;
 
-        [DBFieldName("DisplayScale2")]
+        [DBFieldName("display_scale2")]
         public float DisplayScale2;
 
-        [DBFieldName("DisplayScale3")]
+        [DBFieldName("display_scale3")]
         public float DisplayScale3;
 
-        [DBFieldName("DisplayScale4")]
+        [DBFieldName("display_scale4")]
         public float DisplayScale4;
 
-        [DBFieldName("DisplayProbability1")]
+        [DBFieldName("display_probability1")]
         public float DisplayProbability1;
 
-        [DBFieldName("DisplayProbability2")]
+        [DBFieldName("display_probability2")]
         public float DisplayProbability2;
 
-        [DBFieldName("DisplayProbability3")]
+        [DBFieldName("display_probability3")]
         public float DisplayProbability3;
 
-        [DBFieldName("DisplayProbability4")]
+        [DBFieldName("display_probability4")]
         public float DisplayProbability4;
 
         [DBFieldName("name")]
         public string Name;
 
-        [DBFieldName("femaleName")]
+        [DBFieldName("female_name")]
         public string FemaleName;
 
         [DBFieldName("subname", nullable: true)]
         public string SubName;
 
-        [DBFieldName("TitleAlt", nullable: true)]
+        [DBFieldName("title_alt", nullable: true)]
         public string TitleAlt;
 
-        [DBFieldName("IconName", nullable: true)]
+        [DBFieldName("icon_name", nullable: true)]
         public string IconName;
 
-        [DBFieldName("HealthScalingExpansion")]
+        [DBFieldName("health_scaling_expansion")]
         public ClientType? HealthScalingExpansion;
 
-        [DBFieldName("RequiredExpansion")]
+        [DBFieldName("required_expansion")]
         public ClientType? RequiredExpansion;
 
-        [DBFieldName("VignetteID")]
+        [DBFieldName("vignette_id")]
         public uint? VignetteID;
 
         [DBFieldName("unit_class")]
@@ -239,7 +239,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("rank")]
         public CreatureRank? Rank;
 
-        [DBFieldName("family")]
+        [DBFieldName("beast_family")]
         public CreatureFamily? Family;
 
         [DBFieldName("type")]
@@ -251,22 +251,22 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("type_flags2")]
         public uint? TypeFlags2;
 
-        [DBFieldName("PetSpellDataId")]
+        [DBFieldName("pet_spell_list_id")]
         public uint? PetSpellDataID;
 
-        [DBFieldName("HealthModifier")]
-        public float? HealthModifier;
+        [DBFieldName("health_multiplier")]
+        public float? HealthMultiplier;
 
-        [DBFieldName("ManaModifier")]
-        public float? ManaModifier;
+        [DBFieldName("mana_multiplier")]
+        public float? ManaMultiplier;
 
-        [DBFieldName("Civilian")]
+        [DBFieldName("civilian")]
         public bool? Civilian;
 
-        [DBFieldName("RacialLeader")]
+        [DBFieldName("racial_leader")]
         public bool? RacialLeader;
 
-        [DBFieldName("movementId")]
+        [DBFieldName("movement_id")]
         public uint? MovementID;
 
         [DBFieldName("VerifiedBuild")]

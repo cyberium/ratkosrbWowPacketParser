@@ -59,7 +59,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             creature.ModelIDs[2] = packet.ReadUInt32(); //+31
             creature.RequiredExpansion = packet.ReadUInt32E<ClientType>("Expansion"); //+24
             creature.Type = packet.ReadInt32E<CreatureType>("Type"); //+12
-            creature.HealthModifier = packet.ReadSingle("Modifier 1"); //+15
+            creature.HealthMultiplier = packet.ReadSingle("Modifier 1"); //+15
 
             creature.TypeFlags = packet.ReadUInt32E<CreatureTypeFlag>("Type Flags");
             creature.TypeFlags2 = packet.ReadUInt32("Creature Type Flags 2"); // Missing enum
@@ -93,7 +93,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
                 /*creature.QuestItems[i] = (uint)*/packet.ReadInt32<ItemId>("Quest Item", i); //+72
 
             creature.KillCredits[1] = packet.ReadUInt32(); //+28
-            creature.ManaModifier = packet.ReadSingle("Modifier 2"); //+16
+            creature.ManaMultiplier = packet.ReadSingle("Modifier 2"); //+16
             creature.Family = packet.ReadInt32E<CreatureFamily>("Family"); //+13
 
             for (int i = 0; i < 4; ++i)

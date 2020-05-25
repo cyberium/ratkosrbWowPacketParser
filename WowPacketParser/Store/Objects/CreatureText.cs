@@ -13,9 +13,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("GroupID", true, true)]
         public string GroupId;
 
-        [DBFieldName("ID", true, true)]
-        public string ID;
-
         [DBFieldName("Text")]
         public string Text;
 
@@ -41,9 +38,9 @@ namespace WowPacketParser.Store.Objects
         public uint? Sound;
 
         [DBFieldName("BroadcastTextId", false, true)]
-        public object BroadcastTextID;
+        public object BroadcastTextID = 0;
 
-        [DBFieldName("comment")]
+        [DBFieldName("Comment")]
         public string Comment;
 
         public WowGuid SenderGUID;

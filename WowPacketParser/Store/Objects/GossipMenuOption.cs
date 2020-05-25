@@ -20,7 +20,7 @@ namespace WowPacketParser.Store.Objects
         public string OptionText;
 
         [DBFieldName("option_broadcast_text")]
-        public int? OptionBroadcastTextId;
+        public int? OptionBroadcastTextId = 0;
 
         [DBFieldName("VerifiedBuild")]
         public int? VerifiedBuild = ClientVersion.BuildInt;

@@ -5,16 +5,16 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("gossip_menu_option_action")]
     public class GossipMenuOptionAction : IDataModel
     {
-        [DBFieldName("MenuId", true)]
+        [DBFieldName("menu_id", true)]
         public uint? MenuId;
 
-        [DBFieldName("OptionIndex", true)]
+        [DBFieldName("id", true)]
         public uint? OptionIndex;
 
-        [DBFieldName("ActionMenuId")]
+        [DBFieldName("action_menu_id")]
         public uint? ActionMenuId;
 
-        [DBFieldName("ActionPoiId", false, true)]
+        [DBFieldName("action_poi_id", false, true)]
         public object ActionPoiId;
     }
 }

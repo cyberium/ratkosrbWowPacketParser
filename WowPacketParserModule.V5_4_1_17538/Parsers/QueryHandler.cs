@@ -83,7 +83,7 @@ namespace WowPacketParserModule.V5_4_1_17538.Parsers
             creature.TypeFlags = packet.ReadUInt32E<CreatureTypeFlag>("Type Flags");
             creature.TypeFlags2 = packet.ReadUInt32("Creature Type Flags 2"); // Missing enum
 
-            creature.HealthModifier = packet.ReadSingle("Modifier 1");
+            creature.HealthMultiplier = packet.ReadSingle("Modifier 1");
 
             creature.Rank = packet.ReadInt32E<CreatureRank>("Rank");
 
@@ -91,7 +91,7 @@ namespace WowPacketParserModule.V5_4_1_17538.Parsers
             for (int i = 0; i < 2; ++i)
                 creature.KillCredits[i] = packet.ReadUInt32("Kill Credit", i);
 
-            creature.ManaModifier = packet.ReadSingle("Modifier 2");
+            creature.ManaMultiplier = packet.ReadSingle("Modifier 2");
 
             creature.MovementID = packet.ReadUInt32("Movement ID");
 

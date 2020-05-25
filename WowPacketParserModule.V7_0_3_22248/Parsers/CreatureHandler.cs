@@ -69,8 +69,8 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             for (int i = 0; i < 4; ++i)
                 creature.ModelIDs[i] = packet.ReadUInt32("CreatureDisplayID", i);
 
-            creature.HealthModifier = packet.ReadSingle("HpMulti");
-            creature.ManaModifier = packet.ReadSingle("EnergyMulti");
+            creature.HealthMultiplier = packet.ReadSingle("HpMulti");
+            creature.ManaMultiplier = packet.ReadSingle("EnergyMulti");
 
             uint questItems = packet.ReadUInt32("QuestItems");
             creature.MovementID = packet.ReadUInt32("CreatureMovementInfoID");

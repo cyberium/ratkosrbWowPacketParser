@@ -52,7 +52,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             uint bits24 = packet.ReadBits(11);
             uint bits1C = packet.ReadBits(11);
 
-            creature.ManaModifier = packet.ReadSingle("Modifier 2");
+            creature.ManaMultiplier = packet.ReadSingle("Modifier 2");
 
             var name = new string[4];
             var femaleName = new string[4];
@@ -67,7 +67,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             creature.Name = name[0];
             creature.FemaleName = femaleName[0];
 
-            creature.HealthModifier = packet.ReadSingle("Modifier 1");
+            creature.HealthMultiplier = packet.ReadSingle("Modifier 1");
 
             creature.KillCredits[1] = packet.ReadUInt32();
             creature.ModelIDs[2] = packet.ReadUInt32();
