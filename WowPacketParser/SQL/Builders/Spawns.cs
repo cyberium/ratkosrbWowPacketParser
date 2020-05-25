@@ -65,6 +65,9 @@ namespace WowPacketParser.SQL.Builders
                 if (entry == 0)
                     continue;   // broken entry, nothing to spawn
 
+                if (creature.IsTemporarySpawn() && !Settings.SaveTempSpawns)
+                    continue;
+
                 uint movementType = 0;
                 uint spawnDist = 0;
                 row.Data.AreaID = 0;
@@ -243,17 +246,7 @@ namespace WowPacketParser.SQL.Builders
                 if (creature.IsTemporarySpawn())
                     row.Data.TemporarySpawn = 1;
 
-                if (creature.IsTemporarySpawn() && !Settings.SaveTempSpawns)
-                {
-                    row.CommentOut = true;
-                    row.Comment += " - !!! might be temporary spawn !!!";
-                    if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_addon))
-                    {
-                        addonRow.CommentOut = true;
-                        addonRow.Comment += " - !!! might be temporary spawn !!!";
-                    }
-                }
-                else if (creature.IsOnTransport() && badTransport)
+                if (creature.IsOnTransport() && badTransport)
                 {
                     row.CommentOut = true;
                     row.Comment += " - !!! on transport - transport template not found !!!";
@@ -330,6 +323,9 @@ namespace WowPacketParser.SQL.Builders
                 uint entry = (uint)go.ObjectData.EntryID;
                 if (entry == 0)
                     continue;   // broken entry, nothing to spawn
+
+                if (go.IsTemporarySpawn() && !Settings.SaveTempSpawns)
+                    continue;
 
                 bool badTransport = false;
 
@@ -427,22 +423,16 @@ namespace WowPacketParser.SQL.Builders
 
                 // set some defaults
                 row.Data.PhaseGroup = 0;
+                row.Data.TemporarySpawn = 0;
+
+                if (go.IsTemporarySpawn())
+                    row.Data.TemporarySpawn = 1;
 
                 row.Comment = StoreGetters.GetName(StoreNameType.GameObject, (int)gameobject.Key.GetEntry(), false);
                 row.Comment += " (Area: " + StoreGetters.GetName(StoreNameType.Area, go.Area, false) + " - ";
                 row.Comment += "Difficulty: " + StoreGetters.GetName(StoreNameType.Difficulty, (int)go.DifficultyID, false) + ")";
 
-                if (go.IsTemporarySpawn() && !Settings.SaveTempSpawns)
-                {
-                    row.CommentOut = true;
-                    row.Comment += " - !!! might be temporary spawn !!!";
-                    if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_addon))
-                    {
-                        addonRow.CommentOut = true;
-                        addonRow.Comment += " - !!! might be temporary spawn !!!";
-                    }
-                }
-                else if (go.IsTransport())
+                if (go.IsTransport())
                 {
                     row.CommentOut = true;
                     row.Comment += " - !!! transport !!!";

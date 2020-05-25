@@ -52,6 +52,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("rotation", 4, true)]
         public float?[] Rotation;
 
+        [DBFieldName("temp")]
+        public byte? TemporarySpawn;
+
         [DBFieldName("creator")]
         public uint? CreatedBy;
 
