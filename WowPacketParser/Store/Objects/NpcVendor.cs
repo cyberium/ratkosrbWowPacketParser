@@ -27,7 +27,7 @@ namespace WowPacketParser.Store.Objects
         public uint? PlayerConditionID;
 
         [DBFieldName("IgnoreFiltering")]
-        public bool? IgnoreFiltering;
+        public bool IgnoreFiltering = false;
 
         [DBFieldName("VerifiedBuild")]
         public int? VerifiedBuild = ClientVersion.BuildInt;

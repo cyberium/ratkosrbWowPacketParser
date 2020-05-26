@@ -738,7 +738,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             };
 
             questRequestItems.EmoteOnCompleteDelay = (uint)packet.ReadInt32("CompEmoteDelay");
-            questRequestItems.EmoteOnComplete = (uint)packet.ReadInt32("CompEmoteType");
+            questRequestItems.EmoteOnComplete = (int)packet.ReadInt32("CompEmoteType");
 
             for (int i = 0; i < 2; i++)
                 packet.ReadInt32("QuestFlags", i);

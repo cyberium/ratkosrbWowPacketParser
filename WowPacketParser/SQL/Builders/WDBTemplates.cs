@@ -301,7 +301,9 @@ namespace WowPacketParser.SQL.Builders
                 return SQLUtil.Compare(Storage.NpcTexts, templatesDb, StoreNameType.NpcText);
             }
 
-            if (!Storage.NpcTextsMop.IsEmpty() && Settings.TargetedDatabase >= TargetedDatabase.WarlordsOfDraenor)
+            if (!Storage.NpcTextsMop.IsEmpty() &&
+                (Settings.TargetedDatabase >= TargetedDatabase.WarlordsOfDraenor ||
+                Settings.TargetedDatabase == TargetedDatabase.Classic))
             {
                 foreach (var npcText in Storage.NpcTextsMop)
                     npcText.Item1.ConvertToDBStruct();
