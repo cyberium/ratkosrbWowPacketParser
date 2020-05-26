@@ -408,7 +408,15 @@ namespace WowPacketParser.SQL.Builders
                 if (!Storage.GossipMenuOptionActions.IsEmpty())
                 {
                     foreach (var gossip_pair in Storage.GossipMenuOptionActions)
-                        result += "UPDATE `gossip_menu_option` SET `action_menu_id`=" + gossip_pair.Item1.ActionMenuId.ToString() + ", `action_poi_id`=" + gossip_pair.Item1.ActionPoiId.ToString() + ", `option_id`=1, `npc_option_npcflag`=1 WHERE `menu_id`=" + gossip_pair.Item1.MenuId.ToString() + " && `id`=" + gossip_pair.Item1.OptionIndex.ToString() + ";\r\n";
+                    {
+                        string poiId = "0";
+                        if (gossip_pair.Item1.ActionPoiId != null)
+                            poiId = gossip_pair.Item1.ActionPoiId.ToString();
+
+                        result += "UPDATE `gossip_menu_option` SET `action_menu_id`=" + gossip_pair.Item1.ActionMenuId.ToString() + ", `action_poi_id`=" + poiId + ", `option_id`=1, `npc_option_npcflag`=1 WHERE `menu_id`=" + gossip_pair.Item1.MenuId.ToString() + " && `id`=" + gossip_pair.Item1.OptionIndex.ToString() + ";\r\n";
+
+                    }
+
                     result += "\r\n";
                     result += SQLUtil.Compare(Storage.GossipMenuOptionActions, SQLDatabase.Get(Storage.GossipMenuOptionActions), StoreNameType.None);
                 }
