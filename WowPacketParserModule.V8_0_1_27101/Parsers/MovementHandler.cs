@@ -163,32 +163,29 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             if (guid.GetHighType() == HighGuidType.Creature && Storage.Objects != null && Storage.Objects.ContainsKey(guid))
             {
                 var obj = Storage.Objects[guid].Item1 as Unit;
-                if (obj.UpdateFields != null)
+                if ((obj.UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0) // movement could be because of aggro so ignore that
                 {
-                    if ((obj.UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0) // movement could be because of aggro so ignore that
-                    {
-                        obj.Movement.HasWpsOrRandMov = true;
-                        CreatureMovement movementData = new CreatureMovement();
-                        movementData.Point = (uint)obj.Waypoints.Count;
-                        movementData.PositionX = pos.X;
-                        movementData.PositionY = pos.Y;
-                        movementData.PositionZ = pos.Z;
-                        movementData.Orientation = orientation;
-                        movementData.UnixTime = (uint)CreatureMovement.DateTimeToUnixTimestamp(packet.Time);
+                    obj.Movement.HasWpsOrRandMov = true;
+                    CreatureMovement movementData = new CreatureMovement();
+                    movementData.Point = (uint)obj.Waypoints.Count;
+                    movementData.PositionX = pos.X;
+                    movementData.PositionY = pos.Y;
+                    movementData.PositionZ = pos.Z;
+                    movementData.Orientation = orientation;
+                    movementData.UnixTime = (uint)CreatureMovement.DateTimeToUnixTimestamp(packet.Time);
 
-                        if (obj.Waypoints.Count == 0)
-                        {
-                            movementData.TimeDiff = 0;
-                            movementData.Distance = 0;
-                        }
-                        else
-                        {
-                            CreatureMovement previousPoint = obj.Waypoints[obj.Waypoints.Count - 1];
-                            movementData.TimeDiff = movementData.UnixTime - previousPoint.UnixTime;
-                            movementData.Distance = CreatureMovement.GetDistance3D(movementData.PositionX, movementData.PositionY, movementData.PositionZ, previousPoint.PositionX, previousPoint.PositionY, previousPoint.PositionZ);
-                        }
-                        obj.Waypoints.Add(movementData);
+                    if (obj.Waypoints.Count == 0)
+                    {
+                        movementData.TimeDiff = 0;
+                        movementData.Distance = 0;
                     }
+                    else
+                    {
+                        CreatureMovement previousPoint = obj.Waypoints[obj.Waypoints.Count - 1];
+                        movementData.TimeDiff = movementData.UnixTime - previousPoint.UnixTime;
+                        movementData.Distance = CreatureMovement.GetDistance3D(movementData.PositionX, movementData.PositionY, movementData.PositionZ, previousPoint.PositionX, previousPoint.PositionY, previousPoint.PositionZ);
+                    }
+                    obj.Waypoints.Add(movementData);
                 }
             }
         }
