@@ -438,6 +438,7 @@ namespace WowPacketParser.Enums.Version
                 case ClientVersionBuild.V1_13_4_33920:
                 case ClientVersionBuild.v1_13_4_34219:
                 case ClientVersionBuild.v1_13_4_34266:
+                case ClientVersionBuild.v1_13_4_34600:
                     return ClientVersionBuild.V1_13_4_33598;
                 default:
                     return ClientVersionBuild.V3_3_5a_12340;
