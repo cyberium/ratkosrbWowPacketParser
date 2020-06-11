@@ -116,7 +116,8 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_template))
                 return string.Empty;
 
-            if (Settings.TargetedDatabase <= TargetedDatabase.WarlordsOfDraenor)
+            if (Settings.TargetedDatabase <= TargetedDatabase.WarlordsOfDraenor &&
+                Settings.TargetedDatabase != TargetedDatabase.Classic)
                 return string.Empty;
 
             if (Storage.CreatureTemplateQuestItems.IsEmpty())

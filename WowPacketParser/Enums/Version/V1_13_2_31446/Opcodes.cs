@@ -2094,7 +2094,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.CMSG_MAIL_CREATE_TEXT_ITEM, 0x353B},
             {Opcode.CMSG_MAIL_DELETE, 0x3225},
             {Opcode.CMSG_MAIL_GET_LIST, 0x3536},
-            {Opcode.CMSG_MAIL_MARK_AS_READ, 0x3539},
+            {Opcode.CMSG_MAIL_MARK_AS_READ, 0x3539}, // ??
             {Opcode.CMSG_MAIL_RETURN_TO_SENDER, 0x3654},
             {Opcode.CMSG_MAIL_TAKE_ITEM, 0x3538},
             {Opcode.CMSG_MAIL_TAKE_MONEY, 0x3537},
@@ -2351,7 +2351,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.CMSG_SET_WAR_MODE, 0x32AB},
             {Opcode.CMSG_SET_WATCHED_FACTION, 0x34E1},
             {Opcode.CMSG_SHOW_TRADE_SKILL, 0x36BD},
-            {Opcode.CMSG_SIGN_PETITION, 0x3532},
+            {Opcode.CMSG_SIGN_PETITION, 0x3532}, // ??
             {Opcode.CMSG_SILENCE_PARTY_TALKER, 0x3651},
             {Opcode.CMSG_SOCKET_GEMS, 0x34EB},
             {Opcode.CMSG_SPELL_CLICK, 0x3495},
@@ -3369,7 +3369,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_UPDATE_GAME_TIME_STATE, 0x286D},
             {Opcode.SMSG_UPDATE_INSTANCE_OWNERSHIP, 0x26D7},
             {Opcode.SMSG_UPDATE_LAST_INSTANCE, 0x26B6},
-            {Opcode.SMSG_UPDATE_OBJECT, 0x2812},
+            {Opcode.SMSG_UPDATE_OBJECT, 0x2812}, // ??
             {Opcode.SMSG_UPDATE_TALENT_DATA, 0x25EC},
             {Opcode.SMSG_UPDATE_TASK_PROGRESS, 0x27D5}, // ??
             {Opcode.SMSG_UPDATE_WEEKLY_SPELL_USAGE, 0x2C19},

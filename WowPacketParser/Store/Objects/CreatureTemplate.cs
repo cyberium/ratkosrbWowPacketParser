@@ -160,7 +160,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ItemId")]
         public uint? ItemId;
 
-        [DBFieldName("VerifiedBuild", TargetedDatabase.WarlordsOfDraenor)]
+        [DBFieldName("VerifiedBuild")]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 
@@ -172,6 +172,12 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("kill_credit", 2)]
         public uint?[] KillCredits;
+
+        [DBFieldName("display_total_count")]
+        public uint DisplayTotalCount;
+
+        [DBFieldName("display_total_probability")]
+        public float DisplayTotalProbability;
 
         [DBFieldName("display_id1")]
         public uint DisplayId1;
