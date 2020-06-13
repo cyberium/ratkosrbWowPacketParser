@@ -5059,7 +5059,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_TRANSFER_PENDING, 0x25E5},
             {Opcode.SMSG_TRANSMOG_COLLECTION_UPDATE, 0x25C6},
             {Opcode.SMSG_TRANSMOG_SET_COLLECTION_UPDATE, 0x25C7},
-            {Opcode.SMSG_TRIGGER_CINEMATIC, 0x2810},
+            {Opcode.SMSG_TRIGGER_CINEMATIC, 0x2815}, // ok
             {Opcode.SMSG_TRIGGER_MOVIE, 0x26FC},
             {Opcode.SMSG_TURN_IN_PETITION_RESULT, 0x2794},
             {Opcode.SMSG_TUTORIAL_FLAGS, 0x2807}, // ??
@@ -5068,7 +5068,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_TWITTER_STATUS, 0x2FFD},
             {Opcode.SMSG_UI_TIME, 0x275B}, // ok
             {Opcode.SMSG_UNDELETE_CHARACTER_RESPONSE, 0x2811},
-            {Opcode.SMSG_UNDELETE_COOLDOWN_STATUS_RESPONSE, 0x2815},
+            {Opcode.SMSG_UNDELETE_COOLDOWN_STATUS_RESPONSE, 0x2810}, // ??
             {Opcode.SMSG_UNLEARNED_SPELLS, 0x2C4E},
             {Opcode.SMSG_UPDATE_ACCOUNT_DATA, 0x274B},
             {Opcode.SMSG_UPDATE_CELESTIAL_BODY, 0x2866},
