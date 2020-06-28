@@ -844,6 +844,7 @@ namespace WowPacketParser.Store
             WorldStateUpdates.Clear();
 
             HotfixDatas.Clear();
+            HotfixBlobs.Clear();
 
             Scenes.Clear();
 
@@ -852,6 +853,15 @@ namespace WowPacketParser.Store
 
             BroadcastTexts.Clear();
             BroadcastTextLocales.Clear();
+            
+            PlayerChoices.Clear();
+            PlayerChoiceLocales.Clear();
+            PlayerChoiceResponses.Clear();
+            PlayerChoiceResponseLocales.Clear();
+            PlayerChoiceResponseRewards.Clear();
+            PlayerChoiceResponseRewardCurrencies.Clear();
+            PlayerChoiceResponseRewardFactions.Clear();
+            PlayerChoiceResponseRewardItems.Clear();
         }
     }
 }
