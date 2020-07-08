@@ -8,6 +8,27 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
 {
     public static class ChatHandler
     {
+        [Parser(Opcode.SMSG_CHANNEL_NOTIFY_JOINED, ClientVersionBuild.V1_13_2_31446)]
+        public static void HandleChannelNotifyJoined(Packet packet)
+        {
+            var channelLen = packet.ReadBits(8);
+            uint channelWelcomeMsgLen = 0;
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_2_0_30898))
+                channelWelcomeMsgLen = packet.ReadBits(11);
+            else
+                channelWelcomeMsgLen = packet.ReadBits(10);
+
+            packet.ReadUInt32E<ChannelFlag>("ChannelFlags");
+            packet.ReadInt32("ChatChannelID");
+            packet.ReadUInt32("InstanceID");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_2_5_31921))
+                packet.ReadPackedGuid128("ChannelGUID");
+
+            packet.ReadWoWString("Channel", channelLen);
+            packet.ReadWoWString("ChannelWelcomeMsg", channelWelcomeMsgLen);
+        }
+
         [Parser(Opcode.SMSG_CHAT)]
         public static void HandleServerChatMessage(Packet packet)
         {
