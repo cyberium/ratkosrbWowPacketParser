@@ -14,7 +14,9 @@ namespace WowPacketParser.Store.Objects
 
         public BlockingCollection<List<Aura>> AddedAuras = new BlockingCollection<List<Aura>>();
 
+        public uint globalSplinesCounter = 0;
         public List<CreatureMovement> Waypoints;
+        public List<CreatureMovementSpline> MovementSplines;
 
         public ushort? AIAnimKit;
         public ushort? MovementAnimKit;
@@ -32,6 +34,7 @@ namespace WowPacketParser.Store.Objects
         {
             UnitData = new UnitData(this);
             Waypoints = new List<CreatureMovement>();
+            MovementSplines = new List<CreatureMovementSpline>();
         }
 
         public override bool IsTemporarySpawn()
@@ -52,6 +55,43 @@ namespace WowPacketParser.Store.Objects
                 DynamicFlagsWod = (UnitDynamicFlagsWOD)ObjectData.DynamicFlags;
             else
                 DynamicFlags  = UpdateFields.GetEnum<UnitField, UnitDynamicFlags?>(UnitField.UNIT_DYNAMIC_FLAGS);
+        }
+
+        public void AddWaypoint(CreatureMovement movementData, Vector3 startPosition, DateTime packetTime)
+        {
+            movementData.Point = (uint)Waypoints.Count + 1;
+            movementData.StartPositionX = startPosition.X;
+            movementData.StartPositionY = startPosition.Y;
+            movementData.StartPositionZ = startPosition.Z;
+            movementData.UnixTime = (uint)CreatureMovement.DateTimeToUnixTimestamp(packetTime);
+
+            if (movementData.SplineCount > 0 &&
+                movementData.SplinePoints != null)
+            {
+                int index = (int)movementData.SplineCount - 1;
+                movementData.EndPositionX = movementData.SplinePoints[index].X;
+                movementData.EndPositionY = movementData.SplinePoints[index].Y;
+                movementData.EndPositionZ = movementData.SplinePoints[index].Z;
+
+                if (movementData.SplineCount > 1)
+                {
+                    uint counter = 0;
+                    foreach (Vector3 vector in movementData.SplinePoints)
+                    {
+                        counter++;
+                        CreatureMovementSpline spline = new CreatureMovementSpline();
+                        spline.ParentPoint = movementData.Point;
+                        spline.SplinePoint = counter;
+                        spline.GlobalPoint = globalSplinesCounter++;
+                        spline.PositionX = vector.X;
+                        spline.PositionY = vector.Y;
+                        spline.PositionZ = vector.Z;
+                        MovementSplines.Add(spline);
+                    }
+                }
+                movementData.SplinePoints = null; // free memory
+            }
+            Waypoints.Add(movementData);
         }
     }
 }

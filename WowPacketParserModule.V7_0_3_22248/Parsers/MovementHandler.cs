@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using WowPacketParser.DBC;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
@@ -68,7 +69,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadBits("Type", 2, idx);
         }
 
-        public static float ReadMovementMonsterSpline(Packet packet, Vector3 pos, params object[] indexes)
+        public static void ReadMovementMonsterSpline(CreatureMovement savedata, Packet packet, Vector3 pos, params object[] indexes)
         {
             packet.ReadUInt32("Id", indexes);
             packet.ReadVector3("Destination", indexes);
@@ -78,7 +79,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadBit("CrzTeleport", indexes);
             packet.ReadBits("StopDistanceTolerance", 3, indexes);
 
-            return ReadMovementSpline(packet, pos, indexes, "MovementSpline");
+            ReadMovementSpline(savedata, packet, pos, indexes, "MovementSpline");
         }
 
         public static void ReadMonsterSplineFilter(Packet packet, params object[] indexes)
@@ -107,14 +108,17 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadUInt32("ParabolicCurveID", indexes);
         }
 
-        public static float ReadMovementSpline(Packet packet, Vector3 pos, params object[] indexes)
+        public static float ReadMovementSpline(CreatureMovement savedata, Packet packet, Vector3 pos, params object[] indexes)
         {
-            float orientation = 100;
-            packet.ReadInt32E<SplineFlag>("Flags", indexes);
+            uint splineflags = (uint)packet.ReadInt32E<SplineFlag>("Flags", indexes);
+            if (savedata != null)
+                savedata.SplineFlags = splineflags;
             packet.ReadByte("AnimTier", indexes);
             packet.ReadUInt32("TierTransStartTime", indexes);
             packet.ReadInt32("Elapsed", indexes);
-            packet.ReadUInt32("MoveTime", indexes);
+            uint movetime = packet.ReadUInt32("MoveTime", indexes);
+            if (savedata != null)
+                savedata.MoveTime = movetime;
             packet.ReadSingle("JumpGravity", indexes);
             packet.ReadUInt32("SpecialTime", indexes);
 
@@ -135,6 +139,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             if (hasSplineFilter)
                 ReadMonsterSplineFilter(packet, indexes, "MonsterSplineFilter");
 
+            float orientation = 100;
             switch (type)
             {
                 case 1:
@@ -150,6 +155,14 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                     break;
             }
 
+            if (savedata != null)
+            {
+                savedata.Orientation = orientation;
+                savedata.SplineCount = pointsCount;
+                if (pointsCount > 0)
+                    savedata.SplinePoints = new List<Vector3>();
+            }
+
             Vector3 endpos = new Vector3();
             for (int i = 0; i < pointsCount; i++)
             {
@@ -158,6 +171,9 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 // client always taking first point
                 if (i == 0)
                     endpos = spot;
+
+                if (savedata != null)
+                    savedata.SplinePoints.Add(spot);
 
                 packet.AddValue("Points", spot, indexes, i);
             }
@@ -202,40 +218,25 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             WowGuid guid = packet.ReadPackedGuid128("MoverGUID");
             var pos = packet.ReadVector3("Position");
 
-            float orientation = ReadMovementMonsterSpline(packet, pos, "MovementMonsterSpline");
-
+            Unit obj = null;
+            CreatureMovement movementData = null;
             if (guid.GetHighType() == HighGuidType.Creature && Storage.Objects != null && Storage.Objects.ContainsKey(guid))
             {
-                var obj = Storage.Objects[guid].Item1 as Unit;
+                obj = Storage.Objects[guid].Item1 as Unit;
                 if (obj.UpdateFields != null)
                 {
                     if ((obj.UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0) // movement could be because of aggro so ignore that
                     {
                         obj.Movement.HasWpsOrRandMov = true;
-                        CreatureMovement movementData = new CreatureMovement();
-                        movementData.Point = (uint)obj.Waypoints.Count;
-                        movementData.PositionX = pos.X;
-                        movementData.PositionY = pos.Y;
-                        movementData.PositionZ = pos.Z;
-                        movementData.Orientation = orientation;
-                        movementData.UnixTime = (uint)CreatureMovement.DateTimeToUnixTimestamp(packet.Time);
-
-                        if (obj.Waypoints.Count == 0)
-                        {
-                            movementData.TimeDiff = 0;
-                            movementData.Distance = 0;
-                        }
-                        else
-                        {
-                            CreatureMovement previousPoint = obj.Waypoints[obj.Waypoints.Count - 1];
-                            movementData.TimeDiff = movementData.UnixTime - previousPoint.UnixTime;
-                            movementData.Distance = CreatureMovement.GetDistance3D(movementData.PositionX, movementData.PositionY, movementData.PositionZ, previousPoint.PositionX, previousPoint.PositionY, previousPoint.PositionZ);
-                        }
-
-                        obj.Waypoints.Add(movementData);
+                        movementData = new CreatureMovement();
                     }
                 }
             }
+
+            ReadMovementMonsterSpline(movementData, packet, pos, "MovementMonsterSpline");
+
+            if (movementData != null)
+                obj.AddWaypoint(movementData, pos, packet.Time);
         }
 
         [Parser(Opcode.CMSG_MOVE_CHANGE_TRANSPORT)]

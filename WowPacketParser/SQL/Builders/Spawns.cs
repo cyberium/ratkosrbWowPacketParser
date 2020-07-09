@@ -46,6 +46,7 @@ namespace WowPacketParser.SQL.Builders
             var rows = new RowList<Creature>();
             var addonRows = new RowList<CreatureAddon>();
             var movementRows = new RowList<CreatureMovement>();
+            var movementSplineRows = new RowList<CreatureMovementSpline>();
             foreach (var unit in units)
             {
                 Row<Creature> row = new Row<Creature>();
@@ -213,6 +214,18 @@ namespace WowPacketParser.SQL.Builders
                 {
                     try
                     {
+                        if (creature.MovementSplines != null)
+                        {
+                            foreach (CreatureMovementSpline waypoint in creature.MovementSplines)
+                            {
+                                var movementRow = new Row<CreatureMovementSpline>();
+                                movementRow.Data = waypoint;
+                                movementRow.Data.GUID = "@CGUID+" + count;
+                                movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false); ;
+                                movementSplineRows.Add(movementRow);
+                            }
+                        }
+
                         float maxDistanceFromSpawn = 0;
                         foreach (CreatureMovement waypoint in creature.Waypoints)
                         {
@@ -220,7 +233,7 @@ namespace WowPacketParser.SQL.Builders
                                 break;
 
                             // Get max wander distance
-                            float distanceFromSpawn = CreatureMovement.GetDistance3D(creature.Movement.Position.X, creature.Movement.Position.Y, creature.Movement.Position.Z, waypoint.PositionX, waypoint.PositionY, waypoint.PositionZ);
+                            float distanceFromSpawn = CreatureMovement.GetDistance3D(creature.Movement.Position.X, creature.Movement.Position.Y, creature.Movement.Position.Z, waypoint.StartPositionX, waypoint.StartPositionY, waypoint.StartPositionZ);
                             if (distanceFromSpawn > maxDistanceFromSpawn)
                                 maxDistanceFromSpawn = distanceFromSpawn;
 
@@ -285,11 +298,18 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_movement))
             {
+                // creature_movement
                 var movementDelete = new SQLDelete<CreatureMovement>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
                 result.Append(movementDelete.Build());
                 var movementSql = new SQLInsert<CreatureMovement>(movementRows, false);
                 result.Append(movementSql.Build());
-            }
+
+                // creature_movement_spline
+                var movementSplineDelete = new SQLDelete<CreatureMovementSpline>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
+                result.Append(movementSplineDelete.Build());
+                var movementSplineSql = new SQLInsert<CreatureMovementSpline>(movementSplineRows, false);
+                result.Append(movementSplineSql.Build());
+            }  
 
             return result.ToString();
         }

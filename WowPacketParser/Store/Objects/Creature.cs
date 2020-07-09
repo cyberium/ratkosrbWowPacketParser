@@ -1,4 +1,5 @@
-﻿using WowPacketParser.Enums;
+﻿using System.Collections.Generic;
+using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.SQL;
 
@@ -116,14 +117,20 @@ namespace WowPacketParser.Store.Objects
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 
-    [DBTableName("creature_movement")]
-    public sealed class CreatureMovement : IDataModel
+    [DBTableName("creature_movement_spline")]
+    public sealed class CreatureMovementSpline : IDataModel
     {
-        [DBFieldName("id", true, true)]
+        [DBFieldName("guid", true, true)]
         public string GUID;
 
-        [DBFieldName("point", true)]
-        public uint Point;
+        [DBFieldName("parent_point", true)]
+        public uint ParentPoint;
+
+        [DBFieldName("spline_point", true)]
+        public uint SplinePoint;
+
+        [DBFieldName("global_point")]
+        public uint GlobalPoint;
 
         [DBFieldName("position_x")]
         public float PositionX;
@@ -133,18 +140,51 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("position_z")]
         public float PositionZ;
+    }
+
+    [DBTableName("creature_movement")]
+    public sealed class CreatureMovement : IDataModel
+    {
+        [DBFieldName("id", true, true)]
+        public string GUID;
+
+        [DBFieldName("point", true)]
+        public uint Point;
+
+        [DBFieldName("move_time")]
+        public uint MoveTime;
+
+        [DBFieldName("spline_flags")]
+        public uint SplineFlags;
+
+        [DBFieldName("spline_count")]
+        public uint SplineCount;
+
+        [DBFieldName("start_position_x")]
+        public float StartPositionX;
+
+        [DBFieldName("start_position_y")]
+        public float StartPositionY;
+
+        [DBFieldName("start_position_z")]
+        public float StartPositionZ;  
+
+        [DBFieldName("end_position_x")]
+        public float EndPositionX;
+
+        [DBFieldName("end_position_y")]
+        public float EndPositionY;
+
+        [DBFieldName("end_position_z")]
+        public float EndPositionZ;
 
         [DBFieldName("orientation")]
         public float? Orientation;
 
-        [DBFieldName("distance")]
-        public float? Distance;
-
-        [DBFieldName("timediff")]
-        public uint? TimeDiff;
-
         [DBFieldName("unixtime")]
         public uint? UnixTime;
+
+        public List<Vector3> SplinePoints = null;
 
         public static float GetAngle(float x1, float y1, float x2, float y2)
         {
