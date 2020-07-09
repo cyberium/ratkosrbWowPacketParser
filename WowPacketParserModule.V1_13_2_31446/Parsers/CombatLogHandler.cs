@@ -45,9 +45,15 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                     packet.ReadInt32("DamageResisted", indexes);
             }
 
-            packet.ReadByteE<VictimStates>("VictimState", indexes);
-            packet.ReadInt32("AttackerState", indexes);
+            VictimStates victimStates = packet.ReadByteE<VictimStates>("VictimState", indexes);
+            if (victimStates == VictimStates.VICTIMSTATE_UNK32)
+            {
+                packet.ReadInt32("UnkInt1", indexes);
+                packet.ReadInt32("UnkInt2", indexes);
+                packet.ReadInt32("UnkInt3", indexes);
+            }
 
+            packet.ReadInt32("AttackerState", indexes);
             packet.ReadInt32<SpellId>("MeleeSpellID", indexes);
 
             if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_BLOCK))

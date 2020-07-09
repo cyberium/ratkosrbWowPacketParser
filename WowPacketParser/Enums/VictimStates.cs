@@ -13,6 +13,7 @@ namespace WowPacketParser.Enums
         VICTIMSTATE_BLOCKS    = 5,
         VICTIMSTATE_EVADES    = 6,
         VICTIMSTATE_IS_IMMUNE = 7,
-        VICTIMSTATE_DEFLECTS  = 8
+        VICTIMSTATE_DEFLECTS  = 8,
+        VICTIMSTATE_UNK32     = 32,
     }
 }
