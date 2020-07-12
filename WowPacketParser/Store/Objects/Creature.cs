@@ -255,10 +255,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("dmg_max")]
         public float? DmgMax;
 
-        [DBFieldName("dmg_offhand_min")]
+        [DBFieldName("offhand_dmg_min")]
         public float? OffhandDmgMin;
 
-        [DBFieldName("dmg_offhand_max")]
+        [DBFieldName("offhand_dmg_max")]
         public float? OffhandDmgMax;
 
         [DBFieldName("ranged_dmg_min")]
