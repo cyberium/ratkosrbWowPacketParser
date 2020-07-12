@@ -470,9 +470,9 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         public static void HandlePlaySound(Packet packet)
         {
             uint sound = packet.ReadUInt32<SoundId>("SoundKitID");
-            packet.ReadPackedGuid128("SourceObjectGUID");
+            WowGuid guid = packet.ReadPackedGuid128("SourceObjectGUID");
 
-            Storage.Sounds.Add(sound, packet.TimeSpan);
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, guid));
         }
 
         [Parser(Opcode.SMSG_PLAY_MUSIC)]
@@ -480,7 +480,12 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         {
             uint sound = packet.ReadUInt32<SoundId>("SoundKitID");
 
-            Storage.Sounds.Add(sound, packet.TimeSpan);
+            PlayMusic musicEntry = new PlayMusic
+            {
+                Music = sound,
+                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time)
+            };
+            Storage.Music.Add(musicEntry, packet.TimeSpan);
         }
 
         [Parser(Opcode.SMSG_ZONE_UNDER_ATTACK)]
@@ -732,11 +737,11 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         public static void HandlePlayObjectSound(Packet packet)
         {
             uint sound = packet.ReadUInt32<SoundId>("SoundId");
-            packet.ReadPackedGuid128("SourceObjectGUID");
+            WowGuid guid = packet.ReadPackedGuid128("SourceObjectGUID");
             packet.ReadPackedGuid128("TargetObjectGUID");
             packet.ReadVector3("Position");
 
-            Storage.Sounds.Add(sound, packet.TimeSpan);
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, guid));
         }
 
         [Parser(Opcode.SMSG_PLAY_SPEAKERBOT_SOUND)]

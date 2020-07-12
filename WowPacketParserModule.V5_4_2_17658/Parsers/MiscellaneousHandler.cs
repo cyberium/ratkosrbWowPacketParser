@@ -90,7 +90,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
 
             packet.WriteGuid("Guid", guid);
 
-            Storage.Sounds.Add(sound, packet.TimeSpan);
+            //Storage.Sounds.Add(sound, packet.TimeSpan);
         }
 
         [Parser(Opcode.SMSG_WORLD_SERVER_INFO)]

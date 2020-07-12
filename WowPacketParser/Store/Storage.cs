@@ -53,14 +53,29 @@ namespace WowPacketParser.Store
         public static readonly DataBag<NpcTextMop> NpcTextsMop = new DataBag<NpcTextMop>(new List<SQLOutput> { SQLOutput.npc_text });
 
         // Creature text (says, yells, etc.)
-        public static readonly StoreMulti<uint, CreatureText> CreatureTexts = new StoreMulti<uint, CreatureText>(new List<SQLOutput> { SQLOutput.creature_text });
+        public static readonly DataBag<CreatureText> CreatureTexts = new DataBag<CreatureText>(new List<SQLOutput> { SQLOutput.creature_text });
+        public static readonly StoreMulti<uint, CreatureTextTemplate> CreatureTextTemplates = new StoreMulti<uint, CreatureTextTemplate>(new List<SQLOutput> { SQLOutput.creature_text_template });
 
         // Points of Interest
         public static readonly DataBag<PointsOfInterest> GossipPOIs = new DataBag<PointsOfInterest>(new List<SQLOutput> { SQLOutput.points_of_interest });
 
         // "Helper" stores, do not match a specific table
-        public static readonly StoreMulti<WowGuid, EmoteType> Emotes = new StoreMulti<WowGuid, EmoteType>(new List<SQLOutput> { SQLOutput.creature_text });
-        public static readonly StoreBag<uint> Sounds = new StoreBag<uint>(new List<SQLOutput> { SQLOutput.creature_text });
+        public static readonly Dictionary<WowGuid, List<CreatureEmote>> Emotes = new Dictionary<WowGuid, List<CreatureEmote>>();
+        public static void StoreCreatureEmote(WowGuid guid, EmoteType emote, DateTime time)
+        {
+            if (Storage.Emotes.ContainsKey(guid))
+            {
+                Storage.Emotes[guid].Add(new CreatureEmote(emote, time));
+            }
+            else
+            {
+                List<CreatureEmote> emotesList = new List<CreatureEmote>();
+                emotesList.Add(new CreatureEmote(emote, time));
+                Storage.Emotes.Add(guid, emotesList);
+            }
+        }
+        public static readonly List<ObjectSound> Sounds = new List<ObjectSound>();
+        public static readonly DataBag<PlayMusic> Music = new DataBag<PlayMusic>(new List<SQLOutput> { SQLOutput.play_music });
         public static readonly StoreDictionary<uint, List<uint?>> SpellsX = new StoreDictionary<uint, List<uint?>>(new List<SQLOutput> { SQLOutput.creature_template }); // `creature_template`.`spellsX`
         public static readonly DataBag<QuestOfferReward> QuestOfferRewards = new DataBag<QuestOfferReward>(new List<SQLOutput> { SQLOutput.quest_template });
         public static readonly StoreDictionary<Tuple<uint, uint>, object> GossipSelects = new StoreDictionary<Tuple<uint, uint>, object>(new List<SQLOutput> { SQLOutput.points_of_interest, SQLOutput.gossip_menu, SQLOutput.gossip_menu_option });
@@ -212,6 +227,7 @@ namespace WowPacketParser.Store
             NpcTextsMop.Clear();
 
             CreatureTexts.Clear();
+            CreatureTextTemplates.Clear();
 
             GossipPOIs.Clear();
 

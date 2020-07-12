@@ -966,29 +966,40 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod]
-        public static string CreatureText()
+        public static string CreatureTextTemplate()
         {
-            if (Storage.CreatureTexts.IsEmpty() || !Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_text))
+            if (Storage.CreatureTextTemplates.IsEmpty() || !Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_text_template))
                 return string.Empty;
 
             // For each sound and emote, if the time they were send is in the +1/-1 seconds range of
-            // our texts, add that sound and emote to our Storage.CreatureTexts
+            // our texts, add that sound and emote to our Storage.CreatureTextTemplates
 
-            foreach (var text in Storage.CreatureTexts)
+            foreach (var text in Storage.CreatureTextTemplates)
             {
                 // For each text
                 foreach (var textValue in text.Value)
                 {
                     // For each emote
-                    var text1 = text;
-                    var value1 = textValue;
-                    foreach (var emoteValue in from emote in Storage.Emotes where emote.Key.GetEntry() == text1.Key from emoteValue in emote.Value let timeSpan = value1.Item2 - emoteValue.Item2 where timeSpan != null && timeSpan.Value.Duration() <= TimeSpan.FromSeconds(1) select emoteValue)
-                        textValue.Item1.Emote = emoteValue.Item1;
+                    if (Storage.Emotes.ContainsKey(textValue.Item1.SenderGUID))
+                    {
+                        foreach (var emote in Storage.Emotes[textValue.Item1.SenderGUID])
+                        {
+                            DateTime textTime = textValue.Item1.Time;
+                            if (System.Math.Abs((textTime - emote.time).TotalSeconds) <= 1)
+                                textValue.Item1.Emote = emote.emote;
+                        }
+                    }
 
                     // For each sound
-                    var value = textValue;
-                    foreach (var sound in from sound in Storage.Sounds let timeSpan = value.Item2 - sound.Item2 where timeSpan != null && timeSpan.Value.Duration() <= TimeSpan.FromSeconds(1) select sound)
-                        textValue.Item1.Sound = sound.Item1;
+                    foreach (var sound in Storage.Sounds)
+                    {
+                        DateTime textTime = textValue.Item1.Time;
+                        if (sound.guid == textValue.Item1.SenderGUID)
+                        {
+                            if (System.Math.Abs((textTime - sound.time).TotalSeconds) <= 1)
+                                textValue.Item1.Sound = sound.sound;
+                        }
+                    }
 
                     List<int> textList;
                     if (SQLDatabase.BroadcastTexts.TryGetValue(textValue.Item1.Text, out textList) ||
@@ -1036,34 +1047,40 @@ namespace WowPacketParser.SQL.Builders
             }
 
             /* can't use compare DB without knowing values of groupid or id
-            var entries = Storage.CreatureTexts.Keys.ToList();
-            var creatureTextDb = SQLDatabase.GetDict<uint, CreatureText>(entries);
+            var entries = Storage.CreatureTextTemplates.Keys.ToList();
+            var creatureTextDb = SQLDatabase.GetDict<uint, CreatureTextTemplate>(entries);
             */
 
-            var rows = new RowList<CreatureText>();
+            var rows = new RowList<CreatureTextTemplate>();
             Dictionary<uint, uint> entryCount = new Dictionary<uint, uint>();
 
-            foreach (var text in Storage.CreatureTexts.OrderBy(t => t.Key))
+            foreach (var text in Storage.CreatureTextTemplates.OrderBy(t => t.Key))
             {
                 foreach (var textValue in text.Value)
                 {
+                    textValue.Item1.Entry = text.Key;
                     var count = entryCount.ContainsKey(text.Key) ? entryCount[text.Key] : 0;
 
-                    if (rows.Where(text2 => text2.Data.Text == textValue.Item1.Text).Count() != 0)
-                        continue;
-
-                    var row = new Row<CreatureText>
+                    var sameTextList = rows.Where(text2 => text2.Data.Text == textValue.Item1.Text && text2.Data.Entry == textValue.Item1.Entry);
+                    if (sameTextList.Count() != 0)
                     {
-                        Data = new CreatureText
+                        foreach (var textRow in sameTextList)
                         {
-                            Entry = text.Key,
-                            GroupId = "@GROUP_ID+" + count,
+                            textValue.Item1.GroupId = textRow.Data.GroupId;
+                        }
+                        continue;
+                    }
+
+                    var row = new Row<CreatureTextTemplate>
+                    {
+                        Data = new CreatureTextTemplate
+                        {
+                            Entry = textValue.Item1.Entry,
+                            GroupId = count,
                             Text = textValue.Item1.Text,
                             Type = textValue.Item1.Type,
                             Language = textValue.Item1.Language,
-                            Probability = 100.0f,
                             Emote = (textValue.Item1.Emote != null ? textValue.Item1.Emote : 0),
-                            Duration = 0,
                             Sound = (textValue.Item1.Sound != null ? textValue.Item1.Sound : 0),
                             BroadcastTextID = textValue.Item1.BroadcastTextID,
                             Comment = textValue.Item1.Comment
@@ -1081,7 +1098,72 @@ namespace WowPacketParser.SQL.Builders
                 }
             }
 
-            return new SQLInsert<CreatureText>(rows, false).Build();
+            string result = new SQLInsert<CreatureTextTemplate>(rows, false).Build();
+
+            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_text))
+            {
+                foreach (var text in Storage.CreatureTexts)
+                {
+                    var sameTextList = rows.Where(text2 => text2.Data.Text == text.Item1.Text && text2.Data.Entry == text.Item1.Entry);
+                    if (sameTextList.Count() != 0)
+                    {
+                        foreach (var textRow in sameTextList)
+                        {
+                            text.Item1.GroupId = textRow.Data.GroupId;
+                            break;
+                        }
+                        continue;
+                    }
+                }
+
+                result += SQLUtil.Compare(Storage.CreatureTexts, SQLDatabase.Get(Storage.CreatureTexts),
+                t => t.Entry.ToString());
+            }
+
+            return result;
+        }
+
+        [BuilderMethod]
+        public static string PlaySound()
+        {
+            if (Storage.Sounds.Count == 0 || !Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.play_sound))
+                return string.Empty;
+
+            string query = "";
+            foreach (var sound in Storage.Sounds)
+            {
+                if (query != "")
+                    query += ",\n";
+
+                uint objectId = 0;
+                string objectType = "";
+                if (sound.guid != WowGuid.Empty)
+                {
+                    if (sound.guid.GetObjectType() != ObjectType.Player)
+                        objectId = sound.guid.GetEntry();
+                    if (sound.guid.GetObjectType() != ObjectType.Unit)
+                        objectType = sound.guid.GetObjectType().ToString();
+                    else
+                        objectType = "Creature";
+                }
+                query += "(" + objectId.ToString() + ", '" + objectType + "', " + sound.sound + ", " + (uint)Utilities.GetUnixTimeFromDateTime(sound.time) + ")";
+            }
+            query = "INSERT INTO `play_sound` (`object_id`, `object_type`, `sound`, `unixtime`) VALUES\n" + query + ";\n\n";
+            return query;
+        }
+
+        [BuilderMethod]
+        public static string PlayMusic()
+        {
+            if (Storage.Music.IsEmpty() || !Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.play_music))
+                return string.Empty;
+
+            var result = "";
+
+            result += SQLUtil.Compare(Storage.Music, SQLDatabase.Get(Storage.Music),
+                t => t.Music.ToString());
+
+            return result;
         }
 
         [BuilderMethod]

@@ -17,6 +17,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         int FactionTemplate { get; }
         long CurHealth { get; }
         long MaxHealth { get; }
+        uint HealthPercent { get; }
         int CurMana { get; }
         int MaxMana { get; }
         IVisibleItem[] VirtualItems { get; }

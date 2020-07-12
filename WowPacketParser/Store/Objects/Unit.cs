@@ -63,7 +63,7 @@ namespace WowPacketParser.Store.Objects
             movementData.StartPositionX = startPosition.X;
             movementData.StartPositionY = startPosition.Y;
             movementData.StartPositionZ = startPosition.Z;
-            movementData.UnixTime = (uint)CreatureMovement.DateTimeToUnixTimestamp(packetTime);
+            movementData.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packetTime);
 
             if (movementData.SplineCount > 0 &&
                 movementData.SplinePoints != null)

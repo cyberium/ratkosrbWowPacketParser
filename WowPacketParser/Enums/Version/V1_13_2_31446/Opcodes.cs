@@ -4400,7 +4400,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_DUEL_REQUESTED, 0x2671},
             {Opcode.SMSG_DUEL_WINNER, 0x2677},
             {Opcode.SMSG_DURABILITY_DAMAGE_DEATH, 0x278C},
-            {Opcode.SMSG_EMOTE, 0x280F},
+            {Opcode.SMSG_EMOTE, 0x2814}, // ok
             {Opcode.SMSG_ENABLE_BARBER_SHOP, 0x26EF},
             {Opcode.SMSG_ENABLE_ENCRYPTION, 0x3049},
             {Opcode.SMSG_ENCHANTMENT_LOG, 0x275A}, // ok
@@ -4640,7 +4640,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_LF_GUILD_RECRUITS, 0x29CF},
             {Opcode.SMSG_LIGHTNING_STORM_END, 0x26D6},
             {Opcode.SMSG_LIGHTNING_STORM_START, 0x26D5},
-            {Opcode.SMSG_LIVE_REGION_ACCOUNT_RESTORE_RESULT, 0x27B7},
+            {Opcode.SMSG_LIVE_REGION_ACCOUNT_RESTORE_RESULT, 0x27B2}, // ??
             {Opcode.SMSG_LIVE_REGION_CHARACTER_COPY_RESULT, 0x27B5},
             {Opcode.SMSG_LIVE_REGION_GET_ACCOUNT_CHARACTER_LIST_RESULT, 0x27A8},
             {Opcode.SMSG_LOAD_CUF_PROFILES, 0x25CE},
@@ -4834,7 +4834,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_PLAYER_SKINNED, 0x278A},
             {Opcode.SMSG_PLAYER_TABARD_VENDOR_ACTIVATE, 0x279B}, // ??
             {Opcode.SMSG_PLAY_MUSIC, 0x27B1},
-            {Opcode.SMSG_PLAY_OBJECT_SOUND, 0x27B2},
+            {Opcode.SMSG_PLAY_OBJECT_SOUND, 0x27B7}, // ok
             {Opcode.SMSG_PLAY_ONE_SHOT_ANIM_KIT, 0x2774},
             {Opcode.SMSG_PLAY_ORPHAN_SPELL_VISUAL, 0x2C47},
             {Opcode.SMSG_PLAY_SCENE, 0x2654},

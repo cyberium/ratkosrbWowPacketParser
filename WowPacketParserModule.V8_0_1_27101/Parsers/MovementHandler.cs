@@ -83,7 +83,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             {
                 case 1:
                     var faceSpot = packet.ReadVector3("FaceSpot", indexes);
-                    orientation = CreatureMovement.GetAngle(pos.X, pos.Y, faceSpot.X, faceSpot.Y);
+                    orientation = Utilities.GetAngle(pos.X, pos.Y, faceSpot.X, faceSpot.Y);
                     break;
                 case 2:
                     orientation = packet.ReadSingle("FaceDirection", indexes);

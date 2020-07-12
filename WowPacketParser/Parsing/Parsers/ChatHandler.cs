@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
@@ -41,7 +42,7 @@ namespace WowPacketParser.Parsing.Parsers
             var guid = packet.ReadGuid("GUID");
 
             if (guid.GetObjectType() == ObjectType.Unit)
-                Storage.Emotes.Add(guid, emote, packet.TimeSpan);
+                Storage.StoreCreatureEmote(guid, emote, packet.Time);
         }
 
         [Parser(Opcode.CMSG_SEND_TEXT_EMOTE)]
@@ -71,7 +72,7 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_CHAT)]
         public static void HandleServerChatMessage(Packet packet)
         {
-            var text = new CreatureText
+            var text = new CreatureTextTemplate
             {
                 Type = packet.ReadByteE<ChatMessageType>("Type"),
                 Language = packet.ReadInt32E<Language>("Language"),
@@ -187,7 +188,20 @@ namespace WowPacketParser.Parsing.Parsers
                 entry = text.ReceiverGUID.GetEntry();
 
             if (entry != 0)
-                Storage.CreatureTexts.Add(entry, text, packet.TimeSpan);
+            {
+                text.Time = packet.Time;
+                Storage.CreatureTextTemplates.Add(entry, text, packet.TimeSpan);
+                CreatureText textEntry = new CreatureText();
+                textEntry.Entry = entry;
+                textEntry.Text = text.Text;
+                textEntry.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+                if (Storage.Objects.ContainsKey(text.SenderGUID))
+                {
+                    var obj = Storage.Objects[text.SenderGUID].Item1 as Unit;
+                    textEntry.HealthPercent = obj.UnitData.HealthPercent;
+                }
+                Storage.CreatureTexts.Add(textEntry);
+            }
         }
 
         [Parser(Opcode.CMSG_MESSAGECHAT)]

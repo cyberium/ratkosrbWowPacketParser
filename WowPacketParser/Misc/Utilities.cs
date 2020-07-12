@@ -25,6 +25,25 @@ namespace WowPacketParser.Misc
             return (time - Epoch).TotalSeconds;
         }
 
+        public static float GetAngle(float x1, float y1, float x2, float y2)
+        {
+            float dx = x1 - x2;
+            float dy = y1 - y2;
+
+            double ang = System.Math.Atan2(dy, dx);
+            ang = (ang >= 0) ? ang : 2 * System.Math.PI + ang;
+            return (float)ang;
+        }
+
+        public static float GetDistance3D(float x1, float y1, float z1, float x2, float y2, float z2)
+        {
+            float dx = x1 - x2;
+            float dy = y1 - y2;
+            float dz = z1 - z2;
+            float dist = (float)System.Math.Sqrt((dx * dx) + (dy * dy) + (dz * dz));
+            return (dist > 0 ? dist : 0);
+        }
+
         public static byte[] HexStringToBinary(string data)
         {
             var bytes = new List<byte>();

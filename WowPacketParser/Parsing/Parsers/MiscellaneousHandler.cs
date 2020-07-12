@@ -404,13 +404,28 @@ namespace WowPacketParser.Parsing.Parsers
         {
             uint sound = packet.ReadUInt32("Sound Id");
 
+            WowGuid guid1 = WowGuid.Empty;
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_3_0_15005))
-                packet.ReadGuid("GUID");
+                guid1 = packet.ReadGuid("GUID");
+
+            if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_PLAY_SOUND, Direction.ServerToClient))
+                Storage.Sounds.Add(new ObjectSound(sound, packet.Time, guid1));
 
             if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_PLAY_OBJECT_SOUND, Direction.ServerToClient))
-                packet.ReadGuid("GUID 2");
+            {
+                WowGuid guid2 = packet.ReadGuid("GUID 2");
+                Storage.Sounds.Add(new ObjectSound(sound, packet.Time, guid2));
+            }
 
-            Storage.Sounds.Add(sound, packet.TimeSpan);
+            if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_PLAY_MUSIC, Direction.ServerToClient))
+            {
+                PlayMusic musicEntry = new PlayMusic
+                {
+                    Music = sound,
+                    UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time)
+                };
+                Storage.Music.Add(musicEntry, packet.TimeSpan);
+            }
         }
 
         [Parser(Opcode.SMSG_WEATHER)]

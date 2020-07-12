@@ -47,6 +47,7 @@ namespace WowPacketParser.SQL.Builders
             var addonRows = new RowList<CreatureAddon>();
             var movementRows = new RowList<CreatureMovement>();
             var movementSplineRows = new RowList<CreatureMovementSpline>();
+            string emoteRows = "";
             foreach (var unit in units)
             {
                 Row<Creature> row = new Row<Creature>();
@@ -158,7 +159,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.Scale = creature.ObjectData.Scale;
                 row.Data.BaseAttackTime = creature.UnitData.AttackRoundBaseTime[0];
                 row.Data.RangedAttackTime = creature.UnitData.RangedAttackRoundBaseTime;
-                row.Data.NpcFlag = (uint)creature.UnitData.NpcFlags[0]; 
+                row.Data.NpcFlag = (uint)creature.UnitData.NpcFlags[0];
                 row.Data.UnitFlag = (uint)creature.UnitData.Flags;
                 row.Data.DynamicFlag = (uint)creature.DynamicFlags.GetValueOrDefault(UnitDynamicFlags.None);
 
@@ -233,7 +234,7 @@ namespace WowPacketParser.SQL.Builders
                                 break;
 
                             // Get max wander distance
-                            float distanceFromSpawn = CreatureMovement.GetDistance3D(creature.Movement.Position.X, creature.Movement.Position.Y, creature.Movement.Position.Z, waypoint.StartPositionX, waypoint.StartPositionY, waypoint.StartPositionZ);
+                            float distanceFromSpawn = Utilities.GetDistance3D(creature.Movement.Position.X, creature.Movement.Position.Y, creature.Movement.Position.Z, waypoint.StartPositionX, waypoint.StartPositionY, waypoint.StartPositionZ);
                             if (distanceFromSpawn > maxDistanceFromSpawn)
                                 maxDistanceFromSpawn = distanceFromSpawn;
 
@@ -249,6 +250,19 @@ namespace WowPacketParser.SQL.Builders
                     {
                         Console.WriteLine("{0} Exception caught while parsing waypoints.", e);
                         Console.WriteLine(WowPacketParser.Program.currentSniffFile);
+                    }
+                }
+
+                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_emote))
+                {
+                    if (Storage.Emotes.ContainsKey(unit.Key))
+                    {
+                        foreach (var emote in Storage.Emotes[unit.Key])
+                        {
+                            if (emoteRows != "")
+                                emoteRows += ",\n";
+                            emoteRows += "(@CGUID+" + count.ToString() + ", " + (uint)emote.emote + ", '" + emote.emote + "', " + (uint)Utilities.GetUnixTimeFromDateTime(emote.time) + ")";
+                        }
                     }
                 }
 
@@ -309,7 +323,14 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(movementSplineDelete.Build());
                 var movementSplineSql = new SQLInsert<CreatureMovementSpline>(movementSplineRows, false);
                 result.Append(movementSplineSql.Build());
-            }  
+            }
+
+            if (emoteRows != "")
+            {
+                result.Append("\nINSERT INTO `creature_emote` (`guid`, `emote_id`, `emote_name`, `unixtime`) VALUES\n");
+                result.Append(emoteRows);
+                result.Append(";\n\n");
+            }
 
             return result.ToString();
         }

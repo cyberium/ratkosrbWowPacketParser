@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.SQL;
@@ -185,30 +186,16 @@ namespace WowPacketParser.Store.Objects
         public uint? UnixTime;
 
         public List<Vector3> SplinePoints = null;
+    }
 
-        public static float GetAngle(float x1, float y1, float x2, float y2)
+    public sealed class CreatureEmote
+    {
+        public CreatureEmote(EmoteType emote_, DateTime time_)
         {
-            float dx = x1 - x2;
-            float dy = y1 - y2;
-
-            double ang = System.Math.Atan2(dy, dx);
-            ang = (ang >= 0) ? ang : 2 * System.Math.PI + ang;
-            return (float)ang;
+            emote = emote_;
+            time = time_;
         }
-
-        public static float GetDistance3D(float x1, float y1, float z1, float x2, float y2, float z2)
-        {
-            float dx = x1 - x2;
-            float dy = y1 - y2;
-            float dz = z1 - z2;
-            float dist = (float)System.Math.Sqrt((dx * dx) + (dy * dy) + (dz * dz));
-            return (dist > 0 ? dist : 0);
-        }
-
-        public static double DateTimeToUnixTimestamp(System.DateTime dateTime)
-        {
-            return (System.TimeZoneInfo.ConvertTimeToUtc(dateTime) -
-                   new System.DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)).TotalSeconds;
-        }
+        public EmoteType emote;
+        public DateTime time;
     }
 }
