@@ -67,4 +67,53 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("VerifiedBuild")]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
+
+    [DBTableName("gameobject_create1_time")]
+    public sealed class GameObjectCreate1 : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtime", true)]
+        public uint Time;
+    }
+
+    [DBTableName("gameobject_create2_time")]
+    public sealed class GameObjectCreate2 : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtime", true)]
+        public uint Time;
+    }
+
+    [DBTableName("gameobject_destroy_time")]
+    public sealed class GameObjectDestroy : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtime", true)]
+        public uint Time;
+    }
+
+    [DBTableName("gameobject_update")]
+    public sealed class GameObjectUpdate : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtime", true)]
+        public uint Time;
+
+        [DBFieldName("flags")]
+        public uint? Flags;
+
+        [DBFieldName("state")]
+        public uint? State;
+
+        [DBFieldName("animprogress")]
+        public uint? AnimProgress;
+    }
 }

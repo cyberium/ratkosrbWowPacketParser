@@ -17,7 +17,95 @@ namespace WowPacketParser.Store
 
         // Units, GameObjects, Players, Items
         public static readonly StoreDictionary<WowGuid, WoWObject> Objects = new StoreDictionary<WowGuid, WoWObject>(new List<SQLOutput>());
+        public static readonly Dictionary<WowGuid, List<DateTime>> ObjectDestroyTimes = new Dictionary<WowGuid, List<DateTime>>();
+        public static void StoreObjectDestroyTime(WowGuid guid, DateTime time)
+        {
+            if (guid.GetObjectType() != ObjectType.Unit &&
+                guid.GetObjectType() != ObjectType.GameObject)
+                return;
 
+            if (Storage.ObjectDestroyTimes.ContainsKey(guid))
+            {
+                Storage.ObjectDestroyTimes[guid].Add(time);
+            }
+            else
+            {
+                List<DateTime> timeList = new List<DateTime>();
+                timeList.Add(time);
+                Storage.ObjectDestroyTimes.Add(guid, timeList);
+            }
+        }
+        public static readonly Dictionary<WowGuid, List<DateTime>> ObjectCreate1Times = new Dictionary<WowGuid, List<DateTime>>();
+        public static void StoreObjectCreate1Time(WowGuid guid, DateTime time)
+        {
+            if (guid.GetObjectType() != ObjectType.Unit &&
+                guid.GetObjectType() != ObjectType.GameObject)
+                return;
+
+            if (Storage.ObjectCreate1Times.ContainsKey(guid))
+            {
+                Storage.ObjectCreate1Times[guid].Add(time);
+            }
+            else
+            {
+                List<DateTime> timeList = new List<DateTime>();
+                timeList.Add(time);
+                Storage.ObjectCreate1Times.Add(guid, timeList);
+            }
+        }
+        public static readonly Dictionary<WowGuid, List<DateTime>> ObjectCreate2Times = new Dictionary<WowGuid, List<DateTime>>();
+        public static void StoreObjectCreate2Time(WowGuid guid, DateTime time)
+        {
+            if (guid.GetObjectType() != ObjectType.Unit &&
+                guid.GetObjectType() != ObjectType.GameObject)
+                return;
+
+            if (Storage.ObjectCreate2Times.ContainsKey(guid))
+            {
+                Storage.ObjectCreate2Times[guid].Add(time);
+            }
+            else
+            {
+                List<DateTime> timeList = new List<DateTime>();
+                timeList.Add(time);
+                Storage.ObjectCreate2Times.Add(guid, timeList);
+            }
+        }
+        public static readonly Dictionary<WowGuid, List<CreatureUpdate>> CreatureUpdates = new Dictionary<WowGuid, List<CreatureUpdate>>();
+        public static void StoreCreatureUpdate(WowGuid guid, CreatureUpdate update)
+        {
+            if (guid.GetObjectType() != ObjectType.Unit ||
+                guid.GetHighType() == HighGuidType.Pet)
+                return;
+
+            if (Storage.CreatureUpdates.ContainsKey(guid))
+            {
+                Storage.CreatureUpdates[guid].Add(update);
+            }
+            else
+            {
+                List<CreatureUpdate> updateList = new List<CreatureUpdate>();
+                updateList.Add(update);
+                Storage.CreatureUpdates.Add(guid, updateList);
+            }
+        }
+        public static readonly Dictionary<WowGuid, List<GameObjectUpdate>> GameObjectUpdates = new Dictionary<WowGuid, List<GameObjectUpdate>>();
+        public static void StoreGameObjectUpdate(WowGuid guid, GameObjectUpdate update)
+        {
+            if (guid.GetObjectType() != ObjectType.GameObject)
+                return;
+
+            if (Storage.GameObjectUpdates.ContainsKey(guid))
+            {
+                Storage.GameObjectUpdates[guid].Add(update);
+            }
+            else
+            {
+                List<GameObjectUpdate> updateList = new List<GameObjectUpdate>();
+                updateList.Add(update);
+                Storage.GameObjectUpdates.Add(guid, updateList);
+            }
+        }
         /* Key: Entry */
 
         // Templates
@@ -39,6 +127,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<CreatureTemplateQuestItem> CreatureTemplateQuestItems = new DataBag<CreatureTemplateQuestItem>(new List<SQLOutput> { SQLOutput.creature_template_wdb });
         public static readonly DataBag<CreatureTemplateScaling> CreatureTemplateScalings = new DataBag<CreatureTemplateScaling>(new List<SQLOutput> { SQLOutput.creature_template_scaling });
         public static readonly DataBag<CreatureTemplateModel> CreatureTemplateModels = new DataBag<CreatureTemplateModel>(new List<SQLOutput> { SQLOutput.creature_template });
+        public static readonly DataBag<CreatureStats> CreatureStats = new DataBag<CreatureStats>(new List<SQLOutput> { SQLOutput.creature_stats });
 
         // Vendor & trainer
         public static readonly DataBag<NpcTrainer> NpcTrainers = new DataBag<NpcTrainer>(new List<SQLOutput> { SQLOutput.npc_trainer }); // legacy 3.3.5 support

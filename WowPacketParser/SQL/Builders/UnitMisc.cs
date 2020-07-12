@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using WowPacketParser.Enums;
+using WowPacketParser.Enums.Version;
 using WowPacketParser.Hotfix;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
@@ -565,6 +566,119 @@ namespace WowPacketParser.SQL.Builders
             foreach (var unit in units)
             {
                 var npc = unit.Value;
+
+                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_stats))
+                {
+                    bool hasData = false;
+                    CreatureStats creatureStats = new CreatureStats();
+                    UpdateField value;
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MINDAMAGE), out value))
+                    {
+                        hasData = true;
+                        creatureStats.DmgMin = value.FloatValue;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXDAMAGE), out value))
+                    {
+                        hasData = true;
+                        creatureStats.DmgMax = value.FloatValue;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MINOFFHANDDAMAGE), out value))
+                    {
+                        hasData = true;
+                        creatureStats.OffhandDmgMin = value.FloatValue;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXOFFHANDDAMAGE), out value))
+                    {
+                        hasData = true;
+                        creatureStats.OffhandDmgMax = value.FloatValue;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MINRANGEDDAMAGE), out value))
+                    {
+                        hasData = true;
+                        creatureStats.RangedDmgMin = value.FloatValue;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXRANGEDDAMAGE), out value))
+                    {
+                        hasData = true;
+                        creatureStats.RangedDmgMax = value.FloatValue;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_ATTACK_POWER), out value))
+                    {
+                        hasData = true;
+                        creatureStats.AttackPower = value.UInt32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RANGED_ATTACK_POWER), out value))
+                    {
+                        hasData = true;
+                        creatureStats.RangedAttackPower = value.UInt32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT), out value))
+                    {
+                        hasData = true;
+                        creatureStats.Strength = value.UInt32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT)+1, out value))
+                    {
+                        hasData = true;
+                        creatureStats.Agility = value.UInt32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT)+2, out value))
+                    {
+                        hasData = true;
+                        creatureStats.Stamina = value.UInt32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT)+3, out value))
+                    {
+                        hasData = true;
+                        creatureStats.Intellect = value.UInt32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT)+4, out value))
+                    {
+                        hasData = true;
+                        creatureStats.Spirit = value.UInt32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES), out value))
+                    {
+                        hasData = true;
+                        creatureStats.Armor = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES)+1, out value))
+                    {
+                        hasData = true;
+                        creatureStats.HolyResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES)+2, out value))
+                    {
+                        hasData = true;
+                        creatureStats.FireResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES)+3, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NatureResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES)+4, out value))
+                    {
+                        hasData = true;
+                        creatureStats.FrostResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES)+5, out value))
+                    {
+                        hasData = true;
+                        creatureStats.ShadowResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES)+6, out value))
+                    {
+                        hasData = true;
+                        creatureStats.ArcaneResistance = value.Int32Value;
+                    }
+                    if (hasData)
+                    {
+                        creatureStats.Entry = unit.Key.GetEntry();
+                        Storage.CreatureStats.Add(creatureStats);
+                    }
+                }
+
                 if (!creatureExportData.ContainsKey(unit.Key.GetEntry()))
                 {
                     CreatureTemplateNonWdbExport data = new CreatureTemplateNonWdbExport();
@@ -940,8 +1054,17 @@ namespace WowPacketParser.SQL.Builders
                 Storage.CreatureTemplatesNonWDB.Add(template);
             }
 
+            string result = "";
+
+            // `creature_stats`
+            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_stats))
+                result += SQLUtil.Compare(Storage.CreatureStats, SQLDatabase.Get(Storage.CreatureStats),
+                    t => StoreGetters.GetName(StoreNameType.Unit, (int)t.Entry));
+
             var templatesDb = SQLDatabase.Get(Storage.CreatureTemplatesNonWDB);
-            return SQLUtil.Compare(Storage.CreatureTemplatesNonWDB, templatesDb, StoreNameType.Unit);
+            result += SQLUtil.Compare(Storage.CreatureTemplatesNonWDB, templatesDb, StoreNameType.Unit);
+
+            return result;
         }
 
         static UnitMisc()

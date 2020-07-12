@@ -23,7 +23,10 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 packet.ReadInt16("Int0");
                 var int8 = packet.ReadUInt32("DestroyObjectsCount");
                 for (var i = 0; i < int8; i++)
-                    packet.ReadPackedGuid128("Object GUID", i);
+                {
+                    WowGuid guid = packet.ReadPackedGuid128("Object GUID", i);
+                    Storage.StoreObjectDestroyTime(guid, packet.Time);
+                };
             }
             packet.ReadUInt32("Data size");
 
@@ -42,9 +45,16 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                         break;
                     }
                     case "CreateObject1":
+                    {
+                        var guid = packet.ReadPackedGuid128("Object Guid", i);
+                        Storage.StoreObjectCreate1Time(guid, packet.Time);
+                        ReadCreateObjectBlock(packet, guid, map, i);
+                        break;
+                    }
                     case "CreateObject2": // Might != CreateObject1 on Cata
                     {
                         var guid = packet.ReadPackedGuid128("Object Guid", i);
+                        Storage.StoreObjectCreate2Time(guid, packet.Time);
                         ReadCreateObjectBlock(packet, guid, map, i);
                         break;
                     }

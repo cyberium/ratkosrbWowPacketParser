@@ -188,6 +188,128 @@ namespace WowPacketParser.Store.Objects
         public List<Vector3> SplinePoints = null;
     }
 
+    [DBTableName("creature_create1_time")]
+    public sealed class CreatureCreate1 : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtime", true)]
+        public uint Time;
+    }
+
+    [DBTableName("creature_create2_time")]
+    public sealed class CreatureCreate2 : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtime", true)]
+        public uint Time;
+    }
+
+    [DBTableName("creature_destroy_time")]
+    public sealed class CreatureDestroy : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtime", true)]
+        public uint Time;
+    }
+
+    [DBTableName("creature_update")]
+    public sealed class CreatureUpdate : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtime", true)]
+        public uint Time;
+
+        [DBFieldName("display_id")]
+        public uint? DisplayID;
+
+        [DBFieldName("faction")]
+        public uint? FactionTemplate;
+
+        [DBFieldName("emote_state")]
+        public uint? EmoteState;
+
+        [DBFieldName("npc_flags")]
+        public uint? NpcFlag;
+
+        [DBFieldName("unit_flags")]
+        public uint? UnitFlag;
+    }
+
+    [DBTableName("creature_stats")]
+    public sealed class CreatureStats : IDataModel
+    {
+        [DBFieldName("entry", true)]
+        public uint Entry;
+
+        [DBFieldName("dmg_min")]
+        public float? DmgMin;
+
+        [DBFieldName("dmg_max")]
+        public float? DmgMax;
+
+        [DBFieldName("dmg_offhand_min")]
+        public float? OffhandDmgMin;
+
+        [DBFieldName("dmg_offhand_max")]
+        public float? OffhandDmgMax;
+
+        [DBFieldName("ranged_dmg_min")]
+        public float? RangedDmgMin;
+
+        [DBFieldName("ranged_dmg_max")]
+        public float? RangedDmgMax;
+
+        [DBFieldName("attack_power")]
+        public uint? AttackPower;
+
+        [DBFieldName("ranged_attack_power")]
+        public uint? RangedAttackPower;
+
+        [DBFieldName("strength")]
+        public uint? Strength;
+
+        [DBFieldName("agility")]
+        public uint? Agility;
+
+        [DBFieldName("stamina")]
+        public uint? Stamina;
+
+        [DBFieldName("intellect")]
+        public uint? Intellect;
+
+        [DBFieldName("spirit")]
+        public uint? Spirit;
+
+        [DBFieldName("armor")]
+        public int? Armor;
+
+        [DBFieldName("holy_res")]
+        public int? HolyResistance;
+
+        [DBFieldName("fire_res")]
+        public int? FireResistance;
+
+        [DBFieldName("nature_res")]
+        public int? NatureResistance;
+
+        [DBFieldName("frost_res")]
+        public int? FrostResistance;
+
+        [DBFieldName("shadow_res")]
+        public int? ShadowResistance;
+
+        [DBFieldName("arcane_res")]
+        public int? ArcaneResistance;
+    }
+
     public sealed class CreatureEmote
     {
         public CreatureEmote(EmoteType emote_, DateTime time_)

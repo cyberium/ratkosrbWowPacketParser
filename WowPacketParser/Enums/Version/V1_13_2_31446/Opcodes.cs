@@ -4179,7 +4179,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_AUCTION_COMMAND_RESULT, 0x272A},
             {Opcode.SMSG_AUCTION_HELLO_RESPONSE, 0x272C}, // ok
             {Opcode.SMSG_AUCTION_LIST_BIDDER_ITEMS_RESULT, 0x2735}, // ok
-            {Opcode.SMSG_AUCTION_LIST_ITEMS_RESULT, 0x272F},
+            {Opcode.SMSG_AUCTION_LIST_ITEMS_RESULT, 0x2733}, // ok
             {Opcode.SMSG_AUCTION_LIST_OWNER_ITEMS_RESULT, 0x2734}, // ok
             {Opcode.SMSG_AUCTION_LIST_PENDING_SALES_RESULT, 0x2736}, // ok
             {Opcode.SMSG_AUCTION_OUTBID_NOTIFICATION, 0x2730}, // ??
@@ -4845,7 +4845,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_PLAY_TIME_WARNING, 0x273D},
             {Opcode.SMSG_PONG, 0x304E},
             {Opcode.SMSG_POWER_UPDATE, 0x2705},
-            {Opcode.SMSG_PRE_RESSURECT, 0x27AF},
+            {Opcode.SMSG_PRE_RESSURECT, 0x27B4}, // ok
             {Opcode.SMSG_PRINT_NOTIFICATION, 0x25E1},
             {Opcode.SMSG_PROC_RESIST, 0x279D}, // ??
             //{Opcode.SMSG_PROPOSE_LEVEL_GRANT, 0x2715}, // ??
@@ -5034,7 +5034,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_START_TIMER, 0x25BB},
             {Opcode.SMSG_STOP_ELAPSED_TIMER, 0x261B},
             {Opcode.SMSG_STOP_MIRROR_TIMER, 0x2750}, // ??
-            {Opcode.SMSG_STOP_SPEAKERBOT_SOUND, 0x27B4},
+            {Opcode.SMSG_STOP_SPEAKERBOT_SOUND, 0x27AF}, // ??
             {Opcode.SMSG_STREAMING_MOVIES, 0x25BA},
             {Opcode.SMSG_SUMMON_CANCEL, 0x26E0},
             {Opcode.SMSG_SUMMON_RAID_MEMBER_VALIDATE_FAILED, 0x258E},
