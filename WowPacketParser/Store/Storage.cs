@@ -189,6 +189,10 @@ namespace WowPacketParser.Store
         public static readonly DataBag<QuestPOIPoint> QuestPOIPoints = new DataBag<QuestPOIPoint>(new List<SQLOutput> { SQLOutput.quest_poi_points }); // WoD
 
         // Quest Misc
+        public static readonly DataBag<QuestStarter> QuestStarters = new DataBag<QuestStarter>(new List<SQLOutput> { SQLOutput.quest_starter });
+        public static readonly DataBag<QuestEnder> QuestEnders = new DataBag<QuestEnder>(new List<SQLOutput> { SQLOutput.quest_ender });
+        public static readonly DataBag<QuestClientAccept> QuestClientAcceptTimes = new DataBag<QuestClientAccept>(new List<SQLOutput> { SQLOutput.quest_client_accept });
+        public static readonly DataBag<QuestClientComplete> QuestClientCompleteTimes = new DataBag<QuestClientComplete>(new List<SQLOutput> { SQLOutput.quest_client_complete });
         public static readonly DataBag<QuestGreeting> QuestGreetings = new DataBag<QuestGreeting>(new List<SQLOutput> { SQLOutput.quest_template });
         public static readonly DataBag<QuestDetails> QuestDetails = new DataBag<QuestDetails>(new List<SQLOutput> { SQLOutput.quest_template });
         public static readonly DataBag<QuestRequestItems> QuestRequestItems = new DataBag<QuestRequestItems>(new List<SQLOutput> { SQLOutput.quest_template });

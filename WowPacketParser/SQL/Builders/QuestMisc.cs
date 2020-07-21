@@ -94,5 +94,61 @@ namespace WowPacketParser.SQL.Builders
 
             return SQLUtil.Compare(Storage.QuestRequestItems, templatesDb, StoreNameType.Quest);
          }
+
+        [BuilderMethod]
+        public static string QuestStarters()
+        {
+            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_starter))
+                return string.Empty;
+
+            if (Storage.QuestStarters.IsEmpty())
+                return string.Empty;
+
+            var templatesDb = SQLDatabase.Get(Storage.QuestStarters);
+
+            return SQLUtil.Compare(Storage.QuestStarters, templatesDb, StoreNameType.Quest);
+        }
+
+        [BuilderMethod]
+        public static string QuestEnders()
+        {
+            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_ender))
+                return string.Empty;
+
+            if (Storage.QuestEnders.IsEmpty())
+                return string.Empty;
+
+            var templatesDb = SQLDatabase.Get(Storage.QuestEnders);
+
+            return SQLUtil.Compare(Storage.QuestEnders, templatesDb, StoreNameType.Quest);
+        }
+
+        [BuilderMethod]
+        public static string QuestClientAcceptTimes()
+        {
+            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_client_accept))
+                return string.Empty;
+
+            if (Storage.QuestClientAcceptTimes.IsEmpty())
+                return string.Empty;
+
+            var templatesDb = SQLDatabase.Get(Storage.QuestClientAcceptTimes);
+
+            return SQLUtil.Compare(Storage.QuestClientAcceptTimes, templatesDb, StoreNameType.Quest);
+        }
+
+        [BuilderMethod]
+        public static string QuestClientCompleteTimes()
+        {
+            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_client_complete))
+                return string.Empty;
+
+            if (Storage.QuestClientCompleteTimes.IsEmpty())
+                return string.Empty;
+
+            var templatesDb = SQLDatabase.Get(Storage.QuestClientCompleteTimes);
+
+            return SQLUtil.Compare(Storage.QuestClientCompleteTimes, templatesDb, StoreNameType.Quest);
+        }
     }
 }

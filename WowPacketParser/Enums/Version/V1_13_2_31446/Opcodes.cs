@@ -4835,7 +4835,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_PLAYER_TABARD_VENDOR_ACTIVATE, 0x279B}, // ??
             {Opcode.SMSG_PLAY_MUSIC, 0x27B1},
             {Opcode.SMSG_PLAY_OBJECT_SOUND, 0x27B7}, // ok
-            {Opcode.SMSG_PLAY_ONE_SHOT_ANIM_KIT, 0x2774},
+            {Opcode.SMSG_PLAY_ONE_SHOT_ANIM_KIT, 0x276F}, // ??
             {Opcode.SMSG_PLAY_ORPHAN_SPELL_VISUAL, 0x2C47},
             {Opcode.SMSG_PLAY_SCENE, 0x2654},
             {Opcode.SMSG_PLAY_SOUND, 0x27B0},
@@ -4868,7 +4868,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_QUERY_PLAYER_NAME_RESPONSE, 0x2707},
             {Opcode.SMSG_QUERY_QUEST_INFO_RESPONSE, 0x2A95},
             {Opcode.SMSG_QUERY_TIME_RESPONSE, 0x2723}, // ok
-            {Opcode.SMSG_QUERY_TREASURE_PICKER_RESPONSE, 0x2848},
+            {Opcode.SMSG_QUERY_TREASURE_PICKER_RESPONSE, 0x284D}, // ok
             {Opcode.SMSG_QUEST_COMPLETION_NPC_RESPONSE, 0x2A81},
             {Opcode.SMSG_QUEST_CONFIRM_ACCEPT, 0x2A8E},
             {Opcode.SMSG_QUEST_FORCE_REMOVED, 0x2A9B},
@@ -4970,7 +4970,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_SET_DUNGEON_DIFFICULTY, 0x26D2},
             {Opcode.SMSG_SET_FACTION_AT_WAR, 0x273F},
             {Opcode.SMSG_SET_FACTION_NOT_VISIBLE, 0x276E},
-            {Opcode.SMSG_SET_FACTION_STANDING, 0x276F},
+            {Opcode.SMSG_SET_FACTION_STANDING, 0x2774}, // ok
             {Opcode.SMSG_SET_FACTION_VISIBLE, 0x276D},
             {Opcode.SMSG_SET_FLAT_SPELL_MODIFIER, 0x2C36},
             {Opcode.SMSG_SET_FORCED_REACTIONS, 0x2763}, // ok
