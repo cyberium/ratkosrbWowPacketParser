@@ -241,15 +241,15 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod]
-        public static string CreatureDefaultTrainer()
+        public static string CreatureTrainer()
         {
-            if (Storage.CreatureDefaultTrainers.IsEmpty())
+            if (Storage.CreatureTrainers.IsEmpty())
                 return string.Empty;
 
             if (!Settings.SqlTables.trainer)
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.CreatureDefaultTrainers, SQLDatabase.Get(Storage.CreatureDefaultTrainers), StoreNameType.None);
+            return SQLUtil.Compare(Storage.CreatureTrainers, SQLDatabase.Get(Storage.CreatureTrainers), StoreNameType.None);
         }
 
         [BuilderMethod]
@@ -426,14 +426,6 @@ namespace WowPacketParser.SQL.Builders
                         result += "UPDATE `gossip_menu_option` SET `box_coded`=" + gossip_pair.Item1.BoxCoded.ToString() + ", `box_money`=" + gossip_pair.Item1.BoxMoney.ToString() + ", `box_text`='" + MySql.Data.MySqlClient.MySqlHelper.EscapeString(gossip_pair.Item1.BoxText) + "' WHERE `menu_id`=" + gossip_pair.Item1.MenuId.ToString() + " && `id`=" + gossip_pair.Item1.OptionIndex.ToString() + ";\r\n";
                     result += "\r\n";
                     result += SQLUtil.Compare(Storage.GossipMenuOptionBoxes, SQLDatabase.Get(Storage.GossipMenuOptionBoxes), t => t.BroadcastTextIdHelper);
-                }
-
-                if (!Storage.GossipMenuOptionTrainers.IsEmpty())
-                {
-                    foreach (var gossip_pair in Storage.GossipMenuOptionTrainers)
-                        result += "UPDATE `gossip_menu_option` SET `option_id`=5, `npc_option_npcflag`=16 WHERE `menu_id`=" + gossip_pair.Item1.MenuId.ToString() + " && `id`=" + gossip_pair.Item1.OptionIndex.ToString() + ";\r\n";
-                    result += "\r\n";
-                    result += SQLUtil.Compare(Storage.GossipMenuOptionTrainers, SQLDatabase.Get(Storage.GossipMenuOptionTrainers), StoreNameType.None);
                 }
             }
 

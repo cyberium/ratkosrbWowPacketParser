@@ -526,7 +526,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<NpcVendor> NpcVendors = new DataBag<NpcVendor>(Settings.SqlTables.npc_vendor);
         public static readonly DataBag<Trainer> Trainers = new DataBag<Trainer>(Settings.SqlTables.trainer);
         public static readonly DataBag<TrainerSpell> TrainerSpells = new DataBag<TrainerSpell>(Settings.SqlTables.trainer);
-        public static readonly DataBag<CreatureDefaultTrainer> CreatureDefaultTrainers = new DataBag<CreatureDefaultTrainer>(Settings.SqlTables.trainer);
+        public static readonly DataBag<CreatureTrainer> CreatureTrainers = new DataBag<CreatureTrainer>(Settings.SqlTables.trainer);
 
         // Loot
         public static readonly Dictionary<uint, Dictionary<WowGuid, LootEntry>> CreatureLoot = new Dictionary<uint, Dictionary<WowGuid, LootEntry>>();
@@ -607,7 +607,6 @@ namespace WowPacketParser.Store
         public static readonly DataBag<GossipMenuOption> GossipMenuOptions = new DataBag<GossipMenuOption>(Settings.SqlTables.gossip_menu_option);
         public static readonly DataBag<GossipMenuOptionAction> GossipMenuOptionActions = new DataBag<GossipMenuOptionAction>(Settings.SqlTables.gossip_menu_option);
         public static readonly DataBag<GossipMenuOptionBox> GossipMenuOptionBoxes = new DataBag<GossipMenuOptionBox>(Settings.SqlTables.gossip_menu_option);
-        public static readonly DataBag<GossipMenuOptionTrainer> GossipMenuOptionTrainers = new DataBag<GossipMenuOptionTrainer>(Settings.SqlTables.gossip_menu_option);
 
         // Quest POI (QuestId, Id)
         public static readonly DataBag<QuestPOI> QuestPOIs = new DataBag<QuestPOI>(Settings.SqlTables.quest_poi_points);
@@ -774,7 +773,7 @@ namespace WowPacketParser.Store
             NpcVendors.Clear();
             Trainers.Clear();
             TrainerSpells.Clear();
-            CreatureDefaultTrainers.Clear();
+            CreatureTrainers.Clear();
 
             PageTexts.Clear();
             NpcTexts.Clear();
@@ -802,7 +801,6 @@ namespace WowPacketParser.Store
             GossipMenuOptions.Clear();
             GossipMenuOptionActions.Clear();
             GossipMenuOptionBoxes.Clear();
-            GossipMenuOptionTrainers.Clear();
 
             QuestPOIs.Clear();
             QuestPOIPoints.Clear();
