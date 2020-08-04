@@ -11,6 +11,7 @@ namespace WowPacketParser.Store.Objects
         public ObjectType Type;
 
         public MovementInfo Movement;
+        public MovementInfo OriginalMovement;
 
         public uint Map;
 
@@ -19,6 +20,7 @@ namespace WowPacketParser.Store.Objects
 
         public IObjectData ObjectData;
         public Dictionary<int, UpdateField> UpdateFields;
+        public Dictionary<int, UpdateField> OriginalUpdateFields;
         public Dictionary<int, List<UpdateField>> DynamicUpdateFields;
 
         public uint PhaseMask;
@@ -42,6 +44,11 @@ namespace WowPacketParser.Store.Objects
         public bool IsOnTransport()
         {
             return Movement.TransportGuid != null && Movement.TransportGuid != WowGuid.Empty;
+        }
+
+        public bool WasOriginallyOnTransport()
+        {
+            return OriginalMovement.TransportGuid != null && OriginalMovement.TransportGuid != WowGuid.Empty;
         }
 
         public int GetDefaultSpawnTime(uint difficultyID)

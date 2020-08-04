@@ -181,6 +181,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                             break;
                         case ObjectType.Unit:
                             (obj as Unit).UnitData = handler.ReadCreateUnitData(fieldsData, flags, index);
+                            (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData;
                             break;
                         case ObjectType.Player:
                             handler.ReadCreateUnitData(fieldsData, flags, index);
@@ -238,7 +239,11 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 CoreParsers.UpdateHandler.ProcessExistingObject(ref existObj, obj, guid); // can't do "ref Storage.Objects[guid].Item1 directly
             }
             else
+            {
+                obj.OriginalMovement = moves != null ? moves.CopyFromMe() : null;
+                obj.OriginalUpdateFields = obj.UpdateFields != null ? new Dictionary<int, UpdateField>(obj.UpdateFields) : null;
                 Storage.Objects.Add(guid, obj, packet.TimeSpan);
+            }
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))
                 packet.AddSniffData(Utilities.ObjectTypeToStore(objType), (int)guid.GetEntry(), "SPAWN");

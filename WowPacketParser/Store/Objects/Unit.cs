@@ -29,10 +29,13 @@ namespace WowPacketParser.Store.Objects
         public uint Bytes2;
 
         public IUnitData UnitData;
+        public IUnitData UnitDataOriginal;
 
         public Unit() : base()
         {
             UnitData = new UnitData(this);
+            UnitDataOriginal = new OriginalUnitData(this);
+
             Waypoints = new List<CreatureMovement>();
             MovementSplines = new List<CreatureMovementSpline>();
         }

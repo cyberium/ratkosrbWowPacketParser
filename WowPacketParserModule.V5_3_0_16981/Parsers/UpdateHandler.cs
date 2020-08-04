@@ -98,8 +98,9 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
             }
             else
             {
+                obj.OriginalMovement = moves != null ? moves.CopyFromMe() : null;
+                obj.OriginalUpdateFields = updates != null ? new Dictionary<int, UpdateField>(updates) : null;
                 Storage.Objects.Add(guid, obj, packet.TimeSpan);
-                Storage.AddObjectCopy(obj, objType, guid, packet);
             }
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))

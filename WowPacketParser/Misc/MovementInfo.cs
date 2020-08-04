@@ -29,5 +29,23 @@ namespace WowPacketParser.Misc
         public uint VehicleId; // Not exactly related to movement but it is read in ReadMovementUpdateBlock
 
         public bool HasWpsOrRandMov; // waypoints or random movement
+
+        public MovementInfo CopyFromMe()
+        {
+            MovementInfo copy = new MovementInfo();
+            copy.Flags = this.Flags;
+            copy.FlagsExtra = this.FlagsExtra;
+            copy.HasSplineData = this.HasSplineData;
+            copy.Position = this.Position;
+            copy.Orientation = this.Orientation;
+            copy.TransportGuid = this.TransportGuid;
+            copy.TransportOffset = this.TransportOffset;
+            copy.Rotation = this.Rotation;
+            copy.WalkSpeed = this.WalkSpeed;
+            copy.RunSpeed = this.RunSpeed;
+            copy.VehicleId = this.VehicleId;
+            copy.HasWpsOrRandMov = this.HasWpsOrRandMov;
+            return copy;
+        }
     }
 }

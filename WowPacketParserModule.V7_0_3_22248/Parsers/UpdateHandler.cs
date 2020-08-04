@@ -116,7 +116,11 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 CoreParsers.UpdateHandler.ProcessExistingObject(ref existObj, obj, guid); // can't do "ref Storage.Objects[guid].Item1 directly
             }
             else
+            {
+                obj.OriginalMovement = moves != null ? moves.CopyFromMe() : null;
+                obj.OriginalUpdateFields = updates != null ? new Dictionary<int, UpdateField>(updates) : null;
                 Storage.Objects.Add(guid, obj, packet.TimeSpan);
+            }
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))
                 packet.AddSniffData(Utilities.ObjectTypeToStore(objType), (int)guid.GetEntry(), "SPAWN");

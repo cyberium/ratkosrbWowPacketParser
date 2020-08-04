@@ -126,19 +126,19 @@ namespace WowPacketParser.SQL.Builders
                     row.Data.PhaseID = data;
                 }
 
-                if (!creature.IsOnTransport())
+                if (!creature.WasOriginallyOnTransport())
                 {
-                    row.Data.PositionX = creature.Movement.Position.X;
-                    row.Data.PositionY = creature.Movement.Position.Y;
-                    row.Data.PositionZ = creature.Movement.Position.Z;
-                    row.Data.Orientation = creature.Movement.Orientation;
+                    row.Data.PositionX = creature.OriginalMovement.Position.X;
+                    row.Data.PositionY = creature.OriginalMovement.Position.Y;
+                    row.Data.PositionZ = creature.OriginalMovement.Position.Z;
+                    row.Data.Orientation = creature.OriginalMovement.Orientation;
                 }
                 else
                 {
-                    row.Data.PositionX = creature.Movement.TransportOffset.X;
-                    row.Data.PositionY = creature.Movement.TransportOffset.Y;
-                    row.Data.PositionZ = creature.Movement.TransportOffset.Z;
-                    row.Data.Orientation = creature.Movement.TransportOffset.O;
+                    row.Data.PositionX = creature.OriginalMovement.TransportOffset.X;
+                    row.Data.PositionY = creature.OriginalMovement.TransportOffset.Y;
+                    row.Data.PositionZ = creature.OriginalMovement.TransportOffset.Z;
+                    row.Data.Orientation = creature.OriginalMovement.TransportOffset.O;
                 }
 
                 //row.Data.SpawnTimeSecs = creature.GetDefaultSpawnTime(creature.DifficultyID);
@@ -146,25 +146,26 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.MovementType = movementType;
 
                 // set some defaults
+                Store.Objects.UpdateFields.IUnitData unitData = creature.UnitDataOriginal != null ? creature.UnitDataOriginal : creature.UnitData;
                 row.Data.PhaseGroup = 0;
                 row.Data.TemporarySpawn = 0;
-                row.Data.CreatedBy = creature.UnitData.CreatedBy.GetEntry();
-                row.Data.SummonedBy = creature.UnitData.SummonedBy.GetEntry();
-                row.Data.SummonSpell = (uint)creature.UnitData.CreatedBySpell;
-                row.Data.DisplayID = (uint)creature.UnitData.DisplayID;
-                row.Data.FactionTemplate = (uint)creature.UnitData.FactionTemplate;
-                row.Data.Level = (uint)creature.UnitData.Level;
-                row.Data.CurHealth = (uint)creature.UnitData.CurHealth;
-                row.Data.CurMana = (uint)creature.UnitData.CurMana;
-                row.Data.MaxHealth = (uint)creature.UnitData.MaxHealth;
-                row.Data.MaxMana = (uint)creature.UnitData.MaxMana;
-                row.Data.SpeedWalk = creature.Movement.WalkSpeed;
-                row.Data.SpeedRun = creature.Movement.RunSpeed;
+                row.Data.CreatedBy = unitData.CreatedBy.GetEntry();
+                row.Data.SummonedBy = unitData.SummonedBy.GetEntry();
+                row.Data.SummonSpell = (uint)unitData.CreatedBySpell;
+                row.Data.DisplayID = (uint)unitData.DisplayID;
+                row.Data.FactionTemplate = (uint)unitData.FactionTemplate;
+                row.Data.Level = (uint)unitData.Level;
+                row.Data.CurHealth = (uint)unitData.CurHealth;
+                row.Data.CurMana = (uint)unitData.CurMana;
+                row.Data.MaxHealth = (uint)unitData.MaxHealth;
+                row.Data.MaxMana = (uint)unitData.MaxMana;
+                row.Data.SpeedWalk = creature.OriginalMovement.WalkSpeed;
+                row.Data.SpeedRun = creature.OriginalMovement.RunSpeed;
                 row.Data.Scale = creature.ObjectData.Scale;
-                row.Data.BaseAttackTime = creature.UnitData.AttackRoundBaseTime[0];
-                row.Data.RangedAttackTime = creature.UnitData.RangedAttackRoundBaseTime;
-                row.Data.NpcFlag = (uint)creature.UnitData.NpcFlags[0];
-                row.Data.UnitFlag = (uint)creature.UnitData.Flags;
+                row.Data.BaseAttackTime = unitData.AttackRoundBaseTime[0];
+                row.Data.RangedAttackTime = unitData.RangedAttackRoundBaseTime;
+                row.Data.NpcFlag = (uint)unitData.NpcFlags[0];
+                row.Data.UnitFlag = (uint)unitData.Flags;
                 row.Data.DynamicFlag = (uint)creature.DynamicFlags.GetValueOrDefault(UnitDynamicFlags.None);
 
                 row.Comment = StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
@@ -199,10 +200,10 @@ namespace WowPacketParser.SQL.Builders
                 {
                     addonRow.Data.GUID = "@CGUID+" + count;
                     addonRow.Data.PathID = 0;
-                    addonRow.Data.Mount = (uint)creature.UnitData.MountDisplayID;
+                    addonRow.Data.Mount = (uint)unitData.MountDisplayID;
                     addonRow.Data.Bytes1 = creature.Bytes1;
                     addonRow.Data.Bytes2 = creature.Bytes2;
-                    addonRow.Data.Emote = (uint)creature.UnitData.EmoteState;
+                    addonRow.Data.Emote = (uint)unitData.EmoteState;
                     addonRow.Data.Auras = auras;
                     addonRow.Data.AIAnimKit = creature.AIAnimKit.GetValueOrDefault(0);
                     addonRow.Data.MovementAnimKit = creature.MovementAnimKit.GetValueOrDefault(0);
@@ -271,7 +272,7 @@ namespace WowPacketParser.SQL.Builders
 
                 if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_movement) &&
                     creature.Waypoints != null &&
-                    creature.Movement.Position != null)
+                    creature.OriginalMovement.Position != null)
                 {
                     try
                     {
@@ -294,7 +295,7 @@ namespace WowPacketParser.SQL.Builders
                                 break;
 
                             // Get max wander distance
-                            float distanceFromSpawn = Utilities.GetDistance3D(creature.Movement.Position.X, creature.Movement.Position.Y, creature.Movement.Position.Z, waypoint.StartPositionX, waypoint.StartPositionY, waypoint.StartPositionZ);
+                            float distanceFromSpawn = Utilities.GetDistance3D(creature.OriginalMovement.Position.X, creature.OriginalMovement.Position.Y, creature.OriginalMovement.Position.Z, waypoint.StartPositionX, waypoint.StartPositionY, waypoint.StartPositionZ);
                             if (distanceFromSpawn > maxDistanceFromSpawn)
                                 maxDistanceFromSpawn = distanceFromSpawn;
 
