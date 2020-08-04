@@ -195,7 +195,7 @@ namespace WowPacketParser.Store.Objects
         public string GUID;
 
         [DBFieldName("unixtime", true)]
-        public uint Time;
+        public uint UnixTime;
     }
 
     [DBTableName("creature_create2_time")]
@@ -205,7 +205,7 @@ namespace WowPacketParser.Store.Objects
         public string GUID;
 
         [DBFieldName("unixtime", true)]
-        public uint Time;
+        public uint UnixTime;
     }
 
     [DBTableName("creature_destroy_time")]
@@ -215,7 +215,7 @@ namespace WowPacketParser.Store.Objects
         public string GUID;
 
         [DBFieldName("unixtime", true)]
-        public uint Time;
+        public uint UnixTime;
     }
 
     [DBTableName("creature_update")]
@@ -225,7 +225,10 @@ namespace WowPacketParser.Store.Objects
         public string GUID;
 
         [DBFieldName("unixtime", true)]
-        public uint Time;
+        public uint UnixTime;
+
+        [DBFieldName("entry")]
+        public uint? Entry;
 
         [DBFieldName("display_id")]
         public uint? DisplayID;

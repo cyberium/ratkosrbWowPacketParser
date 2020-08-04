@@ -4,6 +4,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields
 {
     public interface IUnitData
     {
+        uint Entry { get; }
         int DisplayID { get; }
         uint[] NpcFlags { get; }
         WowGuid SummonedBy { get; }

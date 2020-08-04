@@ -346,58 +346,58 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("quest_starter")]
     public sealed class QuestStarter : IDataModel
     {
-        [DBFieldName("object_id", true)]
+        [DBFieldName("ObjectId", true)]
         public uint? ObjectId;
 
-        [DBFieldName("object_type", true)]
+        [DBFieldName("ObjectType", true)]
         public string ObjectType;
 
-        [DBFieldName("quest_id", true)]
+        [DBFieldName("QuestId", true)]
         public uint? QuestId;
     }
 
     [DBTableName("quest_ender")]
     public sealed class QuestEnder : IDataModel
     {
-        [DBFieldName("object_id", true)]
+        [DBFieldName("ObjectId", true)]
         public uint? ObjectId;
 
-        [DBFieldName("object_type", true)]
+        [DBFieldName("ObjectType", true)]
         public string ObjectType;
 
-        [DBFieldName("quest_id", true)]
+        [DBFieldName("QuestId", true)]
         public uint? QuestId;
     }
 
     [DBTableName("quest_client_accept")]
     public sealed class QuestClientAccept : IDataModel
     {
-        [DBFieldName("object_id")]
+        [DBFieldName("UnixTime", true)]
+        public uint? UnixTime;
+
+        [DBFieldName("ObjectId")]
         public uint? ObjectId;
 
-        [DBFieldName("object_type")]
+        [DBFieldName("ObjectType")]
         public string ObjectType;
 
-        [DBFieldName("questId")]
+        [DBFieldName("QuestId")]
         public uint? QuestId;
-
-        [DBFieldName("unixtime", true)]
-        public uint? UnixTime;
     }
 
     [DBTableName("quest_client_complete")]
     public sealed class QuestClientComplete : IDataModel
     {
-        [DBFieldName("object_id")]
+        [DBFieldName("UnixTime", true)]
+        public uint? UnixTime;
+
+        [DBFieldName("ObjectId")]
         public uint? ObjectId;
 
-        [DBFieldName("object_type")]
+        [DBFieldName("ObjectType")]
         public string ObjectType;
 
-        [DBFieldName("questId")]
+        [DBFieldName("QuestId")]
         public uint? QuestId;
-
-        [DBFieldName("unixtime", true)]
-        public uint? UnixTime;
     }
 }

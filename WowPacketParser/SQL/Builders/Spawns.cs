@@ -221,7 +221,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create1Row = new Row<CreatureCreate1>();
                             create1Row.Data.GUID = "@CGUID+" + count;
-                            create1Row.Data.Time = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
+                            create1Row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
                             create1Rows.Add(create1Row);
                         }
                     }
@@ -235,7 +235,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create2Row = new Row<CreatureCreate2>();
                             create2Row.Data.GUID = "@CGUID+" + count;
-                            create2Row.Data.Time = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
+                            create2Row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
                             create2Rows.Add(create2Row);
                         }
                     }
@@ -249,7 +249,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var destroyRow = new Row<CreatureDestroy>();
                             destroyRow.Data.GUID = "@CGUID+" + count;
-                            destroyRow.Data.Time = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
+                            destroyRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
                             destroyRows.Add(destroyRow);
                         }
                     }
@@ -561,7 +561,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create1Row = new Row<GameObjectCreate1>();
                             create1Row.Data.GUID = "@OGUID+" + count;
-                            create1Row.Data.Time = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
+                            create1Row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
                             create1Rows.Add(create1Row);
                         }
                     }
@@ -575,7 +575,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create2Row = new Row<GameObjectCreate2>();
                             create2Row.Data.GUID = "@OGUID+" + count;
-                            create2Row.Data.Time = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
+                            create2Row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
                             create2Rows.Add(create2Row);
                         }
                     }
@@ -589,7 +589,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var destroyRow = new Row<GameObjectDestroy>();
                             destroyRow.Data.GUID = "@OGUID+" + count;
-                            destroyRow.Data.Time = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
+                            destroyRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
                             destroyRows.Add(destroyRow);
                         }
                     }

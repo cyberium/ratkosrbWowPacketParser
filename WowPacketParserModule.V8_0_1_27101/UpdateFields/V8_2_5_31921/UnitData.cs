@@ -5,6 +5,7 @@ namespace WowPacketParserModule.V8_0_1_27101.UpdateFields.V8_2_5_31921
 {
     public class UnitData : IUnitData
     {
+        public uint Entry { get; set; }
         public int DisplayID { get; set; }
         public uint[] NpcFlags { get; } = new uint[2];
         public uint StateSpellVisualID { get; set; }

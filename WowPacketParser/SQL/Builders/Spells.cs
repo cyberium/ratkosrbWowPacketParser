@@ -30,7 +30,7 @@ namespace WowPacketParser.SQL.Builders
                 return string.Empty;
 
             string query = "";
-            query += "REPLACE INTO `spell_cast_start` (`CasterId`, `CasterType`, `SpellId`, `CastFlags`, `CastFlagsEx`, `TargetId`, `TargetType`, `VerifiedBuild`) VALUES";
+            query += "REPLACE INTO `spell_cast_start` (`UnixTime`, `CasterId`, `CasterType`, `SpellId`, `CastFlags`, `CastFlagsEx`, `TargetId`, `TargetType`, `VerifiedBuild`) VALUES";
             uint count = 0;
             foreach (var cast_pair in Storage.SpellCastStart)
             {
@@ -51,7 +51,7 @@ namespace WowPacketParser.SQL.Builders
                     cast_pair.Item1.MainTargetType == "Object")
                     cast_pair.Item1.MainTargetType = "";
 
-                query += "\n(" + cast_pair.Item1.CasterID + ", '" + cast_pair.Item1.CasterType + "', " + cast_pair.Item1.SpellID + ", " + cast_pair.Item1.CastFlags + ", " + cast_pair.Item1.CastFlagsEx + ", " + cast_pair.Item1.MainTargetID + ", '" + cast_pair.Item1.MainTargetType + "', " + cast_pair.Item1.VerifiedBuild + ")";
+                query += "\n(" + cast_pair.Item1.UnixTime + ", " + cast_pair.Item1.CasterID + ", '" + cast_pair.Item1.CasterType + "', " + cast_pair.Item1.SpellID + ", " + cast_pair.Item1.CastFlags + ", " + cast_pair.Item1.CastFlagsEx + ", " + cast_pair.Item1.MainTargetID + ", '" + cast_pair.Item1.MainTargetType + "', " + cast_pair.Item1.VerifiedBuild + ")";
                 count++;
             }
             query += ";\n";
@@ -68,7 +68,7 @@ namespace WowPacketParser.SQL.Builders
                 return string.Empty;
 
             string query = "";
-            query += "REPLACE INTO `spell_cast_go` (`CasterId`, `CasterType`, `SpellId`, `CastFlags`, `CastFlagsEx`, `MainTargetId`, `MainTargetType`, `HitTargetsCount`, `HitTargetId1`, `HitTargetType1`, `HitTargetId2`, `HitTargetType2`, `HitTargetId3`, `HitTargetType3`, `HitTargetId4`, `HitTargetType4`, `HitTargetId5`, `HitTargetType5`, `HitTargetId6`, `HitTargetType6`, `HitTargetId7`, `HitTargetType7`, `HitTargetId8`, `HitTargetType8`, `VerifiedBuild`) VALUES";
+            query += "REPLACE INTO `spell_cast_go` (`UnixTime`, `CasterId`, `CasterType`, `SpellId`, `CastFlags`, `CastFlagsEx`, `MainTargetId`, `MainTargetType`, `HitTargetsCount`, `HitTargetId1`, `HitTargetType1`, `HitTargetId2`, `HitTargetType2`, `HitTargetId3`, `HitTargetType3`, `HitTargetId4`, `HitTargetType4`, `HitTargetId5`, `HitTargetType5`, `HitTargetId6`, `HitTargetType6`, `HitTargetId7`, `HitTargetType7`, `HitTargetId8`, `HitTargetType8`, `VerifiedBuild`) VALUES";
             uint count = 0;
             foreach (var cast_pair in Storage.SpellCastGo)
             {
@@ -89,7 +89,7 @@ namespace WowPacketParser.SQL.Builders
                     cast_pair.Item1.MainTargetType == "Object")
                     cast_pair.Item1.MainTargetType = "";
 
-                query += "\n(" + cast_pair.Item1.CasterID + ", '" + cast_pair.Item1.CasterType + "', " + cast_pair.Item1.SpellID + ", " + cast_pair.Item1.CastFlags + ", " + cast_pair.Item1.CastFlagsEx + ", " + cast_pair.Item1.MainTargetID + ", '" + cast_pair.Item1.MainTargetType + "', " + cast_pair.Item1.HitTargetsCount + ", ";
+                query += "\n(" + cast_pair.Item1.UnixTime + ", " + cast_pair.Item1.CasterID + ", '" + cast_pair.Item1.CasterType + "', " + cast_pair.Item1.SpellID + ", " + cast_pair.Item1.CastFlags + ", " + cast_pair.Item1.CastFlagsEx + ", " + cast_pair.Item1.MainTargetID + ", '" + cast_pair.Item1.MainTargetType + "', " + cast_pair.Item1.HitTargetsCount + ", ";
                 for (uint i = 0; i < SpellCastData.MAX_SPELL_HIT_TARGETS_DB; i++)
                 {
                     query += cast_pair.Item1.HitTargetID[i] + ", '" + cast_pair.Item1.HitTargetType[i] + "', ";

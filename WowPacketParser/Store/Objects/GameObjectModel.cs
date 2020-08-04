@@ -75,7 +75,7 @@ namespace WowPacketParser.Store.Objects
         public string GUID;
 
         [DBFieldName("unixtime", true)]
-        public uint Time;
+        public uint UnixTime;
     }
 
     [DBTableName("gameobject_create2_time")]
@@ -85,7 +85,7 @@ namespace WowPacketParser.Store.Objects
         public string GUID;
 
         [DBFieldName("unixtime", true)]
-        public uint Time;
+        public uint UnixTime;
     }
 
     [DBTableName("gameobject_destroy_time")]
@@ -95,7 +95,7 @@ namespace WowPacketParser.Store.Objects
         public string GUID;
 
         [DBFieldName("unixtime", true)]
-        public uint Time;
+        public uint UnixTime;
     }
 
     [DBTableName("gameobject_update")]
@@ -105,7 +105,7 @@ namespace WowPacketParser.Store.Objects
         public string GUID;
 
         [DBFieldName("unixtime", true)]
-        public uint Time;
+        public uint UnixTime;
 
         [DBFieldName("flags")]
         public uint? Flags;

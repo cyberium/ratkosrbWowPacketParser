@@ -244,6 +244,10 @@ namespace WowPacketParser.Store
                     castData.HitTargetID[i] = 0;
             }
 
+            castData.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+
+            /*
+            uncomment for unique casts only
             foreach (var cast_pair in storage)
             {
                 if (cast_pair.Item1.CasterID == castData.CasterID &&
@@ -257,6 +261,7 @@ namespace WowPacketParser.Store
                     cast_pair.Item1.HitTargetType.SequenceEqual(castData.HitTargetType))
                     return;
             }
+            */
 
             storage.Add(castData, packet.TimeSpan);
         }

@@ -29,6 +29,8 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
             }
         }
 
+        public uint Entry => UpdateFields.GetValue<ObjectField, uint>(ObjectField.OBJECT_FIELD_ENTRY);
+
         public int DisplayID => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_DISPLAYID);
 
         public uint[] NpcFlags

@@ -33,6 +33,9 @@ namespace WowPacketParser.Store.Objects
     {
         public const uint MAX_SPELL_HIT_TARGETS_DB = 8;
 
+        [DBFieldName("UnixTime")]
+        public uint UnixTime = 0;
+
         [DBFieldName("CasterId")]
         public uint? CasterID;
 
@@ -58,7 +61,7 @@ namespace WowPacketParser.Store.Objects
         public uint[] HitTargetID = { 0, 0, 0, 0, 0, 0, 0, 0 };
         public string[] HitTargetType = { "", "", "", "", "", "", "", "" };
 
-        [DBFieldName("verifiedBuild")]
+        [DBFieldName("VerifiedBuild")]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 
