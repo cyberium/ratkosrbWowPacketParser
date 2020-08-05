@@ -620,6 +620,7 @@
     <Compile Include="Store\Objects\CreatureTemplateScaling.cs" />
     <Compile Include="Store\Objects\CreatureText.cs" />
     <Compile Include="Store\Objects\ItemInstance.cs" />
+    <Compile Include="Store\Objects\LootTemplate.cs" />
     <Compile Include="Store\Objects\Sounds.cs" />
     <Compile Include="Store\Objects\UpdateFields\IQuestSession.cs" />
     <Compile Include="Store\Objects\UpdateFields\IReplayedQuest.cs" />

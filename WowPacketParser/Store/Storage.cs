@@ -136,6 +136,42 @@ namespace WowPacketParser.Store
         public static readonly DataBag<TrainerSpell> TrainerSpells = new DataBag<TrainerSpell>(new List<SQLOutput> { SQLOutput.trainer });
         public static readonly DataBag<CreatureDefaultTrainer> CreatureDefaultTrainers = new DataBag<CreatureDefaultTrainer>(new List<SQLOutput> { SQLOutput.trainer });
 
+        // Loot
+        public static readonly Dictionary<uint, Dictionary<WowGuid, LootEntry>> CreatureLoot = new Dictionary<uint, Dictionary<WowGuid, LootEntry>>();
+        public static readonly Dictionary<uint, Dictionary<WowGuid, LootEntry>> GameObjectLoot = new Dictionary<uint, Dictionary<WowGuid, LootEntry>>();
+        public static void StoreLoot(LootEntry loot, WowGuid objectGuid, WowGuid lootGuid)
+        {
+            Dictionary<uint, Dictionary<WowGuid, LootEntry>> lootStorage = null;
+            if (objectGuid.GetObjectType() == ObjectType.Unit)
+                lootStorage = CreatureLoot;
+            else if (objectGuid.GetObjectType() == ObjectType.GameObject)
+                lootStorage = GameObjectLoot;
+            if (lootStorage == null)
+                return;
+
+            if (lootStorage.ContainsKey(loot.Entry))
+            {
+                if (lootStorage[loot.Entry].ContainsKey(lootGuid))
+                    return;
+
+                loot.LootId = LootEntry.LootIdCounter++;
+                foreach (LootItem item in loot.ItemsList)
+                    item.LootId = loot.LootId;
+
+                lootStorage[loot.Entry].Add(lootGuid, loot);
+            }
+            else
+            {
+                loot.LootId = LootEntry.LootIdCounter++;
+                foreach (LootItem item in loot.ItemsList)
+                    item.LootId = loot.LootId;
+
+                Dictionary<WowGuid, LootEntry> dict = new Dictionary<WowGuid, LootEntry>();
+                dict.Add(lootGuid, loot);
+                lootStorage.Add(loot.Entry, dict);
+            }
+        }
+
         // Page & npc text
         public static readonly DataBag<PageText> PageTexts = new DataBag<PageText>(new List<SQLOutput> { SQLOutput.page_text });
         public static readonly DataBag<NpcText> NpcTexts = new DataBag<NpcText>(new List<SQLOutput> { SQLOutput.npc_text });

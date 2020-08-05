@@ -1,12 +1,14 @@
 ﻿using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParserModule.V7_0_3_22248.Parsers
 {
     public static class LootHandler
     {
-        public static void ReadLootItem(Packet packet, params object[] indexes)
+        public static void ReadLootItem(LootEntry loot, Packet packet, params object[] indexes)
         {
             packet.ResetBitReader();
 
@@ -14,9 +16,16 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadBits("ItemUiType", 3, indexes);
             packet.ReadBit("CanTradeToTapList", indexes);
 
-            Substructures.ItemHandler.ReadItemInstance(packet, indexes, "ItemInstance");
+            ItemInstance itemInstance = Substructures.ItemHandler.ReadItemInstance(packet, indexes, "ItemInstance");
+            uint count = packet.ReadUInt32("Quantity", indexes);
+            if (loot != null)
+            {
+                LootItem lootItem = new LootItem();
+                lootItem.ItemId = (uint)itemInstance.ItemID;
+                lootItem.Count = count;
+                loot.ItemsList.Add(lootItem);
+            }
 
-            packet.ReadUInt32("Quantity", indexes);
             packet.ReadByte("LootItemType", indexes);
             packet.ReadByte("LootListID", indexes);
         }
@@ -24,16 +33,19 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
         [Parser(Opcode.SMSG_LOOT_RESPONSE)]
         public static void HandleLootResponse(Packet packet)
         {
-            packet.ReadPackedGuid128("Owner");
-            packet.ReadPackedGuid128("LootObj");
+            WowGuid lootOwner = packet.ReadPackedGuid128("Owner");
+            WowGuid lootObject = packet.ReadPackedGuid128("LootObj");
             packet.ReadByteE<LootError>("FailureReason");
             packet.ReadByteE<LootType>("AcquireReason");
             packet.ReadByteE<LootMethod>("LootMethod");
             packet.ReadByteE<ItemQuality>("Threshold");
 
-            packet.ReadUInt32("Coins");
+            LootEntry loot = new LootEntry();
+            loot.Entry = lootOwner.GetEntry();
+            loot.Money = packet.ReadUInt32("Coins");
 
-            var itemCount = packet.ReadUInt32("ItemCount");
+            uint itemCount = packet.ReadUInt32("ItemCount");
+            loot.ItemsCount = itemCount;
             var currencyCount = packet.ReadUInt32("CurrencyCount");
 
             packet.ResetBitReader();
@@ -44,10 +56,12 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 packet.ReadBit("PersonalLooting");
 
             for (var i = 0; i < itemCount; ++i)
-                ReadLootItem(packet, i, "LootItem");
+                ReadLootItem(loot, packet, i, "LootItem");
 
             for (var i = 0; i < currencyCount; ++i)
                 V6_0_2_19033.Parsers.LootHandler.ReadCurrenciesData(packet, i, "Currencies");
+
+            Storage.StoreLoot(loot, lootOwner, lootObject);
         }
 
         [Parser(Opcode.SMSG_START_LOOT_ROLL)]
@@ -58,7 +72,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadUInt32("RollTime");
             packet.ReadByte("ValidRolls");
             packet.ReadByteE<LootMethod>("Method");
-            ReadLootItem(packet, "LootItem");
+            ReadLootItem(null, packet, "LootItem");
         }
 
         [Parser(Opcode.SMSG_LOOT_ROLL)]
@@ -68,7 +82,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadPackedGuid128("Winner");
             packet.ReadInt32("Roll");
             packet.ReadByte("RollType");
-            ReadLootItem(packet, "LootItem");
+            ReadLootItem(null, packet, "LootItem");
             packet.ResetBitReader();
             packet.ReadBit("MainSpec");
         }
@@ -80,7 +94,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadPackedGuid128("Player");
             packet.ReadInt32("Roll");
             packet.ReadByte("RollType");
-            ReadLootItem(packet, "LootItem");
+            ReadLootItem(null, packet, "LootItem");
             packet.ReadBit("MainSpec");
         }
 
@@ -88,7 +102,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
         public static void HandleLootAllPassed(Packet packet)
         {
             packet.ReadPackedGuid128("LootObj");
-            ReadLootItem(packet, "LootItem");
+            ReadLootItem(null, packet, "LootItem");
         }
 
         [Parser(Opcode.SMSG_LOOT_LIST, ClientVersionBuild.V7_2_0_23826)]

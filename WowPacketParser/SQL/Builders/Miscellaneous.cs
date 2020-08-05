@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
@@ -152,6 +153,54 @@ namespace WowPacketParser.SQL.Builders
             var templateDb = SQLDatabase.Get(Storage.Scenes, Settings.TDBDatabase);
 
             return SQLUtil.Compare(Storage.Scenes, templateDb, StoreNameType.None);
+        }
+
+        public static string BuildLootQuery(Dictionary<uint, Dictionary<WowGuid, LootEntry>> storage, string entryTable, string itemTable)
+        {
+            uint rowsCount = 0;
+            uint rowsCount2 = 0;
+            string query = "INSERT INTO `" + entryTable + "` (`entry`, `loot_id`, `money`, `items_count`) VALUES\n";
+            string query2 = "INSERT INTO `" + itemTable + "` (`loot_id`, `item_id`, `count`) VALUES\n";
+            foreach (var pair1 in storage)
+            {
+                foreach (var pair2 in pair1.Value)
+                {
+                    if (rowsCount > 0)
+                        query += ",\n";
+                    query += "(" + pair2.Value.Entry + ", " + pair2.Value.LootId + ", " + pair2.Value.Money + ", " + pair2.Value.ItemsCount + ")";
+                    rowsCount++;
+
+                    foreach (var itr in pair2.Value.ItemsList)
+                    {
+                        if (rowsCount2 > 0)
+                            query2 += ",\n";
+                        query2 += "(" + itr.LootId + ", " + itr.ItemId + ", " + itr.Count + ")";
+                        rowsCount2++;
+                    }
+                }
+            }
+            query += ";\n";
+            query += query2;
+            query += ";\n\n";
+            return query;
+        }
+
+        [BuilderMethod]
+        public static string LootTemplates()
+        {
+            string query = "";
+
+            if (Storage.CreatureLoot.Count > 0 && Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_loot))
+            {
+                query += BuildLootQuery(Storage.CreatureLoot, "creature_loot", "creature_loot_item");
+            }
+
+            if (Storage.GameObjectLoot.Count > 0 && Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_loot))
+            {
+                query += BuildLootQuery(Storage.CreatureLoot, "creature_loot", "creature_loot_item");
+            }
+
+            return query;
         }
     }
 }
