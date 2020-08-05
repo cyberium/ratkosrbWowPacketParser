@@ -25,7 +25,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
 
             Unit obj = null;
             CreatureMovement movementData = null;
-            if (Storage.Objects != null && Storage.Objects.ContainsKey(guid))
+            if (guid.GetObjectType() == ObjectType.Unit && Storage.Objects != null && Storage.Objects.ContainsKey(guid))
             {
                 obj = Storage.Objects[guid].Item1 as Unit;
                 if (obj.UpdateFields != null)
@@ -39,10 +39,10 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_MONSTER_MOVE_TRANSPORT, Direction.ServerToClient))
             {
                 packet.ReadPackedGuid("TransportGUID");
-                packet.ReadByte("VehicleSeat");
+                packet.ReadSByte("VehicleSeat");
             }
 
-            packet.ReadBool("Toggle AnimTierInTrans");
+            packet.ReadSByte("VehicleExitVoluntary");
             var pos = packet.ReadVector3("Position");
 
             ReadMovementMonsterSpline(movementData, packet, pos, "MovementMonsterSpline");
@@ -59,7 +59,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
 
         public static void ReadMovementSpline(CreatureMovement movementData, Packet packet, Vector3 pos, params object[] indexes)
         {
-            var type = packet.ReadByteE<SplineType>("Face", indexes);
+            var type = packet.ReadSByteE<SplineType>("Face", indexes);
 
             float orientation = 100;
             switch (type)
@@ -90,7 +90,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
 
             if (flags.HasAnyFlag(SplineFlag.Animation))
             {
-                packet.ReadByteE<MovementAnimationState>("AnimTier", indexes);
+                packet.ReadSByteE<MovementAnimationState>("AnimTier", indexes);
                 packet.ReadInt32("TierTransStartTime", indexes); // Async-time in ms
             }
 
