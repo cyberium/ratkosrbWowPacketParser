@@ -346,58 +346,58 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("quest_starter")]
     public sealed class QuestStarter : IDataModel
     {
-        [DBFieldName("ObjectId", true)]
+        [DBFieldName("object_id", true)]
         public uint? ObjectId;
 
-        [DBFieldName("ObjectType", true)]
+        [DBFieldName("object_type", true)]
         public string ObjectType;
 
-        [DBFieldName("QuestId", true)]
+        [DBFieldName("quest_id", true)]
         public uint? QuestId;
     }
 
     [DBTableName("quest_ender")]
     public sealed class QuestEnder : IDataModel
     {
-        [DBFieldName("ObjectId", true)]
+        [DBFieldName("object_id", true)]
         public uint? ObjectId;
 
-        [DBFieldName("ObjectType", true)]
+        [DBFieldName("object_type", true)]
         public string ObjectType;
 
-        [DBFieldName("QuestId", true)]
+        [DBFieldName("quest_id", true)]
         public uint? QuestId;
     }
 
     [DBTableName("quest_client_accept")]
     public sealed class QuestClientAccept : IDataModel
     {
-        [DBFieldName("UnixTime", true)]
+        [DBFieldName("unixtime", true)]
         public uint? UnixTime;
 
-        [DBFieldName("ObjectId")]
+        [DBFieldName("object_id")]
         public uint? ObjectId;
 
-        [DBFieldName("ObjectType")]
+        [DBFieldName("object_type")]
         public string ObjectType;
 
-        [DBFieldName("QuestId")]
+        [DBFieldName("quest_id")]
         public uint? QuestId;
     }
 
     [DBTableName("quest_client_complete")]
     public sealed class QuestClientComplete : IDataModel
     {
-        [DBFieldName("UnixTime", true)]
+        [DBFieldName("unixtime", true)]
         public uint? UnixTime;
 
-        [DBFieldName("ObjectId")]
+        [DBFieldName("object_id")]
         public uint? ObjectId;
 
-        [DBFieldName("ObjectType")]
+        [DBFieldName("object_type")]
         public string ObjectType;
 
-        [DBFieldName("QuestId")]
+        [DBFieldName("quest_id")]
         public uint? QuestId;
     }
 }

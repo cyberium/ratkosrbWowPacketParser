@@ -16,7 +16,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.ConversationActors.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.conversation_actors))
+            if (!Settings.SqlTables.conversation_actors)
                 return string.Empty;
 
             var templateDb = SQLDatabase.Get(Storage.ConversationActors);
@@ -30,7 +30,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.ConversationActorTemplates.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.conversation_actor_template))
+            if (!Settings.SqlTables.conversation_actor_template)
                 return string.Empty;
 
             var templateDb = SQLDatabase.Get(Storage.ConversationActorTemplates);
@@ -44,7 +44,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.ConversationLineTemplates.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.conversation_line_template))
+            if (!Settings.SqlTables.conversation_line_template)
                 return string.Empty;
 
             var templateDb = SQLDatabase.Get(Storage.ConversationLineTemplates);
@@ -66,7 +66,7 @@ namespace WowPacketParser.SQL.Builders
             if (conversations.Count == 0)
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.conversation_template))
+            if (!Settings.SqlTables.conversation_template)
                 return string.Empty;
 
             var conversationsData = new DataBag<ConversationTemplate>();

@@ -14,7 +14,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true, Gameobjects = true)]
         public static string GameObjectTemplateAddon(Dictionary<WowGuid, GameObject> gameobjects)
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_template_addon))
+            if (!Settings.SqlTables.gameobject_template_addon)
                 return string.Empty;
 
             if (gameobjects.Count == 0)

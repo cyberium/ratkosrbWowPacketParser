@@ -83,5 +83,88 @@ namespace WowPacketParser.Misc
                    DumpFormat == DumpFormatType.SqlOnly ||
                    DumpFormat == DumpFormatType.Text;
         }
+        public sealed class SqlTables
+        {
+            public static readonly bool ObjectNames = Conf.GetBoolean("ObjectNames", false);
+            public static readonly bool SniffData = Conf.GetBoolean("SniffData", false);
+            public static readonly bool SniffDataOpcodes = Conf.GetBoolean("SniffDataOpcodes", false);
+
+            public static readonly bool areatrigger_template = Conf.GetBoolean("areatrigger_template", false);
+            public static readonly bool areatrigger_template_polygon_vertices = Conf.GetBoolean("areatrigger_template_polygon_vertices", false);
+            public static readonly bool broadcast_text = Conf.GetBoolean("broadcast_text", false);
+            public static readonly bool broadcast_text_locale = Conf.GetBoolean("broadcast_text_locale", false);
+            public static readonly bool conversation_actor_template = Conf.GetBoolean("conversation_actor_template", false);
+            public static readonly bool conversation_actors = Conf.GetBoolean("conversation_actors", false);
+            public static readonly bool conversation_line_template = Conf.GetBoolean("conversation_line_template", false);
+            public static readonly bool conversation_template = Conf.GetBoolean("conversation_template", false);
+            public static readonly bool creature = Conf.GetBoolean("creature", false);
+            public static readonly bool creature_addon = Conf.GetBoolean("creature_addon", false);
+            public static readonly bool creature_create1_time = Conf.GetBoolean("creature_create1_time", false);
+            public static readonly bool creature_create2_time = Conf.GetBoolean("creature_create2_time", false);
+            public static readonly bool creature_destroy_time = Conf.GetBoolean("creature_destroy_time", false);
+            public static readonly bool creature_display_info_addon = Conf.GetBoolean("creature_display_info_addon", false);
+            public static readonly bool creature_equip_template = Conf.GetBoolean("creature_equip_template", false);
+            public static readonly bool creature_emote = Conf.GetBoolean("creature_emote", false);
+            public static readonly bool creature_gossip = Conf.GetBoolean("creature_gossip", false);
+            public static readonly bool creature_loot = Conf.GetBoolean("creature_loot", false);
+            public static readonly bool creature_movement = Conf.GetBoolean("creature_movement", false);
+            public static readonly bool creature_stats = Conf.GetBoolean("creature_stats", false);
+            public static readonly bool creature_template = Conf.GetBoolean("creature_template", false);
+            public static readonly bool creature_template_wdb = Conf.GetBoolean("creature_template_wdb", false);
+            public static readonly bool creature_template_addon = Conf.GetBoolean("creature_template_addon", false);
+            public static readonly bool creature_template_locale = Conf.GetBoolean("creature_template_locale", false);
+            public static readonly bool creature_template_scaling = Conf.GetBoolean("creature_template_scaling", false);
+            public static readonly bool creature_text = Conf.GetBoolean("creature_text", false);
+            public static readonly bool creature_text_template = Conf.GetBoolean("creature_text_template", false);
+            public static readonly bool creature_update = Conf.GetBoolean("creature_update", false);
+            public static readonly bool gameobject = Conf.GetBoolean("gameobject", false);
+            public static readonly bool gameobject_addon = Conf.GetBoolean("gameobject_addon", false);
+            public static readonly bool gameobject_create1_time = Conf.GetBoolean("gameobject_create1_time", false);
+            public static readonly bool gameobject_create2_time = Conf.GetBoolean("gameobject_create2_time", false);
+            public static readonly bool gameobject_destroy_time = Conf.GetBoolean("gameobject_destroy_time", false);
+            public static readonly bool gameobject_loot = Conf.GetBoolean("gameobject_loot", false);
+            public static readonly bool gameobject_template = Conf.GetBoolean("gameobject_template", false);
+            public static readonly bool gameobject_template_addon = Conf.GetBoolean("gameobject_template_addon", false);
+            public static readonly bool gameobject_update = Conf.GetBoolean("gameobject_update", false);
+            public static readonly bool gossip_menu = Conf.GetBoolean("gossip_menu", false);
+            public static readonly bool gossip_menu_option = Conf.GetBoolean("gossip_menu_option", false);
+            public static readonly bool item_template = Conf.GetBoolean("item_template", false);
+            public static readonly bool locales_quest = Conf.GetBoolean("locales_quest", false);
+            public static readonly bool locales_quest_objectives = Conf.GetBoolean("locales_quest_objectives", false);
+            public static readonly bool npc_spellclick_spells = Conf.GetBoolean("npc_spellclick_spells", false);
+            public static readonly bool npc_text = Conf.GetBoolean("npc_text", false);
+            public static readonly bool npc_trainer = Conf.GetBoolean("npc_trainer", false);
+            public static readonly bool npc_vendor = Conf.GetBoolean("npc_vendor", false);
+            public static readonly bool page_text = Conf.GetBoolean("page_text", false);
+            public static readonly bool page_text_locale = Conf.GetBoolean("page_text_locale", false);
+            public static readonly bool play_sound = Conf.GetBoolean("play_sound", false);
+            public static readonly bool play_music = Conf.GetBoolean("play_music", false);
+            public static readonly bool playerchoice = Conf.GetBoolean("playerchoice", false);
+            public static readonly bool playerchoice_locale = Conf.GetBoolean("playerchoice_locale", false);
+            public static readonly bool playercreateinfo = Conf.GetBoolean("playercreateinfo", false);
+            public static readonly bool playercreateinfo_action = Conf.GetBoolean("playercreateinfo_action", false);
+            public static readonly bool points_of_interest = Conf.GetBoolean("points_of_interest", false);
+            public static readonly bool quest_client_accept = Conf.GetBoolean("quest_client_accept", false);
+            public static readonly bool quest_client_complete = Conf.GetBoolean("quest_client_complete", false);
+            public static readonly bool quest_poi = Conf.GetBoolean("quest_poi", false);
+            public static readonly bool quest_poi_points = Conf.GetBoolean("quest_poi_points", false);
+            public static readonly bool quest_template = Conf.GetBoolean("quest_template", false);
+            public static readonly bool quest_starter = Conf.GetBoolean("quest_starter", false);
+            public static readonly bool quest_ender = Conf.GetBoolean("quest_ender", false);
+            public static readonly bool scene_template = Conf.GetBoolean("scene_template", false);
+            public static readonly bool scenario_poi = Conf.GetBoolean("scenario_poi", false);
+            public static readonly bool spell_cast_start = Conf.GetBoolean("spell_cast_start", false);
+            public static readonly bool spell_cast_go = Conf.GetBoolean("spell_cast_go", false);
+            public static readonly bool spell_pet_action = Conf.GetBoolean("spell_pet_action", false);
+            public static readonly bool spell_pet_cooldown = Conf.GetBoolean("spell_pet_cooldown", false);
+            public static readonly bool spell_target_position = Conf.GetBoolean("spell_target_position", false);
+            public static readonly bool spell_areatrigger = Conf.GetBoolean("spell_areatrigger", false);
+            public static readonly bool trainer = Conf.GetBoolean("trainer", false);
+            public static readonly bool vehicle_template_accessory = Conf.GetBoolean("vehicle_template_accessory", false);
+            public static readonly bool weather_updates = Conf.GetBoolean("weather_updates", false);
+
+            public static readonly bool hotfix_data = Conf.GetBoolean("hotfix_data", false);
+            public static readonly bool hotfix_blob = Conf.GetBoolean("hotfix_blob", false);
+        }
     }
 }

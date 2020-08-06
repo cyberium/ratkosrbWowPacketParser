@@ -13,7 +13,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true)]
         public static string QuestTemplate()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_template))
+            if (!Settings.SqlTables.quest_template)
                 return string.Empty;
 
             if (Storage.QuestTemplates.IsEmpty())
@@ -27,7 +27,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true)]
         public static string QuestObjective()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_template))
+            if (!Settings.SqlTables.quest_template)
                 return string.Empty;
 
             if (Settings.TargetedDatabase == TargetedDatabase.WrathOfTheLichKing ||
@@ -45,7 +45,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true)]
         public static string QuestVisualEffect()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_template))
+            if (!Settings.SqlTables.quest_template)
                 return string.Empty;
 
             if (Settings.TargetedDatabase == TargetedDatabase.WrathOfTheLichKing ||
@@ -63,7 +63,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true, Units = true)]
         public static string CreatureTemplate(Dictionary<WowGuid, Unit> units)
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_template_wdb))
+            if (!Settings.SqlTables.creature_template_wdb)
                 return string.Empty;
 
             if (!Storage.CreatureTemplates.IsEmpty() && Settings.TargetedDatabase != TargetedDatabase.Classic)
@@ -96,7 +96,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true)]
         public static string CreatureTemplateModel()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_template))
+            if (!Settings.SqlTables.creature_template)
                 return string.Empty;
 
             if (Storage.CreatureTemplateModels.IsEmpty())
@@ -113,7 +113,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true)]
         public static string CreatureTemplateQuestItem()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_template))
+            if (!Settings.SqlTables.creature_template)
                 return string.Empty;
 
             if (Settings.TargetedDatabase <= TargetedDatabase.WarlordsOfDraenor &&
@@ -131,7 +131,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true, Gameobjects = true)]
         public static string GameObjectTemplate(Dictionary<WowGuid, GameObject> gameobjects)
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_template))
+            if (!Settings.SqlTables.gameobject_template)
                 return string.Empty;
 
             if (Storage.GameObjectTemplates.IsEmpty())
@@ -155,7 +155,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true)]
         public static string GameObjectTemplateQuestItem()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_template))
+            if (!Settings.SqlTables.gameobject_template)
                 return string.Empty;
 
             if (Settings.TargetedDatabase <= TargetedDatabase.WarlordsOfDraenor)
@@ -172,7 +172,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true)]
         public static string ItemTemplate()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.item_template))
+            if (!Settings.SqlTables.item_template)
                 return string.Empty;
 
             if (Settings.TargetedDatabase == TargetedDatabase.WarlordsOfDraenor)
@@ -189,7 +189,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string PlayerChoice()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.playerchoice))
+            if (!Settings.SqlTables.playerchoice)
                 return string.Empty;
 
             if (Storage.PlayerChoices.IsEmpty())
@@ -203,7 +203,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string PlayerChoiceResponse()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.playerchoice))
+            if (!Settings.SqlTables.playerchoice)
                 return string.Empty;
 
             if (Storage.PlayerChoiceResponses.IsEmpty())
@@ -217,7 +217,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string PlayerChoiceResponseReward()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.playerchoice))
+            if (!Settings.SqlTables.playerchoice)
                 return string.Empty;
 
             if (Storage.PlayerChoiceResponseRewards.IsEmpty())
@@ -231,7 +231,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string PlayerChoiceResponseRewardCurrency()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.playerchoice))
+            if (!Settings.SqlTables.playerchoice)
                 return string.Empty;
 
             if (Storage.PlayerChoiceResponseRewardCurrencies.IsEmpty())
@@ -245,7 +245,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string PlayerChoiceResponseRewardFaction()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.playerchoice))
+            if (!Settings.SqlTables.playerchoice)
                 return string.Empty;
 
             if (Storage.PlayerChoiceResponseRewardFactions.IsEmpty())
@@ -259,7 +259,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string PlayerChoiceResponseRewardItem()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.playerchoice))
+            if (!Settings.SqlTables.playerchoice)
                 return string.Empty;
 
             if (Storage.PlayerChoiceResponseRewardItems.IsEmpty())
@@ -273,7 +273,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true)]
         public static string PageText()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.page_text))
+            if (!Settings.SqlTables.page_text)
                 return string.Empty;
 
             if (Storage.PageTexts.IsEmpty())
@@ -287,7 +287,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true)]
         public static string NpcText()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.npc_text))
+            if (!Settings.SqlTables.npc_text)
                 return string.Empty;
 
             if (!Storage.NpcTexts.IsEmpty() &&
@@ -320,7 +320,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true)]
         public static string ScenarioPOI()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.scenario_poi))
+            if (!Settings.SqlTables.scenario_poi)
                 return string.Empty;
 
             if (Storage.ScenarioPOIs.IsEmpty())
@@ -334,7 +334,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true)]
         public static string ScenarioPOIPoint()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.scenario_poi))
+            if (!Settings.SqlTables.scenario_poi)
                 return string.Empty;
 
             if (Storage.ScenarioPOIPoints.IsEmpty())

@@ -39,7 +39,7 @@ namespace WowPacketParser.SQL.Builders
             if (units.Count == 0)
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature))
+            if (!Settings.SqlTables.creature)
                 return string.Empty;
 
             uint count = 0;
@@ -196,7 +196,7 @@ namespace WowPacketParser.SQL.Builders
                 }
 
                 var addonRow = new Row<CreatureAddon>();
-                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_addon))
+                if (Settings.SqlTables.creature_addon)
                 {
                     addonRow.Data.GUID = "@CGUID+" + count;
                     addonRow.Data.PathID = 0;
@@ -222,7 +222,7 @@ namespace WowPacketParser.SQL.Builders
                     addonRows.Add(addonRow);
                 }
 
-                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_create1_time))
+                if (Settings.SqlTables.creature_create1_time)
                 {
                     if (Storage.ObjectCreate1Times.ContainsKey(unit.Key))
                     {
@@ -236,7 +236,7 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_create2_time))
+                if (Settings.SqlTables.creature_create2_time)
                 {
                     if (Storage.ObjectCreate2Times.ContainsKey(unit.Key))
                     {
@@ -250,7 +250,7 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_destroy_time))
+                if (Settings.SqlTables.creature_destroy_time)
                 {
                     if (Storage.ObjectDestroyTimes.ContainsKey(unit.Key))
                     {
@@ -264,7 +264,7 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_update))
+                if (Settings.SqlTables.creature_update)
                 {
                     if (Storage.CreatureUpdates.ContainsKey(unit.Key))
                     {
@@ -278,7 +278,7 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_movement) &&
+                if (Settings.SqlTables.creature_movement &&
                     creature.Waypoints != null &&
                     creature.OriginalMovement.Position != null)
                 {
@@ -322,7 +322,7 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_emote))
+                if (Settings.SqlTables.creature_emote)
                 {
                     if (Storage.Emotes.ContainsKey(unit.Key))
                     {
@@ -346,7 +346,7 @@ namespace WowPacketParser.SQL.Builders
                 {
                     row.CommentOut = true;
                     row.Comment += " - !!! on transport - transport template not found !!!";
-                    if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_addon))
+                    if (Settings.SqlTables.creature_addon)
                     {
                         addonRow.CommentOut = true;
                         addonRow.Comment += " - !!! on transport - transport template not found !!!";
@@ -371,7 +371,7 @@ namespace WowPacketParser.SQL.Builders
             var sql = new SQLInsert<Creature>(rows, false);
             result.Append(sql.Build());
 
-            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_addon))
+            if (Settings.SqlTables.creature_addon)
             {
                 var addonDelete = new SQLDelete<CreatureAddon>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
                 result.Append(addonDelete.Build());
@@ -379,7 +379,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(addonSql.Build());
             }
 
-            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_create1_time))
+            if (Settings.SqlTables.creature_create1_time)
             {
                 var create1Delete = new SQLDelete<CreatureCreate1>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
                 result.Append(create1Delete.Build());
@@ -387,7 +387,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(createSql.Build());
             }
 
-            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_create2_time))
+            if (Settings.SqlTables.creature_create2_time)
             {
                 var create2Delete = new SQLDelete<CreatureCreate2>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
                 result.Append(create2Delete.Build());
@@ -395,7 +395,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(createSql.Build());
             }
 
-            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_destroy_time))
+            if (Settings.SqlTables.creature_destroy_time)
             {
                 var destroyDelete = new SQLDelete<CreatureDestroy>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
                 result.Append(destroyDelete.Build());
@@ -403,7 +403,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(destroySql.Build());
             }
 
-            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_update))
+            if (Settings.SqlTables.creature_update)
             {
                 var updateDelete = new SQLDelete<CreatureUpdate>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
                 result.Append(updateDelete.Build());
@@ -411,7 +411,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(updateSql.Build());
             }
 
-            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_movement))
+            if (Settings.SqlTables.creature_movement)
             {
                 // creature_movement
                 var movementDelete = new SQLDelete<CreatureMovement>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
@@ -442,7 +442,7 @@ namespace WowPacketParser.SQL.Builders
             if (gameObjects.Count == 0)
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject))
+            if (!Settings.SqlTables.gameobject)
                 return string.Empty;
 
             uint count = 0;
@@ -534,7 +534,7 @@ namespace WowPacketParser.SQL.Builders
 
                 bool add = true;
                 var addonRow = new Row<GameObjectAddon>();
-                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_addon))
+                if (Settings.SqlTables.gameobject_addon)
                 {
                     addonRow.Data.GUID = "@OGUID+" + count;
 
@@ -562,7 +562,7 @@ namespace WowPacketParser.SQL.Builders
                         addonRows.Add(addonRow);
                 }
 
-                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_create1_time))
+                if (Settings.SqlTables.gameobject_create1_time)
                 {
                     if (Storage.ObjectCreate1Times.ContainsKey(gameobject.Key))
                     {
@@ -576,7 +576,7 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_create2_time))
+                if (Settings.SqlTables.gameobject_create2_time)
                 {
                     if (Storage.ObjectCreate2Times.ContainsKey(gameobject.Key))
                     {
@@ -590,7 +590,7 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_destroy_time))
+                if (Settings.SqlTables.gameobject_destroy_time)
                 {
                     if (Storage.ObjectDestroyTimes.ContainsKey(gameobject.Key))
                     {
@@ -604,7 +604,7 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_update))
+                if (Settings.SqlTables.gameobject_update)
                 {
                     if (Storage.GameObjectUpdates.ContainsKey(gameobject.Key))
                     {
@@ -639,7 +639,7 @@ namespace WowPacketParser.SQL.Builders
                 {
                     row.CommentOut = true;
                     row.Comment += " - !!! transport !!!";
-                    if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_addon))
+                    if (Settings.SqlTables.gameobject_addon)
                     {
                         addonRow.CommentOut = true;
                         addonRow.Comment += " - !!! transport !!!";
@@ -649,7 +649,7 @@ namespace WowPacketParser.SQL.Builders
                 {
                     row.CommentOut = true;
                     row.Comment += " - !!! on transport - transport template not found !!!";
-                    if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_addon))
+                    if (Settings.SqlTables.gameobject_addon)
                     {
                         addonRow.CommentOut = true;
                         addonRow.Comment += " - !!! on transport - transport template not found !!!";
@@ -672,7 +672,7 @@ namespace WowPacketParser.SQL.Builders
             var sql = new SQLInsert<GameObjectModel>(rows, false);
             result.Append(sql.Build());
 
-            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_addon))
+            if (Settings.SqlTables.gameobject_addon)
             {
                 var addonDelete = new SQLDelete<GameObjectAddon>(Tuple.Create("@OGUID+0", "@OGUID+" + count));
                 result.Append(addonDelete.Build());
@@ -680,7 +680,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(addonSql.Build());
             }
 
-            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_create1_time))
+            if (Settings.SqlTables.gameobject_create1_time)
             {
                 var create1Delete = new SQLDelete<GameObjectCreate1>(Tuple.Create("@OGUID+0", "@OGUID+" + count));
                 result.Append(create1Delete.Build());
@@ -688,7 +688,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(createSql.Build());
             }
 
-            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_create2_time))
+            if (Settings.SqlTables.gameobject_create2_time)
             {
                 var create2Delete = new SQLDelete<GameObjectCreate2>(Tuple.Create("@OGUID+0", "@OGUID+" + count));
                 result.Append(create2Delete.Build());
@@ -696,7 +696,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(createSql.Build());
             }
 
-            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_destroy_time))
+            if (Settings.SqlTables.gameobject_destroy_time)
             {
                 var destroyDelete = new SQLDelete<GameObjectDestroy>(Tuple.Create("@OGUID+0", "@OGUID+" + count));
                 result.Append(destroyDelete.Build());
@@ -704,7 +704,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(destroySql.Build());
             }
 
-            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_update))
+            if (Settings.SqlTables.gameobject_update)
             {
                 var updateDelete = new SQLDelete<GameObjectUpdate>(Tuple.Create("@OGUID+0", "@OGUID+" + count));
                 result.Append(updateDelete.Build());

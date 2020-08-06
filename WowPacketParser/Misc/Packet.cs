@@ -14,8 +14,8 @@ namespace WowPacketParser.Misc
 {
     public sealed partial class Packet : BinaryReader
     {
-        private static readonly bool SniffData = Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.SniffData) || Settings.DumpFormat == DumpFormatType.SniffDataOnly;
-        private static readonly bool SniffDataOpcodes = Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.SniffDataOpcodes) || Settings.DumpFormat == DumpFormatType.SniffDataOnly;
+        private static readonly bool SniffData = Settings.SqlTables.SniffData || Settings.DumpFormat == DumpFormatType.SniffDataOnly;
+        private static readonly bool SniffDataOpcodes = Settings.SqlTables.SniffDataOpcodes || Settings.DumpFormat == DumpFormatType.SniffDataOnly;
 
         private static DateTime _firstPacketTime;
 

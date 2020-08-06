@@ -13,7 +13,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.QuestOfferRewards.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_template))
+            if (!Settings.SqlTables.quest_template)
                 return string.Empty;
 
             var offerDb = SQLDatabase.Get(Storage.QuestOfferRewards);
@@ -29,14 +29,14 @@ namespace WowPacketParser.SQL.Builders
 
             string sql = string.Empty;
 
-            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_poi))
+            if (Settings.SqlTables.quest_poi)
             {
                 var poiDb = SQLDatabase.Get(Storage.QuestPOIs);
 
                 sql = SQLUtil.Compare(Storage.QuestPOIs, poiDb, StoreNameType.Quest);
             }
 
-            if (Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_poi_points))
+            if (Settings.SqlTables.quest_poi_points)
             {
                 if (!Storage.QuestPOIPoints.IsEmpty())
                 {
@@ -52,7 +52,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string QuestGreeting()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_template))
+            if (!Settings.SqlTables.quest_template)
                 return string.Empty;
 
             if (Settings.TargetedDatabase == TargetedDatabase.WrathOfTheLichKing ||
@@ -70,7 +70,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string QuestDetails()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_template))
+            if (!Settings.SqlTables.quest_template)
                 return string.Empty;
 
             if (Storage.QuestDetails.IsEmpty())
@@ -84,7 +84,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string QuestRequestItems()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_template))
+            if (!Settings.SqlTables.quest_template)
                 return string.Empty;
 
             if (Storage.QuestRequestItems.IsEmpty())
@@ -98,7 +98,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string QuestStarters()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_starter))
+            if (!Settings.SqlTables.quest_starter)
                 return string.Empty;
 
             if (Storage.QuestStarters.IsEmpty())
@@ -112,7 +112,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string QuestEnders()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_ender))
+            if (!Settings.SqlTables.quest_ender)
                 return string.Empty;
 
             if (Storage.QuestEnders.IsEmpty())
@@ -126,7 +126,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string QuestClientAcceptTimes()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_client_accept))
+            if (!Settings.SqlTables.quest_client_accept)
                 return string.Empty;
 
             if (Storage.QuestClientAcceptTimes.IsEmpty())
@@ -140,7 +140,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string QuestClientCompleteTimes()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.quest_client_complete))
+            if (!Settings.SqlTables.quest_client_complete)
                 return string.Empty;
 
             if (Storage.QuestClientCompleteTimes.IsEmpty())

@@ -46,7 +46,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.HotfixDatas.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.hotfix_data))
+            if (!Settings.SqlTables.hotfix_data)
                 return string.Empty;
 
             var rows = new RowList<HotfixData>();
@@ -71,7 +71,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.HotfixBlobs.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.hotfix_blob))
+            if (!Settings.SqlTables.hotfix_blob)
                 return string.Empty;
 
             var rows = new RowList<HotfixBlob>();
@@ -97,7 +97,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.BroadcastTexts.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.broadcast_text))
+            if (!Settings.SqlTables.broadcast_text)
                 return string.Empty;
 
             foreach (var broadcastText in Storage.BroadcastTexts)
@@ -115,7 +115,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.BroadcastTextLocales.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.broadcast_text_locale))
+            if (!Settings.SqlTables.broadcast_text_locale)
                 return string.Empty;
 
             // pass empty list, because we want to select the whole db table (faster than select only needed columns)

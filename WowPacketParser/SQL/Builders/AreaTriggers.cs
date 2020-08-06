@@ -16,7 +16,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.AreaTriggerTemplates.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.areatrigger_template))
+            if (!Settings.SqlTables.areatrigger_template)
                 return string.Empty;
 
             var templateDb = SQLDatabase.Get(Storage.AreaTriggerTemplates);
@@ -30,7 +30,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.AreaTriggerTemplatesVertices.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.areatrigger_template_polygon_vertices))
+            if (!Settings.SqlTables.areatrigger_template_polygon_vertices)
                 return string.Empty;
 
             var templateDb = SQLDatabase.Get(Storage.AreaTriggerTemplatesVertices);
@@ -53,7 +53,7 @@ namespace WowPacketParser.SQL.Builders
             if (spellareatriggers.Count == 0)
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.spell_areatrigger))
+            if (!Settings.SqlTables.spell_areatrigger)
                 return string.Empty;
 
             var spellareatriggersData = new DataBag<SpellAreaTrigger>();

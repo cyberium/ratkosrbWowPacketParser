@@ -14,7 +14,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.SpellTargetPositions.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.spell_target_position))
+            if (!Settings.SqlTables.spell_target_position)
                 return string.Empty;
 
             return SQLUtil.Compare(Storage.SpellTargetPositions, SQLDatabase.Get(Storage.SpellTargetPositions), t => t.EffectHelper);
@@ -26,7 +26,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.SpellCastStart.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.spell_cast_start))
+            if (!Settings.SqlTables.spell_cast_start)
                 return string.Empty;
 
             string query = "";
@@ -64,7 +64,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.SpellCastGo.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.spell_cast_go))
+            if (!Settings.SqlTables.spell_cast_go)
                 return string.Empty;
 
             string query = "";
@@ -104,7 +104,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true)]
         public static string SpellPetCooldown()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.spell_pet_cooldown))
+            if (!Settings.SqlTables.spell_pet_cooldown)
                 return string.Empty;
 
             if (Storage.SpellPetCooldown.IsEmpty())
@@ -118,7 +118,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(true)]
         public static string SpellPetActions()
         {
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.spell_pet_action))
+            if (!Settings.SqlTables.spell_pet_action)
                 return string.Empty;
 
             if (Storage.SpellPetActions.IsEmpty())

@@ -15,7 +15,7 @@ namespace WowPacketParser.SQL.Builders
         {
             string result = string.Empty;
 
-            if (!Storage.StartActions.IsEmpty() && Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.playercreateinfo_action))
+            if (!Storage.StartActions.IsEmpty() && Settings.SqlTables.playercreateinfo_action)
             {
                 result += SQLUtil.Compare(Storage.StartActions, SQLDatabase.Get(Storage.StartActions), a =>
                 {
@@ -29,7 +29,7 @@ namespace WowPacketParser.SQL.Builders
 
             }
             
-            if (!Storage.StartPositions.IsEmpty() && Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.playercreateinfo))
+            if (!Storage.StartPositions.IsEmpty() && Settings.SqlTables.playercreateinfo)
             {
                 var dataDb = SQLDatabase.Get(Storage.StartPositions);
 
@@ -45,7 +45,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.ObjectNames.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.ObjectNames))
+            if (!Settings.SqlTables.ObjectNames)
                 return string.Empty;
 
             var templateDb = SQLDatabase.Get(Storage.ObjectNames, Settings.WPPDatabase);
@@ -60,7 +60,7 @@ namespace WowPacketParser.SQL.Builders
                 return string.Empty;
 
             if (Settings.DumpFormat != DumpFormatType.SniffDataOnly)
-                if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.SniffData) && !Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.SniffDataOpcodes))
+                if (!Settings.SqlTables.SniffData && !Settings.SqlTables.SniffDataOpcodes)
                     return string.Empty;
 
             var templateDb = SQLDatabase.Get(Storage.SniffData, Settings.WPPDatabase);
@@ -75,7 +75,7 @@ namespace WowPacketParser.SQL.Builders
             if (gameobjects.Count == 0)
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_template))
+            if (!Settings.SqlTables.gameobject_template))
                 return string.Empty;
 
             var templates = new StoreDictionary<uint, GameObjectTemplateNonWDB>();
@@ -124,7 +124,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.WeatherUpdates.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.weather_updates))
+            if (!Settings.SqlTables.weather_updates)
                 return string.Empty;
 
             var rows = new RowList<WeatherUpdate>();
@@ -147,7 +147,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.Scenes.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.scene_template))
+            if (!Settings.SqlTables.scene_template)
                 return string.Empty;
 
             var templateDb = SQLDatabase.Get(Storage.Scenes, Settings.TDBDatabase);
@@ -190,12 +190,12 @@ namespace WowPacketParser.SQL.Builders
         {
             string query = "";
 
-            if (Storage.CreatureLoot.Count > 0 && Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.creature_loot))
+            if (Storage.CreatureLoot.Count > 0 && Settings.SqlTables.creature_loot)
             {
                 query += BuildLootQuery(Storage.CreatureLoot, "creature_loot", "creature_loot_item");
             }
 
-            if (Storage.GameObjectLoot.Count > 0 && Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_loot))
+            if (Storage.GameObjectLoot.Count > 0 && Settings.SqlTables.gameobject_loot)
             {
                 query += BuildLootQuery(Storage.GameObjectLoot, "gameobject_loot", "gameobject_loot_item");
             }
