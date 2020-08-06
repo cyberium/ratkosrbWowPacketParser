@@ -13,7 +13,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("id")]
         public uint? ID;
 
-        [DBFieldName("map")]
+        [DBFieldName("map", false, false, true)]
         public uint? Map;
 
         [DBFieldName("zone_id")]
@@ -64,6 +64,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("state")]
         public uint? State;
 
+        [DBFieldName("SniffId", false, false, false, true)]
+        public int? SniffId;
+
         [DBFieldName("VerifiedBuild")]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
@@ -107,13 +110,13 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("unixtime", true)]
         public uint UnixTime;
 
-        [DBFieldName("flags")]
+        [DBFieldName("flags", false, false, true)]
         public uint? Flags;
 
-        [DBFieldName("state")]
+        [DBFieldName("state", false, false, true)]
         public uint? State;
 
-        [DBFieldName("animprogress")]
+        [DBFieldName("animprogress", false, false, true)]
         public uint? AnimProgress;
     }
 }

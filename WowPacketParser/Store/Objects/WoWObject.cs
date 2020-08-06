@@ -31,6 +31,8 @@ namespace WowPacketParser.Store.Objects
 
         public bool ForceTemporarySpawn;
 
+        public int SourceSniffId;
+
         public WoWObject()
         {
             ObjectData = new ObjectData(this);

@@ -194,6 +194,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                             break;
                         case ObjectType.GameObject:
                             (obj as GameObject).GameObjectData = handler.ReadCreateGameObjectData(fieldsData, flags, index);
+                            (obj as GameObject).GameObjectDataOriginal = (obj as GameObject).GameObjectData;
                             break;
                         case ObjectType.DynamicObject:
                             handler.ReadCreateDynamicObjectData(fieldsData, flags, index);
@@ -239,11 +240,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 CoreParsers.UpdateHandler.ProcessExistingObject(ref existObj, obj, guid); // can't do "ref Storage.Objects[guid].Item1 directly
             }
             else
-            {
-                obj.OriginalMovement = moves != null ? moves.CopyFromMe() : null;
-                obj.OriginalUpdateFields = obj.UpdateFields != null ? new Dictionary<int, UpdateField>(obj.UpdateFields) : null;
-                Storage.Objects.Add(guid, obj, packet.TimeSpan);
-            }
+                Storage.StoreNewObject(guid, obj, packet);
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))
                 packet.AddSniffData(Utilities.ObjectTypeToStore(objType), (int)guid.GetEntry(), "SPAWN");

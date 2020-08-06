@@ -30,9 +30,14 @@ namespace WowPacketParser.SQL
         public bool NoQuotes { get; set; }
 
         /// <summary>
-        /// Ture if field is nullable or the default value should be NULL.
+        /// True if field is nullable or the default value should be NULL.
         /// </summary>
         public bool Nullable { get; set;}
+
+        /// <summary>
+        /// True if the field is only used when parsing multiple sniff files into 1 sql.
+        /// </summary>
+        public bool MultipleSniffsOnly { get; set; }
 
         /// <summary>
         /// Number of fields
@@ -60,12 +65,13 @@ namespace WowPacketParser.SQL
         /// </summary>
         /// <param name="name">database field name</param>
         /// <param name="isPrimaryKey">true if field is a primary key</param>
-        public DBFieldNameAttribute(string name, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false)
+        public DBFieldNameAttribute(string name, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false, bool multipleSniffsOnly = false)
         {
             Name = name;
             IsPrimaryKey = isPrimaryKey;
             NoQuotes = noQuotes;
             Nullable = nullable;
+            MultipleSniffsOnly = multipleSniffsOnly;
             Count = 1;
         }
 
@@ -75,12 +81,13 @@ namespace WowPacketParser.SQL
         /// <param name="name">database field name</param>
         /// <param name="locale">initial locale</param>
         /// <param name="isPrimaryKey">true if field is a primary key</param>
-        public DBFieldNameAttribute(string name, LocaleConstant locale, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false)
+        public DBFieldNameAttribute(string name, LocaleConstant locale, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false, bool multipleSniffsOnly = false)
         {
             Name = name;
             IsPrimaryKey = isPrimaryKey;
             NoQuotes = noQuotes;
             Nullable = nullable;
+            MultipleSniffsOnly = multipleSniffsOnly;
             Count = 1;
             Locale = locale;
         }
@@ -91,12 +98,13 @@ namespace WowPacketParser.SQL
         /// <param name="name">database field name</param>
         /// <param name="addedInVersion">initial version</param>
         /// <param name="isPrimaryKey">true if field is a primary key</param>
-        public DBFieldNameAttribute(string name, TargetedDatabase addedInVersion, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false)
+        public DBFieldNameAttribute(string name, TargetedDatabase addedInVersion, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false, bool multipleSniffsOnly = false)
         {
             Name = name;
             IsPrimaryKey = isPrimaryKey;
             NoQuotes = noQuotes;
             Nullable = nullable;
+            MultipleSniffsOnly = multipleSniffsOnly;
             Count = 1;
             _addedInVersion = addedInVersion;
         }
@@ -108,12 +116,13 @@ namespace WowPacketParser.SQL
         /// <param name="addedInVersion">initial version</param>
         /// <param name="locale">initial locale</param>
         /// <param name="isPrimaryKey">true if field is a primary key</param>
-        public DBFieldNameAttribute(string name, TargetedDatabase addedInVersion, LocaleConstant locale, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false)
+        public DBFieldNameAttribute(string name, TargetedDatabase addedInVersion, LocaleConstant locale, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false, bool multipleSniffsOnly = false)
         {
             Name = name;
             IsPrimaryKey = isPrimaryKey;
             NoQuotes = noQuotes;
             Nullable = nullable;
+            MultipleSniffsOnly = multipleSniffsOnly;
             Count = 1;
             Locale = locale;
             _addedInVersion = addedInVersion;
@@ -126,12 +135,13 @@ namespace WowPacketParser.SQL
         /// <param name="addedInVersion">initial version</param>
         /// <param name="removedInVersion">final version</param>
         /// <param name="isPrimaryKey">true if field is a primary key</param>
-        public DBFieldNameAttribute(string name, TargetedDatabase addedInVersion, TargetedDatabase removedInVersion, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false)
+        public DBFieldNameAttribute(string name, TargetedDatabase addedInVersion, TargetedDatabase removedInVersion, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false, bool multipleSniffsOnly = false)
         {
             Name = name;
             IsPrimaryKey = isPrimaryKey;
             NoQuotes = noQuotes;
             Nullable = nullable;
+            MultipleSniffsOnly = multipleSniffsOnly;
             Count = 1;
             _addedInVersion = addedInVersion;
             _removedInVersion = removedInVersion;
@@ -146,12 +156,13 @@ namespace WowPacketParser.SQL
         /// <param name="removedInVersion">final version</param>
         /// <param name="locale">initial locale</param>
         /// <param name="isPrimaryKey">true if field is a primary key</param>
-        public DBFieldNameAttribute(string name, TargetedDatabase addedInVersion, TargetedDatabase removedInVersion, LocaleConstant locale, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false)
+        public DBFieldNameAttribute(string name, TargetedDatabase addedInVersion, TargetedDatabase removedInVersion, LocaleConstant locale, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false, bool multipleSniffsOnly = false)
         {
             Name = name;
             IsPrimaryKey = isPrimaryKey;
             NoQuotes = noQuotes;
             Nullable = nullable;
+            MultipleSniffsOnly = multipleSniffsOnly;
             Count = 1;
             Locale = locale;
             _addedInVersion = addedInVersion;
@@ -165,12 +176,13 @@ namespace WowPacketParser.SQL
         /// <param name="count">number of fields</param>
         /// <param name="startAtZero">true if fields name start at 0</param>
         /// <param name="isPrimaryKey">true if field is a primary key</param>
-        public DBFieldNameAttribute(string name, int count, bool startAtZero = false, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false)
+        public DBFieldNameAttribute(string name, int count, bool startAtZero = false, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false, bool multipleSniffsOnly = false)
         {
             Name = name;
             IsPrimaryKey = isPrimaryKey;
             NoQuotes = noQuotes;
             Nullable = nullable;
+            MultipleSniffsOnly = multipleSniffsOnly;
             Count = count;
             StartAtZero = startAtZero;
             _multipleFields = true;
@@ -185,12 +197,13 @@ namespace WowPacketParser.SQL
         /// <param name="startAtZero">true if fields name start at 0</param>
         /// <param name="isPrimaryKey">true if field is a primary key</param>
         public DBFieldNameAttribute(string name, TargetedDatabase addedInVersion, int count, bool startAtZero = false,
-            bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false)
+            bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false, bool multipleSniffsOnly = false)
         {
             Name = name;
             IsPrimaryKey = isPrimaryKey;
             NoQuotes = noQuotes;
             Nullable = nullable;
+            MultipleSniffsOnly = multipleSniffsOnly;
             Count = count;
             _addedInVersion = addedInVersion;
 
@@ -208,12 +221,13 @@ namespace WowPacketParser.SQL
         /// <param name="startAtZero">true if fields name start at 0</param>
         /// <param name="isPrimaryKey">true if field is a primary key</param>
         public DBFieldNameAttribute(string name, TargetedDatabase addedInVersion, TargetedDatabase removedInVersion,
-            int count, bool startAtZero = false, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false)
+            int count, bool startAtZero = false, bool isPrimaryKey = false, bool noQuotes = false, bool nullable = false, bool multipleSniffsOnly = false)
         {
             Name = name;
             IsPrimaryKey = isPrimaryKey;
             NoQuotes = noQuotes;
             Nullable = nullable;
+            MultipleSniffsOnly = multipleSniffsOnly;
             Count = count;
             _addedInVersion = addedInVersion;
             _removedInVersion = removedInVersion;
@@ -234,6 +248,9 @@ namespace WowPacketParser.SQL
 
             if (_addedInVersion.HasValue && _removedInVersion.HasValue)
                 return target >= _addedInVersion.Value && target < _removedInVersion.Value;
+
+            if (MultipleSniffsOnly && !(!string.IsNullOrWhiteSpace(Settings.SQLFileName) && Settings.DumpFormatWithSQL()))
+                return false;
 
             return true;
         }

@@ -15,7 +15,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("id")]
         public uint? ID;
 
-        [DBFieldName("map")]
+        [DBFieldName("map", false, false, true)]
         public uint? Map;
 
         [DBFieldName("zone_id")]
@@ -111,8 +111,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("unit_flags")]
         public uint? UnitFlag;
 
-        [DBFieldName("dynamic_flags")]
-        public uint? DynamicFlag;
+        [DBFieldName("SniffId", false, false, false, true)]
+        public int? SniffId;
 
         [DBFieldName("VerifiedBuild")]
         public int? VerifiedBuild = ClientVersion.BuildInt;
@@ -227,22 +227,25 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("unixtime", true)]
         public uint UnixTime;
 
-        [DBFieldName("entry")]
+        [DBFieldName("entry", false, false, true)]
         public uint? Entry;
 
-        [DBFieldName("display_id")]
+        [DBFieldName("display_id", false, false, true)]
         public uint? DisplayID;
 
-        [DBFieldName("faction")]
+        [DBFieldName("faction", false, false, true)]
         public uint? FactionTemplate;
 
-        [DBFieldName("emote_state")]
+        [DBFieldName("emote_state", false, false, true)]
         public uint? EmoteState;
 
-        [DBFieldName("npc_flags")]
+        [DBFieldName("stand_state", false, false, true)]
+        public uint? StandState;
+
+        [DBFieldName("npc_flags", false, false, true)]
         public uint? NpcFlag;
 
-        [DBFieldName("unit_flags")]
+        [DBFieldName("unit_flags", false, false, true)]
         public uint? UnitFlag;
     }
 
@@ -252,64 +255,64 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("entry", true)]
         public uint Entry;
 
-        [DBFieldName("dmg_min")]
+        [DBFieldName("dmg_min", false, false, true)]
         public float? DmgMin;
 
-        [DBFieldName("dmg_max")]
+        [DBFieldName("dmg_max", false, false, true)]
         public float? DmgMax;
 
-        [DBFieldName("offhand_dmg_min")]
+        [DBFieldName("offhand_dmg_min", false, false, true)]
         public float? OffhandDmgMin;
 
-        [DBFieldName("offhand_dmg_max")]
+        [DBFieldName("offhand_dmg_max", false, false, true)]
         public float? OffhandDmgMax;
 
-        [DBFieldName("ranged_dmg_min")]
+        [DBFieldName("ranged_dmg_min", false, false, true)]
         public float? RangedDmgMin;
 
-        [DBFieldName("ranged_dmg_max")]
+        [DBFieldName("ranged_dmg_max", false, false, true)]
         public float? RangedDmgMax;
 
-        [DBFieldName("attack_power")]
+        [DBFieldName("attack_power", false, false, true)]
         public uint? AttackPower;
 
-        [DBFieldName("ranged_attack_power")]
+        [DBFieldName("ranged_attack_power", false, false, true)]
         public uint? RangedAttackPower;
 
-        [DBFieldName("strength")]
+        [DBFieldName("strength", false, false, true)]
         public uint? Strength;
 
-        [DBFieldName("agility")]
+        [DBFieldName("agility", false, false, true)]
         public uint? Agility;
 
-        [DBFieldName("stamina")]
+        [DBFieldName("stamina", false, false, true)]
         public uint? Stamina;
 
-        [DBFieldName("intellect")]
+        [DBFieldName("intellect", false, false, true)]
         public uint? Intellect;
 
-        [DBFieldName("spirit")]
+        [DBFieldName("spirit", false, false, true)]
         public uint? Spirit;
 
-        [DBFieldName("armor")]
+        [DBFieldName("armor", false, false, true)]
         public int? Armor;
 
-        [DBFieldName("holy_res")]
+        [DBFieldName("holy_res", false, false, true)]
         public int? HolyResistance;
 
-        [DBFieldName("fire_res")]
+        [DBFieldName("fire_res", false, false, true)]
         public int? FireResistance;
 
-        [DBFieldName("nature_res")]
+        [DBFieldName("nature_res", false, false, true)]
         public int? NatureResistance;
 
-        [DBFieldName("frost_res")]
+        [DBFieldName("frost_res", false, false, true)]
         public int? FrostResistance;
 
-        [DBFieldName("shadow_res")]
+        [DBFieldName("shadow_res", false, false, true)]
         public int? ShadowResistance;
 
-        [DBFieldName("arcane_res")]
+        [DBFieldName("arcane_res", false, false, true)]
         public int? ArcaneResistance;
     }
 

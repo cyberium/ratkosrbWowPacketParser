@@ -197,7 +197,7 @@ namespace WowPacketParser.SQL.Builders
 
             if (Storage.GameObjectLoot.Count > 0 && Settings.SQLOutputFlag.HasAnyFlagBit(SQLOutput.gameobject_loot))
             {
-                query += BuildLootQuery(Storage.CreatureLoot, "creature_loot", "creature_loot_item");
+                query += BuildLootQuery(Storage.GameObjectLoot, "gameobject_loot", "gameobject_loot_item");
             }
 
             return query;

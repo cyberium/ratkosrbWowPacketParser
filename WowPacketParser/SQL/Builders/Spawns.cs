@@ -166,7 +166,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.RangedAttackTime = unitData.RangedAttackRoundBaseTime;
                 row.Data.NpcFlag = (uint)unitData.NpcFlags[0];
                 row.Data.UnitFlag = (uint)unitData.Flags;
-                row.Data.DynamicFlag = (uint)creature.DynamicFlags.GetValueOrDefault(UnitDynamicFlags.None);
+                row.Data.SniffId = creature.SourceSniffId;
 
                 row.Comment = StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
                 row.Comment += " (Area: " + StoreGetters.GetName(StoreNameType.Area, creature.Area, false) + " - ";
@@ -202,7 +202,15 @@ namespace WowPacketParser.SQL.Builders
                     addonRow.Data.PathID = 0;
                     addonRow.Data.Mount = (uint)unitData.MountDisplayID;
                     addonRow.Data.Bytes1 = creature.Bytes1;
+                    addonRow.Data.StandState = unitData.StandState;
+                    addonRow.Data.PetTalentPoints = unitData.PetTalentPoints;
+                    addonRow.Data.VisFlags = unitData.VisFlags;
+                    addonRow.Data.AnimTier = unitData.AnimTier;
                     addonRow.Data.Bytes2 = creature.Bytes2;
+                    addonRow.Data.SheatheState = unitData.SheatheState;
+                    addonRow.Data.PvpFlags = unitData.PvpFlags;
+                    addonRow.Data.PetFlags = unitData.PetFlags;
+                    addonRow.Data.ShapeshiftForm = unitData.ShapeshiftForm;
                     addonRow.Data.Emote = (uint)unitData.EmoteState;
                     addonRow.Data.Auras = auras;
                     addonRow.Data.AIAnimKit = creature.AIAnimKit.GetValueOrDefault(0);
@@ -612,8 +620,9 @@ namespace WowPacketParser.SQL.Builders
 
                 row.Data.CreatedBy = go.GameObjectData.CreatedBy.GetEntry();
                 //row.Data.SpawnTimeSecs = go.GetDefaultSpawnTime(go.DifficultyID);
-                row.Data.AnimProgress = go.GameObjectData.PercentHealth;
-                row.Data.State = (uint)go.GameObjectData.State;
+                row.Data.AnimProgress = go.GameObjectDataOriginal.PercentHealth;
+                row.Data.State = (uint)go.GameObjectDataOriginal.State;
+                row.Data.SniffId = go.SourceSniffId;
 
                 // set some defaults
                 row.Data.PhaseGroup = 0;

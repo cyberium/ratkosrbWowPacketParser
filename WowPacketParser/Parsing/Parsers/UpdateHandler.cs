@@ -108,11 +108,7 @@ namespace WowPacketParser.Parsing.Parsers
                 ProcessExistingObject(ref existObj, obj, guid); // can't do "ref Storage.Objects[guid].Item1 directly
             }
             else
-            {
-                obj.OriginalMovement = moves != null ? moves.CopyFromMe() : null;
-                obj.OriginalUpdateFields = updates != null ? new Dictionary<int, UpdateField>(updates) : null;
-                Storage.Objects.Add(guid, obj, packet.TimeSpan);
-            }
+                Storage.StoreNewObject(guid, obj, packet);
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))
                 packet.AddSniffData(Utilities.ObjectTypeToStore(objType), (int)guid.GetEntry(), "SPAWN");
@@ -231,6 +227,18 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BYTES_1))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.StandState != (update.Value.UInt32Value & 0xFF))
+                            {
+                                hasData = true;
+                                creatureUpdate.StandState = (update.Value.UInt32Value & 0xFF);
+                            }
+                        }
+                    }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_NPC_FLAGS))
                     {
                         if (Storage.Objects.ContainsKey(guid))
@@ -276,8 +284,20 @@ namespace WowPacketParser.Parsing.Parsers
                     }
                     else if (update.Key == UpdateFields.GetUpdateField(GameObjectField.GAMEOBJECT_BYTES_1))
                     {
-                        hasData = true;
-                        goUpdate.State = update.Value.UInt32Value & 0x000000FF;
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as GameObject;
+                            if (obj.GameObjectData.PercentHealth != ((update.Value.UInt32Value & 0xFF000000) >> 24))
+                            {
+                                hasData = true;
+                                goUpdate.AnimProgress = ((update.Value.UInt32Value & 0xFF000000) >> 24);
+                            }
+                            if (obj.GameObjectData.State != (update.Value.UInt32Value & 0x000000FF))
+                            {
+                                hasData = true;
+                                goUpdate.State = update.Value.UInt32Value & 0x000000FF;
+                            }
+                        }
                     }
                     else if (update.Key == UpdateFields.GetUpdateField(GameObjectField.GAMEOBJECT_ANIMPROGRESS))
                     {

@@ -3,6 +3,10 @@
     public enum SQLOutput
     {
         // ReSharper disable InconsistentNaming
+        ObjectNames,
+        SniffData,
+        SniffDataOpcodes,
+
         areatrigger_template,
         areatrigger_template_polygon_vertices,
         broadcast_text,
@@ -49,7 +53,6 @@
         npc_text,
         npc_trainer,
         npc_vendor,
-        ObjectNames,
         page_text,
         page_text_locale,
         play_sound,
@@ -74,8 +77,6 @@
         spell_pet_cooldown,
         spell_target_position,
         spell_areatrigger,
-        SniffData,
-        SniffDataOpcodes,
         trainer,
         vehicle_template_accessory,
         weather_updates,
