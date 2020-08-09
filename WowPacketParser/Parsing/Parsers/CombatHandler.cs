@@ -1,5 +1,6 @@
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
+using WowPacketParser.Store;
 
 namespace WowPacketParser.Parsing.Parsers
 {
@@ -114,13 +115,22 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_ATTACK_START)]
         public static void HandleAttackStartStart(Packet packet)
         {
-            packet.ReadGuid("GUID");
-            packet.ReadGuid("Victim GUID");
+            WowGuid attackerGuid = packet.ReadGuid("GUID");
+            WowGuid victimGuid = packet.ReadGuid("Victim GUID");
+            Storage.StoreCreatureAttack(attackerGuid, victimGuid, packet.Time, true);
         }
 
         [Parser(Opcode.SMSG_ATTACK_STOP)]
-        [Parser(Opcode.SMSG_COMBAT_EVENT_FAILED)]
         public static void HandleAttackStartStop(Packet packet)
+        {
+            WowGuid attackerGuid = packet.ReadPackedGuid("GUID");
+            WowGuid victimGuid = packet.ReadPackedGuid("Victim GUID");
+            packet.ReadInt32("Unk int"); // Has something to do with facing?
+            Storage.StoreCreatureAttack(attackerGuid, victimGuid, packet.Time, false);
+        }
+
+        [Parser(Opcode.SMSG_COMBAT_EVENT_FAILED)]
+        public static void HandleCombatEventFailed(Packet packet)
         {
             packet.ReadPackedGuid("GUID");
             packet.ReadPackedGuid("Victim GUID");

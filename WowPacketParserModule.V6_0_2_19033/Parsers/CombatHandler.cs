@@ -1,6 +1,7 @@
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
 using SpellParsers = WowPacketParserModule.V6_0_2_19033.Parsers.SpellHandler;
 
 namespace WowPacketParserModule.V6_0_2_19033.Parsers
@@ -78,17 +79,18 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_ATTACK_START)]
         public static void HandleAttackStartStart(Packet packet)
         {
-            packet.ReadPackedGuid128("Attacker Guid");
-            packet.ReadPackedGuid128("Victim Guid");
+            WowGuid attackerGuid = packet.ReadPackedGuid128("Attacker Guid");
+            WowGuid victimGuid = packet.ReadPackedGuid128("Victim Guid");
+            Storage.StoreCreatureAttack(attackerGuid, victimGuid, packet.Time, true);
         }
 
         [Parser(Opcode.SMSG_ATTACK_STOP)]
         public static void HandleAttackStartStop(Packet packet)
         {
-            packet.ReadPackedGuid128("Attacker Guid");
-            packet.ReadPackedGuid128("Victim Guid");
-
+            WowGuid attackerGuid = packet.ReadPackedGuid128("Attacker Guid");
+            WowGuid victimGuid = packet.ReadPackedGuid128("Victim Guid");
             packet.ReadBit("NowDead");
+            Storage.StoreCreatureAttack(attackerGuid, victimGuid, packet.Time, false);
         }
 
         [Parser(Opcode.SMSG_HIGHEST_THREAT_UPDATE)]

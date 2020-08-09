@@ -139,6 +139,54 @@ namespace WowPacketParser.Store
                 Storage.GameObjectUpdates.Add(guid, updateList);
             }
         }
+        public static readonly Dictionary<WowGuid, List<CreatureEmote>> Emotes = new Dictionary<WowGuid, List<CreatureEmote>>();
+        public static void StoreCreatureEmote(WowGuid guid, EmoteType emote, DateTime time)
+        {
+            if (!Settings.SqlTables.creature_emote)
+                return;
+
+            if (Storage.Emotes.ContainsKey(guid))
+            {
+                Storage.Emotes[guid].Add(new CreatureEmote(emote, time));
+            }
+            else
+            {
+                List<CreatureEmote> emotesList = new List<CreatureEmote>();
+                emotesList.Add(new CreatureEmote(emote, time));
+                Storage.Emotes.Add(guid, emotesList);
+            }
+        }
+        public static readonly Dictionary<WowGuid, List<CreatureAttackData>> CreatureAttackStartTimes = new Dictionary<WowGuid, List<CreatureAttackData>>();
+        public static readonly Dictionary<WowGuid, List<CreatureAttackData>> CreatureAttackStopTimes = new Dictionary<WowGuid, List<CreatureAttackData>>();
+        public static void StoreCreatureAttack(WowGuid attackerGuid, WowGuid victimGuid, DateTime time, bool start)
+        {
+            Dictionary<WowGuid, List<CreatureAttackData>> store = null;
+            if (start)
+            {
+                if (!Settings.SqlTables.creature_attack_start)
+                    return;
+
+                store = CreatureAttackStartTimes;
+            }
+            else
+            {
+                if (!Settings.SqlTables.creature_attack_stop)
+                    return;
+
+                store = CreatureAttackStopTimes;
+            }
+
+            if (store.ContainsKey(attackerGuid))
+            {
+                store[attackerGuid].Add(new CreatureAttackData(victimGuid, time));
+            }
+            else
+            {
+                List<CreatureAttackData> attackList = new List<CreatureAttackData>();
+                attackList.Add(new CreatureAttackData(victimGuid, time));
+                store.Add(attackerGuid, attackList);
+            }
+        }
         /* Key: Entry */
 
         // Templates
@@ -228,23 +276,6 @@ namespace WowPacketParser.Store
         public static readonly DataBag<PointsOfInterest> GossipPOIs = new DataBag<PointsOfInterest>(Settings.SqlTables.points_of_interest);
 
         // "Helper" stores, do not match a specific table
-        public static readonly Dictionary<WowGuid, List<CreatureEmote>> Emotes = new Dictionary<WowGuid, List<CreatureEmote>>();
-        public static void StoreCreatureEmote(WowGuid guid, EmoteType emote, DateTime time)
-        {
-            if (!Settings.SqlTables.creature_emote)
-                return;
-
-            if (Storage.Emotes.ContainsKey(guid))
-            {
-                Storage.Emotes[guid].Add(new CreatureEmote(emote, time));
-            }
-            else
-            {
-                List<CreatureEmote> emotesList = new List<CreatureEmote>();
-                emotesList.Add(new CreatureEmote(emote, time));
-                Storage.Emotes.Add(guid, emotesList);
-            }
-        }
         public static readonly List<ObjectSound> Sounds = new List<ObjectSound>();
         public static readonly DataBag<PlayMusic> Music = new DataBag<PlayMusic>(Settings.SqlTables.play_music);
         public static readonly StoreDictionary<uint, List<uint?>> SpellsX = new StoreDictionary<uint, List<uint?>>(Settings.SqlTables.creature_template); // `creature_template`.`spellsX`

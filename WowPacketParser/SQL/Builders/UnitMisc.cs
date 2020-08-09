@@ -1271,7 +1271,7 @@ namespace WowPacketParser.SQL.Builders
                 }
                 query += "(" + objectId.ToString() + ", '" + objectType + "', " + sound.sound + ", " + (uint)Utilities.GetUnixTimeFromDateTime(sound.time) + ")";
             }
-            query = "INSERT INTO `play_sound` (`object_id`, `object_type`, `sound`, `unixtime`) VALUES\n" + query + ";\n\n";
+            query = "INSERT INTO `play_sound` (`source_id`, `source_type`, `sound`, `unixtime`) VALUES\n" + query + ";\n\n";
             return query;
         }
 

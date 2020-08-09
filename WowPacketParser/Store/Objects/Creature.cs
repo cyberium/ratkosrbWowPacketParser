@@ -326,4 +326,15 @@ namespace WowPacketParser.Store.Objects
         public EmoteType emote;
         public DateTime time;
     }
+
+    public sealed class CreatureAttackData
+    {
+        public CreatureAttackData(WowGuid victim_, DateTime time_)
+        {
+            victim = victim_;
+            time = time_;
+        }
+        public WowGuid victim;
+        public DateTime time;
+    }
 }

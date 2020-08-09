@@ -52,6 +52,8 @@ namespace WowPacketParser.SQL.Builders
             var movementSplineRows = new RowList<CreatureMovementSpline>();
             var updateRows = new RowList<CreatureUpdate>();
             string emoteRows = "";
+            string attackStartRows = "";
+            string attackStopRows = "";
             foreach (var unit in units)
             {
                 Row<Creature> row = new Row<Creature>();
@@ -335,6 +337,52 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
+                if (Settings.SqlTables.creature_attack_start)
+                {
+                    if (Storage.CreatureAttackStartTimes.ContainsKey(unit.Key))
+                    {
+                        foreach (var attack in Storage.CreatureAttackStartTimes[unit.Key])
+                        {
+                            if (attackStartRows != "")
+                                attackStartRows += ",\n";
+
+                            string victimId = "";
+                            string victimType = attack.victim.GetObjectType().ToString();
+
+                            if (attack.victim.GetObjectType() != ObjectType.Player)
+                                victimId = attack.victim.GetEntry().ToString();
+
+                            if (victimType == "Unit")
+                                victimType = "Creature";
+
+                            attackStartRows += "(@CGUID+" + count.ToString() + ", " + victimId + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.creature_attack_stop)
+                {
+                    if (Storage.CreatureAttackStopTimes.ContainsKey(unit.Key))
+                    {
+                        foreach (var attack in Storage.CreatureAttackStopTimes[unit.Key])
+                        {
+                            if (attackStopRows != "")
+                                attackStopRows += ",\n";
+
+                            string victimId = "";
+                            string victimType = attack.victim.GetObjectType().ToString();
+
+                            if (attack.victim.GetObjectType() != ObjectType.Player)
+                                victimId = attack.victim.GetEntry().ToString();
+
+                            if (victimType == "Unit")
+                                victimType = "Creature";
+
+                            attackStopRows += "(@CGUID+" + count.ToString() + ", " + victimId + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
+                        }
+                    }
+                }
+
                 // Likely to be waypoints if distance is big
                 if (row.Data.WanderDistance > 20)
                     row.Data.MovementType = 2;
@@ -430,6 +478,20 @@ namespace WowPacketParser.SQL.Builders
             {
                 result.Append("\nINSERT INTO `creature_emote` (`guid`, `emote_id`, `emote_name`, `unixtime`) VALUES\n");
                 result.Append(emoteRows);
+                result.Append(";\n\n");
+            }
+
+            if (attackStartRows != "")
+            {
+                result.Append("\nINSERT INTO `creature_attack_start` (`guid`, `victim_id`, `victim_type`, `unixtime`) VALUES\n");
+                result.Append(attackStartRows);
+                result.Append(";\n\n");
+            }
+
+            if (attackStopRows != "")
+            {
+                result.Append("\nINSERT INTO `creature_attack_stop` (`guid`, `victim_id`, `victim_type`, `unixtime`) VALUES\n");
+                result.Append(attackStopRows);
                 result.Append(";\n\n");
             }
 
