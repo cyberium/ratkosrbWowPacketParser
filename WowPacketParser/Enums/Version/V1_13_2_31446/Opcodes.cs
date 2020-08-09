@@ -4654,7 +4654,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_LOG_XP_GAIN, 0x2724}, // ok
             {Opcode.SMSG_LOOT_ALL_PASSED, 0x2636},
             {Opcode.SMSG_LOOT_LEGACY_RULES_IN_EFFECT, 0x2875}, // ok
-            {Opcode.SMSG_LOOT_LIST, 0x2785},
+            {Opcode.SMSG_LOOT_LIST, 0x278A}, // ok
             {Opcode.SMSG_LOOT_MONEY_NOTIFY, 0x2631},
             {Opcode.SMSG_LOOT_RELEASE, 0x2630},
             {Opcode.SMSG_LOOT_RELEASE_ALL, 0x262F},
@@ -4831,7 +4831,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_PLAYED_TIME, 0x2711},
             {Opcode.SMSG_PLAYER_BOUND, 0x257D},
             {Opcode.SMSG_PLAYER_SAVE_GUILD_EMBLEM, 0x29F6},
-            {Opcode.SMSG_PLAYER_SKINNED, 0x278A},
+            {Opcode.SMSG_PLAYER_SKINNED, 0x2785}, // ??
             {Opcode.SMSG_PLAYER_TABARD_VENDOR_ACTIVATE, 0x279B}, // ??
             {Opcode.SMSG_PLAY_MUSIC, 0x27B1},
             {Opcode.SMSG_PLAY_OBJECT_SOUND, 0x27B7}, // ok
