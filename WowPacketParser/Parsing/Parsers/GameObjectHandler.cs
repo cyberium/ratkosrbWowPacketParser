@@ -80,9 +80,15 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadInt32<SpellId>("Spell ID");
         }
 
-        [Parser(Opcode.SMSG_GAMEOBJECT_DESPAWN_ANIM)]
         [Parser(Opcode.CMSG_GAME_OBJ_USE)]
         [Parser(Opcode.CMSG_GAME_OBJ_REPORT_USE)]
+        public static void HandleGOUse(Packet packet)
+        {
+            WowGuid guid = packet.ReadGuid("GUID");
+            Storage.StoreGameObjectUse(guid, packet.Time);
+        }
+
+        [Parser(Opcode.SMSG_GAMEOBJECT_DESPAWN_ANIM)]
         [Parser(Opcode.SMSG_PAGE_TEXT)]
         [Parser(Opcode.SMSG_GAME_OBJECT_RESET_STATE)]
         public static void HandleGOMisc(Packet packet)

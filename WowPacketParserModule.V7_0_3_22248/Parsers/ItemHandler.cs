@@ -1,6 +1,8 @@
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParserModule.V7_0_3_22248.Parsers
 {
@@ -57,7 +59,14 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
         {
             packet.ReadByte("PackSlot");
             packet.ReadByte("Slot");
-            packet.ReadPackedGuid128("CastItem");
+            WowGuid guid = packet.ReadPackedGuid128("CastItem");
+
+            ItemClientUse newGossip = new ItemClientUse
+            {
+                Entry = (uint)Storage.Objects[guid].Item1.ObjectData.EntryID,
+                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time),
+            };
+            Storage.ItemClientUseTimes.Add(newGossip, packet.TimeSpan);
 
             SpellHandler.ReadSpellCastRequest(packet, "Cast");
         }

@@ -368,36 +368,4 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("quest_id", true)]
         public uint? QuestId;
     }
-
-    [DBTableName("quest_client_accept")]
-    public sealed class QuestClientAccept : IDataModel
-    {
-        [DBFieldName("unixtime", true)]
-        public uint? UnixTime;
-
-        [DBFieldName("object_id")]
-        public uint? ObjectId;
-
-        [DBFieldName("object_type")]
-        public string ObjectType;
-
-        [DBFieldName("quest_id")]
-        public uint? QuestId;
-    }
-
-    [DBTableName("quest_client_complete")]
-    public sealed class QuestClientComplete : IDataModel
-    {
-        [DBFieldName("unixtime", true)]
-        public uint? UnixTime;
-
-        [DBFieldName("object_id")]
-        public uint? ObjectId;
-
-        [DBFieldName("object_type")]
-        public string ObjectType;
-
-        [DBFieldName("quest_id")]
-        public uint? QuestId;
-    }
 }

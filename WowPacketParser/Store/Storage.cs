@@ -139,6 +139,23 @@ namespace WowPacketParser.Store
                 Storage.GameObjectUpdates.Add(guid, updateList);
             }
         }
+        public static readonly Dictionary<WowGuid, List<DateTime>> GameObjectClientUseTimes = new Dictionary<WowGuid, List<DateTime>>();
+        public static void StoreGameObjectUse(WowGuid guid, DateTime time)
+        {
+            if (!Settings.SqlTables.gameobject_client_use)
+                return;
+
+            if (Storage.GameObjectClientUseTimes.ContainsKey(guid))
+            {
+                Storage.GameObjectClientUseTimes[guid].Add(time);
+            }
+            else
+            {
+                List<DateTime> usesList = new List<DateTime>();
+                usesList.Add(time);
+                Storage.GameObjectClientUseTimes.Add(guid, usesList);
+            }
+        }
         public static readonly Dictionary<WowGuid, List<CreatureEmote>> Emotes = new Dictionary<WowGuid, List<CreatureEmote>>();
         public static void StoreCreatureEmote(WowGuid guid, EmoteType emote, DateTime time)
         {
@@ -198,6 +215,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<ConversationTemplate> ConversationTemplates = new DataBag<ConversationTemplate>(Settings.SqlTables.conversation_template);
         public static readonly DataBag<GameObjectTemplate> GameObjectTemplates = new DataBag<GameObjectTemplate>(Settings.SqlTables.gameobject_template);
         public static readonly DataBag<GameObjectTemplateQuestItem> GameObjectTemplateQuestItems = new DataBag<GameObjectTemplateQuestItem>(Settings.SqlTables.gameobject_template);
+        public static readonly DataBag<ItemClientUse> ItemClientUseTimes = new DataBag<ItemClientUse>(Settings.SqlTables.item_client_use);
         public static readonly DataBag<ItemTemplate> ItemTemplates = new DataBag<ItemTemplate>(Settings.SqlTables.item_template);
         public static readonly DataBag<QuestTemplate> QuestTemplates = new DataBag<QuestTemplate>(Settings.SqlTables.quest_template);
         public static readonly DataBag<QuestObjective> QuestObjectives = new DataBag<QuestObjective>(Settings.SqlTables.quest_template);
@@ -426,6 +444,7 @@ namespace WowPacketParser.Store
             GameObjectTemplateQuestItems.Clear();
             GameObjectUpdates.Clear();
 
+            ItemClientUseTimes.Clear();
             ItemTemplates.Clear();
 
             QuestTemplates.Clear();

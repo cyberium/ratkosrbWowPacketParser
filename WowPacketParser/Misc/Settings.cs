@@ -121,6 +121,7 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_update = Conf.GetBoolean("creature_update", false);
             public static readonly bool gameobject = Conf.GetBoolean("gameobject", false);
             public static readonly bool gameobject_addon = Conf.GetBoolean("gameobject_addon", false);
+            public static readonly bool gameobject_client_use = Conf.GetBoolean("gameobject_client_use", false);
             public static readonly bool gameobject_create1_time = Conf.GetBoolean("gameobject_create1_time", false);
             public static readonly bool gameobject_create2_time = Conf.GetBoolean("gameobject_create2_time", false);
             public static readonly bool gameobject_destroy_time = Conf.GetBoolean("gameobject_destroy_time", false);
@@ -130,6 +131,7 @@ namespace WowPacketParser.Misc
             public static readonly bool gameobject_update = Conf.GetBoolean("gameobject_update", false);
             public static readonly bool gossip_menu = Conf.GetBoolean("gossip_menu", false);
             public static readonly bool gossip_menu_option = Conf.GetBoolean("gossip_menu_option", false);
+            public static readonly bool item_client_use = Conf.GetBoolean("item_client_use", false);
             public static readonly bool item_template = Conf.GetBoolean("item_template", false);
             public static readonly bool locales_quest = Conf.GetBoolean("locales_quest", false);
             public static readonly bool locales_quest_objectives = Conf.GetBoolean("locales_quest_objectives", false);

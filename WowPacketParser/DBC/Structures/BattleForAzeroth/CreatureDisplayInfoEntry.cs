@@ -6,7 +6,7 @@ namespace WowPacketParser.DBC.Structures.BattleForAzeroth
     public sealed class CreatureDisplayInfoEntry
     {
         public uint ID;
-        public ushort DisplayID;
+        public ushort ModelID;
         public ushort SoundID;
         public sbyte SizeClass;
         public float CreatureModelScale;

@@ -346,16 +346,16 @@ namespace WowPacketParser.SQL.Builders
                             if (attackStartRows != "")
                                 attackStartRows += ",\n";
 
-                            string victimId = "";
+                            uint victimId = 0;
                             string victimType = attack.victim.GetObjectType().ToString();
 
                             if (attack.victim.GetObjectType() != ObjectType.Player)
-                                victimId = attack.victim.GetEntry().ToString();
+                                victimId = attack.victim.GetEntry();
 
                             if (victimType == "Unit")
                                 victimType = "Creature";
 
-                            attackStartRows += "(@CGUID+" + count.ToString() + ", " + victimId + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
+                            attackStartRows += "(@CGUID+" + count.ToString() + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
                         }
                     }
                 }
@@ -369,16 +369,16 @@ namespace WowPacketParser.SQL.Builders
                             if (attackStopRows != "")
                                 attackStopRows += ",\n";
 
-                            string victimId = "";
+                            uint victimId = 0;
                             string victimType = attack.victim.GetObjectType().ToString();
 
                             if (attack.victim.GetObjectType() != ObjectType.Player)
-                                victimId = attack.victim.GetEntry().ToString();
+                                victimId = attack.victim.GetEntry();
 
                             if (victimType == "Unit")
                                 victimType = "Creature";
 
-                            attackStopRows += "(@CGUID+" + count.ToString() + ", " + victimId + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
+                            attackStopRows += "(@CGUID+" + count.ToString() + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
                         }
                     }
                 }
@@ -514,6 +514,7 @@ namespace WowPacketParser.SQL.Builders
             var create2Rows = new RowList<GameObjectCreate2>();
             var destroyRows = new RowList<GameObjectDestroy>();
             var updateRows = new RowList<GameObjectUpdate>();
+            var useRows = new RowList<GameObjectClientUse>();
             foreach (var gameobject in gameObjects)
             {
                 Row<GameObjectModel> row = new Row<GameObjectModel>();
@@ -656,11 +657,11 @@ namespace WowPacketParser.SQL.Builders
                 {
                     if (Storage.ObjectDestroyTimes.ContainsKey(gameobject.Key))
                     {
-                        foreach (var createTime in Storage.ObjectDestroyTimes[gameobject.Key])
+                        foreach (var destroyTime in Storage.ObjectDestroyTimes[gameobject.Key])
                         {
                             var destroyRow = new Row<GameObjectDestroy>();
                             destroyRow.Data.GUID = "@OGUID+" + count;
-                            destroyRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
+                            destroyRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(destroyTime);
                             destroyRows.Add(destroyRow);
                         }
                     }
@@ -676,6 +677,20 @@ namespace WowPacketParser.SQL.Builders
                             updateRow.Data = update;
                             updateRow.Data.GUID = "@OGUID+" + count;
                             updateRows.Add(updateRow);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.gameobject_client_use)
+                {
+                    if (Storage.GameObjectClientUseTimes.ContainsKey(gameobject.Key))
+                    {
+                        foreach (var useTime in Storage.GameObjectClientUseTimes[gameobject.Key])
+                        {
+                            var useRow = new Row<GameObjectClientUse>();
+                            useRow.Data.GUID = "@OGUID+" + count;
+                            useRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(useTime);
+                            useRows.Add(useRow);
                         }
                     }
                 }
@@ -772,6 +787,14 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(updateDelete.Build());
                 var updateSql = new SQLInsert<GameObjectUpdate>(updateRows, false);
                 result.Append(updateSql.Build());
+            }
+
+            if (Settings.SqlTables.gameobject_client_use)
+            {
+                var useDelete = new SQLDelete<GameObjectClientUse>(Tuple.Create("@OGUID+0", "@OGUID+" + count));
+                result.Append(useDelete.Build());
+                var useSql = new SQLInsert<GameObjectClientUse>(useRows, false);
+                result.Append(useSql.Build());
             }
 
             return result.ToString();

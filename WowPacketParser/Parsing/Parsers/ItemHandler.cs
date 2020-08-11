@@ -82,7 +82,14 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadByte("Slot");
             packet.ReadByte("Spell Count");
             packet.ReadByte("Cast Count");
-            packet.ReadGuid("GUID");
+            WowGuid guid = packet.ReadGuid("GUID");
+
+            ItemClientUse newGossip = new ItemClientUse
+            {
+                Entry = (uint)Storage.Objects[guid].Item1.ObjectData.EntryID,
+                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time),
+            };
+            Storage.ItemClientUseTimes.Add(newGossip, packet.TimeSpan);
 
             SpellHandler.ReadSpellCastTargets(packet);
         }
@@ -94,7 +101,15 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadByte("Slot");
             packet.ReadByte("Cast Count");
             packet.ReadInt32<SpellId>("Spell ID");
-            packet.ReadGuid("GUID");
+
+            WowGuid guid = packet.ReadGuid("GUID");
+            ItemClientUse newGossip = new ItemClientUse
+            {
+                Entry = (uint)Storage.Objects[guid].Item1.ObjectData.EntryID,
+                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time),
+            };
+            Storage.ItemClientUseTimes.Add(newGossip, packet.TimeSpan);
+
             packet.ReadUInt32("Glyph Index");
             var castflag = packet.ReadByteE<CastFlag>("Cast Flags");
 

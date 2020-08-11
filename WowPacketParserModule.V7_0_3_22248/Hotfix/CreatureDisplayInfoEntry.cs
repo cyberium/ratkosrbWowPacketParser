@@ -16,7 +16,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Hotfix
         public uint CreatureGeosetData { get; set; }
         public uint StateSpellVisualKitID { get; set; }
         public float InstanceOtherPlayerPetScale { get; set; }
-        public ushort DisplayID { get; set; }
+        public ushort ModelID { get; set; }
         public ushort SoundID { get; set; }
         public ushort NPCSoundID { get; set; }
         public ushort ParticleColorID { get; set; }

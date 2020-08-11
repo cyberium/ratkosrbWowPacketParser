@@ -202,5 +202,19 @@ namespace WowPacketParser.SQL.Builders
 
             return query;
         }
+
+        [BuilderMethod]
+        public static string ItemClientUseTimes()
+        {
+            if (Storage.ItemClientUseTimes.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.item_client_use)
+                return string.Empty;
+
+            var templateDb = SQLDatabase.Get(Storage.ItemClientUseTimes, Settings.TDBDatabase);
+
+            return SQLUtil.Compare(Storage.ItemClientUseTimes, templateDb, StoreNameType.None);
+        }
     }
 }
