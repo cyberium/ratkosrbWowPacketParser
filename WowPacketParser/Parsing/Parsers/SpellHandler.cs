@@ -704,11 +704,7 @@ namespace WowPacketParser.Parsing.Parsers
             bool isSpellGo = packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_SPELL_GO, Direction.ServerToClient);
 
             var casterGUID = packet.ReadPackedGuid("Caster GUID");
-            dbdata.CasterID = casterGUID.GetEntry();
-            if (casterGUID.GetHighType() == HighGuidType.Pet)
-                dbdata.CasterType = "Pet";
-            else
-                dbdata.CasterType = casterGUID.GetObjectType().ToString();
+            dbdata.CasterGuid = casterGUID;
 
             packet.ReadPackedGuid("Caster Unit GUID");
 
@@ -777,13 +773,12 @@ namespace WowPacketParser.Parsing.Parsers
             if (targetFlags.HasAnyFlag(TargetFlag.Unit | TargetFlag.CorpseEnemy | TargetFlag.GameObject |
                 TargetFlag.CorpseAlly | TargetFlag.UnitMinipet))
                 targetGUID = packet.ReadPackedGuid("Target GUID");
-            dbdata.MainTargetID = targetGUID.GetEntry();
-            dbdata.MainTargetType = targetGUID.GetObjectType().ToString();
+            dbdata.MainTargetGuid = targetGUID;
 
             if (isSpellGo)
-                Storage.AddSpellCastDataIfShould(dbdata, Storage.SpellCastGo, packet);
+                Storage.StoreSpellCastData(dbdata, Storage.SpellCastGo, packet);
             else
-                Storage.AddSpellCastDataIfShould(dbdata, Storage.SpellCastStart, packet);
+                Storage.StoreSpellCastData(dbdata, Storage.SpellCastStart, packet);
 
             if (targetFlags.HasAnyFlag(TargetFlag.Item | TargetFlag.TradeItem))
                 packet.ReadPackedGuid("Item Target GUID");

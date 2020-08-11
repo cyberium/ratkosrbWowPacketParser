@@ -64,6 +64,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("state")]
         public uint? State;
 
+        [DBFieldName("flags")]
+        public uint? Flags;
+
         [DBFieldName("SniffId", false, false, false, true)]
         public int? SniffId;
 

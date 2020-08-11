@@ -33,29 +33,17 @@ namespace WowPacketParser.Store.Objects
     {
         public const uint MAX_SPELL_HIT_TARGETS_DB = 8;
 
-        [DBFieldName("UnixTime")]
         public uint UnixTime = 0;
 
-        [DBFieldName("CasterId")]
-        public uint? CasterID;
+        public WowGuid CasterGuid;
 
-        [DBFieldName("CasterType")]
-        public string CasterType;
-
-        [DBFieldName("SpellId")]
         public uint? SpellID;
 
-        [DBFieldName("CastFlags")]
         public uint? CastFlags;
 
-        [DBFieldName("CastFlagsEx")]
         public uint? CastFlagsEx;
 
-        [DBFieldName("MainTargetId")]
-        public uint MainTargetID = 0;
-
-        [DBFieldName("MainTargetType")]
-        public string MainTargetType = "";
+        public WowGuid MainTargetGuid;
 
         public uint HitTargetsCount = 0;
         public uint[] HitTargetID = { 0, 0, 0, 0, 0, 0, 0, 0 };

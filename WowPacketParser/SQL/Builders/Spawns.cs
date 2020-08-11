@@ -43,6 +43,7 @@ namespace WowPacketParser.SQL.Builders
                 return string.Empty;
 
             uint count = 0;
+            uint maxDbGuid = 0;
             var rows = new RowList<Creature>();
             var addonRows = new RowList<CreatureAddon>();
             var create1Rows = new RowList<CreatureCreate1>();
@@ -87,7 +88,7 @@ namespace WowPacketParser.SQL.Builders
                     spawnDist = 10;
                 }
 
-                row.Data.GUID = "@CGUID+" + count;
+                row.Data.GUID = "@CGUID+" + creature.DbGuid;
 
                 row.Data.ID = entry;
                 if (!creature.IsOnTransport())
@@ -200,7 +201,7 @@ namespace WowPacketParser.SQL.Builders
                 var addonRow = new Row<CreatureAddon>();
                 if (Settings.SqlTables.creature_addon)
                 {
-                    addonRow.Data.GUID = "@CGUID+" + count;
+                    addonRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                     addonRow.Data.PathID = 0;
                     addonRow.Data.Mount = (uint)unitData.MountDisplayID;
                     addonRow.Data.Bytes1 = creature.Bytes1;
@@ -231,7 +232,7 @@ namespace WowPacketParser.SQL.Builders
                         foreach (var createTime in Storage.ObjectCreate1Times[unit.Key])
                         {
                             var create1Row = new Row<CreatureCreate1>();
-                            create1Row.Data.GUID = "@CGUID+" + count;
+                            create1Row.Data.GUID = "@CGUID+" + creature.DbGuid;
                             create1Row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
                             create1Rows.Add(create1Row);
                         }
@@ -245,7 +246,7 @@ namespace WowPacketParser.SQL.Builders
                         foreach (var createTime in Storage.ObjectCreate2Times[unit.Key])
                         {
                             var create2Row = new Row<CreatureCreate2>();
-                            create2Row.Data.GUID = "@CGUID+" + count;
+                            create2Row.Data.GUID = "@CGUID+" + creature.DbGuid;
                             create2Row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
                             create2Rows.Add(create2Row);
                         }
@@ -259,7 +260,7 @@ namespace WowPacketParser.SQL.Builders
                         foreach (var createTime in Storage.ObjectDestroyTimes[unit.Key])
                         {
                             var destroyRow = new Row<CreatureDestroy>();
-                            destroyRow.Data.GUID = "@CGUID+" + count;
+                            destroyRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                             destroyRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
                             destroyRows.Add(destroyRow);
                         }
@@ -274,7 +275,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var updateRow = new Row<CreatureUpdate>();
                             updateRow.Data = update;
-                            updateRow.Data.GUID = "@CGUID+" + count;
+                            updateRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                             updateRows.Add(updateRow);
                         }
                     }
@@ -292,7 +293,7 @@ namespace WowPacketParser.SQL.Builders
                             {
                                 var movementRow = new Row<CreatureMovementSpline>();
                                 movementRow.Data = waypoint;
-                                movementRow.Data.GUID = "@CGUID+" + count;
+                                movementRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                                 movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false); ;
                                 movementSplineRows.Add(movementRow);
                             }
@@ -311,7 +312,7 @@ namespace WowPacketParser.SQL.Builders
 
                             var movementRow = new Row<CreatureMovement>();
                             movementRow.Data = waypoint;
-                            movementRow.Data.GUID = "@CGUID+" + count;
+                            movementRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                             movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false); ;
                             movementRows.Add(movementRow);
                         }
@@ -332,7 +333,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             if (emoteRows != "")
                                 emoteRows += ",\n";
-                            emoteRows += "(@CGUID+" + count.ToString() + ", " + (uint)emote.emote + ", '" + emote.emote + "', " + (uint)Utilities.GetUnixTimeFromDateTime(emote.time) + ")";
+                            emoteRows += "(@CGUID+" + creature.DbGuid.ToString() + ", " + (uint)emote.emote + ", '" + emote.emote + "', " + (uint)Utilities.GetUnixTimeFromDateTime(emote.time) + ")";
                         }
                     }
                 }
@@ -355,7 +356,7 @@ namespace WowPacketParser.SQL.Builders
                             if (victimType == "Unit")
                                 victimType = "Creature";
 
-                            attackStartRows += "(@CGUID+" + count.ToString() + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
+                            attackStartRows += "(@CGUID+" + creature.DbGuid.ToString() + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
                         }
                     }
                 }
@@ -378,7 +379,7 @@ namespace WowPacketParser.SQL.Builders
                             if (victimType == "Unit")
                                 victimType = "Creature";
 
-                            attackStopRows += "(@CGUID+" + count.ToString() + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
+                            attackStopRows += "(@CGUID+" + creature.DbGuid.ToString() + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
                         }
                     }
                 }
@@ -401,7 +402,12 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
                 else
+                {
                     ++count;
+
+                    if (creature.DbGuid > maxDbGuid)
+                        maxDbGuid = creature.DbGuid;
+                }
 
                 if (creature.Movement.HasWpsOrRandMov)
                     row.Comment += " (possible waypoints or random movement)";
@@ -414,14 +420,14 @@ namespace WowPacketParser.SQL.Builders
 
             StringBuilder result = new StringBuilder();
             // delete query for GUIDs
-            var delete = new SQLDelete<Creature>(Tuple.Create("@CGUID+0", "@CGUID+" + --count));
+            var delete = new SQLDelete<Creature>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
             result.Append(delete.Build());
             var sql = new SQLInsert<Creature>(rows, false);
             result.Append(sql.Build());
 
             if (Settings.SqlTables.creature_addon)
             {
-                var addonDelete = new SQLDelete<CreatureAddon>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
+                var addonDelete = new SQLDelete<CreatureAddon>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(addonDelete.Build());
                 var addonSql = new SQLInsert<CreatureAddon>(addonRows, false);
                 result.Append(addonSql.Build());
@@ -429,7 +435,7 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_create1_time)
             {
-                var create1Delete = new SQLDelete<CreatureCreate1>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
+                var create1Delete = new SQLDelete<CreatureCreate1>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(create1Delete.Build());
                 var createSql = new SQLInsert<CreatureCreate1>(create1Rows, false);
                 result.Append(createSql.Build());
@@ -437,7 +443,7 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_create2_time)
             {
-                var create2Delete = new SQLDelete<CreatureCreate2>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
+                var create2Delete = new SQLDelete<CreatureCreate2>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(create2Delete.Build());
                 var createSql = new SQLInsert<CreatureCreate2>(create2Rows, false);
                 result.Append(createSql.Build());
@@ -445,7 +451,7 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_destroy_time)
             {
-                var destroyDelete = new SQLDelete<CreatureDestroy>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
+                var destroyDelete = new SQLDelete<CreatureDestroy>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(destroyDelete.Build());
                 var destroySql = new SQLInsert<CreatureDestroy>(destroyRows, false);
                 result.Append(destroySql.Build());
@@ -453,7 +459,7 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_update)
             {
-                var updateDelete = new SQLDelete<CreatureUpdate>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
+                var updateDelete = new SQLDelete<CreatureUpdate>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(updateDelete.Build());
                 var updateSql = new SQLInsert<CreatureUpdate>(updateRows, false);
                 result.Append(updateSql.Build());
@@ -462,13 +468,13 @@ namespace WowPacketParser.SQL.Builders
             if (Settings.SqlTables.creature_movement)
             {
                 // creature_movement
-                var movementDelete = new SQLDelete<CreatureMovement>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
+                var movementDelete = new SQLDelete<CreatureMovement>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(movementDelete.Build());
                 var movementSql = new SQLInsert<CreatureMovement>(movementRows, false);
                 result.Append(movementSql.Build());
 
                 // creature_movement_spline
-                var movementSplineDelete = new SQLDelete<CreatureMovementSpline>(Tuple.Create("@CGUID+0", "@CGUID+" + count));
+                var movementSplineDelete = new SQLDelete<CreatureMovementSpline>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(movementSplineDelete.Build());
                 var movementSplineSql = new SQLInsert<CreatureMovementSpline>(movementSplineRows, false);
                 result.Append(movementSplineSql.Build());
@@ -508,6 +514,7 @@ namespace WowPacketParser.SQL.Builders
                 return string.Empty;
 
             uint count = 0;
+            uint maxDbGuid = 0;
             var rows = new RowList<GameObjectModel>();
             var addonRows = new RowList<GameObjectAddon>();
             var create1Rows = new RowList<GameObjectCreate1>();
@@ -538,7 +545,7 @@ namespace WowPacketParser.SQL.Builders
 
                 bool badTransport = false;
 
-                row.Data.GUID = "@OGUID+" + count;
+                row.Data.GUID = "@OGUID+" + go.DbGuid;
 
                 row.Data.ID = entry;
                 if (!go.IsOnTransport())
@@ -599,7 +606,7 @@ namespace WowPacketParser.SQL.Builders
                 var addonRow = new Row<GameObjectAddon>();
                 if (Settings.SqlTables.gameobject_addon)
                 {
-                    addonRow.Data.GUID = "@OGUID+" + count;
+                    addonRow.Data.GUID = "@OGUID+" + go.DbGuid;
 
                     var parentRotation = go.GetParentRotation();
 
@@ -632,7 +639,7 @@ namespace WowPacketParser.SQL.Builders
                         foreach (var createTime in Storage.ObjectCreate1Times[gameobject.Key])
                         {
                             var create1Row = new Row<GameObjectCreate1>();
-                            create1Row.Data.GUID = "@OGUID+" + count;
+                            create1Row.Data.GUID = "@OGUID+" + go.DbGuid;
                             create1Row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
                             create1Rows.Add(create1Row);
                         }
@@ -646,7 +653,7 @@ namespace WowPacketParser.SQL.Builders
                         foreach (var createTime in Storage.ObjectCreate2Times[gameobject.Key])
                         {
                             var create2Row = new Row<GameObjectCreate2>();
-                            create2Row.Data.GUID = "@OGUID+" + count;
+                            create2Row.Data.GUID = "@OGUID+" + go.DbGuid;
                             create2Row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
                             create2Rows.Add(create2Row);
                         }
@@ -660,7 +667,7 @@ namespace WowPacketParser.SQL.Builders
                         foreach (var destroyTime in Storage.ObjectDestroyTimes[gameobject.Key])
                         {
                             var destroyRow = new Row<GameObjectDestroy>();
-                            destroyRow.Data.GUID = "@OGUID+" + count;
+                            destroyRow.Data.GUID = "@OGUID+" + go.DbGuid;
                             destroyRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(destroyTime);
                             destroyRows.Add(destroyRow);
                         }
@@ -675,7 +682,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var updateRow = new Row<GameObjectUpdate>();
                             updateRow.Data = update;
-                            updateRow.Data.GUID = "@OGUID+" + count;
+                            updateRow.Data.GUID = "@OGUID+" + go.DbGuid;
                             updateRows.Add(updateRow);
                         }
                     }
@@ -688,7 +695,7 @@ namespace WowPacketParser.SQL.Builders
                         foreach (var useTime in Storage.GameObjectClientUseTimes[gameobject.Key])
                         {
                             var useRow = new Row<GameObjectClientUse>();
-                            useRow.Data.GUID = "@OGUID+" + count;
+                            useRow.Data.GUID = "@OGUID+" + go.DbGuid;
                             useRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(useTime);
                             useRows.Add(useRow);
                         }
@@ -699,6 +706,7 @@ namespace WowPacketParser.SQL.Builders
                 //row.Data.SpawnTimeSecs = go.GetDefaultSpawnTime(go.DifficultyID);
                 row.Data.AnimProgress = go.GameObjectDataOriginal.PercentHealth;
                 row.Data.State = (uint)go.GameObjectDataOriginal.State;
+                row.Data.Flags = go.GameObjectDataOriginal.Flags;
                 row.Data.SniffId = go.SourceSniffId;
 
                 // set some defaults
@@ -733,7 +741,12 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
                 else
+                {
                     ++count;
+
+                    if (go.DbGuid > maxDbGuid)
+                        maxDbGuid = go.DbGuid;
+                }
 
                 rows.Add(row);
             }
@@ -743,7 +756,7 @@ namespace WowPacketParser.SQL.Builders
 
             StringBuilder result = new StringBuilder();
             // delete query for GUIDs
-            var delete = new SQLDelete<GameObjectModel>(Tuple.Create("@OGUID+0", "@OGUID+" + --count));
+            var delete = new SQLDelete<GameObjectModel>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
             result.Append(delete.Build());
 
             var sql = new SQLInsert<GameObjectModel>(rows, false);
@@ -751,7 +764,7 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.gameobject_addon)
             {
-                var addonDelete = new SQLDelete<GameObjectAddon>(Tuple.Create("@OGUID+0", "@OGUID+" + count));
+                var addonDelete = new SQLDelete<GameObjectAddon>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
                 result.Append(addonDelete.Build());
                 var addonSql = new SQLInsert<GameObjectAddon>(addonRows, false);
                 result.Append(addonSql.Build());
@@ -759,7 +772,7 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.gameobject_create1_time)
             {
-                var create1Delete = new SQLDelete<GameObjectCreate1>(Tuple.Create("@OGUID+0", "@OGUID+" + count));
+                var create1Delete = new SQLDelete<GameObjectCreate1>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
                 result.Append(create1Delete.Build());
                 var createSql = new SQLInsert<GameObjectCreate1>(create1Rows, false);
                 result.Append(createSql.Build());
@@ -767,7 +780,7 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.gameobject_create2_time)
             {
-                var create2Delete = new SQLDelete<GameObjectCreate2>(Tuple.Create("@OGUID+0", "@OGUID+" + count));
+                var create2Delete = new SQLDelete<GameObjectCreate2>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
                 result.Append(create2Delete.Build());
                 var createSql = new SQLInsert<GameObjectCreate2>(create2Rows, false);
                 result.Append(createSql.Build());
@@ -775,7 +788,7 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.gameobject_destroy_time)
             {
-                var destroyDelete = new SQLDelete<GameObjectDestroy>(Tuple.Create("@OGUID+0", "@OGUID+" + count));
+                var destroyDelete = new SQLDelete<GameObjectDestroy>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
                 result.Append(destroyDelete.Build());
                 var destroySql = new SQLInsert<GameObjectDestroy>(destroyRows, false);
                 result.Append(destroySql.Build());
@@ -783,7 +796,7 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.gameobject_update)
             {
-                var updateDelete = new SQLDelete<GameObjectUpdate>(Tuple.Create("@OGUID+0", "@OGUID+" + count));
+                var updateDelete = new SQLDelete<GameObjectUpdate>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
                 result.Append(updateDelete.Build());
                 var updateSql = new SQLInsert<GameObjectUpdate>(updateRows, false);
                 result.Append(updateSql.Build());
@@ -791,7 +804,7 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.gameobject_client_use)
             {
-                var useDelete = new SQLDelete<GameObjectClientUse>(Tuple.Create("@OGUID+0", "@OGUID+" + count));
+                var useDelete = new SQLDelete<GameObjectClientUse>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
                 result.Append(useDelete.Build());
                 var useSql = new SQLInsert<GameObjectClientUse>(useRows, false);
                 result.Append(useSql.Build());

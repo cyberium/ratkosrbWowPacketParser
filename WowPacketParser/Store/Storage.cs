@@ -353,20 +353,15 @@ namespace WowPacketParser.Store
         // Spell Casts
         public static readonly DataBag<SpellCastData> SpellCastStart = new DataBag<SpellCastData>(Settings.SqlTables.spell_cast_start);
         public static readonly DataBag<SpellCastData> SpellCastGo = new DataBag<SpellCastData>(Settings.SqlTables.spell_cast_go);
-        public static void AddSpellCastDataIfShould(SpellCastData castData, DataBag<SpellCastData> storage, Packet packet)
+        public static void StoreSpellCastData(SpellCastData castData, DataBag<SpellCastData> storage, Packet packet)
         {
             if (!Settings.SqlTables.spell_cast_start &&
                 !Settings.SqlTables.spell_cast_go)
                 return;
 
-            if (!castData.CasterType.Contains("Unit") &&
-                !castData.CasterType.Contains("Creature") &&
-                !castData.CasterType.Contains("GameObject"))
+            if (castData.CasterGuid.GetObjectType() != ObjectType.Unit   &&
+                castData.CasterGuid.GetObjectType() != ObjectType.GameObject)
                 return;
-
-            if (castData.MainTargetID != 0 &&
-                castData.MainTargetType.Contains("Player"))
-                castData.MainTargetID = 0;
 
             for (uint i = 0; i < SpellCastData.MAX_SPELL_HIT_TARGETS_DB; i++)
             {
@@ -439,6 +434,7 @@ namespace WowPacketParser.Store
             ConversationLineTemplates.Clear();
             ConversationTemplates.Clear();
 
+            GameObjectClientUseTimes.Clear();
             GameObjectLoot.Clear();
             GameObjectTemplates.Clear();
             GameObjectTemplateQuestItems.Clear();

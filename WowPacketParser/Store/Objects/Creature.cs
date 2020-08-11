@@ -130,9 +130,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("spline_point", true)]
         public uint SplinePoint;
 
-        [DBFieldName("global_point")]
-        public uint GlobalPoint;
-
         [DBFieldName("position_x")]
         public float PositionX;
 

@@ -30,28 +30,84 @@ namespace WowPacketParser.SQL.Builders
                 return string.Empty;
 
             string query = "";
-            query += "REPLACE INTO `spell_cast_start` (`UnixTime`, `CasterId`, `CasterType`, `SpellId`, `CastFlags`, `CastFlagsEx`, `TargetId`, `TargetType`, `VerifiedBuild`) VALUES";
+            query += "REPLACE INTO `spell_cast_start` (`UnixTime`, `CasterGuid`, `CasterId`, `CasterType`, `SpellId`, `CastFlags`, `CastFlagsEx`, `TargetGuid`, `TargetId`, `TargetType`, `VerifiedBuild`) VALUES";
             uint count = 0;
             foreach (var cast_pair in Storage.SpellCastStart)
             {
                 if (count > 0)
                     query += ",";
 
+                uint casterId = cast_pair.Item1.CasterGuid.GetEntry();
+                string casterType = cast_pair.Item1.CasterGuid.GetObjectType().ToString();
+
+                uint targetId = cast_pair.Item1.MainTargetGuid.GetEntry();
+                string targetType = cast_pair.Item1.MainTargetGuid.GetObjectType().ToString();
+
+                // make it clear that its a pet
+                if (cast_pair.Item1.CasterGuid.GetObjectType() == ObjectType.Unit &&
+                    cast_pair.Item1.CasterGuid.GetHighType() == HighGuidType.Pet)
+                    casterType = "Pet";
+                if (cast_pair.Item1.MainTargetGuid.GetObjectType() == ObjectType.Unit &&
+                    cast_pair.Item1.MainTargetGuid.GetHighType() == HighGuidType.Pet)
+                    casterType = "Pet";
                 // make it clear that its a creature
-                if (cast_pair.Item1.CasterType == "Unit")
-                    cast_pair.Item1.CasterType = "Creature";
-                if (cast_pair.Item1.MainTargetType == "Unit")
-                    cast_pair.Item1.MainTargetType = "Creature";
+                if (casterType == "Unit")
+                    casterType = "Creature";
+                if (targetType == "Unit")
+                    targetType = "Creature";
+                // hide real player guids
+                if (targetType == "Player")
+                    targetId = 0;
+
+                uint casterGuid = 0;
+                string casterGuidType = "";
+                if (!cast_pair.Item1.CasterGuid.IsEmpty())
+                {
+                    if (Storage.Objects.ContainsKey(cast_pair.Item1.CasterGuid))
+                    {
+                        if (cast_pair.Item1.CasterGuid.GetObjectType() == ObjectType.Unit)
+                        {
+                            casterGuid = (Storage.Objects[cast_pair.Item1.CasterGuid].Item1 as Unit).DbGuid;
+                            casterGuidType = "@CGUID+";
+                        }
+                        else if (cast_pair.Item1.CasterGuid.GetObjectType() == ObjectType.GameObject)
+                        {
+                            casterGuid = (Storage.Objects[cast_pair.Item1.CasterGuid].Item1 as GameObject).DbGuid;
+                            casterGuidType = "@OGUID+";
+                        }
+                    }
+                }
+
+
+                uint targetGuid = 0;
+                string targetGuidType = "";
+                if (!cast_pair.Item1.MainTargetGuid.IsEmpty())
+                {
+                    if (Storage.Objects.ContainsKey(cast_pair.Item1.MainTargetGuid))
+                    {
+                        if (cast_pair.Item1.MainTargetGuid.GetObjectType() == ObjectType.Unit)
+                        {
+                            targetGuid = (Storage.Objects[cast_pair.Item1.MainTargetGuid].Item1 as Unit).DbGuid;
+                            targetGuidType = "@CGUID+";
+                        }
+                        else if (cast_pair.Item1.MainTargetGuid.GetObjectType() == ObjectType.GameObject)
+                        {
+                            targetGuid = (Storage.Objects[cast_pair.Item1.MainTargetGuid].Item1 as GameObject).DbGuid;
+                            targetGuidType = "@OGUID+";
+                        }
+                    }
+                }
+
                 for (uint i = 0; i < SpellCastData.MAX_SPELL_HIT_TARGETS_DB; i++)
                 {
                     if (cast_pair.Item1.HitTargetType[i] == "Unit")
                         cast_pair.Item1.HitTargetType[i] = "Creature";
                 }
-                if (cast_pair.Item1.MainTargetID == 0 &&
-                    cast_pair.Item1.MainTargetType == "Object")
-                    cast_pair.Item1.MainTargetType = "";
+                if (targetId == 0 &&
+                    targetType == "Object")
+                    targetType = "";
 
-                query += "\n(" + cast_pair.Item1.UnixTime + ", " + cast_pair.Item1.CasterID + ", '" + cast_pair.Item1.CasterType + "', " + cast_pair.Item1.SpellID + ", " + cast_pair.Item1.CastFlags + ", " + cast_pair.Item1.CastFlagsEx + ", " + cast_pair.Item1.MainTargetID + ", '" + cast_pair.Item1.MainTargetType + "', " + cast_pair.Item1.VerifiedBuild + ")";
+                query += "\n(" + cast_pair.Item1.UnixTime + ", " + casterGuidType + casterGuid + ", " + casterId  + ", '" + casterType + "', " + cast_pair.Item1.SpellID + ", " + cast_pair.Item1.CastFlags + ", " + cast_pair.Item1.CastFlagsEx + ", " + targetGuidType + targetGuid + ", " + targetId + ", '" + targetType + "', " + cast_pair.Item1.VerifiedBuild + ")";
                 count++;
             }
             query += ";\n";
@@ -68,28 +124,84 @@ namespace WowPacketParser.SQL.Builders
                 return string.Empty;
 
             string query = "";
-            query += "REPLACE INTO `spell_cast_go` (`UnixTime`, `CasterId`, `CasterType`, `SpellId`, `CastFlags`, `CastFlagsEx`, `MainTargetId`, `MainTargetType`, `HitTargetsCount`, `HitTargetId1`, `HitTargetType1`, `HitTargetId2`, `HitTargetType2`, `HitTargetId3`, `HitTargetType3`, `HitTargetId4`, `HitTargetType4`, `HitTargetId5`, `HitTargetType5`, `HitTargetId6`, `HitTargetType6`, `HitTargetId7`, `HitTargetType7`, `HitTargetId8`, `HitTargetType8`, `VerifiedBuild`) VALUES";
+            query += "REPLACE INTO `spell_cast_go` (`UnixTime`, `CasterGuid`, `CasterId`, `CasterType`, `SpellId`, `CastFlags`, `CastFlagsEx`, `MainTargetGuid`, `MainTargetId`, `MainTargetType`, `HitTargetsCount`, `HitTargetId1`, `HitTargetType1`, `HitTargetId2`, `HitTargetType2`, `HitTargetId3`, `HitTargetType3`, `HitTargetId4`, `HitTargetType4`, `HitTargetId5`, `HitTargetType5`, `HitTargetId6`, `HitTargetType6`, `HitTargetId7`, `HitTargetType7`, `HitTargetId8`, `HitTargetType8`, `VerifiedBuild`) VALUES";
             uint count = 0;
             foreach (var cast_pair in Storage.SpellCastGo)
             {
                 if (count > 0)
                     query += ",";
 
+                uint casterId = cast_pair.Item1.CasterGuid.GetEntry();
+                string casterType = cast_pair.Item1.CasterGuid.GetObjectType().ToString();
+
+                uint targetId = cast_pair.Item1.MainTargetGuid.GetEntry();
+                string targetType = cast_pair.Item1.MainTargetGuid.GetObjectType().ToString();
+
+                // make it clear that its a pet
+                if (cast_pair.Item1.CasterGuid.GetObjectType() == ObjectType.Unit &&
+                    cast_pair.Item1.CasterGuid.GetHighType() == HighGuidType.Pet)
+                    casterType = "Pet";
+                if (cast_pair.Item1.MainTargetGuid.GetObjectType() == ObjectType.Unit &&
+                    cast_pair.Item1.MainTargetGuid.GetHighType() == HighGuidType.Pet)
+                    casterType = "Pet";
                 // make it clear that its a creature
-                if (cast_pair.Item1.CasterType == "Unit")
-                    cast_pair.Item1.CasterType = "Creature";
-                if (cast_pair.Item1.MainTargetType == "Unit")
-                    cast_pair.Item1.MainTargetType = "Creature";
+                if (casterType == "Unit")
+                    casterType = "Creature";
+                if (targetType == "Unit")
+                    targetType = "Creature";
+                // hide real player guids
+                if (targetType == "Player")
+                    targetId = 0;
+
+                uint casterGuid = 0;
+                string casterGuidType = "";
+                if (!cast_pair.Item1.CasterGuid.IsEmpty())
+                {
+                    if (Storage.Objects.ContainsKey(cast_pair.Item1.CasterGuid))
+                    {
+                        if (cast_pair.Item1.CasterGuid.GetObjectType() == ObjectType.Unit)
+                        {
+                            casterGuid = (Storage.Objects[cast_pair.Item1.CasterGuid].Item1 as Unit).DbGuid;
+                            casterGuidType = "@CGUID+";
+                        }
+                        else if (cast_pair.Item1.CasterGuid.GetObjectType() == ObjectType.GameObject)
+                        {
+                            casterGuid = (Storage.Objects[cast_pair.Item1.CasterGuid].Item1 as GameObject).DbGuid;
+                            casterGuidType = "@OGUID+";
+                        }
+                    }
+                }
+
+
+                uint targetGuid = 0;
+                string targetGuidType = "";
+                if (!cast_pair.Item1.MainTargetGuid.IsEmpty())
+                {
+                    if (Storage.Objects.ContainsKey(cast_pair.Item1.MainTargetGuid))
+                    {
+                        if (cast_pair.Item1.MainTargetGuid.GetObjectType() == ObjectType.Unit)
+                        {
+                            targetGuid = (Storage.Objects[cast_pair.Item1.MainTargetGuid].Item1 as Unit).DbGuid;
+                            targetGuidType = "@CGUID+";
+                        }
+                        else if (cast_pair.Item1.MainTargetGuid.GetObjectType() == ObjectType.GameObject)
+                        {
+                            targetGuid = (Storage.Objects[cast_pair.Item1.MainTargetGuid].Item1 as GameObject).DbGuid;
+                            targetGuidType = "@OGUID+";
+                        }
+                    }
+                }
+
                 for (uint i = 0; i < SpellCastData.MAX_SPELL_HIT_TARGETS_DB; i++)
                 {
                     if (cast_pair.Item1.HitTargetType[i] == "Unit")
                         cast_pair.Item1.HitTargetType[i] = "Creature";
                 }
-                if (cast_pair.Item1.MainTargetID == 0 &&
-                    cast_pair.Item1.MainTargetType == "Object")
-                    cast_pair.Item1.MainTargetType = "";
+                if (targetId == 0 &&
+                    targetType == "Object")
+                    targetType = "";
 
-                query += "\n(" + cast_pair.Item1.UnixTime + ", " + cast_pair.Item1.CasterID + ", '" + cast_pair.Item1.CasterType + "', " + cast_pair.Item1.SpellID + ", " + cast_pair.Item1.CastFlags + ", " + cast_pair.Item1.CastFlagsEx + ", " + cast_pair.Item1.MainTargetID + ", '" + cast_pair.Item1.MainTargetType + "', " + cast_pair.Item1.HitTargetsCount + ", ";
+                query += "\n(" + cast_pair.Item1.UnixTime + ", " + casterGuidType + casterGuid + ", " + casterId + ", '" + casterType + "', " + cast_pair.Item1.SpellID + ", " + cast_pair.Item1.CastFlags + ", " + cast_pair.Item1.CastFlagsEx + ", " + targetGuidType + targetGuid + ", " + targetId + ", '" + targetType + "', " + cast_pair.Item1.HitTargetsCount + ", ";
                 for (uint i = 0; i < SpellCastData.MAX_SPELL_HIT_TARGETS_DB; i++)
                 {
                     query += cast_pair.Item1.HitTargetID[i] + ", '" + cast_pair.Item1.HitTargetType[i] + "', ";

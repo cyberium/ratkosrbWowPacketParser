@@ -44,12 +44,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
 
         public static void ReadSpellCastData(SpellCastData dbdata, Packet packet, params object[] idx)
         {
-            WowGuid casterGuid = packet.ReadPackedGuid128("CasterGUID", idx);
-            dbdata.CasterID = casterGuid.GetEntry();
-            if (casterGuid.GetHighType() == HighGuidType.Pet)
-                dbdata.CasterType = "Pet";
-            else
-                dbdata.CasterType = casterGuid.GetObjectType().ToString();
+            dbdata.CasterGuid = packet.ReadPackedGuid128("CasterGUID", idx);
 
             packet.ReadPackedGuid128("CasterUnit", idx);
 
@@ -140,9 +135,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             var hasMapID = packet.ReadBit("hasMapID ", idx);
             var nameLength = packet.ReadBits(7);
 
-            WowGuid unitGuid = packet.ReadPackedGuid128("Unit", idx);
-            dbdata.MainTargetID = unitGuid.GetEntry();
-            dbdata.MainTargetType = unitGuid.GetObjectType().ToString();
+            dbdata.MainTargetGuid = packet.ReadPackedGuid128("Unit", idx);
             packet.ReadPackedGuid128("Item", idx);
 
             if (hasSrcLoc)
@@ -288,7 +281,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
         {
             SpellCastData castData = new SpellCastData();
             ReadSpellCastData(castData, packet, "Cast");
-            Storage.AddSpellCastDataIfShould(castData, Storage.SpellCastStart, packet);
+            Storage.StoreSpellCastData(castData, Storage.SpellCastStart, packet);
         }
 
         [Parser(Opcode.SMSG_SPELL_GO)]
@@ -304,7 +297,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             if (hasLogData)
                 ReadSpellCastLogData(packet, "LogData");
 
-            Storage.AddSpellCastDataIfShould(castData, Storage.SpellCastGo, packet);
+            Storage.StoreSpellCastData(castData, Storage.SpellCastGo, packet);
         }
 
         [HasSniffData]

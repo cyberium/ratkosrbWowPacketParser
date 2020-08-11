@@ -10,11 +10,13 @@ namespace WowPacketParser.Store.Objects
 {
     public sealed class Unit : WoWObject
     {
+        public static uint UnitGuidCounter = 0;
+        public uint DbGuid;
+
         public List<Aura> Auras;
 
         public BlockingCollection<List<Aura>> AddedAuras = new BlockingCollection<List<Aura>>();
 
-        public uint globalSplinesCounter = 0;
         public List<CreatureMovement> Waypoints;
         public List<CreatureMovementSpline> MovementSplines;
 
@@ -33,6 +35,8 @@ namespace WowPacketParser.Store.Objects
 
         public Unit() : base()
         {
+            DbGuid = ++UnitGuidCounter;
+
             UnitData = new UnitData(this);
             UnitDataOriginal = new OriginalUnitData(this);
 
@@ -85,7 +89,6 @@ namespace WowPacketParser.Store.Objects
                         CreatureMovementSpline spline = new CreatureMovementSpline();
                         spline.ParentPoint = movementData.Point;
                         spline.SplinePoint = counter;
-                        spline.GlobalPoint = globalSplinesCounter++;
                         spline.PositionX = vector.X;
                         spline.PositionY = vector.Y;
                         spline.PositionZ = vector.Z;

@@ -8,11 +8,16 @@ namespace WowPacketParser.Store.Objects
 {
     public sealed class GameObject : WoWObject, IDataModel
     {
+        public static uint GameObjectGuidCounter = 0;
+        public uint DbGuid;
+
         public IGameObjectData GameObjectData;
         public IGameObjectData GameObjectDataOriginal;
 
         public GameObject() : base()
         {
+            DbGuid = ++GameObjectGuidCounter;
+
             GameObjectData = new GameObjectData(this);
             GameObjectDataOriginal = new OriginalGameObjectData(this);
         }
