@@ -41,7 +41,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Language", TargetedDatabase.Zero, TargetedDatabase.BattleForAzeroth)]
         public Language? Language;
 
-        [DBFieldName("Language", TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("Language", TargetedDatabase.Classic)]
         public Language801? Language801;
 
         [DBFieldName("Emote")]
@@ -63,5 +63,24 @@ namespace WowPacketParser.Store.Objects
         public DateTime Time;
 
         public string BroadcastTextIDHelper;
+    }
+
+    [DBTableName("world_text")]
+    public sealed class WorldText : IDataModel
+    {
+        [DBFieldName("UnixTime", true)]
+        public uint UnixTime;
+
+        [DBFieldName("Text")]
+        public string Text;
+
+        [DBFieldName("Type")]
+        public ChatMessageType? Type;
+
+        [DBFieldName("Language", TargetedDatabase.Zero, TargetedDatabase.BattleForAzeroth)]
+        public Language? Language;
+
+        [DBFieldName("Language", TargetedDatabase.Classic)]
+        public Language801? Language801;
     }
 }

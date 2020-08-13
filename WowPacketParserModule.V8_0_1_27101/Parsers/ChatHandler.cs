@@ -72,6 +72,18 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 }
                 Storage.CreatureTexts.Add(textEntry);
             }
+            else if (text.SenderGUID.IsEmpty() && text.ReceiverGUID.IsEmpty() &&
+                    (text.Type == ChatMessageType.BattlegroundNeutral))
+            {
+                var worldText = new WorldText
+                {
+                    UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time),
+                    Type = text.Type,
+                    Language801 = text.Language801,
+                    Text = text.Text
+                };
+                Storage.WorldTexts.Add(worldText);
+            }
         }
 
         [Parser(Opcode.CMSG_CHAT_ADDON_MESSAGE, ClientVersionBuild.V8_0_1_27101, ClientVersionBuild.V8_1_0_28724)]

@@ -233,7 +233,11 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create1Row = new Row<CreatureCreate1>();
                             create1Row.Data.GUID = "@CGUID+" + creature.DbGuid;
-                            create1Row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
+                            create1Row.Data.PositionX = createTime.PositionX;
+                            create1Row.Data.PositionY = createTime.PositionY;
+                            create1Row.Data.PositionZ = createTime.PositionZ;
+                            create1Row.Data.Orientation = createTime.Orientation;
+                            create1Row.Data.UnixTime = createTime.UnixTime;
                             create1Rows.Add(create1Row);
                         }
                     }
@@ -247,7 +251,11 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create2Row = new Row<CreatureCreate2>();
                             create2Row.Data.GUID = "@CGUID+" + creature.DbGuid;
-                            create2Row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
+                            create2Row.Data.PositionX = createTime.PositionX;
+                            create2Row.Data.PositionY = createTime.PositionY;
+                            create2Row.Data.PositionZ = createTime.PositionZ;
+                            create2Row.Data.Orientation = createTime.Orientation;
+                            create2Row.Data.UnixTime = createTime.UnixTime;
                             create2Rows.Add(create2Row);
                         }
                     }
@@ -350,13 +358,21 @@ namespace WowPacketParser.SQL.Builders
                             uint victimId = 0;
                             string victimType = attack.victim.GetObjectType().ToString();
 
-                            if (attack.victim.GetObjectType() != ObjectType.Player)
+                            uint victimGuid = 0;
+                            string victimGuidType = "";
+                            if (attack.victim.GetObjectType() == ObjectType.Unit)
+                            {
                                 victimId = attack.victim.GetEntry();
-
-                            if (victimType == "Unit")
                                 victimType = "Creature";
 
-                            attackStartRows += "(@CGUID+" + creature.DbGuid.ToString() + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
+                                if (Storage.Objects.ContainsKey(attack.victim))
+                                {
+                                    victimGuid = (Storage.Objects[attack.victim].Item1 as Unit).DbGuid;
+                                    victimGuidType = "@CGUID+";
+                                }
+                            }
+
+                            attackStartRows += "(@CGUID+" + creature.DbGuid.ToString() + ", " + victimGuidType + victimGuid.ToString() + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
                         }
                     }
                 }
@@ -373,13 +389,21 @@ namespace WowPacketParser.SQL.Builders
                             uint victimId = 0;
                             string victimType = attack.victim.GetObjectType().ToString();
 
-                            if (attack.victim.GetObjectType() != ObjectType.Player)
+                            uint victimGuid = 0;
+                            string victimGuidType = "";
+                            if (attack.victim.GetObjectType() == ObjectType.Unit)
+                            {
                                 victimId = attack.victim.GetEntry();
-
-                            if (victimType == "Unit")
                                 victimType = "Creature";
 
-                            attackStopRows += "(@CGUID+" + creature.DbGuid.ToString() + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
+                                if (Storage.Objects.ContainsKey(attack.victim))
+                                {
+                                    victimGuid = (Storage.Objects[attack.victim].Item1 as Unit).DbGuid;
+                                    victimGuidType = "@CGUID+";
+                                }
+                            }
+
+                            attackStopRows += "(@CGUID+" + creature.DbGuid.ToString() + ", " + victimGuidType + victimGuid.ToString() + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
                         }
                     }
                 }
@@ -489,14 +513,14 @@ namespace WowPacketParser.SQL.Builders
 
             if (attackStartRows != "")
             {
-                result.Append("\nINSERT INTO `creature_attack_start` (`guid`, `victim_id`, `victim_type`, `unixtime`) VALUES\n");
+                result.Append("\nINSERT INTO `creature_attack_start` (`guid`, `victim_guid`, `victim_id`, `victim_type`, `unixtime`) VALUES\n");
                 result.Append(attackStartRows);
                 result.Append(";\n\n");
             }
 
             if (attackStopRows != "")
             {
-                result.Append("\nINSERT INTO `creature_attack_stop` (`guid`, `victim_id`, `victim_type`, `unixtime`) VALUES\n");
+                result.Append("\nINSERT INTO `creature_attack_stop` (`guid`, `victim_guid`, `victim_id`, `victim_type`, `unixtime`) VALUES\n");
                 result.Append(attackStopRows);
                 result.Append(";\n\n");
             }
@@ -640,7 +664,11 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create1Row = new Row<GameObjectCreate1>();
                             create1Row.Data.GUID = "@OGUID+" + go.DbGuid;
-                            create1Row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
+                            create1Row.Data.PositionX = createTime.PositionX;
+                            create1Row.Data.PositionY = createTime.PositionY;
+                            create1Row.Data.PositionZ = createTime.PositionZ;
+                            create1Row.Data.Orientation = createTime.Orientation;
+                            create1Row.Data.UnixTime = createTime.UnixTime;
                             create1Rows.Add(create1Row);
                         }
                     }
@@ -654,7 +682,11 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create2Row = new Row<GameObjectCreate2>();
                             create2Row.Data.GUID = "@OGUID+" + go.DbGuid;
-                            create2Row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
+                            create2Row.Data.PositionX = createTime.PositionX;
+                            create2Row.Data.PositionY = createTime.PositionY;
+                            create2Row.Data.PositionZ = createTime.PositionZ;
+                            create2Row.Data.Orientation = createTime.Orientation;
+                            create2Row.Data.UnixTime = createTime.UnixTime;
                             create2Rows.Add(create2Row);
                         }
                     }

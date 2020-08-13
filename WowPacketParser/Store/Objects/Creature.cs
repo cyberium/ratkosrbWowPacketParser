@@ -191,6 +191,18 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string GUID;
 
+        [DBFieldName("position_x")]
+        public float? PositionX;
+
+        [DBFieldName("position_y")]
+        public float? PositionY;
+
+        [DBFieldName("position_z")]
+        public float? PositionZ;
+
+        [DBFieldName("orientation")]
+        public float? Orientation;
+
         [DBFieldName("unixtime", true)]
         public uint UnixTime;
     }
@@ -200,6 +212,18 @@ namespace WowPacketParser.Store.Objects
     {
         [DBFieldName("guid", true, true)]
         public string GUID;
+
+        [DBFieldName("position_x")]
+        public float? PositionX;
+
+        [DBFieldName("position_y")]
+        public float? PositionY;
+
+        [DBFieldName("position_z")]
+        public float? PositionZ;
+
+        [DBFieldName("orientation")]
+        public float? Orientation;
 
         [DBFieldName("unixtime", true)]
         public uint UnixTime;

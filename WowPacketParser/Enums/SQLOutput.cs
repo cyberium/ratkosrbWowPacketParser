@@ -82,6 +82,7 @@
         trainer,
         vehicle_template_accessory,
         weather_updates,
+        world_text,
 
         hotfix_data,
         hotfix_blob

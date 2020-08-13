@@ -216,5 +216,19 @@ namespace WowPacketParser.SQL.Builders
 
             return SQLUtil.Compare(Storage.ItemClientUseTimes, templateDb, StoreNameType.None);
         }
+
+        [BuilderMethod]
+        public static string WorldTexts()
+        {
+            if (Storage.WorldTexts.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.world_text)
+                return string.Empty;
+
+            var templateDb = SQLDatabase.Get(Storage.WorldTexts, Settings.TDBDatabase);
+
+            return SQLUtil.Compare(Storage.WorldTexts, templateDb, StoreNameType.None);
+        }
     }
 }

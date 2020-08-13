@@ -50,8 +50,8 @@ namespace WowPacketParser.Store
                 Storage.ObjectDestroyTimes.Add(guid, timeList);
             }
         }
-        public static readonly Dictionary<WowGuid, List<DateTime>> ObjectCreate1Times = new Dictionary<WowGuid, List<DateTime>>();
-        public static void StoreObjectCreate1Time(WowGuid guid, DateTime time)
+        public static readonly Dictionary<WowGuid, List<ObjectCreate>> ObjectCreate1Times = new Dictionary<WowGuid, List<ObjectCreate>>();
+        public static void StoreObjectCreate1Time(WowGuid guid, MovementInfo movement, DateTime time)
         {
             if (guid.GetObjectType() != ObjectType.Unit &&
                 guid.GetObjectType() != ObjectType.GameObject)
@@ -65,17 +65,35 @@ namespace WowPacketParser.Store
 
             if (Storage.ObjectCreate1Times.ContainsKey(guid))
             {
-                Storage.ObjectCreate1Times[guid].Add(time);
+                ObjectCreate createData = new ObjectCreate();
+                createData.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                if (movement != null)
+                {
+                    createData.PositionX = movement.Position.X;
+                    createData.PositionY = movement.Position.Y;
+                    createData.PositionZ = movement.Position.Z;
+                    createData.Orientation = movement.Orientation;
+                }
+                Storage.ObjectCreate1Times[guid].Add(createData);
             }
             else
             {
-                List<DateTime> timeList = new List<DateTime>();
-                timeList.Add(time);
-                Storage.ObjectCreate1Times.Add(guid, timeList);
+                List<ObjectCreate> createList = new List<ObjectCreate>();
+                ObjectCreate createData = new ObjectCreate();
+                createData.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                if (movement != null)
+                {
+                    createData.PositionX = movement.Position.X;
+                    createData.PositionY = movement.Position.Y;
+                    createData.PositionZ = movement.Position.Z;
+                    createData.Orientation = movement.Orientation;
+                }
+                createList.Add(createData);
+                Storage.ObjectCreate1Times.Add(guid, createList);
             }
         }
-        public static readonly Dictionary<WowGuid, List<DateTime>> ObjectCreate2Times = new Dictionary<WowGuid, List<DateTime>>();
-        public static void StoreObjectCreate2Time(WowGuid guid, DateTime time)
+        public static readonly Dictionary<WowGuid, List<ObjectCreate>> ObjectCreate2Times = new Dictionary<WowGuid, List<ObjectCreate>>();
+        public static void StoreObjectCreate2Time(WowGuid guid, MovementInfo movement, DateTime time)
         {
             if (guid.GetObjectType() != ObjectType.Unit &&
                 guid.GetObjectType() != ObjectType.GameObject)
@@ -89,14 +107,40 @@ namespace WowPacketParser.Store
 
             if (Storage.ObjectCreate2Times.ContainsKey(guid))
             {
-                Storage.ObjectCreate2Times[guid].Add(time);
+                ObjectCreate createData = new ObjectCreate();
+                createData.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                if (movement != null)
+                {
+                    createData.PositionX = movement.Position.X;
+                    createData.PositionY = movement.Position.Y;
+                    createData.PositionZ = movement.Position.Z;
+                    createData.Orientation = movement.Orientation;
+                }
+                Storage.ObjectCreate2Times[guid].Add(createData);
             }
             else
             {
-                List<DateTime> timeList = new List<DateTime>();
-                timeList.Add(time);
-                Storage.ObjectCreate2Times.Add(guid, timeList);
+                List<ObjectCreate> createList = new List<ObjectCreate>();
+                ObjectCreate createData = new ObjectCreate();
+                createData.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                if (movement != null)
+                {
+                    createData.PositionX = movement.Position.X;
+                    createData.PositionY = movement.Position.Y;
+                    createData.PositionZ = movement.Position.Z;
+                    createData.Orientation = movement.Orientation;
+                }
+                createList.Add(createData);
+                Storage.ObjectCreate2Times.Add(guid, createList);
             }
+        }
+        public static void StoreObjectCreateTime(WowGuid guid, MovementInfo movement, DateTime time, ObjectCreateType type)
+        {
+            if (type == ObjectCreateType.Create1)
+                StoreObjectCreate1Time(guid, movement, time);
+            else if (type == ObjectCreateType.Create2)
+                StoreObjectCreate2Time(guid, movement, time);
+
         }
         public static readonly Dictionary<WowGuid, List<CreatureUpdate>> CreatureUpdates = new Dictionary<WowGuid, List<CreatureUpdate>>();
         public static void StoreCreatureUpdate(WowGuid guid, CreatureUpdate update)
@@ -287,6 +331,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<NpcTextMop> NpcTextsMop = new DataBag<NpcTextMop>(Settings.SqlTables.npc_text);
 
         // Creature text (says, yells, etc.)
+        public static readonly DataBag<WorldText> WorldTexts = new DataBag<WorldText>(Settings.SqlTables.world_text);
         public static readonly DataBag<CreatureText> CreatureTexts = new DataBag<CreatureText>(Settings.SqlTables.creature_text);
         public static readonly StoreMulti<uint, CreatureTextTemplate> CreatureTextTemplates = new StoreMulti<uint, CreatureTextTemplate>(Settings.SqlTables.creature_text_template);
 

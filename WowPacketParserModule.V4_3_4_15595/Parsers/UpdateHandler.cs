@@ -35,15 +35,13 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
                     case "CreateObject1":
                     {
                         var guid = packet.ReadPackedGuid("GUID", i);
-                        Storage.StoreObjectCreate1Time(guid, packet.Time);
-                        ReadCreateObjectBlock(packet, guid, map, i);
+                        ReadCreateObjectBlock(packet, guid, map, i, ObjectCreateType.Create1);
                         break;
                     }
                     case "CreateObject2":
                     {
                         var guid = packet.ReadPackedGuid("GUID", i);
-                        Storage.StoreObjectCreate2Time(guid, packet.Time);
-                        ReadCreateObjectBlock(packet, guid, map, i);
+                        ReadCreateObjectBlock(packet, guid, map, i, ObjectCreateType.Create2);
                         break;
                     }
                     case "DestroyObjects":
@@ -55,10 +53,11 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             }
         }
 
-        private static void ReadCreateObjectBlock(Packet packet, WowGuid guid, uint map, object index)
+        private static void ReadCreateObjectBlock(Packet packet, WowGuid guid, uint map, object index, ObjectCreateType type)
         {
             ObjectType objType = ObjectTypeConverter.Convert(packet.ReadByteE<ObjectTypeLegacy>("Object Type", index));
             var moves = ReadMovementUpdateBlock434(packet, guid, index);
+            Storage.StoreObjectCreateTime(guid, moves, packet.Time, type);
             var updates = CoreParsers.UpdateHandler.ReadValuesUpdateBlockOnCreate(packet, objType, index);
 
             WoWObject obj;
@@ -92,7 +91,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             if (Storage.Objects.ContainsKey(guid))
             {
                 var existObj = Storage.Objects[guid].Item1;
-                CoreParsers.UpdateHandler.ProcessExistingObject(ref existObj, obj, guid); // can't do "ref Storage.Objects[guid].Item1 directly
+                CoreParsers.UpdateHandler.ProcessExistingObject(ref existObj, obj, guid, packet.Time); // can't do "ref Storage.Objects[guid].Item1 directly
             }
             else
                 Storage.StoreNewObject(guid, obj, packet);
