@@ -116,7 +116,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
 
                 packet.ReadPackedGuid128("AccountID");
                 packet.ReadPackedGuid128("BnetAccountID");
-                packet.ReadPackedGuid128("Player Guid");
+                WowGuid guid = packet.ReadPackedGuid128("Player Guid");
 
                 packet.ReadUInt64("GuildClubMemberID");
                 packet.ReadUInt32("VirtualRealmAddress");
@@ -126,7 +126,9 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 packet.ReadByteE<Class>("Class");
                 packet.ReadByte("Level");
 
-                packet.ReadWoWString("Name", bits15);
+                string name = packet.ReadWoWString("Name", bits15);
+
+                StoreGetters.AddName(guid, name);
             }
         }
 

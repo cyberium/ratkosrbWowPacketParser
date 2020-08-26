@@ -97,6 +97,7 @@ namespace WowPacketParser.Misc
             public static readonly bool conversation_actors = Conf.GetBoolean("conversation_actors", false);
             public static readonly bool conversation_line_template = Conf.GetBoolean("conversation_line_template", false);
             public static readonly bool conversation_template = Conf.GetBoolean("conversation_template", false);
+            public static readonly bool characters = Conf.GetBoolean("characters", false);
             public static readonly bool creature = Conf.GetBoolean("creature", false);
             public static readonly bool creature_addon = Conf.GetBoolean("creature_addon", false);
             public static readonly bool creature_attack_start = Conf.GetBoolean("creature_attack_start", false);

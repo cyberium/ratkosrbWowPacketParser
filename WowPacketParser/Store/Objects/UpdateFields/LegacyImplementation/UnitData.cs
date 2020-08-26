@@ -48,6 +48,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public WowGuid CreatedBy => GetGuidValue(UnitField.UNIT_FIELD_CREATEDBY);
 
+        public byte RaceId => (byte)(UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_0) & 0xFF);
         public byte ClassId => (byte)((UpdateFields.GetValue<UnitField, uint?>(UnitField.UNIT_FIELD_BYTES_0).GetValueOrDefault((uint)Class.Warrior << 8) >> 8) & 0xFF);
 
         public byte Sex => (byte)(ClientVersion.AddedInVersion(ClientVersionBuild.V5_4_0_17359)
@@ -138,6 +139,14 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public float HoverHeight => UpdateFields.GetValue<UnitField, float?>(UnitField.UNIT_FIELD_HOVERHEIGHT).GetValueOrDefault(1.0f);
 
         public int InteractSpellID => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_INTERACT_SPELLID);
+
+        // Player Fields
+        public int PlayerAccount => UpdateFields.GetValue<PlayerField, int>(PlayerField.PLAYER_WOW_ACCOUNT);
+        public int PlayerExperience => UpdateFields.GetValue<PlayerField, int>(PlayerField.PLAYER_XP);
+        public int PlayerMoney => UpdateFields.GetValue<PlayerField, int>(PlayerField.PLAYER_FIELD_COINAGE);
+        public uint PlayerBytes1 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES);
+        public uint PlayerBytes2 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_2);
+        public int PlayerFlags => UpdateFields.GetValue<PlayerField, int>(PlayerField.PLAYER_FLAGS);
 
         public class VisibleItem : IVisibleItem
         {
@@ -189,6 +198,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public WowGuid CreatedBy => GetGuidValue(UnitField.UNIT_FIELD_CREATEDBY);
 
+        public byte RaceId => (byte)(UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_0) & 0xFF);
         public byte ClassId => (byte)((UpdateFields.GetValue<UnitField, uint?>(UnitField.UNIT_FIELD_BYTES_0).GetValueOrDefault((uint)Class.Warrior << 8) >> 8) & 0xFF);
 
         public byte Sex => (byte)(ClientVersion.AddedInVersion(ClientVersionBuild.V5_4_0_17359)
@@ -279,6 +289,14 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public float HoverHeight => UpdateFields.GetValue<UnitField, float?>(UnitField.UNIT_FIELD_HOVERHEIGHT).GetValueOrDefault(1.0f);
 
         public int InteractSpellID => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_INTERACT_SPELLID);
+
+        // Player Fields
+        public int PlayerAccount => UpdateFields.GetValue<PlayerField, int>(PlayerField.PLAYER_WOW_ACCOUNT);
+        public int PlayerExperience => UpdateFields.GetValue<PlayerField, int>(PlayerField.PLAYER_XP);
+        public int PlayerMoney => UpdateFields.GetValue<PlayerField, int>(PlayerField.PLAYER_FIELD_COINAGE);
+        public uint PlayerBytes1 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_FIELD_BYTES);
+        public uint PlayerBytes2 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_FIELD_BYTES2);
+        public int PlayerFlags => UpdateFields.GetValue<PlayerField, int>(PlayerField.PLAYER_FLAGS);
 
         public class VisibleItem : IVisibleItem
         {

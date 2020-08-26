@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
@@ -229,6 +231,126 @@ namespace WowPacketParser.SQL.Builders
             var templateDb = SQLDatabase.Get(Storage.WorldTexts, Settings.TDBDatabase);
 
             return SQLUtil.Compare(Storage.WorldTexts, templateDb, StoreNameType.None);
+        }
+
+        private static Random random = new Random();
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        [BuilderMethod]
+        public static string Characters()
+        {
+            if (!Settings.SqlTables.characters)
+                return string.Empty;
+
+            StringBuilder result = new StringBuilder();
+            uint maxDbGuid = 0;
+            uint itemGuidCounter = 0;
+            var characterRows = new RowList<CharacterTemplate>();
+            var characterInventoryRows = new RowList<CharacterInventory>();
+            var characterItemInstaceRows = new RowList<CharacterItemInstance>();
+            Dictionary<int, uint> accountIdDictionary = new Dictionary<int, uint>();
+            foreach (var objPair in Storage.Objects)
+            {
+                if (objPair.Key.GetObjectType() != ObjectType.Player)
+                    continue;
+
+                Player player = objPair.Value.Item1 as Player;
+                if (player == null)
+                    continue;
+
+                Row<CharacterTemplate> row = new Row<CharacterTemplate>();
+
+                row.Data.Guid = "@PGUID+" + player.DbGuid;
+                if (accountIdDictionary.ContainsKey(player.UnitData.PlayerAccount))
+                    row.Data.Account = "@ACCID+" + accountIdDictionary[player.UnitData.PlayerAccount];
+                else
+                {
+                    uint id = (uint)accountIdDictionary.Count;
+                    accountIdDictionary.Add(player.UnitData.PlayerAccount, id);
+                    row.Data.Account = "@ACCID+" + id;
+                }
+
+                row.Data.Name = StoreGetters.GetName(objPair.Key);
+                row.Data.Race = player.UnitData.RaceId;
+                row.Data.Class = player.UnitData.ClassId;
+                row.Data.Gender = player.UnitData.Sex;
+                row.Data.Level = (uint)player.UnitData.Level;
+                row.Data.XP = (uint)player.UnitData.PlayerExperience;
+                row.Data.Money = (uint)player.UnitData.PlayerMoney;
+                row.Data.PlayerBytes = player.UnitData.PlayerBytes1;
+                row.Data.PlayerBytes2 = player.UnitData.PlayerBytes2;
+                row.Data.PlayerFlags = (uint)player.UnitData.PlayerFlags;
+                row.Data.PositionX = player.OriginalMovement.Position.X;
+                row.Data.PositionY = player.OriginalMovement.Position.Y;
+                row.Data.PositionZ = player.OriginalMovement.Position.Z;
+                row.Data.Orientation = player.OriginalMovement.Orientation;
+                row.Data.Map = player.Map;
+                row.Data.Health = (uint)player.UnitData.CurHealth;
+                row.Data.Power1 = (uint)player.UnitData.CurMana;
+
+                for (int i = 0; i < 38; i++)
+                {
+                    int itemId = 0;
+
+                    UpdateField value;
+                    if (player.UpdateFields.TryGetValue(Enums.Version.UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM) + i, out value))
+                    {
+                        itemId = value.Int32Value;
+
+                        // even indexes are item ids, odd indexes are enchant ids
+                        if (i % 2 == 0)
+                        {
+                            Row<CharacterInventory> inventoryRow = new Row<CharacterInventory>();
+                            inventoryRow.Data.Guid = row.Data.Guid;
+                            inventoryRow.Data.Bag = 0;
+                            inventoryRow.Data.Slot = (uint)i / 2;
+                            inventoryRow.Data.ItemGuid = "@IGUID+" + itemGuidCounter;
+                            inventoryRow.Data.ItemTemplate = (uint)itemId;
+                            characterInventoryRows.Add(inventoryRow);
+
+                            Row<CharacterItemInstance> itemInstanceRow = new Row<CharacterItemInstance>();
+                            itemInstanceRow.Data.Guid = "@IGUID+" + itemGuidCounter;
+                            itemInstanceRow.Data.ItemEntry = (uint)itemId;
+                            itemInstanceRow.Data.OwnerGuid = row.Data.Guid;
+                            characterItemInstaceRows.Add(itemInstanceRow);
+
+                            itemGuidCounter++;
+                        }
+                    }
+
+                    if (row.Data.EquipmentCache.Length > 0)
+                        row.Data.EquipmentCache += " ";
+
+                    row.Data.EquipmentCache += itemId;
+                }
+
+                characterRows.Add(row);
+
+                if (maxDbGuid < player.DbGuid)
+                    maxDbGuid = player.DbGuid;
+            }
+
+            var characterDelete = new SQLDelete<CharacterTemplate>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
+            result.Append(characterDelete.Build());
+            var characterSql = new SQLInsert<CharacterTemplate>(characterRows, false);
+            result.Append(characterSql.Build());
+
+            var inventoryDelete = new SQLDelete<CharacterInventory>(Tuple.Create("@IGUID+0", "@IGUID+" + itemGuidCounter));
+            result.Append(inventoryDelete.Build());
+            var inventorySql = new SQLInsert<CharacterInventory>(characterInventoryRows, false);
+            result.Append(inventorySql.Build());
+
+            var itemInstanceDelete = new SQLDelete<CharacterItemInstance>(Tuple.Create("@IGUID+0", "@IGUID+" + itemGuidCounter));
+            result.Append(itemInstanceDelete.Build());
+            var itemInstanceSql = new SQLInsert<CharacterItemInstance>(characterItemInstaceRows, false);
+            result.Append(itemInstanceSql.Build());
+
+            return result.ToString();
         }
     }
 }
