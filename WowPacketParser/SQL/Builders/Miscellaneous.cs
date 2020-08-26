@@ -303,7 +303,7 @@ namespace WowPacketParser.SQL.Builders
                         itemId = value.Int32Value;
 
                         // even indexes are item ids, odd indexes are enchant ids
-                        if (i % 2 == 0)
+                        if ((itemId != 0) && (i % 2 == 0))
                         {
                             Row<CharacterInventory> inventoryRow = new Row<CharacterInventory>();
                             inventoryRow.Data.Guid = row.Data.Guid;

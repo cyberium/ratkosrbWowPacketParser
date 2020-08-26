@@ -100,6 +100,12 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("count")]
         public uint Count = 1;
 
+        [DBFieldName("charges")]
+        public string Charges = "0 0 0 0 0 ";
+
+        [DBFieldName("enchantments")]
+        public string Enchantments = "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ";
+
         [DBFieldName("durability")]
         public uint Durability = 1;
     }
