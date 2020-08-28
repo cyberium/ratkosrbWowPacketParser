@@ -20,6 +20,7 @@ namespace WowPacketParser.Store.Objects
         public int Level;
 
         public IUnitData UnitData;
+        public bool IsActivePlayer = false;
 
         public Player() : base()
         {

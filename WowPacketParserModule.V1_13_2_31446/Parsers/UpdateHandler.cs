@@ -78,6 +78,11 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 case ObjectType.Player:
                     obj = new Player();
                     break;
+                case ObjectType.ActivePlayer:
+                    Player me = new Player();
+                    me.IsActivePlayer = true;
+                    obj = me;
+                    break;
                 case ObjectType.AreaTrigger:
                     obj = new SpellAreaTrigger();
                     break;

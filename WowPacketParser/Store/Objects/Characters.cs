@@ -1,4 +1,5 @@
-﻿using WowPacketParser.Enums;
+﻿using System;
+using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.SQL;
 
@@ -108,5 +109,45 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("durability")]
         public uint Durability = 1;
+    }
+    [DBTableName("character_movement")]
+    public sealed class CharacterMovement : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string Guid;
+
+        [DBFieldName("opcode")]
+        public string Opcode;
+
+        [DBFieldName("move_time")]
+        public uint MoveTime;
+
+        [DBFieldName("move_flags")]
+        public uint MoveFlags;
+
+        [DBFieldName("position_x")]
+        public float PositionX;
+
+        [DBFieldName("position_y")]
+        public float PositionY;
+
+        [DBFieldName("position_z")]
+        public float PositionZ;
+
+        [DBFieldName("orientation")]
+        public float Orientation;
+
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+    }
+    public sealed class PlayerMovement
+    {
+        public WowGuid guid;
+        public Vector4 Position;
+        public uint MoveTime;
+        public uint MoveFlags;
+        public int Opcode;
+        public Direction OpcodeDirection;
+        public DateTime Time;
     }
 }

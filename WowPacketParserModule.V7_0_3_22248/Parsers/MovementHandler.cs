@@ -17,10 +17,11 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
     {
         public static void ReadMovementStats(Packet packet, params object[] idx)
         {
-            packet.ReadPackedGuid128("MoverGUID", idx);
+            PlayerMovement moveData = new PlayerMovement();
+            moveData.guid = packet.ReadPackedGuid128("MoverGUID", idx);
 
-            packet.ReadInt32("MoveTime", idx);
-            packet.ReadVector4("Position", idx);
+            moveData.MoveTime = packet.ReadUInt32("MoveTime", idx);
+            moveData.Position = packet.ReadVector4("Position", idx);
 
             packet.ReadSingle("Pitch", idx);
             packet.ReadSingle("SplineElevation", idx);
@@ -33,7 +34,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
 
             packet.ResetBitReader();
 
-            packet.ReadBitsE<MovementFlag>("MovementFlags", 30, idx);
+            moveData.MoveFlags = (uint)packet.ReadBitsE<MovementFlag>("MovementFlags", 30, idx);
             packet.ReadBitsE<MovementFlags2>("ExtraMovementFlags", 18, idx);
 
             var hasTransport = packet.ReadBit("HasTransportData", idx);
@@ -47,6 +48,14 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
 
             if (hasFall)
                 V6_0_2_19033.Parsers.MovementHandler.ReadFallData(packet, idx, "FallData");
+
+            if (Settings.SqlTables.character_movement)
+            {
+                moveData.Opcode = packet.Opcode;
+                moveData.OpcodeDirection = packet.Direction;
+                moveData.Time = packet.Time;
+                Storage.PlayerMovements.Add(moveData);
+            }
         }
 
         public static void ReadMovementAck(Packet packet, params object[] idx)

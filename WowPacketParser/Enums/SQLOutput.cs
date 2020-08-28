@@ -16,6 +16,8 @@
         conversation_line_template,
         conversation_template,
         characters,
+        character_inventory,
+        character_movement,
         creature,
         creature_addon,
         creature_create1_time,

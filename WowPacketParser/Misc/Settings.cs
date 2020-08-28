@@ -18,6 +18,8 @@ namespace WowPacketParser.Misc
         public static readonly DumpFormatType DumpFormat = Conf.GetEnum("DumpFormat", DumpFormatType.Text);
         public static readonly ulong SQLOutputFlag = GetSQLOutputFlag();
         public static readonly bool SQLOrderByKey = Conf.GetBoolean("SqlOrderByKey", false);
+        public static readonly bool RandomizePlayerNames = Conf.GetBoolean("RandomizePlayerNames", false);
+        public static readonly bool SkipOtherPlayers = Conf.GetBoolean("SkipOtherPlayers", false);
         public static readonly bool SaveTempSpawns = Conf.GetBoolean("SaveTempSpawns", false);
         public static readonly bool SkipOnlyVerifiedBuildUpdateRows = Conf.GetBoolean("SkipOnlyVerifiedBuildUpdateRows", false);
         public static readonly bool IgnoreZeroValues = Conf.GetBoolean("IgnoreZeroValues", false);
@@ -98,6 +100,8 @@ namespace WowPacketParser.Misc
             public static readonly bool conversation_line_template = Conf.GetBoolean("conversation_line_template", false);
             public static readonly bool conversation_template = Conf.GetBoolean("conversation_template", false);
             public static readonly bool characters = Conf.GetBoolean("characters", false);
+            public static readonly bool character_inventory = Conf.GetBoolean("character_inventory", false);
+            public static readonly bool character_movement = Conf.GetBoolean("character_movement", false);
             public static readonly bool creature = Conf.GetBoolean("creature", false);
             public static readonly bool creature_addon = Conf.GetBoolean("creature_addon", false);
             public static readonly bool creature_attack_start = Conf.GetBoolean("creature_attack_start", false);

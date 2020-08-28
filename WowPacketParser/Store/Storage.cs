@@ -248,6 +248,9 @@ namespace WowPacketParser.Store
                 store.Add(attackerGuid, attackList);
             }
         }
+
+        public static readonly List<PlayerMovement> PlayerMovements = new List<PlayerMovement>();
+
         /* Key: Entry */
 
         // Templates
