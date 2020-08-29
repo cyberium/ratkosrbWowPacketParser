@@ -127,6 +127,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 textEntry.Entry = entry;
                 textEntry.Text = text.Text;
                 textEntry.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+                textEntry.SenderGUID = text.SenderGUID;
                 if (Storage.Objects.ContainsKey(text.SenderGUID))
                 {
                     var obj = Storage.Objects[text.SenderGUID].Item1 as Unit;

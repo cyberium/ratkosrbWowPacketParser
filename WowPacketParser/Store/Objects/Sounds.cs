@@ -19,6 +19,25 @@ namespace WowPacketParser.Store.Objects
         public WowGuid guid;
     }
 
+    [DBTableName("play_sound")]
+    public sealed class PlaySound : IDataModel
+    {
+        [DBFieldName("source_guid", true, true)]
+        public string SourceGuid;
+
+        [DBFieldName("source_id", true)]
+        public uint SourceEntry;
+
+        [DBFieldName("source_type", true)]
+        public string SourceType;
+
+        [DBFieldName("sound", true)]
+        public uint Sound;
+
+        [DBFieldName("unixtime", true)]
+        public uint UnixTime;
+    }
+
     [DBTableName("play_music")]
     public sealed class PlayMusic : IDataModel
     {

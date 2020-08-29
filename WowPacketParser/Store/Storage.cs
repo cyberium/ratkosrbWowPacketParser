@@ -25,6 +25,93 @@ namespace WowPacketParser.Store
                 obj.SourceSniffId = Program.sniffFileNames.IndexOf(packet.FileName);
             Storage.Objects.Add(guid, obj, packet.TimeSpan);
         }
+        public static string GetObjectDbGuid(WowGuid guid)
+        {
+            if (Objects.ContainsKey(guid))
+            {
+                if (guid.GetObjectType() == ObjectType.Unit)
+                {
+                    Unit creature = Objects[guid].Item1 as Unit;
+                    if (creature != null)
+                        return "@CGUID+" + creature.DbGuid;
+                }
+                else if (guid.GetObjectType() == ObjectType.GameObject)
+                {
+                    GameObject gameobject = Objects[guid].Item1 as GameObject;
+                    if (gameobject != null)
+                        return "@OGUID+" + gameobject.DbGuid;
+                }
+                else if (guid.GetObjectType() == ObjectType.Player ||
+                         guid.GetObjectType() == ObjectType.ActivePlayer)
+                {
+                    Player player = Objects[guid].Item1 as Player;
+                    if (player != null)
+                        return "@PGUID+" + player.DbGuid;
+                }
+            }
+            return "0";
+        }
+        public static void GetObjectDbGuidEntryType(WowGuid guid, out string objectGuid, out uint objectEntry, out string objectType)
+        {
+            if (Objects.ContainsKey(guid))
+            {
+                if (guid.GetObjectType() == ObjectType.Unit)
+                {
+                    Unit creature = Objects[guid].Item1 as Unit;
+                    if (creature != null)
+                        objectGuid = "@CGUID+" + creature.DbGuid;
+                    else
+                        objectGuid = "0";
+
+                    objectEntry = guid.GetEntry();
+
+                    if (guid.GetHighType() == HighGuidType.Pet)
+                        objectType = "Pet";
+                    else
+                        objectType = "Creature";
+
+                    return;
+                }
+                else if (guid.GetObjectType() == ObjectType.GameObject)
+                {
+                    GameObject gameobject = Objects[guid].Item1 as GameObject;
+                    if (gameobject != null)
+                        objectGuid = "@OGUID+" + gameobject.DbGuid;
+                    else
+                        objectGuid = "0";
+
+                    objectEntry = guid.GetEntry();
+
+                    objectType = "GameObject";
+
+                    return;
+                }
+                else if (guid.GetObjectType() == ObjectType.Player ||
+                         guid.GetObjectType() == ObjectType.ActivePlayer)
+                {
+                    Player player = Objects[guid].Item1 as Player;
+                    if (player != null)
+                        objectGuid = "@PGUID+" + player.DbGuid;
+                    else
+                        objectGuid = "0";
+
+                    objectEntry = 0;
+                    objectType = "Player";
+
+                    return;
+                }
+                else
+                {
+                    objectGuid = "0";
+                    objectEntry = guid.GetEntry();
+                    objectType = guid.GetObjectType().ToString();
+                    return;
+                }
+            }
+            objectGuid = "0";
+            objectEntry = 0;
+            objectType = "";
+        }
 
         public static readonly Dictionary<WowGuid, List<DateTime>> ObjectDestroyTimes = new Dictionary<WowGuid, List<DateTime>>();
         public static void StoreObjectDestroyTime(WowGuid guid, DateTime time)

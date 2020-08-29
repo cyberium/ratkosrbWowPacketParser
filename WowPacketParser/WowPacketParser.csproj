@@ -626,6 +626,7 @@
     <Compile Include="Store\Objects\LootTemplate.cs" />
     <Compile Include="Store\Objects\ObjectCreate.cs" />
     <Compile Include="Store\Objects\Sounds.cs" />
+    <Compile Include="Store\Objects\SpellCastData.cs" />
     <Compile Include="Store\Objects\UpdateFields\IQuestSession.cs" />
     <Compile Include="Store\Objects\UpdateFields\IReplayedQuest.cs" />
     <Compile Include="Store\Objects\UpdateFields\ISelectedAzeriteEssences.cs" />

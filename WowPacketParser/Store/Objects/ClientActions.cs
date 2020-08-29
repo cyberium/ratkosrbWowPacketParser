@@ -10,6 +10,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("unixtime", true)]
         public uint? UnixTime;
 
+        [DBFieldName("object_guid", false, true)]
+        public string ObjectGuid;
+
         [DBFieldName("object_id")]
         public uint? ObjectId;
 
@@ -25,6 +28,9 @@ namespace WowPacketParser.Store.Objects
     {
         [DBFieldName("unixtime", true)]
         public uint? UnixTime;
+
+        [DBFieldName("object_guid", false, true)]
+        public string ObjectGuid;
 
         [DBFieldName("object_id")]
         public uint? ObjectId;

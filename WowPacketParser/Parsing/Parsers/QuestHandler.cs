@@ -803,17 +803,22 @@ namespace WowPacketParser.Parsing.Parsers
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_2_9901))
                 packet.ReadUInt32("Unk UInt32");
 
-            string objectType = guid.GetObjectType().ToString();
-            if (objectType == "Unit")
-                objectType = "Creature";
-            QuestClientAccept questAccept = new QuestClientAccept
+            if (Settings.SqlTables.quest_client_accept)
             {
-                ObjectId = guid.GetEntry(),
-                ObjectType = objectType,
-                QuestId = (uint)id,
-                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time)
-            };
-            Storage.QuestClientAcceptTimes.Add(questAccept, packet.TimeSpan);
+                string objectGuid;
+                uint objectId;
+                string objectType;
+                Storage.GetObjectDbGuidEntryType(guid, out objectGuid, out objectId, out objectType);
+                QuestClientAccept questAccept = new QuestClientAccept
+                {
+                    ObjectGuid = objectGuid,
+                    ObjectId = objectId,
+                    ObjectType = objectType,
+                    QuestId = id,
+                    UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time)
+                };
+                Storage.QuestClientAcceptTimes.Add(questAccept, packet.TimeSpan);
+            }
         }
 
         [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_DETAILS, ClientVersionBuild.Zero, ClientVersionBuild.V5_1_0_16309)]
@@ -1214,17 +1219,22 @@ namespace WowPacketParser.Parsing.Parsers
             uint id = packet.ReadUInt32<QuestId>("Quest ID");
             packet.ReadUInt32("Reward");
 
-            string objectType = guid.GetObjectType().ToString();
-            if (objectType == "Unit")
-                objectType = "Creature";
-            QuestClientComplete questComplete = new QuestClientComplete
+            if (Settings.SqlTables.quest_client_complete)
             {
-                ObjectId = guid.GetEntry(),
-                ObjectType = objectType,
-                QuestId = id,
-                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time)
-            };
-            Storage.QuestClientCompleteTimes.Add(questComplete, packet.TimeSpan);
+                string objectGuid;
+                uint objectId;
+                string objectType;
+                Storage.GetObjectDbGuidEntryType(guid, out objectGuid, out objectId, out objectType);
+                QuestClientComplete questComplete = new QuestClientComplete
+                {
+                    ObjectGuid = objectGuid,
+                    ObjectId = objectId,
+                    ObjectType = objectType,
+                    QuestId = id,
+                    UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time)
+                };
+                Storage.QuestClientCompleteTimes.Add(questComplete, packet.TimeSpan);
+            }
         }
 
         [Parser(Opcode.SMSG_QUEST_GIVER_INVALID_QUEST)]

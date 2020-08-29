@@ -413,6 +413,8 @@ namespace WowPacketParser.SQL.Builders
                         string poiId = "0";
                         if (gossip_pair.Item1.ActionPoiId != null)
                             poiId = gossip_pair.Item1.ActionPoiId.ToString();
+                        else
+                            gossip_pair.Item1.ActionPoiId = 0;
 
                         result += "UPDATE `gossip_menu_option` SET `action_menu_id`=" + gossip_pair.Item1.ActionMenuId.ToString() + ", `action_poi_id`=" + poiId + ", `option_id`=1, `npc_option_npcflag`=1 WHERE `menu_id`=" + gossip_pair.Item1.MenuId.ToString() + " && `id`=" + gossip_pair.Item1.OptionIndex.ToString() + ";\r\n";
 
@@ -1228,7 +1230,10 @@ namespace WowPacketParser.SQL.Builders
             {
                 foreach (var text in Storage.CreatureTexts)
                 {
-                    var sameTextList = rows.Where(text2 => text2.Data.Text == text.Item1.Text && text2.Data.Entry == text.Item1.Entry);
+                    if (text.Item1.Guid == null)
+                        text.Item1.Guid = Storage.GetObjectDbGuid(text.Item1.SenderGUID);
+
+                    var sameTextList = rows.Where(text2 => text2.Data.Entry == text.Item1.Entry && text2.Data.Text == text.Item1.Text);
                     if (sameTextList.Count() != 0)
                     {
                         foreach (var textRow in sameTextList)
@@ -1253,27 +1258,18 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.Sounds.Count == 0 || !Settings.SqlTables.play_sound)
                 return string.Empty;
 
-            string query = "";
+            var soundRows = new RowList<PlaySound>();
             foreach (var sound in Storage.Sounds)
             {
-                if (query != "")
-                    query += ",\n";
-
-                uint objectId = 0;
-                string objectType = "";
-                if (sound.guid != WowGuid.Empty)
-                {
-                    if (sound.guid.GetObjectType() != ObjectType.Player)
-                        objectId = sound.guid.GetEntry();
-                    if (sound.guid.GetObjectType() != ObjectType.Unit)
-                        objectType = sound.guid.GetObjectType().ToString();
-                    else
-                        objectType = "Creature";
-                }
-                query += "(" + objectId.ToString() + ", '" + objectType + "', " + sound.sound + ", " + (uint)Utilities.GetUnixTimeFromDateTime(sound.time) + ")";
+                Row<PlaySound> row = new Row<PlaySound>();
+                row.Data.Sound = sound.sound;
+                Storage.GetObjectDbGuidEntryType(sound.guid, out row.Data.SourceGuid, out row.Data.SourceEntry, out row.Data.SourceType);
+                row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(sound.time);
+                soundRows.Add(row);
             }
-            query = "INSERT INTO `play_sound` (`source_id`, `source_type`, `sound`, `unixtime`) VALUES\n" + query + ";\n\n";
-            return query;
+
+            var soundsSql = new SQLInsert<PlaySound>(soundRows, false);
+            return soundsSql.Build();
         }
 
         [BuilderMethod]

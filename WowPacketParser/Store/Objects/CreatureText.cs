@@ -8,6 +8,9 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("creature_text")]
     public sealed class CreatureText : IDataModel
     {
+        [DBFieldName("CreatureGuid", true, true)]
+        public string Guid;
+
         [DBFieldName("CreatureID", true)]
         public uint? Entry;
 
@@ -20,6 +23,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("UnixTime", true)]
         public uint UnixTime;
 
+        public WowGuid SenderGUID;
         public string Text;
     }
 

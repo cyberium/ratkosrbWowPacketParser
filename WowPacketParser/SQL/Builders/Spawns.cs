@@ -355,24 +355,12 @@ namespace WowPacketParser.SQL.Builders
                             if (attackStartRows != "")
                                 attackStartRows += ",\n";
 
-                            uint victimId = 0;
-                            string victimType = attack.victim.GetObjectType().ToString();
+                            string victimGuid;
+                            uint victimId;
+                            string victimType;
+                            Storage.GetObjectDbGuidEntryType(attack.victim, out victimGuid, out victimId, out victimType);
 
-                            uint victimGuid = 0;
-                            string victimGuidType = "";
-                            if (attack.victim.GetObjectType() == ObjectType.Unit)
-                            {
-                                victimId = attack.victim.GetEntry();
-                                victimType = "Creature";
-
-                                if (Storage.Objects.ContainsKey(attack.victim))
-                                {
-                                    victimGuid = (Storage.Objects[attack.victim].Item1 as Unit).DbGuid;
-                                    victimGuidType = "@CGUID+";
-                                }
-                            }
-
-                            attackStartRows += "(@CGUID+" + creature.DbGuid.ToString() + ", " + victimGuidType + victimGuid.ToString() + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
+                            attackStartRows += "(@CGUID+" + creature.DbGuid.ToString() + ", " + victimGuid + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
                         }
                     }
                 }
@@ -386,24 +374,12 @@ namespace WowPacketParser.SQL.Builders
                             if (attackStopRows != "")
                                 attackStopRows += ",\n";
 
-                            uint victimId = 0;
-                            string victimType = attack.victim.GetObjectType().ToString();
+                            string victimGuid;
+                            uint victimId;
+                            string victimType;
+                            Storage.GetObjectDbGuidEntryType(attack.victim, out victimGuid, out victimId, out victimType);
 
-                            uint victimGuid = 0;
-                            string victimGuidType = "";
-                            if (attack.victim.GetObjectType() == ObjectType.Unit)
-                            {
-                                victimId = attack.victim.GetEntry();
-                                victimType = "Creature";
-
-                                if (Storage.Objects.ContainsKey(attack.victim))
-                                {
-                                    victimGuid = (Storage.Objects[attack.victim].Item1 as Unit).DbGuid;
-                                    victimGuidType = "@CGUID+";
-                                }
-                            }
-
-                            attackStopRows += "(@CGUID+" + creature.DbGuid.ToString() + ", " + victimGuidType + victimGuid.ToString() + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
+                            attackStopRows += "(@CGUID+" + creature.DbGuid.ToString() + ", " + victimGuid + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
                         }
                     }
                 }
