@@ -17,8 +17,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("GroupID", true)]
         public uint GroupId;
 
-        [DBFieldName("HealthPercent")]
-        public float HealthPercent;
+        [DBFieldName("HealthPercent", false, false, true)]
+        public float? HealthPercent;
 
         [DBFieldName("UnixTime", true)]
         public uint UnixTime;
