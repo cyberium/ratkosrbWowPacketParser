@@ -287,6 +287,23 @@ namespace WowPacketParser.Store
                 Storage.GameObjectClientUseTimes.Add(guid, usesList);
             }
         }
+        public static readonly Dictionary<WowGuid, List<DateTime>> CreatureClientInteractTimes = new Dictionary<WowGuid, List<DateTime>>();
+        public static void StoreCreatureInteract(WowGuid guid, DateTime time)
+        {
+            if (!Settings.SqlTables.creature_client_interact)
+                return;
+
+            if (Storage.CreatureClientInteractTimes.ContainsKey(guid))
+            {
+                Storage.CreatureClientInteractTimes[guid].Add(time);
+            }
+            else
+            {
+                List<DateTime> usesList = new List<DateTime>();
+                usesList.Add(time);
+                Storage.CreatureClientInteractTimes.Add(guid, usesList);
+            }
+        }
         public static readonly Dictionary<WowGuid, List<CreatureEmote>> Emotes = new Dictionary<WowGuid, List<CreatureEmote>>();
         public static void StoreCreatureEmote(WowGuid guid, EmoteType emote, DateTime time)
         {

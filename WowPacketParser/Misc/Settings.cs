@@ -106,6 +106,7 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_addon = Conf.GetBoolean("creature_addon", false);
             public static readonly bool creature_attack_start = Conf.GetBoolean("creature_attack_start", false);
             public static readonly bool creature_attack_stop = Conf.GetBoolean("creature_attack_stop", false);
+            public static readonly bool creature_client_interact = Conf.GetBoolean("creature_client_interact", false);
             public static readonly bool creature_create1_time = Conf.GetBoolean("creature_create1_time", false);
             public static readonly bool creature_create2_time = Conf.GetBoolean("creature_create2_time", false);
             public static readonly bool creature_destroy_time = Conf.GetBoolean("creature_destroy_time", false);

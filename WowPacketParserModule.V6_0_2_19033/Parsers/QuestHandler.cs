@@ -821,7 +821,9 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.CMSG_QUEST_GIVER_HELLO)]
         public static void HandleQuestGiverHello(Packet packet)
         {
-            packet.ReadPackedGuid128("QuestGiver GUID");
+            WowGuid guid = packet.ReadPackedGuid128("QuestGiver GUID");
+            if (guid.GetObjectType() == ObjectType.Unit)
+                Storage.StoreCreatureInteract(guid, packet.Time);
         }
 
         [Parser(Opcode.CMSG_QUEST_PUSH_RESULT)]

@@ -755,11 +755,18 @@ namespace WowPacketParser.Parsing.Parsers
         }
 
         [Parser(Opcode.CMSG_QUEST_GIVER_STATUS_QUERY)]
-        [Parser(Opcode.CMSG_QUEST_GIVER_HELLO)]
         [Parser(Opcode.CMSG_QUEST_GIVER_QUEST_AUTOLAUNCH)]
         public static void HandleQuestgiverStatusQuery(Packet packet)
         {
             packet.ReadGuid("GUID");
+        }
+
+        [Parser(Opcode.CMSG_QUEST_GIVER_HELLO)]
+        public static void HandleQuestgiverHello(Packet packet)
+        {
+            WowGuid guid = packet.ReadGuid("GUID");
+            if (guid.GetObjectType() == ObjectType.Unit)
+                Storage.StoreCreatureInteract(guid, packet.Time);
         }
 
         [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_LIST_MESSAGE)]

@@ -46,6 +46,7 @@ namespace WowPacketParser.SQL.Builders
             uint maxDbGuid = 0;
             var rows = new RowList<Creature>();
             var addonRows = new RowList<CreatureAddon>();
+            var interactRows = new RowList<CreatureClientInteract>();
             var create1Rows = new RowList<CreatureCreate1>();
             var create2Rows = new RowList<CreatureCreate2>();
             var destroyRows = new RowList<CreatureDestroy>();
@@ -223,6 +224,20 @@ namespace WowPacketParser.SQL.Builders
                     if (!string.IsNullOrWhiteSpace(auras))
                         addonRow.Comment += " - " + commentAuras;
                     addonRows.Add(addonRow);
+                }
+
+                if (Settings.SqlTables.creature_client_interact)
+                {
+                    if (Storage.CreatureClientInteractTimes.ContainsKey(unit.Key))
+                    {
+                        foreach (var interactTime in Storage.CreatureClientInteractTimes[unit.Key])
+                        {
+                            var interactRow = new Row<CreatureClientInteract>();
+                            interactRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            interactRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(interactTime);
+                            interactRows.Add(interactRow);
+                        }
+                    }
                 }
 
                 if (Settings.SqlTables.creature_create1_time)
@@ -431,6 +446,14 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(addonDelete.Build());
                 var addonSql = new SQLInsert<CreatureAddon>(addonRows, false);
                 result.Append(addonSql.Build());
+            }
+
+            if (Settings.SqlTables.creature_client_interact)
+            {
+                var interactDelete = new SQLDelete<CreatureClientInteract>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                result.Append(interactDelete.Build());
+                var interactSql = new SQLInsert<CreatureClientInteract>(interactRows, false);
+                result.Append(interactSql.Build());
             }
 
             if (Settings.SqlTables.creature_create1_time)

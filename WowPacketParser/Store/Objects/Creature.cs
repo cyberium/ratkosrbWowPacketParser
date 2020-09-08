@@ -185,6 +185,16 @@ namespace WowPacketParser.Store.Objects
         public List<Vector3> SplinePoints = null;
     }
 
+    [DBTableName("creature_client_interact")]
+    public sealed class CreatureClientInteract : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtime", true)]
+        public uint UnixTime;
+    }
+
     [DBTableName("creature_create1_time")]
     public sealed class CreatureCreate1 : IDataModel
     {

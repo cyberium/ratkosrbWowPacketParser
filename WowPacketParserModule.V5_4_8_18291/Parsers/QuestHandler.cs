@@ -364,7 +364,9 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             var guid = new byte[8];
             packet.StartBitStream(guid, 5, 6, 7, 3, 4, 2, 1, 0);
             packet.ParseBitStream(guid, 4, 1, 7, 3, 6, 0, 5, 2);
-            packet.WriteGuid("Guid", guid);
+            WowGuid guid2 = packet.WriteGuid("Guid", guid);
+            if (guid2.GetObjectType() == ObjectType.Unit)
+                Storage.StoreCreatureInteract(guid2, packet.Time);
         }
 
         [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_LIST_MESSAGE)]
