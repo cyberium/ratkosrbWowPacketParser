@@ -339,7 +339,7 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleNpcHello(Packet packet)
         {
             WowGuid guid = packet.ReadGuid("GUID");
-            LastGossipOption.Guid = packet.ReadGuid("GUID");
+            LastGossipOption.Guid = guid;
             if (guid.GetObjectType() == ObjectType.Unit)
                 Storage.StoreCreatureInteract(guid, packet.Time);
         }
