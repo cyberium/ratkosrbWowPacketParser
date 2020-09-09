@@ -766,7 +766,16 @@ namespace WowPacketParser.Parsing.Parsers
             var hasGameObjectPosition = packet.ReadBit("Has GameObject Position", index);
             /*var bit653 = */ packet.ReadBit();
             var bit784 = packet.ReadBit("Has bit784", index);
-            /*var isSelf = */ packet.ReadBit("Self", index);
+            var isSelf =  packet.ReadBit("Self", index);
+            if (isSelf)
+            {
+                ActivePlayerCreateTime activePlayer = new ActivePlayerCreateTime
+                {
+                    Guid = guid,
+                    Time = packet.Time,
+                };
+                Storage.PlayerActiveCreateTime.Add(activePlayer);
+            }
             /*var bit1 = */ packet.ReadBit();
             var living = packet.ReadBit("Living", index);
             /*var bit3 = */ packet.ReadBit();
@@ -2953,6 +2962,15 @@ namespace WowPacketParser.Parsing.Parsers
                 flags = packet.ReadUInt16E<UpdateFlag>("Update Flags", index);
             else
                 flags = packet.ReadByteE<UpdateFlag>("Update Flags", index);
+            if (flags.HasAnyFlag(UpdateFlag.Self))
+            {
+                ActivePlayerCreateTime activePlayer = new ActivePlayerCreateTime
+                {
+                    Guid = guid,
+                    Time = packet.Time,
+                };
+                Storage.PlayerActiveCreateTime.Add(activePlayer);
+            }
 
             if (flags.HasAnyFlag(UpdateFlag.Living))
             {

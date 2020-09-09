@@ -51,6 +51,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
 
             if (Settings.SqlTables.character_movement)
             {
+                moveData.Map = WowPacketParser.Parsing.Parsers.MovementHandler.CurrentMapId;
                 moveData.Opcode = packet.Opcode;
                 moveData.OpcodeDirection = packet.Direction;
                 moveData.Time = packet.Time;

@@ -125,6 +125,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("move_flags")]
         public uint MoveFlags;
 
+        [DBFieldName("map")]
+        public uint Map;
+
         [DBFieldName("position_x")]
         public float PositionX;
 
@@ -144,10 +147,25 @@ namespace WowPacketParser.Store.Objects
     {
         public WowGuid guid;
         public Vector4 Position;
+        public uint Map;
         public uint MoveTime;
         public uint MoveFlags;
         public int Opcode;
         public Direction OpcodeDirection;
+        public DateTime Time;
+    }
+    [DBTableName("character_active_player")]
+    public sealed class CharacterActivePlayer : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string Guid;
+
+        [DBFieldName("unixtime", true)]
+        public uint UnixTime;
+    }
+    public sealed class ActivePlayerCreateTime
+    {
+        public WowGuid Guid;
         public DateTime Time;
     }
 }

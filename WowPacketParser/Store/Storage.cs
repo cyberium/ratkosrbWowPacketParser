@@ -354,6 +354,7 @@ namespace WowPacketParser.Store
         }
 
         public static readonly List<PlayerMovement> PlayerMovements = new List<PlayerMovement>();
+        public static readonly List<ActivePlayerCreateTime> PlayerActiveCreateTime = new List<ActivePlayerCreateTime>();
 
         /* Key: Entry */
 

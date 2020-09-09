@@ -45,7 +45,7 @@ namespace WowPacketParser.Parsing.Parsers
                 if (packet.ReadGuid("Guid 2", index) != guid)
                     throw new InvalidDataException("Guids are not equal.");
 
-            packet.ReadUInt32("Time", index);
+            info.MoveTime = packet.ReadUInt32("Time", index);
 
             info.Position = packet.ReadVector3("Position", index);
             info.Orientation = packet.ReadSingle("Orientation", index);
@@ -138,7 +138,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             packet.ReadGuid("GUID 2", index);
 
-            packet.ReadUInt32("Time", index);
+            info.MoveTime = packet.ReadUInt32("Time", index);
 
             info.Position = packet.ReadVector3("Position", index);
             info.Orientation = packet.ReadSingle("Orientation", index);
@@ -317,8 +317,8 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.AddValue("Waypoint", vec, i);
                 }
 
-                //if (movementData != null)
-                //    movementData.SplinePoints.Add(newpos);
+                if (movementData != null)
+                    movementData.SplinePoints.Add(newpos);
             }
 
             if (movementData != null)
@@ -1308,7 +1308,24 @@ namespace WowPacketParser.Parsing.Parsers
             else
                 guid = new WowGuid64();
 
-            ReadMovementInfo(packet, guid);
+            MovementInfo movementInfo = ReadMovementInfo(packet, guid);
+
+            if (Settings.SqlTables.character_movement)
+            {
+                PlayerMovement moveData = new PlayerMovement();
+                moveData.guid = guid;
+                moveData.MoveTime = movementInfo.MoveTime;
+                moveData.Map = WowPacketParser.Parsing.Parsers.MovementHandler.CurrentMapId;
+                moveData.Position.X = movementInfo.Position.X;
+                moveData.Position.Y = movementInfo.Position.Y;
+                moveData.Position.Z = movementInfo.Position.Z;
+                moveData.Position.O = movementInfo.Orientation;
+                moveData.MoveFlags = (uint)movementInfo.Flags;
+                moveData.Opcode = packet.Opcode;
+                moveData.OpcodeDirection = packet.Direction;
+                moveData.Time = packet.Time;
+                Storage.PlayerMovements.Add(moveData);
+            }
 
             if (packet.Opcode != Opcodes.GetOpcode(Opcode.MSG_MOVE_KNOCK_BACK, Direction.Bidirectional))
                 return;

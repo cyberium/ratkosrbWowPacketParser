@@ -49,7 +49,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public static TK GetValue<T, TK>(this Dictionary<int, UpdateField> dict, T updateField)
         {
             UpdateField uf;
-            if (dict.TryGetValue(Enums.Version.UpdateFields.GetUpdateField(updateField), out uf))
+            if (dict != null && dict.TryGetValue(Enums.Version.UpdateFields.GetUpdateField(updateField), out uf))
             {
                 var type = GetTypeCodeOfReturnValue<TK>();
                 switch (type)
@@ -81,7 +81,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public static IEnumerable<TK> GetValue<T, TK>(this Dictionary<int, List<UpdateField>> dict, T updateField)
         {
             List<UpdateField> ufs;
-            if (dict.TryGetValue(Enums.Version.UpdateFields.GetUpdateField(updateField), out ufs))
+            if (dict != null && dict.TryGetValue(Enums.Version.UpdateFields.GetUpdateField(updateField), out ufs))
             {
                 var type = GetTypeCodeOfReturnValue<TK>();
                 switch (type)
@@ -118,7 +118,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
             for (var i = 0; i < count; i++)
             {
                 UpdateField uf;
-                if (dict.TryGetValue(Enums.Version.UpdateFields.GetUpdateField(firstUpdateField) + i, out uf))
+                if (dict != null && dict.TryGetValue(Enums.Version.UpdateFields.GetUpdateField(firstUpdateField) + i, out uf))
                 {
                     switch (type)
                     {

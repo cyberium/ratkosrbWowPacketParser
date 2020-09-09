@@ -7,9 +7,9 @@ namespace WowPacketParser.Misc
 {
     public static class ClientLocale
     {
-        public static string ClientLocaleString;
+        public static string ClientLocaleString = "enUS";
 
-        public static string PacketLocaleString;
+        public static string PacketLocaleString = "enUS";
 
         public static LocaleConstant PacketLocale => (LocaleConstant)Enum.Parse(typeof(LocaleConstant), PacketLocaleString);
 

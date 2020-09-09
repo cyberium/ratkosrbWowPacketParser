@@ -112,7 +112,16 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             var hasGameObjectRotation = packet.ReadBit("Has GameObject Rotation", index);
             var hasAnimKits = packet.ReadBit("Has AnimKits", index);
             var hasAttackingTarget = packet.ReadBit("Has Attacking Target", index);
-            packet.ReadBit("Self", index);
+            var isSelf = packet.ReadBit("Self", index);
+            if (isSelf)
+            {
+                ActivePlayerCreateTime activePlayer = new ActivePlayerCreateTime
+                {
+                    Guid = guid,
+                    Time = packet.Time,
+                };
+                Storage.PlayerActiveCreateTime.Add(activePlayer);
+            }
             var hasVehicleData = packet.ReadBit("Has Vehicle Data", index);
             var living = packet.ReadBit("Living", index);
             var unkLoopCounter = packet.ReadBits("Unknown array size", 24, index);

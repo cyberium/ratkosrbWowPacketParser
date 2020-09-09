@@ -32,7 +32,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("bytes2")]
         public uint? Bytes2;
 
-        [DBFieldName("sheathe_state")]
+        [DBFieldName("sheath_state")]
         public uint? SheatheState;
 
         [DBFieldName("pvp_flags")]

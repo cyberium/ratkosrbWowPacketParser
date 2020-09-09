@@ -84,12 +84,15 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadByte("Cast Count");
             WowGuid guid = packet.ReadGuid("GUID");
 
-            ItemClientUse newGossip = new ItemClientUse
+            if (Storage.Objects.ContainsKey(guid))
             {
-                Entry = (uint)Storage.Objects[guid].Item1.ObjectData.EntryID,
-                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time),
-            };
-            Storage.ItemClientUseTimes.Add(newGossip, packet.TimeSpan);
+                ItemClientUse newItemuse = new ItemClientUse
+                {
+                    Entry = (uint)Storage.Objects[guid].Item1.ObjectData.EntryID,
+                    UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time),
+                };
+                Storage.ItemClientUseTimes.Add(newItemuse, packet.TimeSpan);
+            }
 
             SpellHandler.ReadSpellCastTargets(packet);
         }
@@ -103,12 +106,15 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadInt32<SpellId>("Spell ID");
 
             WowGuid guid = packet.ReadGuid("GUID");
-            ItemClientUse newGossip = new ItemClientUse
+            if (Storage.Objects.ContainsKey(guid))
             {
-                Entry = (uint)Storage.Objects[guid].Item1.ObjectData.EntryID,
-                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time),
-            };
-            Storage.ItemClientUseTimes.Add(newGossip, packet.TimeSpan);
+                ItemClientUse newItemuse = new ItemClientUse
+                {
+                    Entry = (uint)Storage.Objects[guid].Item1.ObjectData.EntryID,
+                    UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time),
+                };
+                Storage.ItemClientUseTimes.Add(newItemuse, packet.TimeSpan);
+            }
 
             packet.ReadUInt32("Glyph Index");
             var castflag = packet.ReadByteE<CastFlag>("Cast Flags");

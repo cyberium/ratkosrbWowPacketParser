@@ -168,7 +168,16 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
             var hasAttackingTarget = packet.ReadBit("Has Attacking Target", index);
             packet.ReadBit(); // fake bit
             packet.ReadBit(); // fake bit
-            packet.ReadBit("Self", index);
+            var isSelf = packet.ReadBit("Self", index);
+            if (isSelf)
+            {
+                ActivePlayerCreateTime activePlayer = new ActivePlayerCreateTime
+                {
+                    Guid = guid,
+                    Time = packet.Time,
+                };
+                Storage.PlayerActiveCreateTime.Add(activePlayer);
+            }
             packet.ReadBit(); // fake bit
             var living = packet.ReadBit("Living", index);
             var bit3E8 = packet.ReadBit(); // something with scene object

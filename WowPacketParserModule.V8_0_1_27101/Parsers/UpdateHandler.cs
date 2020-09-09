@@ -302,7 +302,16 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             var hasGameObject = packet.ReadBit("HasGameObject", index);
             var hasSmoothPhasing = packet.ReadBit("HasSmoothPhasing", index);
 
-            packet.ReadBit("ThisIsYou", index);
+            var isSelf = packet.ReadBit("ThisIsYou", index);
+            if (isSelf)
+            {
+                ActivePlayerCreateTime activePlayer = new ActivePlayerCreateTime
+                {
+                    Guid = guid,
+                    Time = packet.Time,
+                };
+                Storage.PlayerActiveCreateTime.Add(activePlayer);
+            }
 
             var sceneObjCreate = packet.ReadBit("SceneObjCreate", index);
             var playerCreateData = packet.ReadBit("HasPlayerCreateData", index);

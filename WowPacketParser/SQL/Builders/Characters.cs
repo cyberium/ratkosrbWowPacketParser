@@ -69,20 +69,28 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.PlayerBytes = player.UnitData.PlayerBytes1;
                 row.Data.PlayerBytes2 = player.UnitData.PlayerBytes2;
                 row.Data.PlayerFlags = (uint)player.UnitData.PlayerFlags;
-                row.Data.PositionX = player.OriginalMovement.Position.X;
-                row.Data.PositionY = player.OriginalMovement.Position.Y;
-                row.Data.PositionZ = player.OriginalMovement.Position.Z;
-                row.Data.Orientation = player.OriginalMovement.Orientation;
+                MovementInfo moveData = player.OriginalMovement == null ? player.Movement : player.OriginalMovement;
+                if (moveData != null)
+                {
+                    row.Data.PositionX = player.OriginalMovement.Position.X;
+                    row.Data.PositionY = player.OriginalMovement.Position.Y;
+                    row.Data.PositionZ = player.OriginalMovement.Position.Z;
+                    row.Data.Orientation = player.OriginalMovement.Orientation;
+                }
                 row.Data.Map = player.Map;
                 row.Data.Health = (uint)player.UnitData.CurHealth;
                 row.Data.Power1 = (uint)player.UnitData.CurMana;
 
+                PlayerField visibleItemsStart = ClientVersion.AddedInVersion(ClientVersionBuild.V5_4_2_17658) ? PlayerField.PLAYER_VISIBLE_ITEM : PlayerField.PLAYER_VISIBLE_ITEM_1_ENTRYID;
                 for (int i = 0; i < 38; i++)
                 {
                     int itemId = 0;
 
+                    if (player.UpdateFields == null)
+                        break;
+
                     UpdateField value;
-                    if (player.UpdateFields.TryGetValue(Enums.Version.UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM) + i, out value))
+                    if (player.UpdateFields.TryGetValue(Enums.Version.UpdateFields.GetUpdateField(visibleItemsStart) + i, out value))
                     {
                         itemId = value.Int32Value;
 
@@ -125,6 +133,22 @@ namespace WowPacketParser.SQL.Builders
             result.Append(characterSql.Build());
             result.AppendLine();
 
+            if (Settings.SqlTables.character_active_player)
+            {
+                var activePlayersRows = new RowList<CharacterActivePlayer>();
+                foreach (var itr in Storage.PlayerActiveCreateTime)
+                {
+                    Row<CharacterActivePlayer> row = new Row<CharacterActivePlayer>();
+                    row.Data.Guid = Storage.GetObjectDbGuid(itr.Guid);
+                    row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(itr.Time);
+                    activePlayersRows.Add(row);
+                }
+
+                var activePlayersSql = new SQLInsert<CharacterActivePlayer>(activePlayersRows, false);
+                result.Append(activePlayersSql.Build());
+                result.AppendLine();
+            }
+
             if (Settings.SqlTables.character_inventory)
             {
                 var inventoryDelete = new SQLDelete<CharacterInventory>(Tuple.Create("@IGUID+0", "@IGUID+" + itemGuidCounter));
@@ -159,6 +183,7 @@ namespace WowPacketParser.SQL.Builders
                         row.Data.Guid = "@PGUID+" + player.DbGuid;
                         row.Data.MoveFlags = movement.MoveFlags;
                         row.Data.MoveTime = movement.MoveTime;
+                        row.Data.Map = movement.Map;
                         row.Data.PositionX = movement.Position.X;
                         row.Data.PositionY = movement.Position.Y;
                         row.Data.PositionZ = movement.Position.Z;

@@ -61,12 +61,15 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadByte("Slot");
             WowGuid guid = packet.ReadPackedGuid128("CastItem");
 
-            ItemClientUse newGossip = new ItemClientUse
+            if (Storage.Objects.ContainsKey(guid))
             {
-                Entry = (uint)Storage.Objects[guid].Item1.ObjectData.EntryID,
-                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time),
-            };
-            Storage.ItemClientUseTimes.Add(newGossip, packet.TimeSpan);
+                ItemClientUse newItemuse = new ItemClientUse
+                {
+                    Entry = (uint)Storage.Objects[guid].Item1.ObjectData.EntryID,
+                    UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time),
+                };
+                Storage.ItemClientUseTimes.Add(newItemuse, packet.TimeSpan);
+            }
 
             SpellHandler.ReadSpellCastRequest(packet, "Cast");
         }

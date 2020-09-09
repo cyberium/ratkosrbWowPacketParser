@@ -132,7 +132,16 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             var hasAreaTrigger = packet.ReadBit("HasAreaTrigger", index);
             var hasGameObject = packet.ReadBit("HasGameObject", index);
 
-            packet.ReadBit("ThisIsYou", index);
+            var isSelf = packet.ReadBit("ThisIsYou", index);
+            if (isSelf)
+            {
+                ActivePlayerCreateTime activePlayer = new ActivePlayerCreateTime
+                {
+                    Guid = guid,
+                    Time = packet.Time,
+                };
+                Storage.PlayerActiveCreateTime.Add(activePlayer);
+            }
             packet.ReadBit("ReplaceActive", index);
 
             var sceneObjCreate = packet.ReadBit("SceneObjCreate", index);
