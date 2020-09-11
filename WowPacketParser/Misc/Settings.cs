@@ -20,6 +20,7 @@ namespace WowPacketParser.Misc
         public static readonly bool SQLOrderByKey = Conf.GetBoolean("SqlOrderByKey", false);
         public static readonly bool RandomizePlayerNames = Conf.GetBoolean("RandomizePlayerNames", false);
         public static readonly bool SkipOtherPlayers = Conf.GetBoolean("SkipOtherPlayers", false);
+        public static readonly bool SavePlayerCasts = Conf.GetBoolean("SavePlayerCasts", false);
         public static readonly bool SaveTempSpawns = Conf.GetBoolean("SaveTempSpawns", false);
         public static readonly bool SkipOnlyVerifiedBuildUpdateRows = Conf.GetBoolean("SkipOnlyVerifiedBuildUpdateRows", false);
         public static readonly bool IgnoreZeroValues = Conf.GetBoolean("IgnoreZeroValues", false);

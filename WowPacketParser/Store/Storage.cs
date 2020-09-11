@@ -514,7 +514,11 @@ namespace WowPacketParser.Store
 
             if (castData.CasterGuid.GetObjectType() != ObjectType.Unit   &&
                 castData.CasterGuid.GetObjectType() != ObjectType.GameObject)
-                return;
+            {
+                if (!(Settings.SavePlayerCasts && castData.CasterGuid.GetObjectType() == ObjectType.Player))
+                    return;
+            }
+                
 
             for (uint i = 0; i < SpellCastData.MAX_SPELL_HIT_TARGETS_DB; i++)
             {
