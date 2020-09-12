@@ -258,34 +258,34 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("unixtime", true)]
         public uint UnixTime;
 
-        [DBFieldName("entry", false, false, true)]
+        [DBFieldName("entry", true, false, true)]
         public uint? Entry;
 
-        [DBFieldName("display_id", false, false, true)]
+        [DBFieldName("display_id", true, false, true)]
         public uint? DisplayID;
 
-        [DBFieldName("mount", false, false, true)]
+        [DBFieldName("mount", true, false, true)]
         public uint? MountDisplayID;
 
-        [DBFieldName("faction", false, false, true)]
+        [DBFieldName("faction", true, false, true)]
         public uint? FactionTemplate;
 
-        [DBFieldName("emote_state", false, false, true)]
+        [DBFieldName("emote_state", true, false, true)]
         public uint? EmoteState;
 
-        [DBFieldName("stand_state", false, false, true)]
+        [DBFieldName("stand_state", true, false, true)]
         public uint? StandState;
 
-        [DBFieldName("npc_flags", false, false, true)]
+        [DBFieldName("npc_flags", true, false, true)]
         public uint? NpcFlag;
 
-        [DBFieldName("unit_flags", false, false, true)]
+        [DBFieldName("unit_flags", true, false, true)]
         public uint? UnitFlag;
 
-        [DBFieldName("current_health", false, false, true)]
+        [DBFieldName("current_health", true, false, true)]
         public uint? CurrentHealth;
 
-        [DBFieldName("max_health", false, false, true)]
+        [DBFieldName("max_health", true, false, true)]
         public uint? MaxHealth;
     }
 

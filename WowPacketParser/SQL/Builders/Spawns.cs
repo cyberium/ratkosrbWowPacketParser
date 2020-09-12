@@ -529,7 +529,7 @@ namespace WowPacketParser.SQL.Builders
                 var movementDelete = new SQLDelete<CreatureMovement>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 movementDelete.tableNameOverride = "creature_movement_combat";
                 result.Append(movementDelete.Build());
-                var movementSql = new SQLInsert<CreatureMovement>(movementRows, false, false, "creature_movement_combat");
+                var movementSql = new SQLInsert<CreatureMovement>(movementCombatRows, false, false, "creature_movement_combat");
                 result.Append(movementSql.Build());
             }
 
