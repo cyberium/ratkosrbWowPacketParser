@@ -11,6 +11,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Dumping structure for table sniffs_new_test.characters
+DROP TABLE IF EXISTS `characters`;
 CREATE TABLE IF NOT EXISTS `characters` (
   `guid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Global Unique Identifier',
   `account` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Account Identifier',
@@ -41,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `characters` (
 
 
 -- Dumping structure for table sniffs_new_test.character_active_player
+DROP TABLE IF EXISTS `character_active_player`;
 CREATE TABLE IF NOT EXISTS `character_active_player` (
   `guid` int(10) unsigned NOT NULL,
   `unixtime` int(10) unsigned NOT NULL,
@@ -51,6 +53,7 @@ CREATE TABLE IF NOT EXISTS `character_active_player` (
 
 
 -- Dumping structure for table sniffs_new_test.character_inventory
+DROP TABLE IF EXISTS `character_inventory`;
 CREATE TABLE IF NOT EXISTS `character_inventory` (
   `guid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Global Unique Identifier',
   `bag` int(11) unsigned NOT NULL DEFAULT '0',
@@ -65,6 +68,7 @@ CREATE TABLE IF NOT EXISTS `character_inventory` (
 
 
 -- Dumping structure for table sniffs_new_test.character_movement
+DROP TABLE IF EXISTS `character_movement`;
 CREATE TABLE IF NOT EXISTS `character_movement` (
   `guid` int(10) unsigned NOT NULL,
   `opcode` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
@@ -83,6 +87,7 @@ CREATE TABLE IF NOT EXISTS `character_movement` (
 
 
 -- Dumping structure for table sniffs_new_test.creature
+DROP TABLE IF EXISTS `creature`;
 CREATE TABLE IF NOT EXISTS `creature` (
   `guid` bigint(20) unsigned NOT NULL DEFAULT '0',
   `id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'Creature Identifier',
@@ -125,6 +130,7 @@ CREATE TABLE IF NOT EXISTS `creature` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_addon
+DROP TABLE IF EXISTS `creature_addon`;
 CREATE TABLE IF NOT EXISTS `creature_addon` (
   `guid` int(10) unsigned NOT NULL DEFAULT '0',
   `path_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -148,6 +154,7 @@ CREATE TABLE IF NOT EXISTS `creature_addon` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_attack_start
+DROP TABLE IF EXISTS `creature_attack_start`;
 CREATE TABLE IF NOT EXISTS `creature_attack_start` (
   `guid` int(10) unsigned NOT NULL,
   `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
@@ -160,6 +167,7 @@ CREATE TABLE IF NOT EXISTS `creature_attack_start` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_attack_stop
+DROP TABLE IF EXISTS `creature_attack_stop`;
 CREATE TABLE IF NOT EXISTS `creature_attack_stop` (
   `guid` int(10) unsigned NOT NULL,
   `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
@@ -172,6 +180,7 @@ CREATE TABLE IF NOT EXISTS `creature_attack_stop` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_client_interact
+DROP TABLE IF EXISTS `creature_client_interact`;
 CREATE TABLE IF NOT EXISTS `creature_client_interact` (
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was sent',
@@ -182,6 +191,7 @@ CREATE TABLE IF NOT EXISTS `creature_client_interact` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_create1_time
+DROP TABLE IF EXISTS `creature_create1_time`;
 CREATE TABLE IF NOT EXISTS `creature_create1_time` (
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
@@ -196,6 +206,7 @@ CREATE TABLE IF NOT EXISTS `creature_create1_time` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_create2_time
+DROP TABLE IF EXISTS `creature_create2_time`;
 CREATE TABLE IF NOT EXISTS `creature_create2_time` (
   `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
@@ -210,6 +221,7 @@ CREATE TABLE IF NOT EXISTS `creature_create2_time` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_default_trainer
+DROP TABLE IF EXISTS `creature_default_trainer`;
 CREATE TABLE IF NOT EXISTS `creature_default_trainer` (
   `CreatureId` int(11) unsigned NOT NULL,
   `TrainerId` int(11) unsigned NOT NULL DEFAULT '0',
@@ -220,6 +232,7 @@ CREATE TABLE IF NOT EXISTS `creature_default_trainer` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_destroy_time
+DROP TABLE IF EXISTS `creature_destroy_time`;
 CREATE TABLE IF NOT EXISTS `creature_destroy_time` (
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
@@ -230,6 +243,7 @@ CREATE TABLE IF NOT EXISTS `creature_destroy_time` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_display_info_addon
+DROP TABLE IF EXISTS `creature_display_info_addon`;
 CREATE TABLE IF NOT EXISTS `creature_display_info_addon` (
   `display_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `bounding_radius` float NOT NULL DEFAULT '0',
@@ -242,6 +256,7 @@ CREATE TABLE IF NOT EXISTS `creature_display_info_addon` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_emote
+DROP TABLE IF EXISTS `creature_emote`;
 CREATE TABLE IF NOT EXISTS `creature_emote` (
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `emote_id` int(10) unsigned NOT NULL COMMENT 'references Emotes.dbc',
@@ -254,6 +269,7 @@ CREATE TABLE IF NOT EXISTS `creature_emote` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_equip_template
+DROP TABLE IF EXISTS `creature_equip_template`;
 CREATE TABLE IF NOT EXISTS `creature_equip_template` (
   `CreatureID` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `ID` tinyint(3) unsigned NOT NULL DEFAULT '1',
@@ -268,6 +284,7 @@ CREATE TABLE IF NOT EXISTS `creature_equip_template` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_gossip
+DROP TABLE IF EXISTS `creature_gossip`;
 CREATE TABLE IF NOT EXISTS `creature_gossip` (
   `CreatureId` int(10) unsigned NOT NULL DEFAULT '0',
   `GossipMenuId` int(10) unsigned NOT NULL DEFAULT '0',
@@ -279,6 +296,7 @@ CREATE TABLE IF NOT EXISTS `creature_gossip` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_loot
+DROP TABLE IF EXISTS `creature_loot`;
 CREATE TABLE IF NOT EXISTS `creature_loot` (
   `entry` int(10) unsigned NOT NULL COMMENT 'creature template id',
   `loot_id` int(10) unsigned NOT NULL COMMENT 'counter',
@@ -291,6 +309,7 @@ CREATE TABLE IF NOT EXISTS `creature_loot` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_loot_item
+DROP TABLE IF EXISTS `creature_loot_item`;
 CREATE TABLE IF NOT EXISTS `creature_loot_item` (
   `loot_id` int(10) unsigned NOT NULL COMMENT 'references creature_loot',
   `item_id` int(10) unsigned NOT NULL COMMENT 'item template id',
@@ -301,6 +320,7 @@ CREATE TABLE IF NOT EXISTS `creature_loot_item` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_movement
+DROP TABLE IF EXISTS `creature_movement`;
 CREATE TABLE IF NOT EXISTS `creature_movement` (
   `id` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `point` smallint(5) unsigned NOT NULL COMMENT 'counter of movements per guid',
@@ -321,7 +341,30 @@ CREATE TABLE IF NOT EXISTS `creature_movement` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_movement_combat
+DROP TABLE IF EXISTS `creature_movement_combat`;
+CREATE TABLE IF NOT EXISTS `creature_movement_combat` (
+  `id` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `point` smallint(5) unsigned NOT NULL COMMENT 'counter of movements per guid',
+  `move_time` int(10) unsigned NOT NULL COMMENT 'how long it will take to move between these points',
+  `spline_flags` int(10) unsigned NOT NULL,
+  `spline_count` smallint(5) unsigned NOT NULL COMMENT 'number of splines belonging to this point',
+  `start_position_x` float NOT NULL COMMENT 'starting position',
+  `start_position_y` float NOT NULL,
+  `start_position_z` float NOT NULL,
+  `end_position_x` float NOT NULL COMMENT 'final position',
+  `end_position_y` float NOT NULL,
+  `end_position_z` float NOT NULL,
+  `orientation` float NOT NULL COMMENT 'final orientation',
+  `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
+  PRIMARY KEY (`id`,`point`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='in combat movement points from SMSG_ON_MONSTER_MOVE\r\nindividual splines are not saved';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_movement_spline
+DROP TABLE IF EXISTS `creature_movement_spline`;
 CREATE TABLE IF NOT EXISTS `creature_movement_spline` (
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `parent_point` smallint(5) unsigned NOT NULL COMMENT 'point from creature_movement to which the spline data belongs',
@@ -336,6 +379,7 @@ CREATE TABLE IF NOT EXISTS `creature_movement_spline` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_questitem
+DROP TABLE IF EXISTS `creature_questitem`;
 CREATE TABLE IF NOT EXISTS `creature_questitem` (
   `CreatureEntry` int(10) unsigned NOT NULL,
   `Idx` int(10) unsigned NOT NULL,
@@ -348,6 +392,7 @@ CREATE TABLE IF NOT EXISTS `creature_questitem` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_stats
+DROP TABLE IF EXISTS `creature_stats`;
 CREATE TABLE IF NOT EXISTS `creature_stats` (
   `entry` int(10) unsigned NOT NULL COMMENT 'creature template id',
   `dmg_min` float DEFAULT NULL,
@@ -376,7 +421,21 @@ CREATE TABLE IF NOT EXISTS `creature_stats` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_target_change
+DROP TABLE IF EXISTS `creature_target_change`;
+CREATE TABLE IF NOT EXISTS `creature_target_change` (
+  `guid` int(10) unsigned NOT NULL,
+  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `unixtime` int(10) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to UNIT_FIELD_TARGET';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_template
+DROP TABLE IF EXISTS `creature_template`;
 CREATE TABLE IF NOT EXISTS `creature_template` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `gossip_menu_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
@@ -400,6 +459,7 @@ CREATE TABLE IF NOT EXISTS `creature_template` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_template_addon
+DROP TABLE IF EXISTS `creature_template_addon`;
 CREATE TABLE IF NOT EXISTS `creature_template_addon` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `path_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -416,6 +476,7 @@ CREATE TABLE IF NOT EXISTS `creature_template_addon` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_template_wdb
+DROP TABLE IF EXISTS `creature_template_wdb`;
 CREATE TABLE IF NOT EXISTS `creature_template_wdb` (
   `entry` int(10) unsigned NOT NULL,
   `kill_credit1` int(11) NOT NULL DEFAULT '0',
@@ -461,6 +522,7 @@ CREATE TABLE IF NOT EXISTS `creature_template_wdb` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_text
+DROP TABLE IF EXISTS `creature_text`;
 CREATE TABLE IF NOT EXISTS `creature_text` (
   `CreatureGuid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `CreatureID` int(10) unsigned NOT NULL COMMENT 'creature template id',
@@ -474,6 +536,7 @@ CREATE TABLE IF NOT EXISTS `creature_text` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_text_template
+DROP TABLE IF EXISTS `creature_text_template`;
 CREATE TABLE IF NOT EXISTS `creature_text_template` (
   `CreatureID` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'creature template id',
   `GroupID` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'counter of unique texts per creature id',
@@ -491,22 +554,27 @@ CREATE TABLE IF NOT EXISTS `creature_text_template` (
 
 
 -- Dumping structure for table sniffs_new_test.creature_update
+DROP TABLE IF EXISTS `creature_update`;
 CREATE TABLE IF NOT EXISTS `creature_update` (
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
   `entry` int(10) unsigned DEFAULT NULL,
   `display_id` int(10) unsigned DEFAULT NULL,
+  `mount` int(10) unsigned DEFAULT NULL,
   `faction` int(10) unsigned DEFAULT NULL,
   `emote_state` int(10) unsigned DEFAULT NULL,
   `stand_state` int(10) unsigned DEFAULT NULL,
   `npc_flags` int(10) unsigned DEFAULT NULL,
-  `unit_flags` int(10) unsigned DEFAULT NULL
+  `unit_flags` int(10) unsigned DEFAULT NULL,
+  `current_health` int(10) unsigned DEFAULT NULL,
+  `max_health` int(10) unsigned DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='values updates from SMSG_UPDATE_OBJECT';
 
 -- Data exporting was unselected.
 
 
 -- Dumping structure for table sniffs_new_test.gameobject
+DROP TABLE IF EXISTS `gameobject`;
 CREATE TABLE IF NOT EXISTS `gameobject` (
   `guid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Global Unique Identifier',
   `id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'Gameobject Identifier',
@@ -535,6 +603,7 @@ CREATE TABLE IF NOT EXISTS `gameobject` (
 
 
 -- Dumping structure for table sniffs_new_test.gameobject_addon
+DROP TABLE IF EXISTS `gameobject_addon`;
 CREATE TABLE IF NOT EXISTS `gameobject_addon` (
   `guid` int(10) unsigned NOT NULL DEFAULT '0',
   `parent_rotation0` float NOT NULL DEFAULT '0',
@@ -550,6 +619,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_addon` (
 
 
 -- Dumping structure for table sniffs_new_test.gameobject_client_use
+DROP TABLE IF EXISTS `gameobject_client_use`;
 CREATE TABLE IF NOT EXISTS `gameobject_client_use` (
   `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was sent',
@@ -560,6 +630,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_client_use` (
 
 
 -- Dumping structure for table sniffs_new_test.gameobject_create1_time
+DROP TABLE IF EXISTS `gameobject_create1_time`;
 CREATE TABLE IF NOT EXISTS `gameobject_create1_time` (
   `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
@@ -574,6 +645,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_create1_time` (
 
 
 -- Dumping structure for table sniffs_new_test.gameobject_create2_time
+DROP TABLE IF EXISTS `gameobject_create2_time`;
 CREATE TABLE IF NOT EXISTS `gameobject_create2_time` (
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
@@ -588,6 +660,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_create2_time` (
 
 
 -- Dumping structure for table sniffs_new_test.gameobject_destroy_time
+DROP TABLE IF EXISTS `gameobject_destroy_time`;
 CREATE TABLE IF NOT EXISTS `gameobject_destroy_time` (
   `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
@@ -598,6 +671,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_destroy_time` (
 
 
 -- Dumping structure for table sniffs_new_test.gameobject_loot
+DROP TABLE IF EXISTS `gameobject_loot`;
 CREATE TABLE IF NOT EXISTS `gameobject_loot` (
   `entry` int(10) unsigned NOT NULL COMMENT 'gameobject template id',
   `loot_id` int(10) unsigned NOT NULL COMMENT 'counter',
@@ -610,6 +684,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_loot` (
 
 
 -- Dumping structure for table sniffs_new_test.gameobject_loot_item
+DROP TABLE IF EXISTS `gameobject_loot_item`;
 CREATE TABLE IF NOT EXISTS `gameobject_loot_item` (
   `loot_id` int(10) unsigned NOT NULL COMMENT 'references creature_loot',
   `item_id` int(10) unsigned NOT NULL COMMENT 'item template id',
@@ -620,6 +695,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_loot_item` (
 
 
 -- Dumping structure for table sniffs_new_test.gameobject_template
+DROP TABLE IF EXISTS `gameobject_template`;
 CREATE TABLE IF NOT EXISTS `gameobject_template` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -664,6 +740,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_template` (
 
 
 -- Dumping structure for table sniffs_new_test.gameobject_template_addon
+DROP TABLE IF EXISTS `gameobject_template_addon`;
 CREATE TABLE IF NOT EXISTS `gameobject_template_addon` (
   `entry` int(10) unsigned NOT NULL,
   `faction` int(10) unsigned NOT NULL DEFAULT '0',
@@ -675,6 +752,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_template_addon` (
 
 
 -- Dumping structure for table sniffs_new_test.gameobject_update
+DROP TABLE IF EXISTS `gameobject_update`;
 CREATE TABLE IF NOT EXISTS `gameobject_update` (
   `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
@@ -687,6 +765,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_update` (
 
 
 -- Dumping structure for table sniffs_new_test.gossip_menu
+DROP TABLE IF EXISTS `gossip_menu`;
 CREATE TABLE IF NOT EXISTS `gossip_menu` (
   `entry` smallint(5) unsigned NOT NULL DEFAULT '0',
   `text_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
@@ -698,6 +777,7 @@ CREATE TABLE IF NOT EXISTS `gossip_menu` (
 
 
 -- Dumping structure for table sniffs_new_test.gossip_menu_option
+DROP TABLE IF EXISTS `gossip_menu_option`;
 CREATE TABLE IF NOT EXISTS `gossip_menu_option` (
   `menu_id` smallint(5) unsigned NOT NULL DEFAULT '0',
   `id` smallint(5) unsigned NOT NULL DEFAULT '0',
@@ -720,6 +800,7 @@ CREATE TABLE IF NOT EXISTS `gossip_menu_option` (
 
 
 -- Dumping structure for table sniffs_new_test.gossip_menu_option_action
+DROP TABLE IF EXISTS `gossip_menu_option_action`;
 CREATE TABLE IF NOT EXISTS `gossip_menu_option_action` (
   `menu_id` int(11) DEFAULT NULL,
   `id` int(11) DEFAULT NULL,
@@ -731,6 +812,7 @@ CREATE TABLE IF NOT EXISTS `gossip_menu_option_action` (
 
 
 -- Dumping structure for table sniffs_new_test.gossip_menu_option_trainer
+DROP TABLE IF EXISTS `gossip_menu_option_trainer`;
 CREATE TABLE IF NOT EXISTS `gossip_menu_option_trainer` (
   `menu_id` int(11) DEFAULT NULL,
   `id` int(11) DEFAULT NULL,
@@ -741,6 +823,7 @@ CREATE TABLE IF NOT EXISTS `gossip_menu_option_trainer` (
 
 
 -- Dumping structure for table sniffs_new_test.hotfix_blob
+DROP TABLE IF EXISTS `hotfix_blob`;
 CREATE TABLE IF NOT EXISTS `hotfix_blob` (
   `TableHash` int(11) DEFAULT NULL,
   `RecordId` int(11) DEFAULT NULL,
@@ -751,6 +834,7 @@ CREATE TABLE IF NOT EXISTS `hotfix_blob` (
 
 
 -- Dumping structure for table sniffs_new_test.hotfix_data
+DROP TABLE IF EXISTS `hotfix_data`;
 CREATE TABLE IF NOT EXISTS `hotfix_data` (
   `Id` int(10) unsigned NOT NULL,
   `TableHash` int(10) unsigned NOT NULL DEFAULT '0',
@@ -762,6 +846,7 @@ CREATE TABLE IF NOT EXISTS `hotfix_data` (
 
 
 -- Dumping structure for table sniffs_new_test.item_client_use
+DROP TABLE IF EXISTS `item_client_use`;
 CREATE TABLE IF NOT EXISTS `item_client_use` (
   `entry` int(10) unsigned NOT NULL COMMENT 'item template entry',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was sent',
@@ -772,6 +857,7 @@ CREATE TABLE IF NOT EXISTS `item_client_use` (
 
 
 -- Dumping structure for table sniffs_new_test.item_instance
+DROP TABLE IF EXISTS `item_instance`;
 CREATE TABLE IF NOT EXISTS `item_instance` (
   `guid` int(10) unsigned NOT NULL DEFAULT '0',
   `itemEntry` mediumint(8) unsigned NOT NULL DEFAULT '0',
@@ -789,6 +875,7 @@ CREATE TABLE IF NOT EXISTS `item_instance` (
 
 
 -- Dumping structure for table sniffs_new_test.npc_text
+DROP TABLE IF EXISTS `npc_text`;
 CREATE TABLE IF NOT EXISTS `npc_text` (
   `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `Probability0` float NOT NULL DEFAULT '0',
@@ -815,6 +902,7 @@ CREATE TABLE IF NOT EXISTS `npc_text` (
 
 
 -- Dumping structure for table sniffs_new_test.npc_vendor
+DROP TABLE IF EXISTS `npc_vendor`;
 CREATE TABLE IF NOT EXISTS `npc_vendor` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `slot` smallint(6) NOT NULL DEFAULT '0',
@@ -834,6 +922,7 @@ CREATE TABLE IF NOT EXISTS `npc_vendor` (
 
 
 -- Dumping structure for table sniffs_new_test.object_names
+DROP TABLE IF EXISTS `object_names`;
 CREATE TABLE IF NOT EXISTS `object_names` (
   `ObjectType` int(11) DEFAULT NULL,
   `Id` int(11) DEFAULT NULL,
@@ -844,6 +933,7 @@ CREATE TABLE IF NOT EXISTS `object_names` (
 
 
 -- Dumping structure for table sniffs_new_test.page_text
+DROP TABLE IF EXISTS `page_text`;
 CREATE TABLE IF NOT EXISTS `page_text` (
   `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `Text` longtext NOT NULL,
@@ -856,6 +946,7 @@ CREATE TABLE IF NOT EXISTS `page_text` (
 
 
 -- Dumping structure for table sniffs_new_test.playercreateinfo
+DROP TABLE IF EXISTS `playercreateinfo`;
 CREATE TABLE IF NOT EXISTS `playercreateinfo` (
   `race` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `class` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -872,6 +963,7 @@ CREATE TABLE IF NOT EXISTS `playercreateinfo` (
 
 
 -- Dumping structure for table sniffs_new_test.play_music
+DROP TABLE IF EXISTS `play_music`;
 CREATE TABLE IF NOT EXISTS `play_music` (
   `music` int(10) unsigned NOT NULL COMMENT 'references SoundEntries.dbc',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
@@ -882,6 +974,7 @@ CREATE TABLE IF NOT EXISTS `play_music` (
 
 
 -- Dumping structure for table sniffs_new_test.play_sound
+DROP TABLE IF EXISTS `play_sound`;
 CREATE TABLE IF NOT EXISTS `play_sound` (
   `source_guid` int(10) unsigned NOT NULL COMMENT 'guid of the object which was the source of the sound',
   `source_id` int(10) unsigned NOT NULL COMMENT 'entry of the object which was the source of the sound',
@@ -895,6 +988,7 @@ CREATE TABLE IF NOT EXISTS `play_sound` (
 
 
 -- Dumping structure for table sniffs_new_test.points_of_interest
+DROP TABLE IF EXISTS `points_of_interest`;
 CREATE TABLE IF NOT EXISTS `points_of_interest` (
   `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `PositionX` float NOT NULL DEFAULT '0',
@@ -911,6 +1005,7 @@ CREATE TABLE IF NOT EXISTS `points_of_interest` (
 
 
 -- Dumping structure for table sniffs_new_test.quest_client_accept
+DROP TABLE IF EXISTS `quest_client_accept`;
 CREATE TABLE IF NOT EXISTS `quest_client_accept` (
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was sent',
   `object_guid` int(10) unsigned NOT NULL COMMENT 'guid of the quest ender object',
@@ -924,6 +1019,7 @@ CREATE TABLE IF NOT EXISTS `quest_client_accept` (
 
 
 -- Dumping structure for table sniffs_new_test.quest_client_complete
+DROP TABLE IF EXISTS `quest_client_complete`;
 CREATE TABLE IF NOT EXISTS `quest_client_complete` (
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was sent',
   `object_guid` int(10) unsigned NOT NULL COMMENT 'guid of the quest ender object',
@@ -937,6 +1033,7 @@ CREATE TABLE IF NOT EXISTS `quest_client_complete` (
 
 
 -- Dumping structure for table sniffs_new_test.quest_details
+DROP TABLE IF EXISTS `quest_details`;
 CREATE TABLE IF NOT EXISTS `quest_details` (
   `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `Emote1` smallint(5) unsigned NOT NULL DEFAULT '0',
@@ -955,6 +1052,7 @@ CREATE TABLE IF NOT EXISTS `quest_details` (
 
 
 -- Dumping structure for table sniffs_new_test.quest_ender
+DROP TABLE IF EXISTS `quest_ender`;
 CREATE TABLE IF NOT EXISTS `quest_ender` (
   `object_id` int(10) unsigned NOT NULL COMMENT 'entry of the quest ender object',
   `object_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT 'type of the quest ender object',
@@ -966,6 +1064,7 @@ CREATE TABLE IF NOT EXISTS `quest_ender` (
 
 
 -- Dumping structure for table sniffs_new_test.quest_greeting
+DROP TABLE IF EXISTS `quest_greeting`;
 CREATE TABLE IF NOT EXISTS `quest_greeting` (
   `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `Type` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -980,6 +1079,7 @@ CREATE TABLE IF NOT EXISTS `quest_greeting` (
 
 
 -- Dumping structure for table sniffs_new_test.quest_objectives
+DROP TABLE IF EXISTS `quest_objectives`;
 CREATE TABLE IF NOT EXISTS `quest_objectives` (
   `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `QuestID` mediumint(8) unsigned NOT NULL DEFAULT '0',
@@ -999,6 +1099,7 @@ CREATE TABLE IF NOT EXISTS `quest_objectives` (
 
 
 -- Dumping structure for table sniffs_new_test.quest_offer_reward
+DROP TABLE IF EXISTS `quest_offer_reward`;
 CREATE TABLE IF NOT EXISTS `quest_offer_reward` (
   `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `Emote1` smallint(5) unsigned NOT NULL DEFAULT '0',
@@ -1018,6 +1119,7 @@ CREATE TABLE IF NOT EXISTS `quest_offer_reward` (
 
 
 -- Dumping structure for table sniffs_new_test.quest_poi
+DROP TABLE IF EXISTS `quest_poi`;
 CREATE TABLE IF NOT EXISTS `quest_poi` (
   `QuestID` int(10) unsigned NOT NULL DEFAULT '0',
   `id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1036,6 +1138,7 @@ CREATE TABLE IF NOT EXISTS `quest_poi` (
 
 
 -- Dumping structure for table sniffs_new_test.quest_poi_points
+DROP TABLE IF EXISTS `quest_poi_points`;
 CREATE TABLE IF NOT EXISTS `quest_poi_points` (
   `QuestID` int(10) unsigned NOT NULL DEFAULT '0',
   `Idx1` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1051,10 +1154,11 @@ CREATE TABLE IF NOT EXISTS `quest_poi_points` (
 
 
 -- Dumping structure for table sniffs_new_test.quest_request_items
+DROP TABLE IF EXISTS `quest_request_items`;
 CREATE TABLE IF NOT EXISTS `quest_request_items` (
   `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `EmoteOnComplete` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `EmoteOnIncomplete` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `EmoteOnComplete` smallint(5) unsigned DEFAULT NULL,
+  `EmoteOnIncomplete` smallint(5) unsigned DEFAULT NULL,
   `CompletionText` text,
   `VerifiedBuild` smallint(5) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
@@ -1064,6 +1168,7 @@ CREATE TABLE IF NOT EXISTS `quest_request_items` (
 
 
 -- Dumping structure for table sniffs_new_test.quest_starter
+DROP TABLE IF EXISTS `quest_starter`;
 CREATE TABLE IF NOT EXISTS `quest_starter` (
   `object_id` int(10) unsigned NOT NULL COMMENT 'entry of the quest giver object',
   `object_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT 'type of the quest giver object',
@@ -1075,6 +1180,7 @@ CREATE TABLE IF NOT EXISTS `quest_starter` (
 
 
 -- Dumping structure for table sniffs_new_test.quest_template
+DROP TABLE IF EXISTS `quest_template`;
 CREATE TABLE IF NOT EXISTS `quest_template` (
   `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `QuestType` tinyint(3) unsigned NOT NULL DEFAULT '2',
@@ -1188,6 +1294,7 @@ CREATE TABLE IF NOT EXISTS `quest_template` (
 
 
 -- Dumping structure for table sniffs_new_test.spell_cast_go
+DROP TABLE IF EXISTS `spell_cast_go`;
 CREATE TABLE IF NOT EXISTS `spell_cast_go` (
   `UnixTime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'when the packet was received',
   `CasterGuid` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1222,6 +1329,7 @@ CREATE TABLE IF NOT EXISTS `spell_cast_go` (
 
 
 -- Dumping structure for table sniffs_new_test.spell_cast_start
+DROP TABLE IF EXISTS `spell_cast_start`;
 CREATE TABLE IF NOT EXISTS `spell_cast_start` (
   `UnixTime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'when the packet was received',
   `CasterGuid` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1239,6 +1347,7 @@ CREATE TABLE IF NOT EXISTS `spell_cast_start` (
 
 
 -- Dumping structure for table sniffs_new_test.spell_pet_actions
+DROP TABLE IF EXISTS `spell_pet_actions`;
 CREATE TABLE IF NOT EXISTS `spell_pet_actions` (
   `CreatureId` int(10) unsigned NOT NULL DEFAULT '0',
   `SpellId1` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1258,6 +1367,7 @@ CREATE TABLE IF NOT EXISTS `spell_pet_actions` (
 
 
 -- Dumping structure for table sniffs_new_test.spell_pet_cooldown
+DROP TABLE IF EXISTS `spell_pet_cooldown`;
 CREATE TABLE IF NOT EXISTS `spell_pet_cooldown` (
   `CreatureId` int(10) unsigned NOT NULL DEFAULT '0',
   `Flags` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -1272,6 +1382,7 @@ CREATE TABLE IF NOT EXISTS `spell_pet_cooldown` (
 
 
 -- Dumping structure for table sniffs_new_test.spell_target_position
+DROP TABLE IF EXISTS `spell_target_position`;
 CREATE TABLE IF NOT EXISTS `spell_target_position` (
   `ID` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'Identifier',
   `EffectIndex` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -1288,6 +1399,7 @@ CREATE TABLE IF NOT EXISTS `spell_target_position` (
 
 
 -- Dumping structure for table sniffs_new_test.trainer
+DROP TABLE IF EXISTS `trainer`;
 CREATE TABLE IF NOT EXISTS `trainer` (
   `Id` int(10) unsigned NOT NULL DEFAULT '0',
   `Type` tinyint(2) unsigned NOT NULL DEFAULT '2',
@@ -1301,6 +1413,7 @@ CREATE TABLE IF NOT EXISTS `trainer` (
 
 
 -- Dumping structure for table sniffs_new_test.trainer_spell
+DROP TABLE IF EXISTS `trainer_spell`;
 CREATE TABLE IF NOT EXISTS `trainer_spell` (
   `TrainerId` int(10) unsigned NOT NULL DEFAULT '0',
   `SpellId` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1319,6 +1432,7 @@ CREATE TABLE IF NOT EXISTS `trainer_spell` (
 
 
 -- Dumping structure for table sniffs_new_test.weather_update
+DROP TABLE IF EXISTS `weather_update`;
 CREATE TABLE IF NOT EXISTS `weather_update` (
   `map_id` int(11) NOT NULL DEFAULT '0',
   `zone_id` int(11) NOT NULL DEFAULT '0',
@@ -1331,6 +1445,7 @@ CREATE TABLE IF NOT EXISTS `weather_update` (
 
 
 -- Dumping structure for table sniffs_new_test.world_text
+DROP TABLE IF EXISTS `world_text`;
 CREATE TABLE IF NOT EXISTS `world_text` (
   `UnixTime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'when the packet was received',
   `Text` longtext COMMENT 'the actual text that was sent',

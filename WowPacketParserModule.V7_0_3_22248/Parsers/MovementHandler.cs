@@ -235,11 +235,8 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 obj = Storage.Objects[guid].Item1 as Unit;
                 if (obj.UpdateFields != null)
                 {
-                    if ((obj.UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0) // movement could be because of aggro so ignore that
-                    {
-                        obj.Movement.HasWpsOrRandMov = true;
-                        movementData = new CreatureMovement();
-                    }
+                    obj.Movement.HasWpsOrRandMov = true;
+                    movementData = new CreatureMovement();
                 }
             }
 

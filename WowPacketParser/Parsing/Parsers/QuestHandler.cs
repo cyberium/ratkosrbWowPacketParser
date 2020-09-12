@@ -1014,12 +1014,12 @@ namespace WowPacketParser.Parsing.Parsers
             if ((flags & 0x3) == 0) // not completable
             {
                 requestItems.EmoteOnIncompleteDelay = emoteDelay;
-                requestItems.EmoteOnIncomplete = (int)emoteID;
+                requestItems.EmoteOnIncomplete = emoteID;
             }
             else
             {
                 requestItems.EmoteOnCompleteDelay = emoteDelay;
-                requestItems.EmoteOnComplete = (int)emoteID;
+                requestItems.EmoteOnComplete = emoteID;
             }
             packet.ReadUInt32("Unk flags 2");
             packet.ReadUInt32("Unk flags 3");
@@ -1061,7 +1061,7 @@ namespace WowPacketParser.Parsing.Parsers
             };
 
             requestItems.EmoteOnCompleteDelay = packet.ReadUInt32("Delay");  // not confirmed
-            requestItems.EmoteOnComplete = (int)packet.ReadUInt32("Emote");  // not confirmed
+            requestItems.EmoteOnComplete = packet.ReadUInt32("Emote");  // not confirmed
 
             packet.ReadUInt32("Close Window on Cancel");
             packet.ReadUInt32E<QuestFlags>("Quest Flags");
@@ -1117,7 +1117,7 @@ namespace WowPacketParser.Parsing.Parsers
                 CompletionText = text
             };
 
-            requestItems.EmoteOnComplete = (int)packet.ReadUInt32("Emote");
+            requestItems.EmoteOnComplete = packet.ReadUInt32("Emote");
             requestItems.EmoteOnCompleteDelay = packet.ReadUInt32("Delay");
             packet.ReadUInt32("Close Window on Cancel");
             packet.ReadUInt32E<QuestFlags>("Quest Flags");

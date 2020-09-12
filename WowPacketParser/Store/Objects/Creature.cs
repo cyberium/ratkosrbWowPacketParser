@@ -264,6 +264,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("display_id", false, false, true)]
         public uint? DisplayID;
 
+        [DBFieldName("mount", false, false, true)]
+        public uint? MountDisplayID;
+
         [DBFieldName("faction", false, false, true)]
         public uint? FactionTemplate;
 
@@ -278,6 +281,12 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("unit_flags", false, false, true)]
         public uint? UnitFlag;
+
+        [DBFieldName("current_health", false, false, true)]
+        public uint? CurrentHealth;
+
+        [DBFieldName("max_health", false, false, true)]
+        public uint? MaxHealth;
     }
 
     [DBTableName("creature_stats")]
@@ -358,9 +367,28 @@ namespace WowPacketParser.Store.Objects
         public DateTime time;
     }
 
-    public sealed class CreatureAttackData
+    [DBTableName("creature_target_change")]
+    public sealed class CreatureTargetChange : IDataModel
     {
-        public CreatureAttackData(WowGuid victim_, DateTime time_)
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("victim_guid", false, true)]
+        public string VictimGuid;
+
+        [DBFieldName("victim_id")]
+        public uint VictimId;
+
+        [DBFieldName("victim_type")]
+        public string VictimType;
+
+        [DBFieldName("unixtime", true)]
+        public uint UnixTime;
+    }
+
+    public sealed class CreatureTargetData
+    {
+        public CreatureTargetData(WowGuid victim_, DateTime time_)
         {
             victim = victim_;
             time = time_;

@@ -6,6 +6,7 @@ using WowPacketParser.Enums.Version;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
 using WowPacketParser.Store.Objects;
+using WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation;
 
 namespace WowPacketParser.Parsing.Parsers
 {
@@ -170,6 +171,21 @@ namespace WowPacketParser.Parsing.Parsers
             }
         }
 
+        private static WowGuid GetGuidValue(Dictionary<int, UpdateField> UpdateFields, UnitField field)
+        {
+            if (!ClientVersion.AddedInVersion(ClientType.WarlordsOfDraenor))
+            {
+                var parts = UpdateFields.GetArray<UnitField, uint>(field, 2);
+                return new WowGuid64(Utilities.MAKE_PAIR64(parts[0], parts[1]));
+            }
+            else
+            {
+                var parts = UpdateFields.GetArray<UnitField, uint>(field, 4);
+                return new WowGuid128(Utilities.MAKE_PAIR64(parts[0], parts[1]), Utilities.MAKE_PAIR64(parts[2], parts[3]));
+            }
+        }
+        
+
         public static void StoreObjectUpdate(DateTime time, WowGuid guid, Dictionary<int, UpdateField> updates)
         {
             if (guid.GetObjectType() == ObjectType.Unit &&
@@ -201,6 +217,18 @@ namespace WowPacketParser.Parsing.Parsers
                                 hasData = true;
                                 creatureUpdate.DisplayID = update.Value.UInt32Value;
                             } 
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MOUNTDISPLAYID))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.MountDisplayID != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.MountDisplayID = update.Value.UInt32Value;
+                            }
                         }
                     }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_FACTIONTEMPLATE))
@@ -260,6 +288,44 @@ namespace WowPacketParser.Parsing.Parsers
                             {
                                 hasData = true;
                                 creatureUpdate.UnitFlag = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_HEALTH) &&
+                             Settings.SaveHealthUpdates)
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.CurHealth != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.CurrentHealth = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXHEALTH) &&
+                             Settings.SaveHealthUpdates)
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.MaxHealth != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.MaxHealth = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_TARGET) &&
+                             Settings.SqlTables.creature_target_change)
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.Target != GetGuidValue(updates, UnitField.UNIT_FIELD_TARGET))
+                            {
+                                Storage.StoreCreatureTargetChange(guid, GetGuidValue(updates, UnitField.UNIT_FIELD_TARGET), time);
                             }
                         }
                     }

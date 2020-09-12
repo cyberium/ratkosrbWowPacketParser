@@ -178,11 +178,8 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             if (guid.GetHighType() == HighGuidType.Creature && Storage.Objects != null && Storage.Objects.ContainsKey(guid))
             {
                 obj = Storage.Objects[guid].Item1 as Unit;
-                if ((obj.UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0) // movement could be because of aggro so ignore that
-                {
-                    obj.Movement.HasWpsOrRandMov = true;
-                    movementData = new CreatureMovement();
-                }
+                obj.Movement.HasWpsOrRandMov = true;
+                movementData = new CreatureMovement();
             }
 
             ReadMovementMonsterSpline(movementData, packet, pos, "MovementMonsterSpline");

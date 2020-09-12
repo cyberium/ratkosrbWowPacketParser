@@ -51,11 +51,13 @@ namespace WowPacketParser.SQL.Builders
             var create2Rows = new RowList<CreatureCreate2>();
             var destroyRows = new RowList<CreatureDestroy>();
             var movementRows = new RowList<CreatureMovement>();
+            var movementCombatRows = new RowList<CreatureMovement>();
             var movementSplineRows = new RowList<CreatureMovementSpline>();
             var updateRows = new RowList<CreatureUpdate>();
+            var attackStartRows = new RowList<CreatureTargetChange>();
+            var attackStopRows = new RowList<CreatureTargetChange>();
+            var targetChangeRows = new RowList<CreatureTargetChange>();
             string emoteRows = "";
-            string attackStartRows = "";
-            string attackStopRows = "";
             foreach (var unit in units)
             {
                 Row<Creature> row = new Row<Creature>();
@@ -305,46 +307,54 @@ namespace WowPacketParser.SQL.Builders
                 }
 
                 if (Settings.SqlTables.creature_movement &&
-                    creature.Waypoints != null &&
-                    creature.OriginalMovement.Position != null)
+                        creature.Waypoints != null &&
+                        creature.OriginalMovement.Position != null)
                 {
-                    try
+                    if (creature.MovementSplines != null)
                     {
-                        if (creature.MovementSplines != null)
+                        foreach (CreatureMovementSpline waypoint in creature.MovementSplines)
                         {
-                            foreach (CreatureMovementSpline waypoint in creature.MovementSplines)
-                            {
-                                var movementRow = new Row<CreatureMovementSpline>();
-                                movementRow.Data = waypoint;
-                                movementRow.Data.GUID = "@CGUID+" + creature.DbGuid;
-                                movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false); ;
-                                movementSplineRows.Add(movementRow);
-                            }
-                        }
-
-                        float maxDistanceFromSpawn = 0;
-                        foreach (CreatureMovement waypoint in creature.Waypoints)
-                        {
-                            if (waypoint == null)
-                                break;
-
-                            // Get max wander distance
-                            float distanceFromSpawn = Utilities.GetDistance3D(creature.OriginalMovement.Position.X, creature.OriginalMovement.Position.Y, creature.OriginalMovement.Position.Z, waypoint.StartPositionX, waypoint.StartPositionY, waypoint.StartPositionZ);
-                            if (distanceFromSpawn > maxDistanceFromSpawn)
-                                maxDistanceFromSpawn = distanceFromSpawn;
-
-                            var movementRow = new Row<CreatureMovement>();
+                            var movementRow = new Row<CreatureMovementSpline>();
                             movementRow.Data = waypoint;
                             movementRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                             movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false); ;
-                            movementRows.Add(movementRow);
+                            movementSplineRows.Add(movementRow);
                         }
-                        row.Data.WanderDistance = maxDistanceFromSpawn;
                     }
-                    catch (Exception e)
+
+                    float maxDistanceFromSpawn = 0;
+                    foreach (CreatureMovement waypoint in creature.Waypoints)
                     {
-                        Console.WriteLine("{0} Exception caught while parsing waypoints.", e);
-                        Console.WriteLine(WowPacketParser.Program.currentSniffFile);
+                        if (waypoint == null)
+                            break;
+
+                        // Get max wander distance
+                        float distanceFromSpawn = Utilities.GetDistance3D(creature.OriginalMovement.Position.X, creature.OriginalMovement.Position.Y, creature.OriginalMovement.Position.Z, waypoint.StartPositionX, waypoint.StartPositionY, waypoint.StartPositionZ);
+                        if (distanceFromSpawn > maxDistanceFromSpawn)
+                            maxDistanceFromSpawn = distanceFromSpawn;
+
+                        var movementRow = new Row<CreatureMovement>();
+                        movementRow.Data = waypoint;
+                        movementRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                        movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false); ;
+                        movementRows.Add(movementRow);
+                    }
+                    row.Data.WanderDistance = maxDistanceFromSpawn;
+                }
+
+                if (Settings.SqlTables.creature_movement_combat &&
+                    creature.CombatMovements != null)
+                {
+                    foreach (CreatureMovement waypoint in creature.CombatMovements)
+                    {
+                        if (waypoint == null)
+                            break;
+
+                        var movementCombatRow = new Row<CreatureMovement>();
+                        movementCombatRow.Data = waypoint;
+                        movementCombatRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                        movementCombatRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false); ;
+                        movementCombatRows.Add(movementCombatRow);
                     }
                 }
 
@@ -367,15 +377,12 @@ namespace WowPacketParser.SQL.Builders
                     {
                         foreach (var attack in Storage.CreatureAttackStartTimes[unit.Key])
                         {
-                            if (attackStartRows != "")
-                                attackStartRows += ",\n";
+                            var attackStartRow = new Row<CreatureTargetChange>();
 
-                            string victimGuid;
-                            uint victimId;
-                            string victimType;
-                            Storage.GetObjectDbGuidEntryType(attack.victim, out victimGuid, out victimId, out victimType);
-
-                            attackStartRows += "(@CGUID+" + creature.DbGuid.ToString() + ", " + victimGuid + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
+                            attackStartRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            Storage.GetObjectDbGuidEntryType(attack.victim, out attackStartRow.Data.VictimGuid, out attackStartRow.Data.VictimId, out attackStartRow.Data.VictimType);
+                            attackStartRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.time);
+                            attackStartRows.Add(attackStartRow);
                         }
                     }
                 }
@@ -386,15 +393,28 @@ namespace WowPacketParser.SQL.Builders
                     {
                         foreach (var attack in Storage.CreatureAttackStopTimes[unit.Key])
                         {
-                            if (attackStopRows != "")
-                                attackStopRows += ",\n";
+                            var attackStopRow = new Row<CreatureTargetChange>();
 
-                            string victimGuid;
-                            uint victimId;
-                            string victimType;
-                            Storage.GetObjectDbGuidEntryType(attack.victim, out victimGuid, out victimId, out victimType);
+                            attackStopRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            Storage.GetObjectDbGuidEntryType(attack.victim, out attackStopRow.Data.VictimGuid, out attackStopRow.Data.VictimId, out attackStopRow.Data.VictimType);
+                            attackStopRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.time);
+                            attackStopRows.Add(attackStopRow);
+                        }
+                    }
+                }
 
-                            attackStopRows += "(@CGUID+" + creature.DbGuid.ToString() + ", " + victimGuid + ", " + victimId.ToString() + ", '" + victimType + "', " + (uint)Utilities.GetUnixTimeFromDateTime(attack.time) + ")";
+                if (Settings.SqlTables.creature_target_change)
+                {
+                    if (Storage.CreatureTargetChanges.ContainsKey(unit.Key))
+                    {
+                        foreach (var attack in Storage.CreatureTargetChanges[unit.Key])
+                        {
+                            var targetChangeRow = new Row<CreatureTargetChange>();
+
+                            targetChangeRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            Storage.GetObjectDbGuidEntryType(attack.victim, out targetChangeRow.Data.VictimGuid, out targetChangeRow.Data.VictimId, out targetChangeRow.Data.VictimType);
+                            targetChangeRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.time);
+                            targetChangeRows.Add(targetChangeRow);
                         }
                     }
                 }
@@ -503,6 +523,16 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(movementSplineSql.Build());
             }
 
+            if (Settings.SqlTables.creature_movement_combat)
+            {
+                // creature_movement
+                var movementDelete = new SQLDelete<CreatureMovement>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                movementDelete.tableNameOverride = "creature_movement_combat";
+                result.Append(movementDelete.Build());
+                var movementSql = new SQLInsert<CreatureMovement>(movementRows, false, false, "creature_movement_combat");
+                result.Append(movementSql.Build());
+            }
+
             if (emoteRows != "")
             {
                 result.Append("\nINSERT INTO `creature_emote` (`guid`, `emote_id`, `emote_name`, `unixtime`) VALUES\n");
@@ -510,18 +540,32 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(";\n\n");
             }
 
-            if (attackStartRows != "")
+            if (Settings.SqlTables.creature_attack_start)
             {
-                result.Append("\nINSERT INTO `creature_attack_start` (`guid`, `victim_guid`, `victim_id`, `victim_type`, `unixtime`) VALUES\n");
-                result.Append(attackStartRows);
-                result.Append(";\n\n");
+                var attackDelete = new SQLDelete<CreatureTargetChange>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                attackDelete.tableNameOverride = "creature_attack_start";
+                result.Append(attackDelete.Build());
+                var attackSql = new SQLInsert<CreatureTargetChange>(attackStartRows, false, false, "creature_attack_start");
+                result.Append(attackSql.Build());
             }
 
-            if (attackStopRows != "")
+
+            if (Settings.SqlTables.creature_attack_stop)
             {
-                result.Append("\nINSERT INTO `creature_attack_stop` (`guid`, `victim_guid`, `victim_id`, `victim_type`, `unixtime`) VALUES\n");
-                result.Append(attackStopRows);
-                result.Append(";\n\n");
+                var attackDelete = new SQLDelete<CreatureTargetChange>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                attackDelete.tableNameOverride = "creature_attack_stop";
+                result.Append(attackDelete.Build());
+                var attackSql = new SQLInsert<CreatureTargetChange>(attackStopRows, false, false, "creature_attack_stop");
+                result.Append(attackSql.Build());
+            }
+
+            if (Settings.SqlTables.creature_target_change)
+            {
+                var attackDelete = new SQLDelete<CreatureTargetChange>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                attackDelete.tableNameOverride = "creature_target_change";
+                result.Append(attackDelete.Build());
+                var attackSql = new SQLInsert<CreatureTargetChange>(targetChangeRows, false, false, "creature_target_change");
+                result.Append(attackSql.Build());
             }
 
             return result.ToString();

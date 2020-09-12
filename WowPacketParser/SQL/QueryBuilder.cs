@@ -269,10 +269,12 @@ namespace WowPacketParser.SQL
         /// <param name="rows">A list of <see cref="SQLInsertRow{T}"/> rows</param>
         /// <param name="withDelete">If set to false the full query will not include a delete query</param>
         /// <param name="ignore">If set to true the INSERT INTO query will be INSERT IGNORE INTO</param>
-        public SQLInsert(RowList<T> rows, bool withDelete = true, bool ignore = false)
+        public SQLInsert(RowList<T> rows, bool withDelete = true, bool ignore = false, string tableNameOverride = null)
         {
             _rows = rows;
-            _insertHeader = new SQLInsertHeader<T>(ignore).Build();
+            var headerBuilder = new SQLInsertHeader<T>(ignore);
+            headerBuilder.tableNameOverride = tableNameOverride;
+            _insertHeader = headerBuilder.Build();
             _withDelete = withDelete;
         }
 
@@ -317,6 +319,8 @@ namespace WowPacketParser.SQL
 
         private static readonly List<Tuple<string, FieldInfo, List<DBFieldNameAttribute>>> _databaseFields = SQLUtil.GetFields<T>();
 
+        public string tableNameOverride = null;
+
         /// <summary>
         /// <para>Creates the header of an INSERT query</para>
         /// <code>INSERT INTO `tableName` (fields[0], ..., fields[n]) VALUES</code>
@@ -339,7 +343,10 @@ namespace WowPacketParser.SQL
             query.Append("INSERT ");
             query.Append(_ignore ? "IGNORE " : string.Empty);
             query.Append("INTO ");
-            query.Append(SQLUtil.GetTableName<T>());
+            if (tableNameOverride != null)
+                query.Append("`" + tableNameOverride + "`");
+            else
+                query.Append(SQLUtil.GetTableName<T>());
 
             query.Append(" (");
             foreach (var field in _databaseFields)
@@ -465,6 +472,8 @@ namespace WowPacketParser.SQL
         private static readonly List<Tuple<string, FieldInfo, List<DBFieldNameAttribute>>> _databaseFields = SQLUtil.GetFields<T>();
         private static readonly FieldInfo _primaryKeyReflectionField = SQLUtil.GetFirstPrimaryKey<T>();
 
+        public string tableNameOverride = null;
+
         /// <summary>
         /// <para>Creates a delete query with a single primary key and an arbitrary number of values</para>
         /// <code>DELETE FROM `tableName` WHERE `primaryKey` IN (values[0], ..., values[n]);</code>
@@ -501,7 +510,10 @@ namespace WowPacketParser.SQL
                 var pk = _databaseFields.Single(f => f.Item2 == _primaryKeyReflectionField);
 
                 query.Append("DELETE FROM ");
-                query.Append(SQLUtil.GetTableName<T>());
+                if (tableNameOverride != null)
+                    query.Append("`" + tableNameOverride + "`");
+                else
+                    query.Append(SQLUtil.GetTableName<T>());
                 query.Append(" WHERE ");
 
                 query.Append(pk.Item1);

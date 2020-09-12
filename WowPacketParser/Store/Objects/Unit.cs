@@ -18,6 +18,7 @@ namespace WowPacketParser.Store.Objects
         public BlockingCollection<List<Aura>> AddedAuras = new BlockingCollection<List<Aura>>();
 
         public List<CreatureMovement> Waypoints;
+        public List<CreatureMovement> CombatMovements;
         public List<CreatureMovementSpline> MovementSplines;
 
         public ushort? AIAnimKit;
@@ -41,6 +42,7 @@ namespace WowPacketParser.Store.Objects
             UnitDataOriginal = new OriginalUnitData(this);
 
             Waypoints = new List<CreatureMovement>();
+            CombatMovements = new List<CreatureMovement>();
             MovementSplines = new List<CreatureMovementSpline>();
         }
 
@@ -66,7 +68,13 @@ namespace WowPacketParser.Store.Objects
 
         public void AddWaypoint(CreatureMovement movementData, Vector3 startPosition, DateTime packetTime)
         {
-            movementData.Point = (uint)Waypoints.Count + 1;
+            List<CreatureMovement> list = null;
+            if ((UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0)
+                list = Waypoints;
+            else
+                list = CombatMovements;
+
+            movementData.Point = (uint)list.Count + 1;
             movementData.StartPositionX = startPosition.X;
             movementData.StartPositionY = startPosition.Y;
             movementData.StartPositionZ = startPosition.Z;
@@ -80,7 +88,9 @@ namespace WowPacketParser.Store.Objects
                 movementData.EndPositionY = movementData.SplinePoints[index].Y;
                 movementData.EndPositionZ = movementData.SplinePoints[index].Z;
 
-                if (movementData.SplineCount > 1)
+                if (movementData.SplineCount > 1 &&
+                    // Only store out of combat splines.
+                    (UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0)
                 {
                     uint counter = 0;
                     foreach (Vector3 vector in movementData.SplinePoints)
@@ -97,7 +107,7 @@ namespace WowPacketParser.Store.Objects
                 }
                 movementData.SplinePoints = null; // free memory
             }
-            Waypoints.Add(movementData);
+            list.Add(movementData);
         }
     }
 }

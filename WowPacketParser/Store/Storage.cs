@@ -321,11 +321,11 @@ namespace WowPacketParser.Store
                 Storage.Emotes.Add(guid, emotesList);
             }
         }
-        public static readonly Dictionary<WowGuid, List<CreatureAttackData>> CreatureAttackStartTimes = new Dictionary<WowGuid, List<CreatureAttackData>>();
-        public static readonly Dictionary<WowGuid, List<CreatureAttackData>> CreatureAttackStopTimes = new Dictionary<WowGuid, List<CreatureAttackData>>();
+        public static readonly Dictionary<WowGuid, List<CreatureTargetData>> CreatureAttackStartTimes = new Dictionary<WowGuid, List<CreatureTargetData>>();
+        public static readonly Dictionary<WowGuid, List<CreatureTargetData>> CreatureAttackStopTimes = new Dictionary<WowGuid, List<CreatureTargetData>>();
         public static void StoreCreatureAttack(WowGuid attackerGuid, WowGuid victimGuid, DateTime time, bool start)
         {
-            Dictionary<WowGuid, List<CreatureAttackData>> store = null;
+            Dictionary<WowGuid, List<CreatureTargetData>> store = null;
             if (start)
             {
                 if (!Settings.SqlTables.creature_attack_start)
@@ -343,16 +343,32 @@ namespace WowPacketParser.Store
 
             if (store.ContainsKey(attackerGuid))
             {
-                store[attackerGuid].Add(new CreatureAttackData(victimGuid, time));
+                store[attackerGuid].Add(new CreatureTargetData(victimGuid, time));
             }
             else
             {
-                List<CreatureAttackData> attackList = new List<CreatureAttackData>();
-                attackList.Add(new CreatureAttackData(victimGuid, time));
+                List<CreatureTargetData> attackList = new List<CreatureTargetData>();
+                attackList.Add(new CreatureTargetData(victimGuid, time));
                 store.Add(attackerGuid, attackList);
             }
         }
+        public static readonly Dictionary<WowGuid, List<CreatureTargetData>> CreatureTargetChanges = new Dictionary<WowGuid, List<CreatureTargetData>>();
+        public static void StoreCreatureTargetChange(WowGuid ownGuid, WowGuid victimGuid, DateTime time)
+        {
+            if (!Settings.SqlTables.creature_target_change)
+                return;
 
+            if (CreatureTargetChanges.ContainsKey(ownGuid))
+            {
+                CreatureTargetChanges[ownGuid].Add(new CreatureTargetData(victimGuid, time));
+            }
+            else
+            {
+                List<CreatureTargetData> attackList = new List<CreatureTargetData>();
+                attackList.Add(new CreatureTargetData(victimGuid, time));
+                CreatureTargetChanges.Add(ownGuid, attackList);
+            }
+        }
         public static readonly List<PlayerMovement> PlayerMovements = new List<PlayerMovement>();
         public static readonly List<ActivePlayerCreateTime> PlayerActiveCreateTime = new List<ActivePlayerCreateTime>();
 

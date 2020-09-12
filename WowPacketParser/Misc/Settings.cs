@@ -21,6 +21,7 @@ namespace WowPacketParser.Misc
         public static readonly bool RandomizePlayerNames = Conf.GetBoolean("RandomizePlayerNames", false);
         public static readonly bool SkipOtherPlayers = Conf.GetBoolean("SkipOtherPlayers", false);
         public static readonly bool SavePlayerCasts = Conf.GetBoolean("SavePlayerCasts", false);
+        public static readonly bool SaveHealthUpdates = Conf.GetBoolean("SaveHealthUpdates", false);
         public static readonly bool SaveTempSpawns = Conf.GetBoolean("SaveTempSpawns", false);
         public static readonly bool SkipOnlyVerifiedBuildUpdateRows = Conf.GetBoolean("SkipOnlyVerifiedBuildUpdateRows", false);
         public static readonly bool IgnoreZeroValues = Conf.GetBoolean("IgnoreZeroValues", false);
@@ -118,7 +119,9 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_gossip = Conf.GetBoolean("creature_gossip", false);
             public static readonly bool creature_loot = Conf.GetBoolean("creature_loot", false);
             public static readonly bool creature_movement = Conf.GetBoolean("creature_movement", false);
+            public static readonly bool creature_movement_combat = Conf.GetBoolean("creature_movement_combat", false);
             public static readonly bool creature_stats = Conf.GetBoolean("creature_stats", false);
+            public static readonly bool creature_target_change = Conf.GetBoolean("creature_target_change", false);
             public static readonly bool creature_template = Conf.GetBoolean("creature_template", false);
             public static readonly bool creature_template_wdb = Conf.GetBoolean("creature_template_wdb", false);
             public static readonly bool creature_template_addon = Conf.GetBoolean("creature_template_addon", false);

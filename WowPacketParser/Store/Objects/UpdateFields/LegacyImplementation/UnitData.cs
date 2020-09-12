@@ -48,6 +48,8 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public WowGuid CreatedBy => GetGuidValue(UnitField.UNIT_FIELD_CREATEDBY);
 
+        public WowGuid Target => GetGuidValue(UnitField.UNIT_FIELD_TARGET);
+
         public byte RaceId => (byte)(UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_0) & 0xFF);
         public byte ClassId => (byte)((UpdateFields.GetValue<UnitField, uint?>(UnitField.UNIT_FIELD_BYTES_0).GetValueOrDefault((uint)Class.Warrior << 8) >> 8) & 0xFF);
 
@@ -197,6 +199,8 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public WowGuid SummonedBy => GetGuidValue(UnitField.UNIT_FIELD_SUMMONEDBY);
 
         public WowGuid CreatedBy => GetGuidValue(UnitField.UNIT_FIELD_CREATEDBY);
+
+        public WowGuid Target => GetGuidValue(UnitField.UNIT_FIELD_TARGET);
 
         public byte RaceId => (byte)(UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_0) & 0xFF);
         public byte ClassId => (byte)((UpdateFields.GetValue<UnitField, uint?>(UnitField.UNIT_FIELD_BYTES_0).GetValueOrDefault((uint)Class.Warrior << 8) >> 8) & 0xFF);
