@@ -44,6 +44,8 @@
         creature_text,
         creature_text_template,
         creature_update,
+        client_reclaim_corpse,
+        client_release_spirit,
         gameobject,
         gameobject_addon,
         gameobject_client_use,

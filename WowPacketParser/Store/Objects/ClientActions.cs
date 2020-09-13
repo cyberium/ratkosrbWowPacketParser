@@ -61,4 +61,16 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("unixtime", true)]
         public uint UnixTime;
     }
+    [DBTableName("client_release_spirit")]
+    public sealed class ClientReleaseSpirit : IDataModel
+    {
+        [DBFieldName("unixtime", true)]
+        public uint UnixTime;
+    }
+    [DBTableName("client_reclaim_corpse")]
+    public sealed class ClientReclaimCorpse : IDataModel
+    {
+        [DBFieldName("unixtime", true)]
+        public uint UnixTime;
+    }
 }

@@ -230,5 +230,33 @@ namespace WowPacketParser.SQL.Builders
 
             return SQLUtil.Compare(Storage.WorldTexts, templateDb, StoreNameType.None);
         }
+
+        [BuilderMethod]
+        public static string ClientReclaimCorpseTimes()
+        {
+            if (Storage.ClientReclaimCorpseTimes.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.client_reclaim_corpse)
+                return string.Empty;
+
+            var templateDb = SQLDatabase.Get(Storage.ClientReclaimCorpseTimes, Settings.TDBDatabase);
+
+            return SQLUtil.Compare(Storage.ClientReclaimCorpseTimes, templateDb, StoreNameType.None);
+        }
+
+        [BuilderMethod]
+        public static string ClientReleaseSpiritTimes()
+        {
+            if (Storage.ClientReleaseSpiritTimes.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.client_release_spirit)
+                return string.Empty;
+
+            var templateDb = SQLDatabase.Get(Storage.ClientReleaseSpiritTimes, Settings.TDBDatabase);
+
+            return SQLUtil.Compare(Storage.ClientReleaseSpiritTimes, templateDb, StoreNameType.None);
+        }
     }
 }

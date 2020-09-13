@@ -1146,7 +1146,6 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_FISH_ESCAPED)]
         [Parser(Opcode.SMSG_SUMMON_CANCEL)]
         [Parser(Opcode.CMSG_MEETINGSTONE_INFO)]
-        [Parser(Opcode.CMSG_CLIENT_PORT_GRAVEYARD)]
         [Parser(Opcode.CMSG_REQUEST_CEMETERY_LIST)]
         [Parser(Opcode.CMSG_REQUEST_RESEARCH_HISTORY)]
         [Parser(Opcode.CMSG_COMPLETE_MOVIE)]
@@ -1158,6 +1157,15 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.CMSG_UPDATE_VAS_PURCHASE_STATES)]
         public static void HandleZeroLengthPackets(Packet packet)
         {
+        }
+
+        [Parser(Opcode.CMSG_CLIENT_PORT_GRAVEYARD)]
+        public static void HandleClientPortGraveyard(Packet packet)
+        {
+            Storage.ClientReleaseSpiritTimes.Add(new WowPacketParser.Store.Objects.ClientReleaseSpirit
+            {
+                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time)
+            }, packet.TimeSpan);
         }
     }
 }

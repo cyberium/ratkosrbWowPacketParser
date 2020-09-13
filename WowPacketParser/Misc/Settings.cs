@@ -130,6 +130,8 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_text = Conf.GetBoolean("creature_text", false);
             public static readonly bool creature_text_template = Conf.GetBoolean("creature_text_template", false);
             public static readonly bool creature_update = Conf.GetBoolean("creature_update", false);
+            public static readonly bool client_reclaim_corpse = Conf.GetBoolean("client_reclaim_corpse", false);
+            public static readonly bool client_release_spirit = Conf.GetBoolean("client_release_spirit", false);
             public static readonly bool gameobject = Conf.GetBoolean("gameobject", false);
             public static readonly bool gameobject_addon = Conf.GetBoolean("gameobject_addon", false);
             public static readonly bool gameobject_client_use = Conf.GetBoolean("gameobject_client_use", false);

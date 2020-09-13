@@ -1,6 +1,7 @@
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
 
 namespace WowPacketParserModule.V5_4_7_17898.Parsers
 {
@@ -23,6 +24,11 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             packet.ParseBitStream(guid, 5, 4, 3, 1, 7, 0, 2, 6);
 
             packet.WriteGuid("Corpse GUID", guid);
+
+            Storage.ClientReclaimCorpseTimes.Add(new WowPacketParser.Store.Objects.ClientReclaimCorpse
+            {
+                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time)
+            }, packet.TimeSpan);
         }
 
         [Parser(Opcode.CMSG_CORPSE_QUERY)]

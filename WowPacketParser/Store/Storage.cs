@@ -590,6 +590,10 @@ namespace WowPacketParser.Store
         public static readonly DataBag<PlayerChoiceResponseRewardFactionTemplate> PlayerChoiceResponseRewardFactions = new DataBag<PlayerChoiceResponseRewardFactionTemplate>(Settings.SqlTables.playerchoice);
         public static readonly DataBag<PlayerChoiceResponseRewardItemTemplate> PlayerChoiceResponseRewardItems = new DataBag<PlayerChoiceResponseRewardItemTemplate>(Settings.SqlTables.playerchoice);
 
+        // Client Actions
+        public static readonly DataBag<ClientReclaimCorpse> ClientReclaimCorpseTimes = new DataBag<ClientReclaimCorpse>(Settings.SqlTables.client_reclaim_corpse);
+        public static readonly DataBag<ClientReleaseSpirit> ClientReleaseSpiritTimes = new DataBag<ClientReleaseSpirit>(Settings.SqlTables.client_release_spirit);
+
         public static void ClearContainers()
         {
             SniffData.Clear();

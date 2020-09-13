@@ -1,6 +1,7 @@
 ﻿using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
 
 namespace WowPacketParserModule.V1_13_2_31446.Parsers
 {
@@ -70,6 +71,16 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 packet.ReadWoWString("Key", len1, i);
                 packet.ReadWoWString("Action", len2, i);
             }
+        }
+
+        [Parser(Opcode.CMSG_CLIENT_PORT_GRAVEYARD)]
+        public static void HandleClientPortGraveyard(Packet packet)
+        {
+            packet.ReadByte("UnkByte");
+            Storage.ClientReleaseSpiritTimes.Add(new WowPacketParser.Store.Objects.ClientReleaseSpirit
+            {
+                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time)
+            }, packet.TimeSpan);
         }
     }
 }

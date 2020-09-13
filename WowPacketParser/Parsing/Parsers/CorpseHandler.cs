@@ -1,5 +1,6 @@
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
+using WowPacketParser.Store;
 
 namespace WowPacketParser.Parsing.Parsers
 {
@@ -45,6 +46,10 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleReclaimCorpse(Packet packet)
         {
             packet.ReadGuid("Corpse GUID");
+            Storage.ClientReclaimCorpseTimes.Add(new WowPacketParser.Store.Objects.ClientReclaimCorpse
+            {
+                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time)
+            }, packet.TimeSpan);
         }
 
         [Parser(Opcode.SMSG_AREA_TRIGGER_NO_CORPSE)]
