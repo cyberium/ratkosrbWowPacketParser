@@ -22,12 +22,12 @@ namespace WowPacketParser.Misc
 
         public static double GetUnixTimeFromDateTime(DateTime time)
         {
-            return (time - Epoch).TotalSeconds;
+            return (time.ToUniversalTime() - Epoch.ToUniversalTime()).TotalSeconds;
         }
 
         public static double GetUnixTimeMsFromDateTime(DateTime time)
         {
-            return (time - Epoch).TotalMilliseconds;
+            return (time.ToUniversalTime() - Epoch.ToUniversalTime()).TotalMilliseconds;
         }
 
         public static float GetAngle(float x1, float y1, float x2, float y2)
