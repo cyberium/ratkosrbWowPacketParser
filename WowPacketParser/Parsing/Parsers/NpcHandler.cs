@@ -591,7 +591,6 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_GOSSIP_COMPLETE)]
         public static void HandleGossipComplete(Packet packet)
         {
-            LastGossipOption.Reset();
         }
 
         [Parser(Opcode.SMSG_THREAT_UPDATE)]
