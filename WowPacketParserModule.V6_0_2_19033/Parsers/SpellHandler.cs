@@ -511,10 +511,13 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_PLAY_SPELL_VISUAL_KIT)]
         public static void HandleCastVisualKit(Packet packet)
         {
-            packet.ReadPackedGuid128("Unit");
-            packet.ReadInt32("KitRecID");
-            packet.ReadInt32("KitType");
-            packet.ReadUInt32("Duration");
+            SpellVisualKitData visualKitData = new SpellVisualKitData();
+            visualKitData.Guid = packet.ReadPackedGuid128("Unit");
+            visualKitData.KitId = (uint)packet.ReadInt32("KitRecID");
+            visualKitData.KitType = (uint)packet.ReadInt32("KitType");
+            visualKitData.Duration = packet.ReadUInt32("Duration");
+            visualKitData.Time = packet.Time;
+            Storage.SpellPlayVisualKit.Add(visualKitData);
         }
 
         [Parser(Opcode.CMSG_UNLEARN_SKILL)]

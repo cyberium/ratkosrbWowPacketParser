@@ -110,7 +110,8 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             packet.StartBitStream(guid, 1, 2, 0, 6, 4, 5, 3, 7);
             packet.ParseBitStream(guid, 0, 5, 1, 7, 2, 3, 4, 6);
 
-            packet.WriteGuid("Guid", guid);
+            WowGuid guid2 = packet.WriteGuid("Guid", guid);
+            Storage.StoreGameObjectDespawnAnim(guid2, packet.Time);
         }
 
         [Parser(Opcode.SMSG_GAME_OBJECT_CUSTOM_ANIM)]

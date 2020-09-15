@@ -586,6 +586,8 @@ namespace WowPacketParser.SQL.Builders
             var addonRows = new RowList<GameObjectAddon>();
             var create1Rows = new RowList<GameObjectCreate1>();
             var create2Rows = new RowList<GameObjectCreate2>();
+            var customAnimRows = new RowList<GameObjectCustomAnim>();
+            var despawnAnimRows = new RowList<GameObjectDespawnAnim>();
             var destroyRows = new RowList<GameObjectDestroy>();
             var updateRows = new RowList<GameObjectUpdate>();
             var useRows = new RowList<GameObjectClientUse>();
@@ -735,6 +737,34 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
+                if (Settings.SqlTables.gameobject_custom_anim)
+                {
+                    if (Storage.GameObjectCustomAnims.ContainsKey(gameobject.Key))
+                    {
+                        foreach (var animTime in Storage.GameObjectCustomAnims[gameobject.Key])
+                        {
+                            var customAnimRow = new Row<GameObjectCustomAnim>();
+                            customAnimRow.Data = animTime;
+                            customAnimRow.Data.GUID = "@OGUID+" + go.DbGuid;
+                            customAnimRows.Add(customAnimRow);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.gameobject_despawn_anim)
+                {
+                    if (Storage.GameObjectDespawnAnims.ContainsKey(gameobject.Key))
+                    {
+                        foreach (var animTime in Storage.GameObjectDespawnAnims[gameobject.Key])
+                        {
+                            var despawnAnimRow = new Row<GameObjectDespawnAnim>();
+                            despawnAnimRow.Data.GUID = "@OGUID+" + go.DbGuid;
+                            despawnAnimRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(animTime);
+                            despawnAnimRows.Add(despawnAnimRow);
+                        }
+                    }
+                }
+
                 if (Settings.SqlTables.gameobject_destroy_time)
                 {
                     if (Storage.ObjectDestroyTimes.ContainsKey(gameobject.Key))
@@ -859,6 +889,22 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(create2Delete.Build());
                 var createSql = new SQLInsert<GameObjectCreate2>(create2Rows, false);
                 result.Append(createSql.Build());
+            }
+
+            if (Settings.SqlTables.gameobject_custom_anim)
+            {
+                var animDelete = new SQLDelete<GameObjectCustomAnim>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
+                result.Append(animDelete.Build());
+                var animSql = new SQLInsert<GameObjectCustomAnim>(customAnimRows, false);
+                result.Append(animSql.Build());
+            }
+
+            if (Settings.SqlTables.gameobject_despawn_anim)
+            {
+                var animDelete = new SQLDelete<GameObjectDespawnAnim>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
+                result.Append(animDelete.Build());
+                var animSql = new SQLInsert<GameObjectDespawnAnim>(despawnAnimRows, false);
+                result.Append(animSql.Build());
             }
 
             if (Settings.SqlTables.gameobject_destroy_time)

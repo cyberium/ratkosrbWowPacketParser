@@ -146,4 +146,30 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("animprogress", false, false, true)]
         public uint? AnimProgress;
     }
+
+    [DBTableName("gameobject_custom_anim")]
+    public sealed class GameObjectCustomAnim : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("anim_id")]
+        public int AnimId;
+
+        [DBFieldName("as_despawn", false, false, true)]
+        public bool? AsDespawn;
+
+        [DBFieldName("unixtime", true)]
+        public uint UnixTime;
+    }
+
+    [DBTableName("gameobject_despawn_anim")]
+    public sealed class GameObjectDespawnAnim : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtime", true)]
+        public uint UnixTime;
+    }
 }

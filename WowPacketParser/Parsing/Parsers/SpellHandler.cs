@@ -959,8 +959,17 @@ namespace WowPacketParser.Parsing.Parsers
         }
 
         [Parser(Opcode.SMSG_PLAY_SPELL_VISUAL, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]
-        [Parser(Opcode.SMSG_PLAY_SPELL_IMPACT)]
         public static void HandleCastVisual(Packet packet)
+        {
+            SpellVisualKitData visualKitData = new SpellVisualKitData();
+            visualKitData.Guid = packet.ReadGuid("Caster GUID");
+            visualKitData.KitId = packet.ReadUInt32("SpellVisualKit ID");
+            visualKitData.Time = packet.Time;
+            Storage.SpellPlayVisualKit.Add(visualKitData);
+        }
+
+        [Parser(Opcode.SMSG_PLAY_SPELL_IMPACT)]
+        public static void HandlePlaySpellImpact(Packet packet)
         {
             packet.ReadGuid("Caster GUID");
             packet.ReadUInt32("SpellVisualKit ID");
@@ -1024,25 +1033,31 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_PLAY_SPELL_VISUAL_KIT, ClientVersionBuild.V4_3_0_15005, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleCastVisualKit430(Packet packet)
         {
-            packet.ReadUInt32("SpellVisualKit ID");
-            packet.ReadUInt32("Unk");
-            packet.ReadUInt32("Unk");
+            SpellVisualKitData visualKitData = new SpellVisualKitData();
+            visualKitData.KitId = packet.ReadUInt32("KitRecID");
+            visualKitData.KitType = packet.ReadUInt32("KitType");
+            visualKitData.Duration = packet.ReadUInt32("Duration");
 
             var guid = packet.StartBitStream(0, 4, 3, 6, 5, 7, 2, 1);
             packet.ParseBitStream(guid, 5, 7, 6, 1, 4, 3, 2, 0);
-            packet.WriteGuid("Caster Guid", guid);
+            visualKitData.Guid = packet.WriteGuid("Caster Guid", guid);
+            visualKitData.Time = packet.Time;
+            Storage.SpellPlayVisualKit.Add(visualKitData);
         }
 
         [Parser(Opcode.SMSG_PLAY_SPELL_VISUAL_KIT, ClientVersionBuild.V4_3_4_15595)] // 4.3.4
         public static void HandleCastVisualKit434(Packet packet)
         {
-            packet.ReadUInt32("Unk");
-            packet.ReadUInt32("SpellVisualKit ID");
-            packet.ReadUInt32("Unk");
+            SpellVisualKitData visualKitData = new SpellVisualKitData();
+            visualKitData.KitType = packet.ReadUInt32("Unk");
+            visualKitData.KitId = packet.ReadUInt32("SpellVisualKit ID");
+            visualKitData.Duration = packet.ReadUInt32("Unk");
 
             var guid = packet.StartBitStream(4, 7, 5, 3, 1, 2, 0, 6);
             packet.ParseBitStream(guid, 0, 4, 1, 6, 7, 2, 3, 5);
-            packet.WriteGuid("Caster Guid", guid);
+            visualKitData.Guid = packet.WriteGuid("Caster Guid", guid);
+            visualKitData.Time = packet.Time;
+            Storage.SpellPlayVisualKit.Add(visualKitData);
         }
 
         [Parser(Opcode.SMSG_PET_CAST_FAILED)]

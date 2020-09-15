@@ -5,6 +5,40 @@ using WowPacketParser.SQL;
 
 namespace WowPacketParser.Store.Objects
 {
+    [DBTableName("play_spell_visual_kit")]
+    public sealed class PlaySpellVisualKit : IDataModel
+    {
+        [DBFieldName("caster_guid", true, true)]
+        public string CasterGuid;
+
+        [DBFieldName("caster_id", true)]
+        public uint CasterId;
+
+        [DBFieldName("caster_type", true)]
+        public string CasterType;
+
+        [DBFieldName("kit_id", true)]
+        public uint KitId;
+
+        [DBFieldName("kit_type", false, false, true)]
+        public uint? KitType;
+
+        [DBFieldName("duration", false, false, true)]
+        public uint? Duration;
+
+        [DBFieldName("unixtime", true)]
+        public uint UnixTime;
+    }
+
+    public sealed class SpellVisualKitData
+    {
+        public WowGuid Guid;
+        public uint KitId;
+        public uint? KitType;
+        public uint? Duration;
+        public DateTime Time;
+    }
+
     [DBTableName("spell_cast_start")]
     public sealed class SpellCastStart : IDataModel
     {

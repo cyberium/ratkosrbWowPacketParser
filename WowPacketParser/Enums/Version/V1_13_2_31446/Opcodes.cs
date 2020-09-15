@@ -4422,7 +4422,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_FORCED_DEATH_UPDATE, 0x270F},
             {Opcode.SMSG_FORCE_ANIM, 0x2797},
             {Opcode.SMSG_FORCE_OBJECT_RELINK, 0x2668},
-            {Opcode.SMSG_FRIEND_STATUS, 0x27D1}, // ?
+            {Opcode.SMSG_FRIEND_STATUS, 0x27D6}, // ok
             {Opcode.SMSG_GAME_EVENT_DEBUG_INITIALIZE, 0x267E},
             {Opcode.SMSG_GAME_OBJECT_ACTIVATE_ANIM_KIT, 0x25D6},
             {Opcode.SMSG_GAME_OBJECT_CUSTOM_ANIM, 0x25D7},
@@ -4432,7 +4432,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_GAME_OBJECT_PLAY_SPELL_VISUAL_KIT, 0x2C4A},
             {Opcode.SMSG_GAME_OBJECT_RESET_STATE, 0x275F},
             {Opcode.SMSG_GAME_OBJECT_SET_STATE, 0x2843},
-            {Opcode.SMSG_GAME_OBJECT_UI_ACTION, 0x2758}, // ??
+            {Opcode.SMSG_GAME_OBJECT_UI_ACTION, 0x2750}, // ??
             {Opcode.SMSG_GAME_SPEED_SET, 0x26AF},
             {Opcode.SMSG_GAME_TIME_SET, 0x274E},
             {Opcode.SMSG_GAME_TIME_UPDATE, 0x274D},
@@ -4505,7 +4505,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_GROUP_DESTROYED, 0x27DB},
             {Opcode.SMSG_GROUP_INVITE_CONFIRMATION, 0x2858},
             {Opcode.SMSG_GROUP_NEW_LEADER, 0x264A},
-            {Opcode.SMSG_GROUP_UNINVITE, 0x27D6}, // ??
+            {Opcode.SMSG_GROUP_UNINVITE, 0x27D1}, // ??
             {Opcode.SMSG_GUILD_ACHIEVEMENT_DELETED, 0x29C5},
             {Opcode.SMSG_GUILD_ACHIEVEMENT_EARNED, 0x29C4},
             {Opcode.SMSG_GUILD_ACHIEVEMENT_MEMBERS, 0x29C7},
@@ -5033,7 +5033,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_START_MIRROR_TIMER, 0x2752},
             {Opcode.SMSG_START_TIMER, 0x25BB},
             {Opcode.SMSG_STOP_ELAPSED_TIMER, 0x261B},
-            {Opcode.SMSG_STOP_MIRROR_TIMER, 0x2750}, // ??
+            {Opcode.SMSG_STOP_MIRROR_TIMER, 0x2758}, // ok
             {Opcode.SMSG_STOP_SPEAKERBOT_SOUND, 0x27AF}, // ??
             {Opcode.SMSG_STREAMING_MOVIES, 0x25BA},
             {Opcode.SMSG_SUMMON_CANCEL, 0x26E0},

@@ -105,6 +105,8 @@ namespace WowPacketParser.Misc
             public static readonly bool character_active_player = Conf.GetBoolean("character_active_player", false);
             public static readonly bool character_inventory = Conf.GetBoolean("character_inventory", false);
             public static readonly bool character_movement = Conf.GetBoolean("character_movement", false);
+            public static readonly bool client_reclaim_corpse = Conf.GetBoolean("client_reclaim_corpse", false);
+            public static readonly bool client_release_spirit = Conf.GetBoolean("client_release_spirit", false);
             public static readonly bool creature = Conf.GetBoolean("creature", false);
             public static readonly bool creature_addon = Conf.GetBoolean("creature_addon", false);
             public static readonly bool creature_attack_start = Conf.GetBoolean("creature_attack_start", false);
@@ -130,13 +132,13 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_text = Conf.GetBoolean("creature_text", false);
             public static readonly bool creature_text_template = Conf.GetBoolean("creature_text_template", false);
             public static readonly bool creature_update = Conf.GetBoolean("creature_update", false);
-            public static readonly bool client_reclaim_corpse = Conf.GetBoolean("client_reclaim_corpse", false);
-            public static readonly bool client_release_spirit = Conf.GetBoolean("client_release_spirit", false);
             public static readonly bool gameobject = Conf.GetBoolean("gameobject", false);
             public static readonly bool gameobject_addon = Conf.GetBoolean("gameobject_addon", false);
             public static readonly bool gameobject_client_use = Conf.GetBoolean("gameobject_client_use", false);
             public static readonly bool gameobject_create1_time = Conf.GetBoolean("gameobject_create1_time", false);
             public static readonly bool gameobject_create2_time = Conf.GetBoolean("gameobject_create2_time", false);
+            public static readonly bool gameobject_custom_anim = Conf.GetBoolean("gameobject_custom_anim", false);
+            public static readonly bool gameobject_despawn_anim = Conf.GetBoolean("gameobject_despawn_anim", false);
             public static readonly bool gameobject_destroy_time = Conf.GetBoolean("gameobject_destroy_time", false);
             public static readonly bool gameobject_loot = Conf.GetBoolean("gameobject_loot", false);
             public static readonly bool gameobject_template = Conf.GetBoolean("gameobject_template", false);
@@ -154,8 +156,9 @@ namespace WowPacketParser.Misc
             public static readonly bool npc_vendor = Conf.GetBoolean("npc_vendor", false);
             public static readonly bool page_text = Conf.GetBoolean("page_text", false);
             public static readonly bool page_text_locale = Conf.GetBoolean("page_text_locale", false);
-            public static readonly bool play_sound = Conf.GetBoolean("play_sound", false);
             public static readonly bool play_music = Conf.GetBoolean("play_music", false);
+            public static readonly bool play_sound = Conf.GetBoolean("play_sound", false);
+            public static readonly bool play_spell_visual_kit = Conf.GetBoolean("play_spell_visual_kit", false);
             public static readonly bool playerchoice = Conf.GetBoolean("playerchoice", false);
             public static readonly bool playerchoice_locale = Conf.GetBoolean("playerchoice_locale", false);
             public static readonly bool playercreateinfo = Conf.GetBoolean("playercreateinfo", false);

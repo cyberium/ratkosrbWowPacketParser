@@ -87,8 +87,7 @@ namespace WowPacketParser.Parsing.Parsers
             WowGuid guid = packet.ReadGuid("GUID");
             Storage.StoreGameObjectUse(guid, packet.Time);
         }
-
-        [Parser(Opcode.SMSG_GAMEOBJECT_DESPAWN_ANIM)]
+        
         [Parser(Opcode.SMSG_PAGE_TEXT)]
         [Parser(Opcode.SMSG_GAME_OBJECT_RESET_STATE)]
         public static void HandleGOMisc(Packet packet)
@@ -96,11 +95,21 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadGuid("GUID");
         }
 
+        [Parser(Opcode.SMSG_GAMEOBJECT_DESPAWN_ANIM)]
+        public static void HandleGODespawnAnim(Packet packet)
+        {
+            WowGuid guid = packet.ReadGuid("GUID");
+            Storage.StoreGameObjectDespawnAnim(guid, packet.Time);
+        }
+
         [Parser(Opcode.SMSG_GAME_OBJECT_CUSTOM_ANIM)]
         public static void HandleGOCustomAnim(Packet packet)
         {
-            packet.ReadGuid("GUID");
-            packet.ReadInt32("Anim");
+            WowGuid guid = packet.ReadGuid("GUID");
+            GameObjectCustomAnim animData = new GameObjectCustomAnim();
+            animData.AnimId = packet.ReadInt32("Anim");
+            animData.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+            Storage.StoreGameObjectCustomAnim(guid, animData);
         }
 
         [Parser(Opcode.SMSG_GAME_OBJECT_ACTIVATE_ANIM_KIT)] // 4.3.4

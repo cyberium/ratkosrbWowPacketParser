@@ -112,5 +112,33 @@ namespace WowPacketParser.SQL.Builders
 
             return SQLUtil.Compare(Storage.SpellPetActions, templatesDb, StoreNameType.None);
         }
+
+        [BuilderMethod]
+        public static string PlaySpellVisualKit()
+        {
+            if (Storage.SpellPlayVisualKit.Count == 0)
+                return string.Empty;
+
+            if (!Settings.SqlTables.play_spell_visual_kit)
+                return string.Empty;
+
+            var spellRows = new RowList<PlaySpellVisualKit>();
+            foreach (var spellVisual in Storage.SpellPlayVisualKit)
+            {
+                if (spellVisual.Guid.GetObjectType() == ObjectType.Player && !Settings.SavePlayerCasts)
+                    continue;
+
+                Row<PlaySpellVisualKit> row = new Row<PlaySpellVisualKit>();
+
+                row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(spellVisual.Time);
+                row.Data.KitId = spellVisual.KitId;
+                row.Data.KitType = spellVisual.KitType;
+                row.Data.Duration = spellVisual.Duration;
+                Storage.GetObjectDbGuidEntryType(spellVisual.Guid, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
+                spellRows.Add(row);
+            }
+            var spellsSql = new SQLInsert<PlaySpellVisualKit>(spellRows, false);
+            return spellsSql.Build();
+        }
     }
 }
