@@ -173,6 +173,7 @@ namespace WowPacketParser.Misc
             public static readonly bool quest_ender = Conf.GetBoolean("quest_ender", false);
             public static readonly bool scene_template = Conf.GetBoolean("scene_template", false);
             public static readonly bool scenario_poi = Conf.GetBoolean("scenario_poi", false);
+            public static readonly bool spell_cast_failed = Conf.GetBoolean("spell_cast_failed", false);
             public static readonly bool spell_cast_start = Conf.GetBoolean("spell_cast_start", false);
             public static readonly bool spell_cast_go = Conf.GetBoolean("spell_cast_go", false);
             public static readonly bool spell_pet_action = Conf.GetBoolean("spell_pet_action", false);

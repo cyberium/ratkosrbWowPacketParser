@@ -557,7 +557,8 @@ namespace WowPacketParser.Store
         public static readonly DataBag<PageTextLocale> LocalesPageText = new DataBag<PageTextLocale>(Settings.SqlTables.page_text_locale);
 
         // Spell Casts
-        public static readonly List<SpellVisualKitData> SpellPlayVisualKit = new List<SpellVisualKitData>();
+        public static readonly DataBag<PlaySpellVisualKit> SpellPlayVisualKit = new DataBag<PlaySpellVisualKit>(Settings.SqlTables.play_spell_visual_kit);
+        public static readonly DataBag<SpellCastFailed> SpellCastFailed = new DataBag<SpellCastFailed>(Settings.SqlTables.spell_cast_failed);
         public static readonly DataBag<SpellCastData> SpellCastStart = new DataBag<SpellCastData>(Settings.SqlTables.spell_cast_start);
         public static readonly DataBag<SpellCastData> SpellCastGo = new DataBag<SpellCastData>(Settings.SqlTables.spell_cast_go);
 
@@ -737,6 +738,7 @@ namespace WowPacketParser.Store
             SpellClicks.Clear();
 
             SpellPlayVisualKit.Clear();
+            SpellCastFailed.Clear();
             SpellCastStart.Clear();
             SpellCastGo.Clear();
             SpellPetActions.Clear();

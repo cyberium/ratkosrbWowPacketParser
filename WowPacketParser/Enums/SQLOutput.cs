@@ -87,6 +87,7 @@
         quest_ender,
         scene_template,
         scenario_poi,
+        spell_cast_failed,
         spell_cast_start,
         spell_cast_go,
         spell_pet_action,

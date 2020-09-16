@@ -116,7 +116,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string PlaySpellVisualKit()
         {
-            if (Storage.SpellPlayVisualKit.Count == 0)
+            if (Storage.SpellPlayVisualKit.IsEmpty())
                 return string.Empty;
 
             if (!Settings.SqlTables.play_spell_visual_kit)
@@ -125,19 +125,41 @@ namespace WowPacketParser.SQL.Builders
             var spellRows = new RowList<PlaySpellVisualKit>();
             foreach (var spellVisual in Storage.SpellPlayVisualKit)
             {
-                if (spellVisual.Guid.GetObjectType() == ObjectType.Player && !Settings.SavePlayerCasts)
+                if (spellVisual.Item1.Guid.GetObjectType() == ObjectType.Player && !Settings.SavePlayerCasts)
                     continue;
 
                 Row<PlaySpellVisualKit> row = new Row<PlaySpellVisualKit>();
-
-                row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(spellVisual.Time);
-                row.Data.KitId = spellVisual.KitId;
-                row.Data.KitType = spellVisual.KitType;
-                row.Data.Duration = spellVisual.Duration;
-                Storage.GetObjectDbGuidEntryType(spellVisual.Guid, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
+                row.Data = spellVisual.Item1;
+                Storage.GetObjectDbGuidEntryType(spellVisual.Item1.Guid, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
+                row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(spellVisual.Item1.Time);
                 spellRows.Add(row);
             }
             var spellsSql = new SQLInsert<PlaySpellVisualKit>(spellRows, false);
+            return spellsSql.Build();
+        }
+
+        [BuilderMethod]
+        public static string SpellCastFailed()
+        {
+            if (Storage.SpellCastFailed.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.spell_cast_failed)
+                return string.Empty;
+
+            var spellRows = new RowList<SpellCastFailed>();
+            foreach (var failedCast in Storage.SpellCastFailed)
+            {
+                if (failedCast.Item1.Guid.GetObjectType() == ObjectType.Player && !Settings.SavePlayerCasts)
+                    continue;
+
+                Row<SpellCastFailed> row = new Row<SpellCastFailed>();
+                row.Data = failedCast.Item1;
+                Storage.GetObjectDbGuidEntryType(failedCast.Item1.Guid, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
+                row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(failedCast.Item1.Time);
+                spellRows.Add(row);
+            }
+            var spellsSql = new SQLInsert<SpellCastFailed>(spellRows, false);
             return spellsSql.Build();
         }
     }

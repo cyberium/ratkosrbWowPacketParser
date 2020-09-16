@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
 using WowPacketParser.Store.Objects;
 
 namespace WowPacketParserModule.V5_4_7_17898.Parsers
@@ -1211,15 +1212,18 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             packet.ReadXORByte(guid, 0);
             packet.ReadXORByte(guid, 2);
             packet.ReadXORByte(guid, 5);
-            packet.ReadByteE<SpellCastFailureReason>("Reason");
+            SpellCastFailed failData = new SpellCastFailed();
+            failData.Reason = (uint)packet.ReadByteE<SpellCastFailureReason>("Reason");
             packet.ReadByte("Cast count");
-            packet.ReadUInt32<SpellId>("Spell ID");
+            failData.SpellId = packet.ReadUInt32<SpellId>("Spell ID");
             packet.ReadXORByte(guid, 6);
             packet.ReadXORByte(guid, 4);
             packet.ReadXORByte(guid, 3);
             packet.ReadXORByte(guid, 7);
 
-            packet.WriteGuid("Guid", guid);
+            failData.Guid = packet.WriteGuid("Guid", guid);
+            failData.Time = packet.Time;
+            Storage.SpellCastFailed.Add(failData);
         }
 
         [Parser(Opcode.SMSG_SPELL_FAILED_OTHER)]
@@ -1234,14 +1238,17 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             packet.ReadXORByte(guid, 6);
             packet.ReadXORByte(guid, 4);
             packet.ReadXORByte(guid, 3);
-            packet.ReadByteE<SpellCastFailureReason>("Reason");
+            SpellCastFailed failData = new SpellCastFailed();
+            failData.Reason = (uint)packet.ReadByteE<SpellCastFailureReason>("Reason");
             packet.ReadXORByte(guid, 7);
-            packet.ReadUInt32<SpellId>("Spell ID");
+            failData.SpellId = packet.ReadUInt32<SpellId>("Spell ID");
             packet.ReadXORByte(guid, 1);
             packet.ReadByte("Cast count");
             packet.ReadXORByte(guid, 0);
 
-            packet.WriteGuid("Guid", guid);
+            failData.Guid = packet.WriteGuid("Guid", guid);
+            failData.Time = packet.Time;
+            Storage.SpellCastFailed.Add(failData);
         }
 
         [Parser(Opcode.SMSG_SPELL_INTERRUPT_LOG)] // 4.3.4

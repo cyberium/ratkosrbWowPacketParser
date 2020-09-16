@@ -961,7 +961,7 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_PLAY_SPELL_VISUAL, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleCastVisual(Packet packet)
         {
-            SpellVisualKitData visualKitData = new SpellVisualKitData();
+            PlaySpellVisualKit visualKitData = new PlaySpellVisualKit();
             visualKitData.Guid = packet.ReadGuid("Caster GUID");
             visualKitData.KitId = packet.ReadUInt32("SpellVisualKit ID");
             visualKitData.Time = packet.Time;
@@ -1033,7 +1033,7 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_PLAY_SPELL_VISUAL_KIT, ClientVersionBuild.V4_3_0_15005, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleCastVisualKit430(Packet packet)
         {
-            SpellVisualKitData visualKitData = new SpellVisualKitData();
+            PlaySpellVisualKit visualKitData = new PlaySpellVisualKit();
             visualKitData.KitId = packet.ReadUInt32("KitRecID");
             visualKitData.KitType = packet.ReadUInt32("KitType");
             visualKitData.Duration = packet.ReadUInt32("Duration");
@@ -1048,7 +1048,7 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_PLAY_SPELL_VISUAL_KIT, ClientVersionBuild.V4_3_4_15595)] // 4.3.4
         public static void HandleCastVisualKit434(Packet packet)
         {
-            SpellVisualKitData visualKitData = new SpellVisualKitData();
+            PlaySpellVisualKit visualKitData = new PlaySpellVisualKit();
             visualKitData.KitType = packet.ReadUInt32("Unk");
             visualKitData.KitId = packet.ReadUInt32("SpellVisualKit ID");
             visualKitData.Duration = packet.ReadUInt32("Unk");
@@ -1152,10 +1152,13 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_SPELL_FAILED_OTHER)]
         public static void HandleSpellFailedOther(Packet packet)
         {
-            packet.ReadPackedGuid("Guid");
+            SpellCastFailed failData = new SpellCastFailed();
+            failData.Guid = packet.ReadPackedGuid("Guid");
             packet.ReadByte("Cast count");
-            packet.ReadUInt32<SpellId>("Spell ID");
-            packet.ReadByteE<SpellCastFailureReason>("Reason");
+            failData.SpellId = packet.ReadUInt32<SpellId>("Spell ID");
+            failData.Reason = (uint)packet.ReadByteE<SpellCastFailureReason>("Reason");
+            failData.Time = packet.Time;
+            Storage.SpellCastFailed.Add(failData);
         }
 
         [Parser(Opcode.SMSG_SPELL_INSTAKILL_LOG)]

@@ -28,14 +28,36 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("unixtime", true)]
         public uint UnixTime;
+
+        public WowGuid Guid;
+        public DateTime Time;
     }
 
-    public sealed class SpellVisualKitData
+    [DBTableName("spell_cast_failed")]
+    public sealed class SpellCastFailed : IDataModel
     {
+        [DBFieldName("caster_guid", true, true)]
+        public string CasterGuid;
+
+        [DBFieldName("caster_id", true)]
+        public uint CasterId;
+
+        [DBFieldName("caster_type", true)]
+        public string CasterType;
+
+        [DBFieldName("spell_id", true)]
+        public uint SpellId;
+
+        [DBFieldName("visual_id", false, false, true)]
+        public uint? VisualId;
+
+        [DBFieldName("reason", false, false, true)]
+        public uint? Reason;
+
+        [DBFieldName("unixtime", true)]
+        public uint UnixTime;
+
         public WowGuid Guid;
-        public uint KitId;
-        public uint? KitType;
-        public uint? Duration;
         public DateTime Time;
     }
 
