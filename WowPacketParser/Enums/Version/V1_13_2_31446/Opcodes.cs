@@ -3752,7 +3752,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.CMSG_IGNORE_TRADE, 0x3159},
             {Opcode.CMSG_INITIATE_ROLE_POLL, 0x35DA},
             {Opcode.CMSG_INITIATE_TRADE, 0x3156},
-            {Opcode.CMSG_INSPECT, 0x3529},
+            {Opcode.CMSG_INSPECT, 0x352A}, // ok
             {Opcode.CMSG_ISLAND_QUEUE, 0x337E},
             {Opcode.CMSG_ITEM_PURCHASE_REFUND, 0x3530},
             {Opcode.CMSG_ITEM_TEXT_QUERY, 0x331D},
@@ -3980,7 +3980,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.CMSG_REQUEST_CEMETERY_LIST, 0x3178},
             {Opcode.CMSG_REQUEST_CHALLENGE_MODE_AFFIXES, 0x3208},
             {Opcode.CMSG_REQUEST_CONQUEST_FORMULA_CONSTANTS, 0x32B2},
-            {Opcode.CMSG_REQUEST_CROWD_CONTROL_SPELL, 0x352A},
+            //{Opcode.CMSG_REQUEST_CROWD_CONTROL_SPELL, 0x352A}, // ??
             {Opcode.CMSG_REQUEST_FORCED_REACTIONS, 0x320A},
             {Opcode.CMSG_REQUEST_GUILD_PARTY_STATE, 0x31AA},
             {Opcode.CMSG_REQUEST_GUILD_REWARDS_LIST, 0x31A9},
@@ -4048,7 +4048,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.CMSG_SET_PVP, 0x32AA},
             {Opcode.CMSG_SET_RAID_DIFFICULTY, 0x36D9},
             {Opcode.CMSG_SET_ROLE, 0x35D9},
-            {Opcode.CMSG_SET_SELECTION, 0x3528},
+            {Opcode.CMSG_SET_SELECTION, 0x3529}, // ok
             {Opcode.CMSG_SET_SHEATHED, 0x3489},
             {Opcode.CMSG_SET_TAXI_BENCHMARK_MODE, 0x34F3},
             {Opcode.CMSG_SET_TITLE, 0x327F},
@@ -4505,7 +4505,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.SMSG_GROUP_DESTROYED, 0x27DB},
             {Opcode.SMSG_GROUP_INVITE_CONFIRMATION, 0x2858},
             {Opcode.SMSG_GROUP_NEW_LEADER, 0x264A},
-            {Opcode.SMSG_GROUP_UNINVITE, 0x27D1}, // ??
+            {Opcode.SMSG_GROUP_UNINVITE, 0x27DF}, // ok
             {Opcode.SMSG_GUILD_ACHIEVEMENT_DELETED, 0x29C5},
             {Opcode.SMSG_GUILD_ACHIEVEMENT_EARNED, 0x29C4},
             {Opcode.SMSG_GUILD_ACHIEVEMENT_MEMBERS, 0x29C7},
