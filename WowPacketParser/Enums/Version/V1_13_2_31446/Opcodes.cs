@@ -3980,7 +3980,7 @@ namespace WowPacketParser.Enums.Version.V1_13_2_31446
             {Opcode.CMSG_REQUEST_CEMETERY_LIST, 0x3178},
             {Opcode.CMSG_REQUEST_CHALLENGE_MODE_AFFIXES, 0x3208},
             {Opcode.CMSG_REQUEST_CONQUEST_FORMULA_CONSTANTS, 0x32B2},
-            //{Opcode.CMSG_REQUEST_CROWD_CONTROL_SPELL, 0x352A}, // ??
+            {Opcode.CMSG_REQUEST_CROWD_CONTROL_SPELL, 0x3528}, // ??
             {Opcode.CMSG_REQUEST_FORCED_REACTIONS, 0x320A},
             {Opcode.CMSG_REQUEST_GUILD_PARTY_STATE, 0x31AA},
             {Opcode.CMSG_REQUEST_GUILD_REWARDS_LIST, 0x31A9},
