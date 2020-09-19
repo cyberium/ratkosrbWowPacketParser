@@ -736,31 +736,15 @@ namespace WowPacketParser.Parsing.Parsers
                 for (var i = 0; i < hitCount; i++)
                 {
                     WowGuid hitTarget = packet.ReadGuid("Hit GUID", i);
-                    for (uint j = 0; j < SpellCastData.MAX_SPELL_HIT_TARGETS_DB; j++)
-                    {
-                        if (hitTarget.GetObjectType() == ObjectType.Player &&
-                            dbdata.HitTargetType[j].Contains("Player"))
-                            break;
-
-                        if (dbdata.HitTargetID[j] == hitTarget.GetEntry() &&
-                            dbdata.HitTargetType[j] == hitTarget.GetObjectType().ToString())
-                            break;
-
-                        if (dbdata.HitTargetID[j] == 0 &&
-                            dbdata.HitTargetType[j] == "")
-                        {
-                            dbdata.HitTargetID[j] = hitTarget.GetEntry();
-                            dbdata.HitTargetType[j] = hitTarget.GetObjectType().ToString();
-                            break;
-                        }
-                    }
+                    dbdata.AddHitTarget(hitTarget);
                 }
 
                 var missCount = packet.ReadByte("Miss Count");
+                dbdata.MissTargetsCount = missCount;
                 for (var i = 0; i < missCount; i++)
                 {
-                    packet.ReadGuid("Miss GUID", i);
-
+                    WowGuid missTarget = packet.ReadGuid("Miss GUID", i);
+                    dbdata.AddMissTarget(missTarget);
                     var missType = packet.ReadByteE<SpellMissType>("Miss Type", i);
                     if (missType == SpellMissType.Reflect)
                         packet.ReadByteE<SpellMissType>("Miss Reflect", i);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.SQL;
@@ -11,7 +12,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("caster_guid", true, true)]
         public string CasterGuid;
 
-        [DBFieldName("caster_id", true)]
+        [DBFieldName("caster_id")]
         public uint CasterId;
 
         [DBFieldName("caster_type", true)]
@@ -39,7 +40,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("caster_guid", true, true)]
         public string CasterGuid;
 
-        [DBFieldName("caster_id", true)]
+        [DBFieldName("caster_id")]
         public uint CasterId;
 
         [DBFieldName("caster_type", true)]
@@ -64,84 +65,101 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("spell_cast_start")]
     public sealed class SpellCastStart : IDataModel
     {
-        [DBFieldName("UnixTime", true)]
+        [DBFieldName("unixtime", true)]
         public uint UnixTime;
 
-        [DBFieldName("CasterGuid", true, true)]
+        [DBFieldName("caster_guid", true, true)]
         public string CasterGuid;
 
-        [DBFieldName("CasterId", true)]
+        [DBFieldName("caster_id")]
         public uint CasterId;
 
-        [DBFieldName("CasterType", true)]
+        [DBFieldName("caster_type", true)]
         public string CasterType;
 
-        [DBFieldName("SpellId", true)]
+        [DBFieldName("spell_id", true)]
         public uint SpellId;
 
-        [DBFieldName("CastFlags")]
+        [DBFieldName("cast_flags")]
         public uint CastFlags;
 
-        [DBFieldName("CastFlagsEx")]
+        [DBFieldName("cast_flags_ex")]
         public uint CastFlagsEx;
 
-        [DBFieldName("TargetGuid", false, true)]
+        [DBFieldName("target_guid", false, true)]
         public string TargetGuid;
 
-        [DBFieldName("TargetId")]
+        [DBFieldName("target_id")]
         public uint TargetId;
 
-        [DBFieldName("TargetType")]
+        [DBFieldName("target_type")]
+        public string TargetType;
+    }
+
+    [DBTableName("spell_cast_go_target")]
+    public sealed class SpellCastGoTarget : IDataModel
+    {
+        [DBFieldName("list_id", true)]
+        public uint ListId;
+
+        [DBFieldName("target_guid", true, true)]
+        public string TargetGuid;
+
+        [DBFieldName("target_id")]
+        public uint TargetId;
+
+        [DBFieldName("target_type", true)]
         public string TargetType;
     }
 
     [DBTableName("spell_cast_go")]
     public sealed class SpellCastGo : IDataModel
     {
-        [DBFieldName("UnixTime", true)]
+        [DBFieldName("unixtime", true)]
         public uint UnixTime;
 
-        [DBFieldName("CasterGuid", true, true)]
+        [DBFieldName("caster_guid", true, true)]
         public string CasterGuid;
 
-        [DBFieldName("CasterId", true)]
+        [DBFieldName("caster_id")]
         public uint CasterId;
 
-        [DBFieldName("CasterType", true)]
+        [DBFieldName("caster_type", true)]
         public string CasterType;
 
-        [DBFieldName("SpellId", true)]
+        [DBFieldName("spell_id", true)]
         public uint SpellId;
 
-        [DBFieldName("CastFlags")]
+        [DBFieldName("cast_flags")]
         public uint CastFlags;
 
-        [DBFieldName("CastFlagsEx")]
+        [DBFieldName("cast_flags_ex")]
         public uint CastFlagsEx;
 
-        [DBFieldName("MainTargetGuid", false, true)]
+        [DBFieldName("main_target_guid", false, true)]
         public string MainTargetGuid;
 
-        [DBFieldName("MainTargetId")]
+        [DBFieldName("main_target_id")]
         public uint MainTargetId;
 
-        [DBFieldName("MainTargetType")]
+        [DBFieldName("main_target_type")]
         public string MainTargetType;
 
-        [DBFieldName("HitTargetsCount")]
+        [DBFieldName("hit_targets_count")]
         public uint HitTargetsCount;
 
-        [DBFieldName("HitTargetId", 8)]
-        public uint[] HitTargetId = { 0, 0, 0, 0, 0, 0, 0, 0 };
+        [DBFieldName("hit_targets_list_id")]
+        public uint HitTargetsListId;
 
-        [DBFieldName("HitTargetType", 8)]
-        public string[] HitTargetType = { "", "", "", "", "", "", "", "" };
+        [DBFieldName("miss_targets_count")]
+        public uint MissTargetsCount;
+
+        [DBFieldName("miss_targets_list_id")]
+        public uint MissTargetsListId;
     }
 
     public sealed class SpellCastData : IDataModel
     {
-        public const uint MAX_SPELL_HIT_TARGETS_DB = 8;
-
         public uint UnixTime = 0;
 
         public WowGuid CasterGuid;
@@ -155,46 +173,52 @@ namespace WowPacketParser.Store.Objects
         public WowGuid MainTargetGuid;
 
         public uint HitTargetsCount = 0;
-        public uint[] HitTargetID = { 0, 0, 0, 0, 0, 0, 0, 0 };
-        public string[] HitTargetType = { "", "", "", "", "", "", "", "" };
+        public List<WowGuid> HitTargetsList;
+        public void AddHitTarget(WowGuid guid)
+        {
+            if (HitTargetsList == null)
+                HitTargetsList = new List<WowGuid>();
 
-        [DBFieldName("VerifiedBuild")]
-        public int? VerifiedBuild = ClientVersion.BuildInt;
+            HitTargetsList.Add(guid);
+        }
+        public uint MissTargetsCount = 0;
+        public List<WowGuid> MissTargetsList;
+        public void AddMissTarget(WowGuid guid)
+        {
+            if (MissTargetsList == null)
+                MissTargetsList = new List<WowGuid>();
+
+            MissTargetsList.Add(guid);
+        }
     }
 
     public sealed class SpellPetCooldown : IDataModel
     {
-        [DBFieldName("CreatureId", true)]
+        [DBFieldName("creature_id", true)]
         public uint? CasterID;
 
-        [DBFieldName("Flags")]
+        [DBFieldName("flags")]
         public byte? Flags;
 
-        [DBFieldName("Index", true)]
+        [DBFieldName("index", true)]
         public byte? Index;
 
-        [DBFieldName("SpellId", true)]
+        [DBFieldName("spell_id", true)]
         public uint? SpellID;
 
-        [DBFieldName("Cooldown", true)]
+        [DBFieldName("cooldown", true)]
         public uint? Cooldown;
 
-        [DBFieldName("ModRate")]
+        [DBFieldName("mod_rate")]
         public float? ModRate;
-
-        [DBFieldName("VerifiedBuild")]
-        public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 
     public sealed class SpellPetActions : IDataModel
     {
-        [DBFieldName("CreatureId", true)]
+        [DBFieldName("creature_id", true)]
         public uint? CasterID;
 
-        [DBFieldName("SpellId", 10)]
+        [DBFieldName("slot", 10)]
         public uint[] SpellID = new uint[10];
-
-        [DBFieldName("VerifiedBuild")]
-        public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 }

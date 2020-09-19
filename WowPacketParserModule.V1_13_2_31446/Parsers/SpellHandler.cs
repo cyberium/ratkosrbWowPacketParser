@@ -133,6 +133,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             var hitTargetsCount = packet.ReadBits("HitTargetsCount", 16, idx);
             dbdata.HitTargetsCount = hitTargetsCount;
             var missTargetsCount = packet.ReadBits("MissTargetsCount", 16, idx);
+            dbdata.MissTargetsCount = missTargetsCount;
             var missStatusCount = packet.ReadBits("MissStatusCount", 16, idx);
             var remainingPowerCount = packet.ReadBits("RemainingPowerCount", 9, idx);
 
@@ -149,29 +150,14 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             for (var i = 0; i < hitTargetsCount; ++i)
             {
                 WowGuid hitTarget = packet.ReadPackedGuid128("HitTarget", idx, i);
-
-                for (uint j = 0; j < SpellCastData.MAX_SPELL_HIT_TARGETS_DB; j++)
-                {
-                    if (hitTarget.GetObjectType() == ObjectType.Player &&
-                        dbdata.HitTargetType[j].Contains("Player"))
-                        break;
-
-                    if (dbdata.HitTargetID[j] == hitTarget.GetEntry() &&
-                        dbdata.HitTargetType[j] == hitTarget.GetObjectType().ToString())
-                        break;
-
-                    if (dbdata.HitTargetID[j] == 0 &&
-                        dbdata.HitTargetType[j] == "")
-                    {
-                        dbdata.HitTargetID[j] = hitTarget.GetEntry();
-                        dbdata.HitTargetType[j] = hitTarget.GetObjectType().ToString();
-                        break;
-                    }
-                }
+                dbdata.AddHitTarget(hitTarget);
             }
 
             for (var i = 0; i < missTargetsCount; ++i)
-                packet.ReadPackedGuid128("MissTarget", idx, i);
+            {
+                WowGuid missTarget = packet.ReadPackedGuid128("MissTarget", idx, i);
+                dbdata.AddMissTarget(missTarget);
+            }
 
             for (var i = 0; i < remainingPowerCount; ++i)
                 V6_0_2_19033.Parsers.SpellHandler.ReadSpellPowerData(packet, idx, "RemainingPower", i);

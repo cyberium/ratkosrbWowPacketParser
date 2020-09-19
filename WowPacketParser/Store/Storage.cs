@@ -574,14 +574,6 @@ namespace WowPacketParser.Store
                 if (!(Settings.SavePlayerCasts && castData.CasterGuid.GetObjectType() == ObjectType.Player))
                     return;
             }
-                
-
-            for (uint i = 0; i < SpellCastData.MAX_SPELL_HIT_TARGETS_DB; i++)
-            {
-                if (castData.HitTargetID[i] != 0 &&
-                    castData.HitTargetType[i].Contains("Player"))
-                    castData.HitTargetID[i] = 0;
-            }
 
             castData.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
 

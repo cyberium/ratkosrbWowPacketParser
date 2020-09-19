@@ -1,4 +1,5 @@
-﻿using WowPacketParser.Enums;
+﻿using System.Text;
+using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
 using WowPacketParser.Store.Objects;
@@ -57,7 +58,10 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.spell_cast_go)
                 return string.Empty;
 
+            uint maxListId = 0;
             var spellRows = new RowList<SpellCastGo>();
+            var spellTargetRows = new RowList<SpellCastGoTarget>();
+            StringBuilder result = new StringBuilder();
             foreach (var cast_pair in Storage.SpellCastGo)
             {
                 Row<SpellCastGo> row = new Row<SpellCastGo>();
@@ -67,22 +71,48 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.CastFlags = cast_pair.Item1.CastFlags;
                 row.Data.CastFlagsEx = cast_pair.Item1.CastFlagsEx;
                 row.Data.HitTargetsCount = cast_pair.Item1.HitTargetsCount;
+                row.Data.MissTargetsCount = cast_pair.Item1.MissTargetsCount;
 
                 Storage.GetObjectDbGuidEntryType(cast_pair.Item1.CasterGuid, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
                 Storage.GetObjectDbGuidEntryType(cast_pair.Item1.MainTargetGuid, out row.Data.MainTargetGuid, out row.Data.MainTargetId, out row.Data.MainTargetType);
 
-                for (uint i = 0; i < SpellCastData.MAX_SPELL_HIT_TARGETS_DB; i++)
+                if (cast_pair.Item1.HitTargetsCount > 0)
                 {
-                    if (cast_pair.Item1.HitTargetType[i] == "Unit")
-                        cast_pair.Item1.HitTargetType[i] = "Creature";
-                    row.Data.HitTargetId[i] = cast_pair.Item1.HitTargetID[i];
-                    row.Data.HitTargetType[i] = cast_pair.Item1.HitTargetType[i];
+                    row.Data.HitTargetsListId = ++maxListId;
+                    foreach (WowGuid target in cast_pair.Item1.HitTargetsList)
+                    {
+                        Row<SpellCastGoTarget> targetRow = new Row<SpellCastGoTarget>();
+                        targetRow.Data.ListId = row.Data.HitTargetsListId;
+                        Storage.GetObjectDbGuidEntryType(target, out targetRow.Data.TargetGuid, out targetRow.Data.TargetId, out targetRow.Data.TargetType);
+                        spellTargetRows.Add(targetRow);
+                    }
                 }
-                
+                else
+                    row.Data.HitTargetsListId = 0;
+
+                if (cast_pair.Item1.MissTargetsCount > 0)
+                {
+                    row.Data.MissTargetsListId = ++maxListId;
+                    foreach (WowGuid target in cast_pair.Item1.MissTargetsList)
+                    {
+                        Row<SpellCastGoTarget> targetRow = new Row<SpellCastGoTarget>();
+                        targetRow.Data.ListId = row.Data.MissTargetsListId;
+                        Storage.GetObjectDbGuidEntryType(target, out targetRow.Data.TargetGuid, out targetRow.Data.TargetId, out targetRow.Data.TargetType);
+                        spellTargetRows.Add(targetRow);
+                    }
+                }
+                else
+                    row.Data.MissTargetsListId = 0;
+
                 spellRows.Add(row);
             }
             var spellsSql = new SQLInsert<SpellCastGo>(spellRows, false);
-            return spellsSql.Build();
+            result.Append(spellsSql.Build());
+            result.AppendLine();
+            var targetsSql = new SQLInsert<SpellCastGoTarget>(spellTargetRows, false);
+            result.Append(targetsSql.Build());
+
+            return result.ToString();
         }
 
         [BuilderMethod(true)]
