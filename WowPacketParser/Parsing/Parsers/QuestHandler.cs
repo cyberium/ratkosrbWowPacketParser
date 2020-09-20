@@ -831,10 +831,10 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_DETAILS, ClientVersionBuild.Zero, ClientVersionBuild.V5_1_0_16309)]
         public static void HandleQuestgiverDetails(Packet packet)
         {
-            WowGuid guid = packet.ReadGuid("GUID1");
+            WowGuid guid = packet.ReadGuid("QuestGiverGUID");
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
-                packet.ReadGuid("Unk NPC GUID");
+                packet.ReadGuid("InformUnit");
 
             uint id = packet.ReadUInt32<QuestId>("Quest ID");
             string objectType = guid.GetObjectType().ToString();
@@ -915,12 +915,13 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_DETAILS, ClientVersionBuild.V5_1_0_16309, ClientVersionBuild.V5_1_0a_16357)]
         public static void HandleQuestgiverDetails510(Packet packet)
         {
-            WowGuid guid = packet.ReadGuid("GUID");
-            packet.ReadGuid("Unk NPC GUID");
+            WowGuid guid = packet.ReadGuid("QuestGiverGUID");
+            packet.ReadGuid("InformUnit");
             uint id = packet.ReadUInt32<QuestId>("Quest ID");
             string objectType = guid.GetObjectType().ToString();
             if (objectType == "Unit")
                 objectType = "Creature";
+
             QuestStarter questStarter = new QuestStarter
             {
                 ObjectId = guid.GetEntry(),
@@ -928,6 +929,7 @@ namespace WowPacketParser.Parsing.Parsers
                 QuestId = (uint)id
             };
             Storage.QuestStarters.Add(questStarter, packet.TimeSpan);
+
             packet.ReadInt32("Unk Int32");
             packet.ReadCString("Title");
             packet.ReadCString("Details");
