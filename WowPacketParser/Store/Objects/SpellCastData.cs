@@ -62,6 +62,56 @@ namespace WowPacketParser.Store.Objects
         public DateTime Time;
     }
 
+    [DBTableName("spell_channel_start")]
+    public sealed class SpellChannelStart : IDataModel
+    {
+        [DBFieldName("caster_guid", true, true)]
+        public string CasterGuid;
+
+        [DBFieldName("caster_id")]
+        public uint CasterId;
+
+        [DBFieldName("caster_type", true)]
+        public string CasterType;
+
+        [DBFieldName("spell_id", true)]
+        public uint SpellId;
+
+        [DBFieldName("visual_id", false, false, true)]
+        public uint? VisualId;
+
+        [DBFieldName("duration", false)]
+        public int Duration;
+
+        [DBFieldName("unixtime", true)]
+        public uint UnixTime;
+
+        public WowGuid Guid;
+        public DateTime Time;
+    }
+
+    [DBTableName("spell_channel_update")]
+    public sealed class SpellChannelUpdate : IDataModel
+    {
+        [DBFieldName("caster_guid", true, true)]
+        public string CasterGuid;
+
+        [DBFieldName("caster_id")]
+        public uint CasterId;
+
+        [DBFieldName("caster_type", true)]
+        public string CasterType;
+
+        [DBFieldName("duration", true)]
+        public int Duration;
+
+        [DBFieldName("unixtime", true)]
+        public uint UnixTime;
+
+        public WowGuid Guid;
+        public DateTime Time;
+    }
+
     [DBTableName("spell_cast_start")]
     public sealed class SpellCastStart : IDataModel
     {

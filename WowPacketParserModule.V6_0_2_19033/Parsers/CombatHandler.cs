@@ -81,7 +81,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         {
             WowGuid attackerGuid = packet.ReadPackedGuid128("Attacker Guid");
             WowGuid victimGuid = packet.ReadPackedGuid128("Victim Guid");
-            Storage.StoreCreatureAttack(attackerGuid, victimGuid, packet.Time, true);
+            Storage.StoreUnitAttack(attackerGuid, victimGuid, packet.Time, true);
         }
 
         [Parser(Opcode.SMSG_ATTACK_STOP)]
@@ -90,7 +90,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             WowGuid attackerGuid = packet.ReadPackedGuid128("Attacker Guid");
             WowGuid victimGuid = packet.ReadPackedGuid128("Victim Guid");
             packet.ReadBit("NowDead");
-            Storage.StoreCreatureAttack(attackerGuid, victimGuid, packet.Time, false);
+            Storage.StoreUnitAttack(attackerGuid, victimGuid, packet.Time, false);
         }
 
         [Parser(Opcode.SMSG_HIGHEST_THREAT_UPDATE)]

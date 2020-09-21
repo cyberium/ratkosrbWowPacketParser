@@ -587,10 +587,11 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
         [Parser(Opcode.SMSG_SPELL_CHANNEL_START, ClientVersionBuild.V7_2_0_23826)]
         public static void HandleSpellChannelStart(Packet packet)
         {
-            packet.ReadPackedGuid128("CasterGUID");
-            packet.ReadInt32<SpellId>("SpellID");
-            packet.ReadInt32("SpellXSpellVisualID");
-            packet.ReadInt32("ChannelDuration");
+            SpellChannelStart channel = new SpellChannelStart();
+            channel.Guid = packet.ReadPackedGuid128("CasterGUID");
+            channel.SpellId = (uint)packet.ReadInt32<SpellId>("SpellID");
+            channel.VisualId = (uint)packet.ReadInt32("SpellXSpellVisualID");
+            channel.Duration = packet.ReadInt32("ChannelDuration");
 
             var hasInterruptImmunities = packet.ReadBit("HasInterruptImmunities");
             var hasHealPrediction = packet.ReadBit("HasHealPrediction");
@@ -600,6 +601,9 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
 
             if (hasHealPrediction)
                 V6_0_2_19033.Parsers.SpellHandler.ReadSpellTargetedHealPrediction(packet, "HealPrediction");
+
+            channel.Time = packet.Time;
+            Storage.SpellChannelStart.Add(channel);
         }
 
         [Parser(Opcode.SMSG_RESUME_CAST_BAR, ClientVersionBuild.V7_2_0_23826)]

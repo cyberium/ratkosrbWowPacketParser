@@ -294,9 +294,9 @@ namespace WowPacketParser.SQL.Builders
 
                 if (Settings.SqlTables.creature_update)
                 {
-                    if (Storage.CreatureUpdates.ContainsKey(unit.Key))
+                    if (Storage.UnitUpdates.ContainsKey(unit.Key))
                     {
-                        foreach (var update in Storage.CreatureUpdates[unit.Key])
+                        foreach (var update in Storage.UnitUpdates[unit.Key])
                         {
                             var updateRow = new Row<CreatureUpdate>();
                             updateRow.Data = update;
@@ -373,9 +373,9 @@ namespace WowPacketParser.SQL.Builders
 
                 if (Settings.SqlTables.creature_attack_start)
                 {
-                    if (Storage.CreatureAttackStartTimes.ContainsKey(unit.Key))
+                    if (Storage.UnitAttackStartTimes.ContainsKey(unit.Key))
                     {
-                        foreach (var attack in Storage.CreatureAttackStartTimes[unit.Key])
+                        foreach (var attack in Storage.UnitAttackStartTimes[unit.Key])
                         {
                             var attackStartRow = new Row<CreatureTargetChange>();
 
@@ -389,9 +389,9 @@ namespace WowPacketParser.SQL.Builders
 
                 if (Settings.SqlTables.creature_attack_stop)
                 {
-                    if (Storage.CreatureAttackStopTimes.ContainsKey(unit.Key))
+                    if (Storage.UnitAttackStopTimes.ContainsKey(unit.Key))
                     {
-                        foreach (var attack in Storage.CreatureAttackStopTimes[unit.Key])
+                        foreach (var attack in Storage.UnitAttackStopTimes[unit.Key])
                         {
                             var attackStopRow = new Row<CreatureTargetChange>();
 
@@ -405,9 +405,9 @@ namespace WowPacketParser.SQL.Builders
 
                 if (Settings.SqlTables.creature_target_change)
                 {
-                    if (Storage.CreatureTargetChanges.ContainsKey(unit.Key))
+                    if (Storage.UnitTargetChanges.ContainsKey(unit.Key))
                     {
-                        foreach (var attack in Storage.CreatureTargetChanges[unit.Key])
+                        foreach (var attack in Storage.UnitTargetChanges[unit.Key])
                         {
                             var targetChangeRow = new Row<CreatureTargetChange>();
 

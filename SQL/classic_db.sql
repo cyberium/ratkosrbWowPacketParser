@@ -52,6 +52,32 @@ CREATE TABLE IF NOT EXISTS `character_active_player` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.character_attack_start
+DROP TABLE IF EXISTS `character_attack_start`;
+CREATE TABLE IF NOT EXISTS `character_attack_start` (
+  `guid` int(10) unsigned NOT NULL,
+  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `unixtime` int(10) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACK_START';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.character_attack_stop
+DROP TABLE IF EXISTS `character_attack_stop`;
+CREATE TABLE IF NOT EXISTS `character_attack_stop` (
+  `guid` int(10) unsigned NOT NULL,
+  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `unixtime` int(10) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACK_STOP';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.character_inventory
 DROP TABLE IF EXISTS `character_inventory`;
 CREATE TABLE IF NOT EXISTS `character_inventory` (
@@ -82,6 +108,42 @@ CREATE TABLE IF NOT EXISTS `character_movement` (
   `unixtimems` bigint(20) unsigned NOT NULL,
   PRIMARY KEY (`guid`,`opcode`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='shows all player movement packets';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.character_target_change
+DROP TABLE IF EXISTS `character_target_change`;
+CREATE TABLE IF NOT EXISTS `character_target_change` (
+  `guid` int(10) unsigned NOT NULL,
+  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `unixtime` int(10) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to UNIT_FIELD_TARGET';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.character_update
+DROP TABLE IF EXISTS `character_update`;
+CREATE TABLE IF NOT EXISTS `character_update` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
+  `entry` int(10) unsigned DEFAULT NULL,
+  `scale` float unsigned DEFAULT NULL,
+  `display_id` int(10) unsigned DEFAULT NULL,
+  `mount` int(10) unsigned DEFAULT NULL,
+  `faction` int(10) unsigned DEFAULT NULL,
+  `emote_state` int(10) unsigned DEFAULT NULL,
+  `stand_state` int(10) unsigned DEFAULT NULL,
+  `npc_flags` int(10) unsigned DEFAULT NULL,
+  `unit_flags` int(10) unsigned DEFAULT NULL,
+  `current_health` int(10) unsigned DEFAULT NULL,
+  `max_health` int(10) unsigned DEFAULT NULL,
+  `current_mana` int(10) unsigned DEFAULT NULL,
+  `max_mana` int(10) unsigned DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='values updates from SMSG_UPDATE_OBJECT';
 
 -- Data exporting was unselected.
 
@@ -579,6 +641,7 @@ CREATE TABLE IF NOT EXISTS `creature_update` (
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
   `entry` int(10) unsigned DEFAULT NULL,
+  `scale` float unsigned DEFAULT NULL,
   `display_id` int(10) unsigned DEFAULT NULL,
   `mount` int(10) unsigned DEFAULT NULL,
   `faction` int(10) unsigned DEFAULT NULL,
@@ -587,7 +650,9 @@ CREATE TABLE IF NOT EXISTS `creature_update` (
   `npc_flags` int(10) unsigned DEFAULT NULL,
   `unit_flags` int(10) unsigned DEFAULT NULL,
   `current_health` int(10) unsigned DEFAULT NULL,
-  `max_health` int(10) unsigned DEFAULT NULL
+  `max_health` int(10) unsigned DEFAULT NULL,
+  `current_mana` int(10) unsigned DEFAULT NULL,
+  `max_mana` int(10) unsigned DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='values updates from SMSG_UPDATE_OBJECT';
 
 -- Data exporting was unselected.
@@ -1429,6 +1494,34 @@ CREATE TABLE IF NOT EXISTS `spell_cast_start` (
   `target_id` int(10) unsigned NOT NULL DEFAULT '0',
   `target_type` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_SPELL_START\r\nsent when somebody starts casting a spell';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.spell_channel_start
+DROP TABLE IF EXISTS `spell_channel_start`;
+CREATE TABLE IF NOT EXISTS `spell_channel_start` (
+  `unixtime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'when the packet was received',
+  `caster_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `caster_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `caster_type` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `visual_id` int(10) unsigned DEFAULT NULL,
+  `duration` int(10) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_SPELL_CHANNEL_START\r\nsent when somebody starts channeling a spell';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.spell_channel_update
+DROP TABLE IF EXISTS `spell_channel_update`;
+CREATE TABLE IF NOT EXISTS `spell_channel_update` (
+  `unixtime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'when the packet was received',
+  `caster_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `caster_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `caster_type` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `duration` int(10) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_SPELL_CHANNEL_UPDATE';
 
 -- Data exporting was unselected.
 

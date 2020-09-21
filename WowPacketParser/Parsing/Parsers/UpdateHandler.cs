@@ -188,8 +188,8 @@ namespace WowPacketParser.Parsing.Parsers
 
         public static void StoreObjectUpdate(DateTime time, WowGuid guid, Dictionary<int, UpdateField> updates)
         {
-            if (guid.GetObjectType() == ObjectType.Unit &&
-                guid.GetHighType() != HighGuidType.Pet)
+            if ((guid.GetObjectType() == ObjectType.Unit && guid.GetHighType() != HighGuidType.Pet) ||
+                (guid.GetObjectType() == ObjectType.Player || guid.GetObjectType() == ObjectType.ActivePlayer))
             {
                 bool hasData = false;
                 CreatureUpdate creatureUpdate = new CreatureUpdate();
@@ -204,6 +204,18 @@ namespace WowPacketParser.Parsing.Parsers
                             {
                                 hasData = true;
                                 creatureUpdate.Entry = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(ObjectField.OBJECT_FIELD_SCALE_X))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.ObjectData.Scale != update.Value.FloatValue)
+                            {
+                                hasData = true;
+                                creatureUpdate.Scale = update.Value.FloatValue;
                             }
                         }
                     }
@@ -317,6 +329,32 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER) &&
+                             Settings.SaveManaUpdates)
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.CurMana != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.CurrentMana = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER) &&
+                             Settings.SaveManaUpdates)
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.MaxMana != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.MaxMana = update.Value.UInt32Value;
+                            }
+                        }
+                    }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_TARGET) &&
                              Settings.SqlTables.creature_target_change)
                     {
@@ -325,7 +363,7 @@ namespace WowPacketParser.Parsing.Parsers
                             var obj = Storage.Objects[guid].Item1 as Unit;
                             if (obj.UnitData.Target != GetGuidValue(updates, UnitField.UNIT_FIELD_TARGET))
                             {
-                                Storage.StoreCreatureTargetChange(guid, GetGuidValue(updates, UnitField.UNIT_FIELD_TARGET), time);
+                                Storage.StoreUnitTargetChange(guid, GetGuidValue(updates, UnitField.UNIT_FIELD_TARGET), time);
                             }
                         }
                     }
@@ -334,7 +372,7 @@ namespace WowPacketParser.Parsing.Parsers
                 if (hasData)
                 {
                     creatureUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
-                    Storage.StoreCreatureUpdate(guid, creatureUpdate);
+                    Storage.StoreUnitUpdate(guid, creatureUpdate);
                 }
             }
             else if (guid.GetObjectType() == ObjectType.GameObject)

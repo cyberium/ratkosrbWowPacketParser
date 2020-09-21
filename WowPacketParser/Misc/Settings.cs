@@ -22,6 +22,7 @@ namespace WowPacketParser.Misc
         public static readonly bool SkipOtherPlayers = Conf.GetBoolean("SkipOtherPlayers", false);
         public static readonly bool SavePlayerCasts = Conf.GetBoolean("SavePlayerCasts", false);
         public static readonly bool SaveHealthUpdates = Conf.GetBoolean("SaveHealthUpdates", false);
+        public static readonly bool SaveManaUpdates = Conf.GetBoolean("SaveManaUpdates", false);
         public static readonly bool SaveTempSpawns = Conf.GetBoolean("SaveTempSpawns", false);
         public static readonly bool SkipOnlyVerifiedBuildUpdateRows = Conf.GetBoolean("SkipOnlyVerifiedBuildUpdateRows", false);
         public static readonly bool IgnoreZeroValues = Conf.GetBoolean("IgnoreZeroValues", false);
@@ -103,8 +104,12 @@ namespace WowPacketParser.Misc
             public static readonly bool conversation_template = Conf.GetBoolean("conversation_template", false);
             public static readonly bool characters = Conf.GetBoolean("characters", false);
             public static readonly bool character_active_player = Conf.GetBoolean("character_active_player", false);
+            public static readonly bool character_attack_start = Conf.GetBoolean("character_attack_start", false);
+            public static readonly bool character_attack_stop = Conf.GetBoolean("character_attack_stop", false);
             public static readonly bool character_inventory = Conf.GetBoolean("character_inventory", false);
             public static readonly bool character_movement = Conf.GetBoolean("character_movement", false);
+            public static readonly bool character_target_change = Conf.GetBoolean("character_target_change", false);
+            public static readonly bool character_update = Conf.GetBoolean("character_update", false);
             public static readonly bool client_reclaim_corpse = Conf.GetBoolean("client_reclaim_corpse", false);
             public static readonly bool client_release_spirit = Conf.GetBoolean("client_release_spirit", false);
             public static readonly bool creature = Conf.GetBoolean("creature", false);
@@ -176,6 +181,8 @@ namespace WowPacketParser.Misc
             public static readonly bool spell_cast_failed = Conf.GetBoolean("spell_cast_failed", false);
             public static readonly bool spell_cast_start = Conf.GetBoolean("spell_cast_start", false);
             public static readonly bool spell_cast_go = Conf.GetBoolean("spell_cast_go", false);
+            public static readonly bool spell_channel_start = Conf.GetBoolean("spell_channel_start", false);
+            public static readonly bool spell_channel_update = Conf.GetBoolean("spell_channel_update", false);
             public static readonly bool spell_pet_action = Conf.GetBoolean("spell_pet_action", false);
             public static readonly bool spell_pet_cooldown = Conf.GetBoolean("spell_pet_cooldown", false);
             public static readonly bool spell_target_position = Conf.GetBoolean("spell_target_position", false);

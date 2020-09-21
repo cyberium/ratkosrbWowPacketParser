@@ -34,6 +34,10 @@ namespace WowPacketParser.SQL.Builders
             var characterRows = new RowList<CharacterTemplate>();
             var characterInventoryRows = new RowList<CharacterInventory>();
             var characterItemInstaceRows = new RowList<CharacterItemInstance>();
+            var characterAttackStartRows = new RowList<CreatureTargetChange>();
+            var characterAttackStopRows = new RowList<CreatureTargetChange>();
+            var characterTargetChangeRows = new RowList<CreatureTargetChange>();
+            var characterUpdateRows = new RowList<CreatureUpdate>();
             Dictionary<int, uint> accountIdDictionary = new Dictionary<int, uint>();
             foreach (var objPair in Storage.Objects)
             {
@@ -121,6 +125,65 @@ namespace WowPacketParser.SQL.Builders
                     row.Data.EquipmentCache += itemId;
                 }
 
+                if (Settings.SqlTables.character_attack_start)
+                {
+                    if (Storage.UnitAttackStartTimes.ContainsKey(objPair.Key))
+                    {
+                        foreach (var attack in Storage.UnitAttackStartTimes[objPair.Key])
+                        {
+                            Row<CreatureTargetChange> attackRow = new Row<CreatureTargetChange>();
+                            attackRow.Data.GUID = row.Data.Guid;
+                            Storage.GetObjectDbGuidEntryType(attack.victim, out attackRow.Data.VictimGuid, out attackRow.Data.VictimId, out attackRow.Data.VictimType);
+                            attackRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.time);
+                            characterAttackStartRows.Add(attackRow);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.character_attack_stop)
+                {
+                    if (Storage.UnitAttackStopTimes.ContainsKey(objPair.Key))
+                    {
+                        foreach (var attack in Storage.UnitAttackStopTimes[objPair.Key])
+                        {
+                            Row<CreatureTargetChange> attackRow = new Row<CreatureTargetChange>();
+                            attackRow.Data.GUID = row.Data.Guid;
+                            Storage.GetObjectDbGuidEntryType(attack.victim, out attackRow.Data.VictimGuid, out attackRow.Data.VictimId, out attackRow.Data.VictimType);
+                            attackRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.time);
+                            characterAttackStopRows.Add(attackRow);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.character_target_change)
+                {
+                    if (Storage.UnitTargetChanges.ContainsKey(objPair.Key))
+                    {
+                        foreach (var attack in Storage.UnitTargetChanges[objPair.Key])
+                        {
+                            Row<CreatureTargetChange> attackRow = new Row<CreatureTargetChange>();
+                            attackRow.Data.GUID = row.Data.Guid;
+                            Storage.GetObjectDbGuidEntryType(attack.victim, out attackRow.Data.VictimGuid, out attackRow.Data.VictimId, out attackRow.Data.VictimType);
+                            attackRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.time);
+                            characterTargetChangeRows.Add(attackRow);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.character_update)
+                {
+                    if (Storage.UnitUpdates.ContainsKey(objPair.Key))
+                    {
+                        foreach (var update in Storage.UnitUpdates[objPair.Key])
+                        {
+                            var updateRow = new Row<CreatureUpdate>();
+                            updateRow.Data = update;
+                            updateRow.Data.GUID = row.Data.Guid;
+                            characterUpdateRows.Add(updateRow);
+                        }
+                    }
+                }
+
                 characterRows.Add(row);
 
                 if (maxDbGuid < player.DbGuid)
@@ -196,6 +259,34 @@ namespace WowPacketParser.SQL.Builders
 
                 var movementSql = new SQLInsert<CharacterMovement>(movementRows, false);
                 result.Append(movementSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.character_attack_start)
+            {
+                var characterAttackStartSql = new SQLInsert<CreatureTargetChange>(characterAttackStartRows, false, false, "character_attack_start");
+                result.Append(characterAttackStartSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.character_attack_stop)
+            {
+                var characterAttackStopSql = new SQLInsert<CreatureTargetChange>(characterAttackStopRows, false, false, "character_attack_stop");
+                result.Append(characterAttackStopSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.character_target_change)
+            {
+                var characterTargetChangeSql = new SQLInsert<CreatureTargetChange>(characterTargetChangeRows, false, false, "character_target_change");
+                result.Append(characterTargetChangeSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.character_update)
+            {
+                var characterUpdateSql = new SQLInsert<CreatureUpdate>(characterUpdateRows, false, false, "character_update");
+                result.Append(characterUpdateSql.Build());
                 result.AppendLine();
             }
 

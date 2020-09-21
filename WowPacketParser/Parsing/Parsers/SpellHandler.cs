@@ -1173,16 +1173,23 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.MSG_CHANNEL_UPDATE)]
         public static void HandleSpellChannelUpdate(Packet packet)
         {
-            packet.ReadPackedGuid("GUID");
-            packet.ReadUInt32("Timestamp");
+            SpellChannelUpdate channel = new SpellChannelUpdate();
+            channel.Guid = packet.ReadPackedGuid("GUID");
+            channel.Duration = (int)packet.ReadUInt32("Timestamp");
+            channel.Time = packet.Time;
+            Storage.SpellChannelUpdate.Add(channel);
         }
 
         [Parser(Opcode.MSG_CHANNEL_START)]
         public static void HandleSpellChannelStart(Packet packet)
         {
-            packet.ReadPackedGuid("GUID");
-            packet.ReadUInt32<SpellId>("Spell ID");
-            packet.ReadInt32("Duration");
+            SpellChannelStart channel = new SpellChannelStart();
+            channel.Guid = packet.ReadPackedGuid("GUID");
+            channel.SpellId = packet.ReadUInt32<SpellId>("Spell ID");
+            channel.Duration = packet.ReadInt32("Duration");
+
+            channel.Time = packet.Time;
+            Storage.SpellChannelStart.Add(channel);
 
             if (ClientVersion.RemovedInVersion(ClientVersionBuild.V4_0_6a_13623))
                 return;

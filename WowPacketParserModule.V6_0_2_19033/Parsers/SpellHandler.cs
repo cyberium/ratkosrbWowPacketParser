@@ -432,8 +432,11 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_SPELL_CHANNEL_UPDATE)]
         public static void HandleSpellChannelUpdate(Packet packet)
         {
-            packet.ReadPackedGuid128("CasterGUID");
-            packet.ReadInt32("TimeRemaining");
+            SpellChannelUpdate channel = new SpellChannelUpdate();
+            channel.Guid = packet.ReadPackedGuid128("CasterGUID");
+            channel.Duration = packet.ReadInt32("TimeRemaining");
+            channel.Time = packet.Time;
+            Storage.SpellChannelUpdate.Add(channel);
         }
 
         public static void ReadSpellChannelStartInterruptImmunities(Packet packet, params object[] idx)
@@ -458,9 +461,10 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_SPELL_CHANNEL_START)]
         public static void HandleSpellChannelStart(Packet packet)
         {
-            packet.ReadPackedGuid128("CasterGUID");
-            packet.ReadInt32<SpellId>("SpellID");
-            packet.ReadInt32("ChannelDuration");
+            SpellChannelStart channel = new SpellChannelStart();
+            channel.Guid = packet.ReadPackedGuid128("CasterGUID");
+            channel.SpellId = (uint)packet.ReadInt32<SpellId>("SpellID");
+            channel.Duration = packet.ReadInt32("ChannelDuration");
 
             var hasInterruptImmunities = packet.ReadBit("HasInterruptImmunities");
             var hasHealPrediction = packet.ReadBit("HasHealPrediction");
@@ -470,6 +474,9 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
 
             if (hasHealPrediction)
                 ReadSpellTargetedHealPrediction(packet, "HealPrediction");
+
+            channel.Time = packet.Time;
+            Storage.SpellChannelStart.Add(channel);
         }
 
         [Parser(Opcode.SMSG_SPELL_UPDATE_CHAIN_TARGETS)]

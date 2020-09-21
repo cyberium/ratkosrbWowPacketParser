@@ -115,6 +115,56 @@ namespace WowPacketParser.SQL.Builders
             return result.ToString();
         }
 
+        [BuilderMethod]
+        public static string SpellChannelStart()
+        {
+            if (Storage.SpellChannelStart.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.spell_channel_start)
+                return string.Empty;
+
+            var spellRows = new RowList<SpellChannelStart>();
+            foreach (var channel in Storage.SpellChannelStart)
+            {
+                if (channel.Item1.Guid.GetObjectType() == ObjectType.Player && !Settings.SavePlayerCasts)
+                    continue;
+
+                Row<SpellChannelStart> row = new Row<SpellChannelStart>();
+                row.Data = channel.Item1;
+                Storage.GetObjectDbGuidEntryType(channel.Item1.Guid, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
+                row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(channel.Item1.Time);
+                spellRows.Add(row);
+            }
+            var spellsSql = new SQLInsert<SpellChannelStart>(spellRows, false);
+            return spellsSql.Build();
+        }
+
+        [BuilderMethod]
+        public static string SpellChannelUpdate()
+        {
+            if (Storage.SpellChannelUpdate.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.spell_channel_update)
+                return string.Empty;
+
+            var spellRows = new RowList<SpellChannelUpdate>();
+            foreach (var channel in Storage.SpellChannelUpdate)
+            {
+                if (channel.Item1.Guid.GetObjectType() == ObjectType.Player && !Settings.SavePlayerCasts)
+                    continue;
+
+                Row<SpellChannelUpdate> row = new Row<SpellChannelUpdate>();
+                row.Data = channel.Item1;
+                Storage.GetObjectDbGuidEntryType(channel.Item1.Guid, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
+                row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(channel.Item1.Time);
+                spellRows.Add(row);
+            }
+            var spellsSql = new SQLInsert<SpellChannelUpdate>(spellRows, false);
+            return spellsSql.Build();
+        }
+
         [BuilderMethod(true)]
         public static string SpellPetCooldown()
         {

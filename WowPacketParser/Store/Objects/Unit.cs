@@ -8,7 +8,7 @@ using WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation;
 
 namespace WowPacketParser.Store.Objects
 {
-    public sealed class Unit : WoWObject
+    public class Unit : WoWObject
     {
         public static uint UnitGuidCounter = 0;
         public uint DbGuid;
@@ -34,16 +34,18 @@ namespace WowPacketParser.Store.Objects
         public IUnitData UnitData;
         public IUnitData UnitDataOriginal;
 
-        public Unit() : base()
+        public Unit(bool isCreature = true) : base()
         {
-            DbGuid = ++UnitGuidCounter;
-
             UnitData = new UnitData(this);
             UnitDataOriginal = new OriginalUnitData(this);
 
-            Waypoints = new List<CreatureMovement>();
-            CombatMovements = new List<CreatureMovement>();
-            MovementSplines = new List<CreatureMovementSpline>();
+            if (isCreature)
+            {
+                DbGuid = ++UnitGuidCounter;
+                Waypoints = new List<CreatureMovement>();
+                CombatMovements = new List<CreatureMovement>();
+                MovementSplines = new List<CreatureMovementSpline>();
+            }
         }
 
         public override bool IsTemporarySpawn()

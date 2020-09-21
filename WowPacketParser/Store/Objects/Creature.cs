@@ -261,6 +261,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("entry", true, false, true)]
         public uint? Entry;
 
+        [DBFieldName("scale", true, false, true)]
+        public float? Scale;
+
         [DBFieldName("display_id", true, false, true)]
         public uint? DisplayID;
 
@@ -287,6 +290,12 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("max_health", true, false, true)]
         public uint? MaxHealth;
+
+        [DBFieldName("current_mana", true, false, true)]
+        public uint? CurrentMana;
+
+        [DBFieldName("max_mana", true, false, true)]
+        public uint? MaxMana;
     }
 
     [DBTableName("creature_stats")]
