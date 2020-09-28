@@ -81,34 +81,35 @@ namespace WowPacketParser.Parsing.Parsers
             var updates = ReadValuesUpdateBlockOnCreate(packet, objType, index);
             var dynamicUpdates = ReadDynamicValuesUpdateBlockOnCreate(packet, objType, index);
 
-            WoWObject obj;
-            switch (objType)
-            {
-                case ObjectType.Unit:       obj = new Unit(); break;
-                case ObjectType.GameObject: obj = new GameObject(); break;
-                case ObjectType.Player:     obj = new Player(); break;
-                case ObjectType.AreaTrigger:obj = new SpellAreaTrigger(); break;
-                default:                    obj = new WoWObject(); break;
-            }
-
-            obj.Type = objType;
-            obj.Movement = moves;
-            obj.UpdateFields = updates;
-            obj.DynamicUpdateFields = dynamicUpdates;
-            obj.Map = map;
-            obj.Area = WorldStateHandler.CurrentAreaId;
-            obj.Zone = WorldStateHandler.CurrentZoneId;
-            obj.PhaseMask = (uint) MovementHandler.CurrentPhaseMask;
-
             // If this is the second time we see the same object (same guid,
             // same position) update its phasemask
             if (Storage.Objects.ContainsKey(guid))
             {
                 var existObj = Storage.Objects[guid].Item1;
-                ProcessExistingObject(ref existObj, obj, guid, packet.Time); // can't do "ref Storage.Objects[guid].Item1 directly
+                ProcessExistingObject(ref existObj, guid, packet.Time, updates, dynamicUpdates, moves); // can't do "ref Storage.Objects[guid].Item1 directly
             }
             else
+            {
+                WoWObject obj;
+                switch (objType)
+                {
+                    case ObjectType.Unit: obj = new Unit(); break;
+                    case ObjectType.GameObject: obj = new GameObject(); break;
+                    case ObjectType.Player: obj = new Player(); break;
+                    case ObjectType.AreaTrigger: obj = new SpellAreaTrigger(); break;
+                    default: obj = new WoWObject(); break;
+                }
+
+                obj.Type = objType;
+                obj.Movement = moves;
+                obj.UpdateFields = updates;
+                obj.DynamicUpdateFields = dynamicUpdates;
+                obj.Map = map;
+                obj.Area = WorldStateHandler.CurrentAreaId;
+                obj.Zone = WorldStateHandler.CurrentZoneId;
+                obj.PhaseMask = (uint)MovementHandler.CurrentPhaseMask;
                 Storage.StoreNewObject(guid, obj, packet);
+            }
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))
                 packet.AddSniffData(Utilities.ObjectTypeToStore(objType), (int)guid.GetEntry(), "SPAWN");
@@ -124,17 +125,21 @@ namespace WowPacketParser.Parsing.Parsers
             return ReadDynamicValuesUpdateBlock(packet, type, index, true, null);
         }
 
-        public static void ProcessExistingObject(ref WoWObject obj, WoWObject newObj, WowGuid guid, DateTime time)
+        public static void ProcessExistingObject(ref WoWObject obj, WowGuid guid, DateTime time, Dictionary<int, UpdateField> updates, Dictionary<int, List<UpdateField>> dynamicUpdates, MovementInfo moves)
         {
-            obj.PhaseMask |= newObj.PhaseMask;
+            obj.PhaseMask |= (uint)MovementHandler.CurrentPhaseMask;
             if (guid.GetHighType() == HighGuidType.Creature) // skip if not an unit
             {
                 if (!obj.Movement.HasWpsOrRandMov)
-                    if (obj.Movement.Position != newObj.Movement.Position)
+                    if (obj.Movement.Position != moves.Position)
                         if (((obj as Unit).UnitData.Flags & (uint) UnitFlags.IsInCombat) == 0) // movement could be because of aggro so ignore that
                             obj.Movement.HasWpsOrRandMov = true;
             }
-            StoreObjectUpdate(time, guid, newObj.UpdateFields);
+            if (updates != null)
+            {
+                StoreObjectUpdate(time, guid, updates);
+                ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
+            }
         }
 
         public static void ReadObjectsBlock(Packet packet, object index)

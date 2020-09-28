@@ -10,17 +10,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ID", true)]
         public uint? ID;
 
-        [DBFieldName("EmoteOnComplete", false, false, true)]
+        [DBFieldName("Emote", false, false, true)]
         public uint? EmoteOnComplete;
 
-        [DBFieldName("EmoteOnIncomplete", false, false, true)]
-        public uint? EmoteOnIncomplete;
-
-        [DBFieldName("EmoteOnCompleteDelay", TargetedDatabase.WarlordsOfDraenor)]
+        [DBFieldName("EmoteDelay", TargetedDatabase.WarlordsOfDraenor)]
         public uint? EmoteOnCompleteDelay;
-
-        [DBFieldName("EmoteOnIncompleteDelay", TargetedDatabase.WarlordsOfDraenor)]
-        public uint? EmoteOnIncompleteDelay;
 
         [DBFieldName("CompletionText")]
         public string CompletionText;

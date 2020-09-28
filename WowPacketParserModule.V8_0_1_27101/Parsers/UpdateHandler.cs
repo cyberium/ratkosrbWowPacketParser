@@ -241,7 +241,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             if (Storage.Objects.ContainsKey(guid))
             {
                 var existObj = Storage.Objects[guid].Item1;
-                CoreParsers.UpdateHandler.ProcessExistingObject(ref existObj, obj, guid, packet.Time); // can't do "ref Storage.Objects[guid].Item1 directly
+                CoreParsers.UpdateHandler.ProcessExistingObject(ref existObj, guid, packet.Time, obj.UpdateFields, obj.DynamicUpdateFields, moves); // can't do "ref Storage.Objects[guid].Item1 directly
             }
             else
                 Storage.StoreNewObject(guid, obj, packet);

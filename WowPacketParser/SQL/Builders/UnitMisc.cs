@@ -75,7 +75,7 @@ namespace WowPacketParser.SQL.Builders
 
                 addons.Add(addon);
             }
-
+            
             var addonsDb = SQLDatabase.Get(addons);
             return SQLUtil.Compare(addons, addonsDb,
                 addon =>
@@ -791,9 +791,6 @@ namespace WowPacketParser.SQL.Builders
 
             foreach (var npc in creatureExportData)
             {
-                if (Storage.CreatureTemplatesNonWDB.Any(creature => creature.Item1.Entry == npc.Key))
-                    continue;
-
                 uint mostCommonFaction = 0;
                 uint mostCommonFactionCount = 0;
                 foreach (var factionPair in npc.Value.Factions)

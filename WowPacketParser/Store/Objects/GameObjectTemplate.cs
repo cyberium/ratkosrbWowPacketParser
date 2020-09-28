@@ -19,10 +19,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("name", LocaleConstant.enUS)] // ToDo: Add locale support
         public string Name;
 
-        [DBFieldName("IconName")]
+        [DBFieldName("icon_name")]
         public string IconName;
 
-        [DBFieldName("castBarCaption", LocaleConstant.enUS)] // ToDo: Add locale support
+        [DBFieldName("cast_bar_caption", LocaleConstant.enUS)] // ToDo: Add locale support
         public string CastCaption;
 
         [DBFieldName("unk1")]
@@ -34,13 +34,13 @@ namespace WowPacketParser.Store.Objects
         //TODO: move to gameobject_questitem
         public uint?[] QuestItems;
 
-        [DBFieldName("Data", TargetedDatabase.Zero, TargetedDatabase.Cataclysm, 24, true)]
-        [DBFieldName("Data", TargetedDatabase.Cataclysm, TargetedDatabase.WarlordsOfDraenor, 32, true)]
-        [DBFieldName("Data", TargetedDatabase.WarlordsOfDraenor, TargetedDatabase.BattleForAzeroth, 33, true)]
-        [DBFieldName("Data", TargetedDatabase.BattleForAzeroth, 34, true)]
+        [DBFieldName("data", TargetedDatabase.Zero, TargetedDatabase.Cataclysm, 24, true)]
+        [DBFieldName("data", TargetedDatabase.Cataclysm, TargetedDatabase.WarlordsOfDraenor, 32, true)]
+        [DBFieldName("data", TargetedDatabase.WarlordsOfDraenor, TargetedDatabase.BattleForAzeroth, 33, true)]
+        [DBFieldName("data", TargetedDatabase.BattleForAzeroth, 34, true)]
         public int?[] Data;
 
-        [DBFieldName("RequiredLevel", TargetedDatabase.Cataclysm)]
+        [DBFieldName("required_level", TargetedDatabase.Cataclysm)]
         public int? RequiredLevel;
 
         [DBFieldName("VerifiedBuild")]

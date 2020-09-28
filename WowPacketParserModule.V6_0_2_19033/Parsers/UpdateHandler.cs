@@ -68,43 +68,44 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             var updates = CoreParsers.UpdateHandler.ReadValuesUpdateBlockOnCreate(packet, objType, index);
             var dynamicUpdates = CoreParsers.UpdateHandler.ReadDynamicValuesUpdateBlockOnCreate(packet, objType, index);
 
-            WoWObject obj;
-            switch (objType)
-            {
-                case ObjectType.Unit:
-                    obj = new Unit();
-                    break;
-                case ObjectType.GameObject:
-                    obj = new GameObject();
-                    break;
-                case ObjectType.Player:
-                    obj = new Player();
-                    break;
-                default:
-                    obj = new WoWObject();
-                    break;
-            }
-
-            obj.Type = objType;
-            obj.Movement = moves;
-            obj.UpdateFields = updates;
-            obj.DynamicUpdateFields = dynamicUpdates;
-            obj.Map = map;
-            obj.Area = CoreParsers.WorldStateHandler.CurrentAreaId;
-            obj.Zone = CoreParsers.WorldStateHandler.CurrentZoneId;
-            obj.PhaseMask = (uint)CoreParsers.MovementHandler.CurrentPhaseMask;
-            obj.Phases = new HashSet<ushort>(CoreParsers.MovementHandler.ActivePhases.Keys);
-            obj.DifficultyID = CoreParsers.MovementHandler.CurrentDifficultyID;
-
             // If this is the second time we see the same object (same guid,
             // same position) update its phasemask
             if (Storage.Objects.ContainsKey(guid))
             {
                 var existObj = Storage.Objects[guid].Item1;
-                CoreParsers.UpdateHandler.ProcessExistingObject(ref existObj, obj, guid, packet.Time); // can't do "ref Storage.Objects[guid].Item1 directly
+                CoreParsers.UpdateHandler.ProcessExistingObject(ref existObj, guid, packet.Time, updates, dynamicUpdates, moves); // can't do "ref Storage.Objects[guid].Item1 directly
             }
             else
+            {
+                WoWObject obj;
+                switch (objType)
+                {
+                    case ObjectType.Unit:
+                        obj = new Unit();
+                        break;
+                    case ObjectType.GameObject:
+                        obj = new GameObject();
+                        break;
+                    case ObjectType.Player:
+                        obj = new Player();
+                        break;
+                    default:
+                        obj = new WoWObject();
+                        break;
+                }
+
+                obj.Type = objType;
+                obj.Movement = moves;
+                obj.UpdateFields = updates;
+                obj.DynamicUpdateFields = dynamicUpdates;
+                obj.Map = map;
+                obj.Area = CoreParsers.WorldStateHandler.CurrentAreaId;
+                obj.Zone = CoreParsers.WorldStateHandler.CurrentZoneId;
+                obj.PhaseMask = (uint)CoreParsers.MovementHandler.CurrentPhaseMask;
+                obj.Phases = new HashSet<ushort>(CoreParsers.MovementHandler.ActivePhases.Keys);
+                obj.DifficultyID = CoreParsers.MovementHandler.CurrentDifficultyID;
                 Storage.StoreNewObject(guid, obj, packet);
+            }   
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))
                 packet.AddSniffData(Utilities.ObjectTypeToStore(objType), (int)guid.GetEntry(), "SPAWN");

@@ -69,26 +69,31 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             ObjectType objType = ObjectTypeConverter.Convert(packet.ReadByteE<ObjectTypeLegacy>("Object Type", index));
 
             WoWObject obj;
-            switch (objType)
+            if (Storage.Objects.ContainsKey(guid))
+                obj = Storage.Objects[guid].Item1;
+            else
             {
-                case ObjectType.Unit:
-                    obj = new Unit();
-                    break;
-                case ObjectType.GameObject:
-                    obj = new GameObject();
-                    break;
-                case ObjectType.Player:
-                    obj = new Player();
-                    break;
-                case ObjectType.AreaTrigger:
-                    obj = new SpellAreaTrigger();
-                    break;
-                case ObjectType.Conversation:
-                    obj = new ConversationTemplate();
-                    break;
-                default:
-                    obj = new WoWObject();
-                    break;
+                switch (objType)
+                {
+                    case ObjectType.Unit:
+                        obj = new Unit();
+                        break;
+                    case ObjectType.GameObject:
+                        obj = new GameObject();
+                        break;
+                    case ObjectType.Player:
+                        obj = new Player();
+                        break;
+                    case ObjectType.AreaTrigger:
+                        obj = new SpellAreaTrigger();
+                        break;
+                    case ObjectType.Conversation:
+                        obj = new ConversationTemplate();
+                        break;
+                    default:
+                        obj = new WoWObject();
+                        break;
+                }
             }
 
             var moves = ReadMovementUpdateBlock(packet, guid, obj, index);
@@ -96,26 +101,26 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             var updates = CoreParsers.UpdateHandler.ReadValuesUpdateBlockOnCreate(packet, objType, index);
             var dynamicUpdates = CoreParsers.UpdateHandler.ReadDynamicValuesUpdateBlockOnCreate(packet, objType, index);
 
-            obj.Type = objType;
-            obj.Movement = moves;
-            obj.UpdateFields = updates;
-            obj.DynamicUpdateFields = dynamicUpdates;
-            obj.Map = map;
-            obj.Area = CoreParsers.WorldStateHandler.CurrentAreaId;
-            obj.Zone = CoreParsers.WorldStateHandler.CurrentZoneId;
-            obj.PhaseMask = (uint)CoreParsers.MovementHandler.CurrentPhaseMask;
-            obj.Phases = new HashSet<ushort>(CoreParsers.MovementHandler.ActivePhases.Keys);
-            obj.DifficultyID = CoreParsers.MovementHandler.CurrentDifficultyID;
-
             // If this is the second time we see the same object (same guid,
             // same position) update its phasemask
             if (Storage.Objects.ContainsKey(guid))
             {
-                var existObj = Storage.Objects[guid].Item1;
-                CoreParsers.UpdateHandler.ProcessExistingObject(ref existObj, obj, guid, packet.Time); // can't do "ref Storage.Objects[guid].Item1 directly
+                CoreParsers.UpdateHandler.ProcessExistingObject(ref obj, guid, packet.Time, updates, dynamicUpdates, moves); // can't do "ref Storage.Objects[guid].Item1 directly
             }
             else
+            {
+                obj.Type = objType;
+                obj.Movement = moves;
+                obj.UpdateFields = updates;
+                obj.DynamicUpdateFields = dynamicUpdates;
+                obj.Map = map;
+                obj.Area = CoreParsers.WorldStateHandler.CurrentAreaId;
+                obj.Zone = CoreParsers.WorldStateHandler.CurrentZoneId;
+                obj.PhaseMask = (uint)CoreParsers.MovementHandler.CurrentPhaseMask;
+                obj.Phases = new HashSet<ushort>(CoreParsers.MovementHandler.ActivePhases.Keys);
+                obj.DifficultyID = CoreParsers.MovementHandler.CurrentDifficultyID;
                 Storage.StoreNewObject(guid, obj, packet);
+            }
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))
                 packet.AddSniffData(Utilities.ObjectTypeToStore(objType), (int)guid.GetEntry(), "SPAWN");
