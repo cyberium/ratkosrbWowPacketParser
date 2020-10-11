@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using WowPacketParser.Enums;
+using WowPacketParser.Enums.Version;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
 using WowPacketParser.Store.Objects;
@@ -84,35 +85,17 @@ namespace WowPacketParser.Parsing.Parsers
 
             switch (text.Type)
             {
-                case ChatMessageType.Channel:
-                {
-                    packet.ReadCString("Channel Name");
-                    goto case ChatMessageType.Say;
-                }
-                case ChatMessageType.Say:
-                case ChatMessageType.Yell:
-                case ChatMessageType.Party:
-                case ChatMessageType.PartyLeader:
-                case ChatMessageType.Raid:
-                case ChatMessageType.RaidLeader:
-                case ChatMessageType.RaidWarning:
-                case ChatMessageType.Guild:
-                case ChatMessageType.Officer:
-                case ChatMessageType.Emote:
-                case ChatMessageType.TextEmote:
-                case ChatMessageType.Whisper:
-                case ChatMessageType.WhisperInform:
-                case ChatMessageType.System:
-                case ChatMessageType.Battleground:
-                case ChatMessageType.BattlegroundLeader:
                 case ChatMessageType.Achievement:
                 case ChatMessageType.GuildAchievement:
-                case ChatMessageType.Restricted:
-                case ChatMessageType.Dnd:
-                case ChatMessageType.Afk:
-                case ChatMessageType.Ignored:
                 {
                     packet.ReadGuid("Sender GUID");
+                    break;
+                }
+                case ChatMessageType.WhisperForeign:
+                {
+                    packet.ReadInt32("Name Length");
+                    text.SenderName = packet.ReadCString("Name");
+                    text.ReceiverGUID = packet.ReadGuid("Receiver GUID");
                     break;
                 }
                 case ChatMessageType.BattlegroundNeutral:
@@ -155,6 +138,22 @@ namespace WowPacketParser.Parsing.Parsers
                             text.ReceiverName = packet.ReadCString("Receiver Name");
                             break;
                     }
+                    break;
+                }
+                default:
+                {
+                    if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_GM_MESSAGECHAT, Direction.ServerToClient))
+                    {
+                        packet.ReadInt32("GMNameLength");
+                        packet.ReadCString("GMSenderName");
+                    }
+
+                    if (text.Type == ChatMessageType.Channel)
+                    {
+                        packet.ReadCString("Channel Name");
+                    }
+
+                    packet.ReadGuid("Sender GUID");
                     break;
                 }
             }
