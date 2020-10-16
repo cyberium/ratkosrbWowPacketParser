@@ -480,9 +480,9 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
 
                 moveInfo.Position.Z = packet.ReadSingle();
                 moveInfo.Position.Y = packet.ReadSingle();
-                packet.ReadSingle("Fly Speed", index);
+                moveInfo.FlightSpeed = packet.ReadSingle("Fly Speed", index);
                 packet.ReadXORByte(guid1, 6);
-                packet.ReadSingle("Fly Back Speed", index);
+                moveInfo.FlightBackSpeed = packet.ReadSingle("Fly Back Speed", index);
 
                 if (hasTransportData)
                 {
@@ -534,10 +534,10 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
                 if (hasPitch)
                     packet.ReadSingle("Pitch", index);
 
-                packet.ReadSingle("Swim Speed", index);
+                moveInfo.SwimSpeed = packet.ReadSingle("Swim Speed", index);
                 packet.ReadXORByte(guid1, 1);
-                packet.ReadSingle("Run Back Speed", index);
-                packet.ReadSingle("Swim Back Speed", index);
+                moveInfo.RunBackSpeed = packet.ReadSingle("Run Back Speed", index);
+                moveInfo.SwimBackSpeed = packet.ReadSingle("Swim Back Speed", index);
                 packet.ReadXORByte(guid1, 5);
 
                 if (hasSplineElevation)
@@ -546,12 +546,12 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
                 if (bitA8)
                     packet.ReadInt32("IntA8", index);
 
-                packet.ReadSingle("Turn Speed", index);
+                moveInfo.TurnRate = packet.ReadSingle("Turn Speed", index);
                 packet.ReadXORByte(guid1, 3);
-                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index) / 7.0f;
+                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index);
                 packet.ReadXORByte(guid1, 7);
-                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index) / 2.5f;
-                packet.ReadSingle("Pitch Speed", index);
+                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index);
+                moveInfo.PitchRate = packet.ReadSingle("Pitch Speed", index);
 
                 if (hasTimestamp)
                     packet.ReadUInt32("Time?", index);

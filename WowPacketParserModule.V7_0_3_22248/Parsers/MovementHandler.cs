@@ -15,7 +15,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
 {
     public static class MovementHandler
     {
-        public static void ReadMovementStats(Packet packet, params object[] idx)
+        public static WowGuid ReadMovementStats(Packet packet, params object[] idx)
         {
             PlayerMovement moveData = new PlayerMovement();
             moveData.guid = packet.ReadPackedGuid128("MoverGUID", idx);
@@ -57,6 +57,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 moveData.Time = packet.Time;
                 Storage.PlayerMovements.Add(moveData);
             }
+            return moveData.guid;
         }
 
         public static void ReadMovementAck(Packet packet, params object[] idx)
@@ -327,18 +328,93 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
         }
 
         [Parser(Opcode.SMSG_MOVE_UPDATE_WALK_SPEED)]
-        [Parser(Opcode.SMSG_MOVE_UPDATE_RUN_SPEED)]
-        [Parser(Opcode.SMSG_MOVE_UPDATE_RUN_BACK_SPEED)]
-        [Parser(Opcode.SMSG_MOVE_UPDATE_SWIM_SPEED)]
-        [Parser(Opcode.SMSG_MOVE_UPDATE_SWIM_BACK_SPEED)]
-        [Parser(Opcode.SMSG_MOVE_UPDATE_TURN_RATE)]
-        [Parser(Opcode.SMSG_MOVE_UPDATE_FLIGHT_SPEED)]
-        [Parser(Opcode.SMSG_MOVE_UPDATE_FLIGHT_BACK_SPEED)]
-        [Parser(Opcode.SMSG_MOVE_UPDATE_PITCH_RATE)]
-        public static void HandleMovementUpdateSpeed(Packet packet)
+        public static void HandleMovementUpdateWalkSpeed(Packet packet)
         {
-            ReadMovementStats(packet, "MovementStats");
-            packet.ReadSingle("Speed");
+            WowGuid guid = ReadMovementStats(packet, "MovementStats");
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+            speedUpdate.WalkSpeed = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_WALK_SPEED;
+            speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+            Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+        }
+
+        [Parser(Opcode.SMSG_MOVE_UPDATE_RUN_SPEED)]
+        public static void HandleMovementUpdateRunSpeed(Packet packet)
+        {
+            WowGuid guid = ReadMovementStats(packet, "MovementStats");
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+            speedUpdate.RunSpeed = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_RUN_SPEED;
+            speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+            Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+        }
+
+        [Parser(Opcode.SMSG_MOVE_UPDATE_RUN_BACK_SPEED)]
+        public static void HandleMovementUpdateRunBackSpeed(Packet packet)
+        {
+            WowGuid guid = ReadMovementStats(packet, "MovementStats");
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+            speedUpdate.RunBackSpeed = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_RUN_BACK_SPEED;
+            speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+            Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+        }
+
+        [Parser(Opcode.SMSG_MOVE_UPDATE_SWIM_SPEED)]
+        public static void HandleMovementUpdateSwimSpeed(Packet packet)
+        {
+            WowGuid guid = ReadMovementStats(packet, "MovementStats");
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+            speedUpdate.SwimSpeed = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_SWIM_SPEED;
+            speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+            Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+        }
+
+        [Parser(Opcode.SMSG_MOVE_UPDATE_SWIM_BACK_SPEED)]
+        public static void HandleMovementUpdateSwimBackSpeed(Packet packet)
+        {
+            WowGuid guid = ReadMovementStats(packet, "MovementStats");
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+            speedUpdate.SwimBackSpeed = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
+            speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+            Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+        }
+
+        [Parser(Opcode.SMSG_MOVE_UPDATE_TURN_RATE)]
+        public static void HandleMovementUpdateTurnRate(Packet packet)
+        {
+            WowGuid guid = ReadMovementStats(packet, "MovementStats");
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+            speedUpdate.TurnRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_TURN_RATE;
+            speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+            Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+        }
+
+        [Parser(Opcode.SMSG_MOVE_UPDATE_FLIGHT_SPEED)]
+        public static void HandleMovementUpdateFlightSpeed(Packet packet)
+        {
+            WowGuid guid = ReadMovementStats(packet, "MovementStats");
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+            speedUpdate.FlightSpeed = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_FLY_SPEED;
+            speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+            Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+        }
+
+        [Parser(Opcode.SMSG_MOVE_UPDATE_FLIGHT_BACK_SPEED)]
+        public static void HandleMovementUpdateFlightBackSpeed(Packet packet)
+        {
+            WowGuid guid = ReadMovementStats(packet, "MovementStats");
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+            speedUpdate.FlightBackSpeed = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_FLY_BACK_SPEED;
+            speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+            Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+        }
+
+        [Parser(Opcode.SMSG_MOVE_UPDATE_PITCH_RATE)]
+        public static void HandleMovementUpdatePitchRate(Packet packet)
+        {
+            WowGuid guid = ReadMovementStats(packet, "MovementStats");
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+            speedUpdate.PitchRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_PITCH_RATE;
+            speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+            Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
 
         [Parser(Opcode.CMSG_MOVE_SPLINE_DONE)]

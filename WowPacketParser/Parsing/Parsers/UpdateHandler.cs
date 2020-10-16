@@ -42,8 +42,12 @@ namespace WowPacketParser.Parsing.Parsers
                     case "Movement":
                     {
                         var guid = ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_2_9901) ? packet.ReadPackedGuid("GUID", i) : packet.ReadGuid("GUID", i);
-                        ReadMovementUpdateBlock(packet, guid, i);
-                        // Should we update Storage.Object?
+                        var moves = ReadMovementUpdateBlock(packet, guid, i);
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1;
+                            HandleMovementInfoChange(obj, guid, packet.Time, moves);
+                        }   
                         break;
                     }
                     case "CreateObject1":
@@ -124,17 +128,22 @@ namespace WowPacketParser.Parsing.Parsers
         {
             return ReadDynamicValuesUpdateBlock(packet, type, index, true, null);
         }
-
-        public static void ProcessExistingObject(ref WoWObject obj, WowGuid guid, DateTime time, Dictionary<int, UpdateField> updates, Dictionary<int, List<UpdateField>> dynamicUpdates, MovementInfo moves)
+        public static void HandleMovementInfoChange(WoWObject obj, WowGuid guid, DateTime time, MovementInfo moveInfo)
         {
-            obj.PhaseMask |= (uint)MovementHandler.CurrentPhaseMask;
             if (guid.GetHighType() == HighGuidType.Creature) // skip if not an unit
             {
                 if (!obj.Movement.HasWpsOrRandMov)
-                    if (obj.Movement.Position != moves.Position)
-                        if (((obj as Unit).UnitData.Flags & (uint) UnitFlags.IsInCombat) == 0) // movement could be because of aggro so ignore that
-                            obj.Movement.HasWpsOrRandMov = true;
+                    if (obj.Movement.Position != moveInfo.Position)
+                        if (((obj as Unit).UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0) // movement could be because of aggro so ignore that
+                            moveInfo.HasWpsOrRandMov = true;
             }
+            StoreObjectSpeedUpdate(time, guid, moveInfo);
+            obj.Movement = moveInfo;
+        }
+        public static void ProcessExistingObject(ref WoWObject obj, WowGuid guid, DateTime time, Dictionary<int, UpdateField> updates, Dictionary<int, List<UpdateField>> dynamicUpdates, MovementInfo moveInfo)
+        {
+            obj.PhaseMask |= (uint)MovementHandler.CurrentPhaseMask;
+            HandleMovementInfoChange(obj, guid, time, moveInfo);
             if (updates != null)
             {
                 StoreObjectUpdate(time, guid, updates);
@@ -189,7 +198,69 @@ namespace WowPacketParser.Parsing.Parsers
                 return new WowGuid128(Utilities.MAKE_PAIR64(parts[0], parts[1]), Utilities.MAKE_PAIR64(parts[2], parts[3]));
             }
         }
-        
+        public static void StoreObjectSpeedUpdate(DateTime time, WowGuid guid, MovementInfo moveInfo)
+        {
+            if ((guid.GetObjectType() == ObjectType.Unit && guid.GetHighType() != HighGuidType.Pet) ||
+                (guid.GetObjectType() == ObjectType.Player || guid.GetObjectType() == ObjectType.ActivePlayer))
+            {
+                if (Storage.Objects.ContainsKey(guid))
+                {
+                    bool hasData = false;
+                    CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                    var obj = Storage.Objects[guid].Item1 as Unit;
+                    if (obj.Movement.WalkSpeed != moveInfo.WalkSpeed)
+                    {
+                        hasData = true;
+                        speedUpdate.WalkSpeed = moveInfo.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
+                    }
+                    if (obj.Movement.RunSpeed != moveInfo.RunSpeed)
+                    {
+                        hasData = true;
+                        speedUpdate.RunSpeed = moveInfo.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
+                    }
+                    if (obj.Movement.RunBackSpeed != moveInfo.RunBackSpeed)
+                    {
+                        hasData = true;
+                        speedUpdate.RunBackSpeed = moveInfo.RunBackSpeed / MovementInfo.DEFAULT_RUN_BACK_SPEED;
+                    }
+                    if (obj.Movement.SwimSpeed != moveInfo.SwimSpeed)
+                    {
+                        hasData = true;
+                        speedUpdate.SwimSpeed = moveInfo.SwimSpeed / MovementInfo.DEFAULT_SWIM_SPEED;
+                    }
+                    if (obj.Movement.SwimBackSpeed != moveInfo.SwimBackSpeed)
+                    {
+                        hasData = true;
+                        speedUpdate.SwimBackSpeed = moveInfo.SwimBackSpeed / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
+                    }
+                    if (obj.Movement.FlightSpeed != moveInfo.FlightSpeed)
+                    {
+                        hasData = true;
+                        speedUpdate.FlightSpeed = moveInfo.FlightSpeed / MovementInfo.DEFAULT_FLY_SPEED;
+                    }
+                    if (obj.Movement.FlightBackSpeed != moveInfo.FlightBackSpeed)
+                    {
+                        hasData = true;
+                        speedUpdate.FlightBackSpeed = moveInfo.FlightBackSpeed / MovementInfo.DEFAULT_FLY_BACK_SPEED;
+                    }
+                    if (obj.Movement.TurnRate != moveInfo.TurnRate)
+                    {
+                        hasData = true;
+                        speedUpdate.TurnRate = moveInfo.TurnRate / MovementInfo.DEFAULT_TURN_RATE;
+                    }
+                    if (obj.Movement.PitchRate != moveInfo.PitchRate)
+                    {
+                        hasData = true;
+                        speedUpdate.PitchRate = moveInfo.PitchRate / MovementInfo.DEFAULT_PITCH_RATE;
+                    }
+                    if (hasData)
+                    {
+                        speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                        Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+                    } 
+                }
+            }
+        }
 
         public static void StoreObjectUpdate(DateTime time, WowGuid guid, Dictionary<int, UpdateField> updates)
         {
@@ -197,7 +268,7 @@ namespace WowPacketParser.Parsing.Parsers
                 (guid.GetObjectType() == ObjectType.Player || guid.GetObjectType() == ObjectType.ActivePlayer))
             {
                 bool hasData = false;
-                CreatureUpdate creatureUpdate = new CreatureUpdate();
+                CreatureValuesUpdate creatureUpdate = new CreatureValuesUpdate();
                 foreach (var update in updates)
                 {
                     if (update.Key == UpdateFields.GetUpdateField(ObjectField.OBJECT_FIELD_ENTRY))
@@ -377,7 +448,7 @@ namespace WowPacketParser.Parsing.Parsers
                 if (hasData)
                 {
                     creatureUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
-                    Storage.StoreUnitUpdate(guid, creatureUpdate);
+                    Storage.StoreUnitValuesUpdate(guid, creatureUpdate);
                 }
             }
             else if (guid.GetObjectType() == ObjectType.GameObject)
@@ -1093,7 +1164,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (living)
             {
-                packet.ReadSingle("FlyBack Speed", index);
+                moveInfo.FlightBackSpeed = packet.ReadSingle("FlyBack Speed", index);
                 if (moveInfo.HasSplineData)
                 {
                     if (hasFullSpline)
@@ -1164,7 +1235,7 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.AddValue("Spline Endpoint", endPoint, index);
                 }
 
-                packet.ReadSingle("Swim Speed", index);
+                moveInfo.SwimSpeed = packet.ReadSingle("Swim Speed", index);
 
                 if (hasFallData)
                 {
@@ -1220,14 +1291,14 @@ namespace WowPacketParser.Parsing.Parsers
                 }
 
                 packet.ReadXORByte(guid2, 1);
-                packet.ReadSingle("Turn Speed", index);
+                moveInfo.TurnRate = packet.ReadSingle("Turn Speed", index);
                 moveInfo.Position.Y = packet.ReadSingle();
                 packet.ReadXORByte(guid2, 3);
                 moveInfo.Position.Z = packet.ReadSingle();
                 if (hasOrientation)
                     moveInfo.Orientation = packet.ReadSingle();
 
-                packet.ReadSingle("Run Back Speed", index);
+                moveInfo.RunBackSpeed = packet.ReadSingle("Run Back Speed", index);
                 if (hasSplineElevation)
                     packet.ReadSingle("Spline Elevation", index);
 
@@ -1240,7 +1311,7 @@ namespace WowPacketParser.Parsing.Parsers
                 if (hasTimestamp)
                     packet.ReadUInt32("Time", index);
 
-                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index) / 2.5f;
+                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index);
                 if (hasPitch)
                     packet.ReadSingle("Pitch", index);
 
@@ -1248,13 +1319,13 @@ namespace WowPacketParser.Parsing.Parsers
                 if (field8)
                     packet.ReadUInt32("Unk UInt32", index);
 
-                packet.ReadSingle("Pitch Speed", index);
+                moveInfo.PitchRate = packet.ReadSingle("Pitch Speed", index);
                 packet.ReadXORByte(guid2, 2);
-                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index) / 7.0f;
+                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index);
                 packet.ReadXORByte(guid2, 7);
-                packet.ReadSingle("SwimBack Speed", index);
+                moveInfo.SwimBackSpeed = packet.ReadSingle("SwimBack Speed", index);
                 packet.ReadXORByte(guid2, 4);
-                packet.ReadSingle("Fly Speed", index);
+                moveInfo.FlightSpeed = packet.ReadSingle("Fly Speed", index);
 
                 packet.WriteGuid("GUID 2", guid2, index);
                 packet.AddValue("Position", moveInfo.Position, index);
@@ -1674,7 +1745,7 @@ namespace WowPacketParser.Parsing.Parsers
                 for (var i = 0; i < field9C; ++i)
                     packet.ReadUInt32();
 
-                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index) / 2.5f;
+                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index);
                 if (hasTransportData)
                 {
                     packet.ReadXORByte(transportGuid, 4);
@@ -1733,7 +1804,7 @@ namespace WowPacketParser.Parsing.Parsers
                 if (hasTimestamp)
                     packet.ReadUInt32("Time", index);
 
-                packet.ReadSingle("Fly Speed", index);
+                moveInfo.FlightSpeed = packet.ReadSingle("Fly Speed", index);
                 moveInfo.Position.X = packet.ReadSingle();
                 if (hasFieldA8)
                     packet.ReadUInt32();
@@ -1750,17 +1821,17 @@ namespace WowPacketParser.Parsing.Parsers
                 if (hasSplineElevation)
                     packet.ReadSingle("Spline Elevation", index);
 
-                packet.ReadSingle("Turn Speed", index);
-                packet.ReadSingle("Pitch Speed", index);
-                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index) / 7.0f;
+                moveInfo.TurnRate = packet.ReadSingle("Turn Speed", index);
+                moveInfo.PitchRate = packet.ReadSingle("Pitch Speed", index);
+                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index);
                 if (hasOrientation)
                     moveInfo.Orientation = packet.ReadSingle();
 
                 packet.ReadXORByte(guid2, 4);
-                packet.ReadSingle("Swim Speed", index);
-                packet.ReadSingle("SwimBack Speed", index);
-                packet.ReadSingle("FlyBack Speed", index);
-                packet.ReadSingle("RunBack Speed", index);
+                moveInfo.SwimSpeed = packet.ReadSingle("Swim Speed", index);
+                moveInfo.SwimBackSpeed = packet.ReadSingle("SwimBack Speed", index);
+                moveInfo.FlightBackSpeed = packet.ReadSingle("FlyBack Speed", index);
+                moveInfo.RunBackSpeed = packet.ReadSingle("RunBack Speed", index);
                 packet.ReadXORByte(guid2, 0);
 
                 packet.WriteGuid("GUID 2", guid2, index);
@@ -2034,7 +2105,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (living)
             {
-                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index) / 2.5f;
+                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index);
                 if (moveInfo.HasSplineData)
                 {
                     if (bit216)
@@ -2143,17 +2214,17 @@ namespace WowPacketParser.Parsing.Parsers
                 if (unkFloat1)
                     packet.ReadSingle("float +28", index);
 
-                packet.ReadSingle("FlyBack Speed", index);
-                packet.ReadSingle("Turn Speed", index);
+                moveInfo.FlightBackSpeed = packet.ReadSingle("FlyBack Speed", index);
+                moveInfo.TurnRate = packet.ReadSingle("Turn Speed", index);
                 packet.ReadXORByte(guid2, 5);
 
-                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index) / 7.0f;
+                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index);
                 if (unkFloat2)
                     packet.ReadSingle("float +36", index);
 
                 packet.ReadXORByte(guid2, 0);
 
-                packet.ReadSingle("Pitch Speed", index);
+                moveInfo.PitchRate = packet.ReadSingle("Pitch Speed", index);
                 if (hasFallData)
                 {
                     packet.ReadInt32("Time Fallen", index);
@@ -2166,17 +2237,17 @@ namespace WowPacketParser.Parsing.Parsers
                     }
                 }
 
-                packet.ReadSingle("RunBack Speed", index);
+                moveInfo.RunBackSpeed = packet.ReadSingle("RunBack Speed", index);
                 moveInfo.Position = new Vector3 {X = packet.ReadSingle()};
-                packet.ReadSingle("SwimBack Speed", index);
+                moveInfo.SwimBackSpeed = packet.ReadSingle("SwimBack Speed", index);
                 packet.ReadXORByte(guid2, 7);
 
                 moveInfo.Position.Z = packet.ReadSingle();
                 packet.ReadXORByte(guid2, 3);
                 packet.ReadXORByte(guid2, 2);
 
-                packet.ReadSingle("Fly Speed", index);
-                packet.ReadSingle("Swim Speed", index);
+                moveInfo.FlightSpeed = packet.ReadSingle("Fly Speed", index);
+                moveInfo.SwimSpeed = packet.ReadSingle("Swim Speed", index);
                 packet.ReadXORByte(guid2, 1);
                 packet.ReadXORByte(guid2, 4);
                 packet.ReadXORByte(guid2, 6);
@@ -2568,7 +2639,7 @@ namespace WowPacketParser.Parsing.Parsers
                 }
 
                 moveInfo.Position = new Vector3 {Z = packet.ReadSingle()};
-                packet.ReadSingle("FlyBack Speed", index);
+                moveInfo.FlightBackSpeed = packet.ReadSingle("FlyBack Speed", index);
                 moveInfo.Position.Y = packet.ReadSingle();
                 packet.ReadXORByte(guid2, 4);
                 packet.ReadXORByte(guid2, 0);
@@ -2589,9 +2660,9 @@ namespace WowPacketParser.Parsing.Parsers
                     moveInfo.Orientation = packet.ReadSingle("Orientation");
 
                 packet.AddValue("Position", moveInfo.Position, moveInfo.Orientation, index);
-                packet.ReadSingle("Swim Speed", index);
-                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index) / 7.0f;
-                packet.ReadSingle("Fly Speed", index);
+                moveInfo.SwimSpeed = packet.ReadSingle("Swim Speed", index);
+                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index);
+                moveInfo.FlightSpeed = packet.ReadSingle("Fly Speed", index);
                 packet.ReadXORByte(guid2, 2);
                 if (unkFloat2)
                     packet.ReadSingle("Unk float +36", index);
@@ -2600,19 +2671,19 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.ReadSingle("Unk float +28", index);
 
                 packet.ReadXORByte(guid2, 3);
-                packet.ReadSingle("RunBack Speed", index);
+                moveInfo.RunBackSpeed = packet.ReadSingle("RunBack Speed", index);
                 packet.ReadXORByte(guid2, 6);
-                packet.ReadSingle("Pitch Speed", index);
+                moveInfo.PitchRate = packet.ReadSingle("Pitch Speed", index);
                 packet.ReadXORByte(guid2, 7);
                 packet.ReadXORByte(guid2, 5);
-                packet.ReadSingle("Turn Speed", index);
-                packet.ReadSingle("SwimBack Speed", index);
+                moveInfo.TurnRate = packet.ReadSingle("Turn Speed", index);
+                moveInfo.SwimBackSpeed = packet.ReadSingle("SwimBack Speed", index);
                 packet.ReadXORByte(guid2, 1);
                 packet.WriteGuid("GUID 2", guid2, index);
                 if (hasUnkUInt)
                     packet.ReadInt32();
 
-                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index) / 2.5f;
+                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index);
             }
 
             if (hasAttackingTarget)
@@ -2924,7 +2995,7 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.AddValue("Spline Endpoint", endPoint, index);
                 }
 
-                packet.ReadSingle("Pitch Speed", index);
+                moveInfo.PitchRate = packet.ReadSingle("Pitch Speed", index);
                 if (hasTransportData)
                 {
                     packet.ReadXORByte(transportGuid, 4);
@@ -2966,7 +3037,7 @@ namespace WowPacketParser.Parsing.Parsers
                     }
                 }
 
-                packet.ReadSingle("FlyBack Speed", index);
+                moveInfo.FlightBackSpeed = packet.ReadSingle("FlyBack Speed", index);
                 moveInfo.Position = new Vector3 {X = packet.ReadSingle()};
                 if (unkFloat1)
                     packet.ReadSingle("Unk float +28", index);
@@ -2984,19 +3055,19 @@ namespace WowPacketParser.Parsing.Parsers
                 }
 
                 packet.ReadXORByte(guid2, 7);
-                packet.ReadSingle("SwimBack Speed", index);
+                moveInfo.SwimBackSpeed = packet.ReadSingle("SwimBack Speed", index);
                 packet.ReadXORByte(guid2, 0);
                 packet.ReadXORByte(guid2, 5);
                 if (hasUnkUInt)
                     packet.ReadUInt32();
 
                 moveInfo.Position.Z = packet.ReadSingle();
-                packet.ReadSingle("Fly Speed", index);
+                moveInfo.FlightSpeed = packet.ReadSingle("Fly Speed", index);
                 packet.ReadXORByte(guid2, 1);
-                packet.ReadSingle("RunBack Speed", index);
-                packet.ReadSingle("Turn Speed", index);
-                packet.ReadSingle("Swim Speed", index);
-                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index) / 2.5f;
+                moveInfo.RunBackSpeed = packet.ReadSingle("RunBack Speed", index);
+                moveInfo.TurnRate = packet.ReadSingle("Turn Speed", index);
+                moveInfo.SwimSpeed = packet.ReadSingle("Swim Speed", index);
+                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index);
                 packet.ReadXORByte(guid2, 3);
                 packet.ReadXORByte(guid2, 4);
                 packet.ReadXORByte(guid2, 2);
@@ -3009,7 +3080,7 @@ namespace WowPacketParser.Parsing.Parsers
                 if (hasOrientation)
                     moveInfo.Orientation = packet.ReadSingle("Orientation", index);
 
-                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index) / 7.0f;
+                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index);
                 packet.AddValue("Position", moveInfo.Position, index);
             }
 
@@ -3097,12 +3168,47 @@ namespace WowPacketParser.Parsing.Parsers
                     {
                         case SpeedType.Walk:
                         {
-                            moveInfo.WalkSpeed = speed / 2.5f;
+                            moveInfo.WalkSpeed = speed;
                             break;
                         }
                         case SpeedType.Run:
                         {
-                            moveInfo.RunSpeed = speed / 7.0f;
+                            moveInfo.RunSpeed = speed;
+                            break;
+                        }
+                        case SpeedType.RunBack:
+                        {
+                            moveInfo.RunBackSpeed = speed;
+                            break;
+                        }
+                        case SpeedType.Swim:
+                        {
+                            moveInfo.SwimSpeed = speed;
+                            break;
+                        }
+                        case SpeedType.SwimBack:
+                        {
+                            moveInfo.SwimBackSpeed = speed;
+                            break;
+                        }
+                        case SpeedType.Turn:
+                        {
+                            moveInfo.TurnRate = speed;
+                            break;
+                        }
+                        case SpeedType.Fly:
+                        {
+                            moveInfo.FlightSpeed = speed;
+                            break;
+                        }
+                        case SpeedType.FlyBack:
+                        {
+                            moveInfo.FlightBackSpeed = speed;
+                            break;
+                        }
+                        case SpeedType.Pitch:
+                        {
+                            moveInfo.PitchRate = speed;
                             break;
                         }
                     }

@@ -229,39 +229,68 @@ namespace WowPacketParser.Store
                 StoreObjectCreate2Time(guid, movement, time);
 
         }
-        public static readonly Dictionary<WowGuid, List<CreatureUpdate>> UnitUpdates = new Dictionary<WowGuid, List<CreatureUpdate>>();
-        public static void StoreUnitUpdate(WowGuid guid, CreatureUpdate update)
+        public static readonly Dictionary<WowGuid, List<CreatureValuesUpdate>> UnitValuesUpdates = new Dictionary<WowGuid, List<CreatureValuesUpdate>>();
+        public static void StoreUnitValuesUpdate(WowGuid guid, CreatureValuesUpdate update)
         {
             if (guid.GetObjectType() == ObjectType.Unit &&
                 guid.GetHighType() != HighGuidType.Pet)
             {
-                if (!Settings.SqlTables.creature_update)
+                if (!Settings.SqlTables.creature_values_update)
                     return;
             }
             else if (guid.GetObjectType() == ObjectType.Player ||
                      guid.GetObjectType() == ObjectType.ActivePlayer)
             {
-                if (!Settings.SqlTables.character_update)
+                if (!Settings.SqlTables.character_values_update)
                     return;
             }
             else
                 return;
 
-            if (Storage.UnitUpdates.ContainsKey(guid))
+            if (Storage.UnitValuesUpdates.ContainsKey(guid))
             {
-                Storage.UnitUpdates[guid].Add(update);
+                Storage.UnitValuesUpdates[guid].Add(update);
             }
             else
             {
-                List<CreatureUpdate> updateList = new List<CreatureUpdate>();
+                List<CreatureValuesUpdate> updateList = new List<CreatureValuesUpdate>();
                 updateList.Add(update);
-                Storage.UnitUpdates.Add(guid, updateList);
+                Storage.UnitValuesUpdates.Add(guid, updateList);
+            }
+        }
+        public static readonly Dictionary<WowGuid, List<CreatureSpeedUpdate>> UnitSpeedUpdates = new Dictionary<WowGuid, List<CreatureSpeedUpdate>>();
+        public static void StoreUnitSpeedUpdate(WowGuid guid, CreatureSpeedUpdate update)
+        {
+            if (guid.GetObjectType() == ObjectType.Unit &&
+                guid.GetHighType() != HighGuidType.Pet)
+            {
+                if (!Settings.SqlTables.creature_speed_update)
+                    return;
+            }
+            else if (guid.GetObjectType() == ObjectType.Player ||
+                     guid.GetObjectType() == ObjectType.ActivePlayer)
+            {
+                if (!Settings.SqlTables.character_speed_update)
+                    return;
+            }
+            else
+                return;
+
+            if (Storage.UnitSpeedUpdates.ContainsKey(guid))
+            {
+                Storage.UnitSpeedUpdates[guid].Add(update);
+            }
+            else
+            {
+                List<CreatureSpeedUpdate> updateList = new List<CreatureSpeedUpdate>();
+                updateList.Add(update);
+                Storage.UnitSpeedUpdates.Add(guid, updateList);
             }
         }
         public static readonly Dictionary<WowGuid, List<GameObjectUpdate>> GameObjectUpdates = new Dictionary<WowGuid, List<GameObjectUpdate>>();
         public static void StoreGameObjectUpdate(WowGuid guid, GameObjectUpdate update)
         {
-            if (!Settings.SqlTables.gameobject_update)
+            if (!Settings.SqlTables.gameobject_values_update)
                 return;
 
             if (guid.GetObjectType() != ObjectType.GameObject)
@@ -702,7 +731,8 @@ namespace WowPacketParser.Store
             CreatureTemplateQuestItems.Clear();
             CreatureTemplateScalings.Clear();
             CreatureTemplateModels.Clear();
-            UnitUpdates.Clear();
+            UnitValuesUpdates.Clear();
+            UnitSpeedUpdates.Clear();
 
             NpcTrainers.Clear();
             NpcVendors.Clear();

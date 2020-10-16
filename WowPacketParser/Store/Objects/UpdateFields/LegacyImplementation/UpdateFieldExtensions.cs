@@ -160,7 +160,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
             try
             {
                 UpdateField uf;
-                if (dict.TryGetValue(Enums.Version.UpdateFields.GetUpdateField(updateField), out uf))
+                if (dict != null && dict.TryGetValue(Enums.Version.UpdateFields.GetUpdateField(updateField), out uf))
                     return (TK)Enum.Parse(typeof(TK).GetGenericArguments()[0], uf.UInt32Value.ToString(CultureInfo.InvariantCulture));
             }
             catch (OverflowException) // Data wrongly parsed can result in very wtfy values

@@ -37,6 +37,7 @@ namespace WowPacketParser.SQL.Builders
 
                 row.Data.UnixTime = cast_pair.Item1.UnixTime;
                 row.Data.SpellId = cast_pair.Item1.SpellID;
+                row.Data.CastTime = cast_pair.Item1.CastTime;
                 row.Data.CastFlags = cast_pair.Item1.CastFlags;
                 row.Data.CastFlagsEx = cast_pair.Item1.CastFlagsEx;
 
@@ -59,8 +60,10 @@ namespace WowPacketParser.SQL.Builders
                 return string.Empty;
 
             uint maxListId = 0;
+            uint maxPositionId = 0;
             var spellRows = new RowList<SpellCastGo>();
             var spellTargetRows = new RowList<SpellCastGoTarget>();
+            var spellPositionRows = new RowList<SpellCastGoPosition>();
             StringBuilder result = new StringBuilder();
             foreach (var cast_pair in Storage.SpellCastGo)
             {
@@ -104,6 +107,34 @@ namespace WowPacketParser.SQL.Builders
                 else
                     row.Data.MissTargetsListId = 0;
 
+                if (cast_pair.Item1.SrcPosition != null &&
+                   (cast_pair.Item1.SrcPosition.X != 0 || cast_pair.Item1.SrcPosition.Y != 0 || cast_pair.Item1.SrcPosition.Z != 0))
+                {
+                    row.Data.SrcPositionId = ++maxPositionId;
+                    Row<SpellCastGoPosition> positionRow = new Row<SpellCastGoPosition>();
+                    positionRow.Data.Id = row.Data.SrcPositionId;
+                    positionRow.Data.PositionX = cast_pair.Item1.SrcPosition.X;
+                    positionRow.Data.PositionY = cast_pair.Item1.SrcPosition.Y;
+                    positionRow.Data.PositionZ = cast_pair.Item1.SrcPosition.Z;
+                    spellPositionRows.Add(positionRow);
+                }
+                else
+                    row.Data.SrcPositionId = 0;
+
+                if (cast_pair.Item1.DstPosition != null &&
+                   (cast_pair.Item1.DstPosition.X != 0 || cast_pair.Item1.DstPosition.Y != 0 || cast_pair.Item1.DstPosition.Z != 0))
+                {
+                    row.Data.DstPositionId = ++maxPositionId;
+                    Row<SpellCastGoPosition> positionRow = new Row<SpellCastGoPosition>();
+                    positionRow.Data.Id = row.Data.DstPositionId;
+                    positionRow.Data.PositionX = cast_pair.Item1.DstPosition.X;
+                    positionRow.Data.PositionY = cast_pair.Item1.DstPosition.Y;
+                    positionRow.Data.PositionZ = cast_pair.Item1.DstPosition.Z;
+                    spellPositionRows.Add(positionRow);
+                }
+                else
+                    row.Data.DstPositionId = 0;
+
                 spellRows.Add(row);
             }
             var spellsSql = new SQLInsert<SpellCastGo>(spellRows, false);
@@ -111,7 +142,8 @@ namespace WowPacketParser.SQL.Builders
             result.AppendLine();
             var targetsSql = new SQLInsert<SpellCastGoTarget>(spellTargetRows, false);
             result.Append(targetsSql.Build());
-
+            var positionSql = new SQLInsert<SpellCastGoPosition>(spellPositionRows, false);
+            result.Append(positionSql.Build());
             return result.ToString();
         }
 

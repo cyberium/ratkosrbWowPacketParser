@@ -37,7 +37,8 @@ namespace WowPacketParser.SQL.Builders
             var characterAttackStartRows = new RowList<CreatureTargetChange>();
             var characterAttackStopRows = new RowList<CreatureTargetChange>();
             var characterTargetChangeRows = new RowList<CreatureTargetChange>();
-            var characterUpdateRows = new RowList<CreatureUpdate>();
+            var characterValuesUpdateRows = new RowList<CreatureValuesUpdate>();
+            var characterSpeedUpdateRows = new RowList<CreatureSpeedUpdate>();
             Dictionary<int, uint> accountIdDictionary = new Dictionary<int, uint>();
             foreach (var objPair in Storage.Objects)
             {
@@ -82,8 +83,8 @@ namespace WowPacketParser.SQL.Builders
                     row.Data.Orientation = player.OriginalMovement.Orientation;
                 }
                 row.Data.Map = player.Map;
-                row.Data.Health = (uint)player.UnitData.CurHealth;
-                row.Data.Power1 = (uint)player.UnitData.CurMana;
+                row.Data.Health = (uint)player.UnitData.MaxHealth;
+                row.Data.Power1 = (uint)player.UnitData.MaxMana;
 
                 PlayerField visibleItemsStart = ClientVersion.AddedInVersion(ClientVersionBuild.V5_4_2_17658) ? PlayerField.PLAYER_VISIBLE_ITEM : PlayerField.PLAYER_VISIBLE_ITEM_1_ENTRYID;
                 for (int i = 0; i < 38; i++)
@@ -170,16 +171,30 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SqlTables.character_update)
+                if (Settings.SqlTables.character_values_update)
                 {
-                    if (Storage.UnitUpdates.ContainsKey(objPair.Key))
+                    if (Storage.UnitValuesUpdates.ContainsKey(objPair.Key))
                     {
-                        foreach (var update in Storage.UnitUpdates[objPair.Key])
+                        foreach (var update in Storage.UnitValuesUpdates[objPair.Key])
                         {
-                            var updateRow = new Row<CreatureUpdate>();
+                            var updateRow = new Row<CreatureValuesUpdate>();
                             updateRow.Data = update;
                             updateRow.Data.GUID = row.Data.Guid;
-                            characterUpdateRows.Add(updateRow);
+                            characterValuesUpdateRows.Add(updateRow);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.character_speed_update)
+                {
+                    if (Storage.UnitSpeedUpdates.ContainsKey(objPair.Key))
+                    {
+                        foreach (var update in Storage.UnitSpeedUpdates[objPair.Key])
+                        {
+                            var updateRow = new Row<CreatureSpeedUpdate>();
+                            updateRow.Data = update;
+                            updateRow.Data.GUID = row.Data.Guid;
+                            characterSpeedUpdateRows.Add(updateRow);
                         }
                     }
                 }
@@ -283,9 +298,16 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.character_update)
+            if (Settings.SqlTables.character_values_update)
             {
-                var characterUpdateSql = new SQLInsert<CreatureUpdate>(characterUpdateRows, false, false, "character_update");
+                var characterUpdateSql = new SQLInsert<CreatureValuesUpdate>(characterValuesUpdateRows, false, false, "character_values_update");
+                result.Append(characterUpdateSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.character_speed_update)
+            {
+                var characterUpdateSql = new SQLInsert<CreatureSpeedUpdate>(characterSpeedUpdateRows, false, false, "character_speed_update");
                 result.Append(characterUpdateSql.Build());
                 result.AppendLine();
             }

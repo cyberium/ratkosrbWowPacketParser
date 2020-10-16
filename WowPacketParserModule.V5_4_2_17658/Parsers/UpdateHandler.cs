@@ -611,36 +611,36 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                     packet.ReadInt32("Int98", index);
 
                 packet.ReadXORByte(guid1, 1);
-                packet.ReadSingle("Turn Speed", index);
-                packet.ReadSingle("FlyBack Speed", index);
-                packet.ReadSingle("RunBack Speed", index);
+                moveInfo.TurnRate = packet.ReadSingle("Turn Speed", index);
+                moveInfo.FlightBackSpeed = packet.ReadSingle("FlyBack Speed", index);
+                moveInfo.RunBackSpeed = packet.ReadSingle("RunBack Speed", index);
 
                 if (hasTimestamp)
                     packet.ReadUInt32("Time", index);
 
                 moveInfo.Position.X = packet.ReadSingle();
                 packet.ReadXORByte(guid1, 2);
-                packet.ReadSingle("Swim Speed", index);
-                packet.ReadSingle("SwimBack Speed", index);
+                moveInfo.SwimSpeed = packet.ReadSingle("Swim Speed", index);
+                moveInfo.SwimBackSpeed = packet.ReadSingle("SwimBack Speed", index);
 
                 if (hasOrientation)
                     moveInfo.Orientation = packet.ReadSingle();
 
-                packet.ReadSingle("Fly Speed", index);
+                moveInfo.FlightSpeed = packet.ReadSingle("Fly Speed", index);
                 packet.ReadXORByte(guid1, 6);
 
                 if (hasPitch)
                     packet.ReadSingle("Pitch", index);
 
-                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index) / 7.0f;
-                packet.ReadSingle("Pitch Speed", index);
+                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index);
+                moveInfo.PitchRate = packet.ReadSingle("Pitch Speed", index);
                 packet.ReadXORBytes(guid1, 0, 5);
 
                 for (var i = 0; i < bits90; ++i)
                     packet.ReadInt32("Int8C", index, i);
 
                 packet.ReadXORByte(guid1, 4);
-                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index) / 2.5f;
+                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index);
                 moveInfo.Position.Z = packet.ReadSingle();
                 packet.ReadXORByte(guid1, 3);
 

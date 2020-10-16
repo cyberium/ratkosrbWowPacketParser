@@ -725,7 +725,7 @@ namespace WowPacketParser.Parsing.Parsers
             dbdata.CastFlags = (uint)flags;
             dbdata.CastFlagsEx = 0;
 
-            packet.ReadUInt32("Time");
+            dbdata.CastTime = packet.ReadUInt32("Time");
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_3_0_15005))
                 packet.ReadUInt32("Time2");
 
@@ -759,11 +759,6 @@ namespace WowPacketParser.Parsing.Parsers
                 targetGUID = packet.ReadPackedGuid("Target GUID");
             dbdata.MainTargetGuid = targetGUID;
 
-            if (isSpellGo)
-                Storage.StoreSpellCastData(dbdata, Storage.SpellCastGo, packet);
-            else
-                Storage.StoreSpellCastData(dbdata, Storage.SpellCastStart, packet);
-
             if (targetFlags.HasAnyFlag(TargetFlag.Item | TargetFlag.TradeItem))
                 packet.ReadPackedGuid("Item Target GUID");
 
@@ -772,7 +767,7 @@ namespace WowPacketParser.Parsing.Parsers
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_2_0_10192))
                     packet.ReadPackedGuid("Source Transport GUID");
 
-                packet.ReadVector3("Source Position");
+                dbdata.SrcPosition = packet.ReadVector3("Source Position");
             }
 
             if (targetFlags.HasAnyFlag(TargetFlag.DestinationLocation))
@@ -780,7 +775,7 @@ namespace WowPacketParser.Parsing.Parsers
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_8_9464))
                     packet.ReadPackedGuid("Destination Transport GUID");
 
-                packet.ReadVector3("Destination Position");
+                dbdata.DstPosition = packet.ReadVector3("Destination Position");
             }
 
             if (targetFlags.HasAnyFlag(TargetFlag.NameString))
@@ -894,7 +889,12 @@ namespace WowPacketParser.Parsing.Parsers
             }
 
             if (isSpellGo)
+            {
                 packet.AddSniffData(StoreNameType.Spell, spellId, "SPELL_GO");
+                Storage.StoreSpellCastData(dbdata, Storage.SpellCastGo, packet);
+            }
+            else
+                Storage.StoreSpellCastData(dbdata, Storage.SpellCastStart, packet);
         }
 
         [Parser(Opcode.SMSG_LEARNED_SPELL)]

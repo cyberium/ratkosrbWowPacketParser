@@ -361,15 +361,15 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     }
                 }
 
-                moveInfo.WalkSpeed = packet.ReadSingle("WalkSpeed", index) / 2.5f;
-                moveInfo.RunSpeed = packet.ReadSingle("RunSpeed", index) / 7.0f;
-                packet.ReadSingle("RunBackSpeed", index);
-                packet.ReadSingle("SwimSpeed", index);
-                packet.ReadSingle("SwimBackSpeed", index);
-                packet.ReadSingle("FlightSpeed", index);
-                packet.ReadSingle("FlightBackSpeed", index);
-                packet.ReadSingle("TurnRate", index);
-                packet.ReadSingle("PitchRate", index);
+                moveInfo.WalkSpeed = packet.ReadSingle("WalkSpeed", index);
+                moveInfo.RunSpeed = packet.ReadSingle("RunSpeed", index);
+                moveInfo.RunBackSpeed = packet.ReadSingle("RunBackSpeed", index);
+                moveInfo.SwimSpeed = packet.ReadSingle("SwimSpeed", index);
+                moveInfo.SwimBackSpeed = packet.ReadSingle("SwimBackSpeed", index);
+                moveInfo.FlightSpeed = packet.ReadSingle("FlightSpeed", index);
+                moveInfo.FlightBackSpeed = packet.ReadSingle("FlightBackSpeed", index);
+                moveInfo.TurnRate = packet.ReadSingle("TurnRate", index);
+                moveInfo.PitchRate = packet.ReadSingle("PitchRate", index);
 
                 var movementForceCount = packet.ReadUInt32("MovementForceCount", index);
 

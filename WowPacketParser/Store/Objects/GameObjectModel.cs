@@ -128,7 +128,7 @@ namespace WowPacketParser.Store.Objects
         public uint UnixTime;
     }
 
-    [DBTableName("gameobject_update")]
+    [DBTableName("gameobject_values_update")]
     public sealed class GameObjectUpdate : IDataModel
     {
         [DBFieldName("guid", true, true)]

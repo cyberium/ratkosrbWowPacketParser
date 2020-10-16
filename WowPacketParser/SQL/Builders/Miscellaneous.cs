@@ -160,7 +160,7 @@ namespace WowPacketParser.SQL.Builders
             uint rowsCount = 0;
             uint rowsCount2 = 0;
             string query = "INSERT INTO `" + entryTable + "` (`entry`, `loot_id`, `money`, `items_count`) VALUES\n";
-            string query2 = "INSERT INTO `" + itemTable + "` (`loot_id`, `item_id`, `count`) VALUES\n";
+            string query2 = "";
             foreach (var pair1 in storage)
             {
                 foreach (var pair2 in pair1.Value)
@@ -180,8 +180,13 @@ namespace WowPacketParser.SQL.Builders
                 }
             }
             query += ";\n";
-            query += query2;
-            query += ";\n\n";
+            if (query2 != "")
+            {
+                query += "INSERT INTO `" + itemTable + "` (`loot_id`, `item_id`, `count`) VALUES\n";
+                query += query2;
+                query += ";\n\n";
+            }
+            
             return query;
         }
 

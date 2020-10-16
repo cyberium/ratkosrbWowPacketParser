@@ -274,7 +274,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             {
                 packet.ReadXORByte(guid2, 4);
 
-                packet.ReadSingle("RunBack Speed", index);
+                moveInfo.RunBackSpeed = packet.ReadSingle("RunBack Speed", index);
                 if (hasFallData)
                 {
                     if (hasFallDirection)
@@ -288,7 +288,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
                     packet.ReadSingle("Fall Z Speed", index);
                 }
 
-                packet.ReadSingle("SwimBack Speed", index);
+                moveInfo.SwimBackSpeed = packet.ReadSingle("SwimBack Speed", index);
                 if (hasSplineElevation)
                     packet.ReadSingle("Spline Elevation", index);
 
@@ -396,32 +396,32 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
                 }
 
                 moveInfo.Position.X = packet.ReadSingle();
-                packet.ReadSingle("Pitch Speed", index);
+                moveInfo.PitchRate = packet.ReadSingle("Pitch Speed", index);
                 packet.ReadXORByte(guid2, 3);
                 packet.ReadXORByte(guid2, 0);
 
-                packet.ReadSingle("Swim Speed", index);
+                moveInfo.SwimSpeed = packet.ReadSingle("Swim Speed", index);
                 moveInfo.Position.Y = packet.ReadSingle();
                 packet.ReadXORByte(guid2, 7);
                 packet.ReadXORByte(guid2, 1);
                 packet.ReadXORByte(guid2, 2);
 
-                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index) / 2.5f;
+                moveInfo.WalkSpeed = packet.ReadSingle("Walk Speed", index);
                 if (hasTimestamp)
                     packet.ReadUInt32("Time", index);
 
-                packet.ReadSingle("FlyBack Speed", index);
+                moveInfo.FlightBackSpeed = packet.ReadSingle("FlyBack Speed", index);
                 packet.ReadXORByte(guid2, 6);
 
-                packet.ReadSingle("Turn Speed", index);
+                moveInfo.TurnRate = packet.ReadSingle("Turn Speed", index);
                 if (hasOrientation)
                     moveInfo.Orientation = packet.ReadSingle();
 
-                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index) / 7.0f;
+                moveInfo.RunSpeed = packet.ReadSingle("Run Speed", index);
                 if (hasPitch)
                     packet.ReadSingle("Pitch", index);
 
-                packet.ReadSingle("Fly Speed", index);
+                moveInfo.FlightSpeed = packet.ReadSingle("Fly Speed", index);
 
                 packet.WriteGuid("GUID 2", guid2);
                 packet.AddValue("Position", moveInfo.Position, index);

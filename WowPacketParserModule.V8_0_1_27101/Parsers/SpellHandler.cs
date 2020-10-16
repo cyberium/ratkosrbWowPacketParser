@@ -30,11 +30,10 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             packet.ReadPackedGuid128("Item", idx);
 
             if (hasSrcLoc)
-                V6_0_2_19033.Parsers.SpellHandler.ReadLocation(packet, "SrcLocation");
+                dbdata.SrcPosition = V6_0_2_19033.Parsers.SpellHandler.ReadLocation(packet, "SrcLocation");
 
-            var dstLocation = new Vector3();
             if (hasDstLoc)
-                dstLocation = V6_0_2_19033.Parsers.SpellHandler.ReadLocation(packet, "DstLocation");
+                dbdata.DstPosition = V6_0_2_19033.Parsers.SpellHandler.ReadLocation(packet, "DstLocation");
 
             if (hasOrient)
                 packet.ReadSingle("Orientation", idx);
@@ -43,7 +42,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             if (hasMapID)
                 mapID = (ushort)packet.ReadInt32("MapID", idx);
 
-            if (Settings.UseDBC && dstLocation != null && mapID != -1)
+            if (Settings.UseDBC && dbdata.DstPosition != null && mapID != -1)
             {
                 for (uint i = 0; i < 32; i++)
                 {
@@ -59,9 +58,9 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                             {
                                 ID = spellID,
                                 EffectIndex = (byte)i,
-                                PositionX = dstLocation.X,
-                                PositionY = dstLocation.Y,
-                                PositionZ = dstLocation.Z,
+                                PositionX = dbdata.DstPosition.X,
+                                PositionY = dbdata.DstPosition.Y,
+                                PositionZ = dbdata.DstPosition.Z,
                                 MapID = (ushort)mapID,
                                 EffectHelper = effectHelper
                             };
@@ -118,15 +117,12 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             packet.ReadPackedGuid128("CastID", idx);
             packet.ReadPackedGuid128("OriginalCastID", idx);
 
-            var spellID = packet.ReadUInt32<SpellId>("SpellID", idx);
-            dbdata.SpellID = spellID;
+            dbdata.SpellID = packet.ReadUInt32<SpellId>("SpellID", idx);
             packet.ReadUInt32("SpellXSpellVisualID", idx);
 
-            uint castFlags = packet.ReadUInt32("CastFlags", idx);
-            dbdata.CastFlags = castFlags;
-            uint castFlagsEx = packet.ReadUInt32("CastFlagsEx", idx);
-            dbdata.CastFlagsEx = castFlagsEx;
-            packet.ReadUInt32("CastTime", idx);
+            dbdata.CastFlags = packet.ReadUInt32("CastFlags", idx);
+            dbdata.CastFlagsEx = packet.ReadUInt32("CastFlagsEx", idx);
+            dbdata.CastTime = packet.ReadUInt32("CastTime", idx);
 
             V6_0_2_19033.Parsers.SpellHandler.ReadMissileTrajectoryResult(packet, idx, "MissileTrajectory");
 
@@ -156,7 +152,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             for (var i = 0; i < missStatusCount; ++i)
                 V6_0_2_19033.Parsers.SpellHandler.ReadSpellMissStatus(packet, idx, "MissStatus", i);
 
-            ReadSpellTargetData(dbdata, packet, spellID, idx, "Target");
+            ReadSpellTargetData(dbdata, packet, dbdata.SpellID, idx, "Target");
 
             for (var i = 0; i < hitTargetsCount; ++i)
             {

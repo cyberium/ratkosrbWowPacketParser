@@ -112,6 +112,25 @@ CREATE TABLE IF NOT EXISTS `character_movement` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.character_speed_update
+DROP TABLE IF EXISTS `character_speed_update`;
+CREATE TABLE IF NOT EXISTS `character_speed_update` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
+  `speed_walk` float unsigned DEFAULT NULL,
+  `speed_run` float unsigned DEFAULT NULL,
+  `speed_run_back` float unsigned DEFAULT NULL,
+  `speed_swim` float unsigned DEFAULT NULL,
+  `speed_swim_back` float unsigned DEFAULT NULL,
+  `speed_fly` float unsigned DEFAULT NULL,
+  `speed_fly_back` float unsigned DEFAULT NULL,
+  `rate_turn` float unsigned DEFAULT NULL,
+  `rate_pitch` float unsigned DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to movement speed';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.character_target_change
 DROP TABLE IF EXISTS `character_target_change`;
 CREATE TABLE IF NOT EXISTS `character_target_change` (
@@ -125,9 +144,9 @@ CREATE TABLE IF NOT EXISTS `character_target_change` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.character_update
-DROP TABLE IF EXISTS `character_update`;
-CREATE TABLE IF NOT EXISTS `character_update` (
+-- Dumping structure for table sniffs_new_test.character_values_update
+DROP TABLE IF EXISTS `character_values_update`;
+CREATE TABLE IF NOT EXISTS `character_values_update` (
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
   `entry` int(10) unsigned DEFAULT NULL,
@@ -473,6 +492,25 @@ CREATE TABLE IF NOT EXISTS `creature_questitem` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_speed_update
+DROP TABLE IF EXISTS `creature_speed_update`;
+CREATE TABLE IF NOT EXISTS `creature_speed_update` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
+  `speed_walk` float unsigned DEFAULT NULL,
+  `speed_run` float unsigned DEFAULT NULL,
+  `speed_run_back` float unsigned DEFAULT NULL,
+  `speed_swim` float unsigned DEFAULT NULL,
+  `speed_swim_back` float unsigned DEFAULT NULL,
+  `speed_fly` float unsigned DEFAULT NULL,
+  `speed_fly_back` float unsigned DEFAULT NULL,
+  `rate_turn` float unsigned DEFAULT NULL,
+  `rate_pitch` float unsigned DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to movement speed';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_stats
 DROP TABLE IF EXISTS `creature_stats`;
 CREATE TABLE IF NOT EXISTS `creature_stats` (
@@ -635,9 +673,9 @@ CREATE TABLE IF NOT EXISTS `creature_text_template` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.creature_update
-DROP TABLE IF EXISTS `creature_update`;
-CREATE TABLE IF NOT EXISTS `creature_update` (
+-- Dumping structure for table sniffs_new_test.creature_values_update
+DROP TABLE IF EXISTS `creature_values_update`;
+CREATE TABLE IF NOT EXISTS `creature_values_update` (
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
   `entry` int(10) unsigned DEFAULT NULL,
@@ -811,36 +849,34 @@ CREATE TABLE IF NOT EXISTS `gameobject_template` (
   `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `displayId` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `name` varchar(100) NOT NULL DEFAULT '',
-  `IconName` varchar(100) NOT NULL DEFAULT '',
-  `castBarCaption` varchar(100) NOT NULL DEFAULT '',
+  `icon_name` varchar(100) NOT NULL DEFAULT '',
+  `cast_bar_caption` varchar(100) NOT NULL DEFAULT '',
   `unk1` varchar(100) NOT NULL DEFAULT '',
   `size` float NOT NULL DEFAULT '1',
-  `Data0` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data1` int(11) NOT NULL DEFAULT '0',
-  `Data2` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data3` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data4` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data5` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data6` int(11) NOT NULL DEFAULT '0',
-  `Data7` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data8` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data9` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data10` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data11` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data12` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data13` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data14` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data15` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data16` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data17` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data18` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data19` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data20` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data21` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data22` int(10) unsigned NOT NULL DEFAULT '0',
-  `Data23` int(10) unsigned NOT NULL DEFAULT '0',
-  `AIName` char(64) NOT NULL DEFAULT '',
-  `ScriptName` varchar(64) NOT NULL DEFAULT '',
+  `data0` int(10) unsigned NOT NULL DEFAULT '0',
+  `data1` int(11) NOT NULL DEFAULT '0',
+  `data2` int(10) unsigned NOT NULL DEFAULT '0',
+  `data3` int(10) unsigned NOT NULL DEFAULT '0',
+  `data4` int(10) unsigned NOT NULL DEFAULT '0',
+  `data5` int(10) unsigned NOT NULL DEFAULT '0',
+  `data6` int(11) NOT NULL DEFAULT '0',
+  `data7` int(10) unsigned NOT NULL DEFAULT '0',
+  `data8` int(10) unsigned NOT NULL DEFAULT '0',
+  `data9` int(10) unsigned NOT NULL DEFAULT '0',
+  `data10` int(10) unsigned NOT NULL DEFAULT '0',
+  `data11` int(10) unsigned NOT NULL DEFAULT '0',
+  `data12` int(10) unsigned NOT NULL DEFAULT '0',
+  `data13` int(10) unsigned NOT NULL DEFAULT '0',
+  `data14` int(10) unsigned NOT NULL DEFAULT '0',
+  `data15` int(10) unsigned NOT NULL DEFAULT '0',
+  `data16` int(10) unsigned NOT NULL DEFAULT '0',
+  `data17` int(10) unsigned NOT NULL DEFAULT '0',
+  `data18` int(10) unsigned NOT NULL DEFAULT '0',
+  `data19` int(10) unsigned NOT NULL DEFAULT '0',
+  `data20` int(10) unsigned NOT NULL DEFAULT '0',
+  `data21` int(10) unsigned NOT NULL DEFAULT '0',
+  `data22` int(10) unsigned NOT NULL DEFAULT '0',
+  `data23` int(10) unsigned NOT NULL DEFAULT '0',
   `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
   PRIMARY KEY (`entry`),
   KEY `idx_name` (`name`)
@@ -861,9 +897,9 @@ CREATE TABLE IF NOT EXISTS `gameobject_template_addon` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.gameobject_update
-DROP TABLE IF EXISTS `gameobject_update`;
-CREATE TABLE IF NOT EXISTS `gameobject_update` (
+-- Dumping structure for table sniffs_new_test.gameobject_values_update
+DROP TABLE IF EXISTS `gameobject_values_update`;
+CREATE TABLE IF NOT EXISTS `gameobject_values_update` (
   `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
   `flags` int(10) unsigned DEFAULT NULL,
@@ -1045,11 +1081,11 @@ CREATE TABLE IF NOT EXISTS `object_names` (
 -- Dumping structure for table sniffs_new_test.page_text
 DROP TABLE IF EXISTS `page_text`;
 CREATE TABLE IF NOT EXISTS `page_text` (
-  `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `Text` longtext NOT NULL,
-  `NextPageID` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `text` longtext NOT NULL,
+  `next_page` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`entry`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Item System';
 
 -- Data exporting was unselected.
@@ -1283,8 +1319,7 @@ CREATE TABLE IF NOT EXISTS `quest_poi_points` (
 DROP TABLE IF EXISTS `quest_request_items`;
 CREATE TABLE IF NOT EXISTS `quest_request_items` (
   `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `EmoteOnComplete` smallint(5) unsigned DEFAULT NULL,
-  `EmoteOnIncomplete` smallint(5) unsigned DEFAULT NULL,
+  `Emote` smallint(5) unsigned DEFAULT NULL,
   `CompletionText` text,
   `VerifiedBuild` smallint(5) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
@@ -1462,8 +1497,23 @@ CREATE TABLE IF NOT EXISTS `spell_cast_go` (
   `hit_targets_count` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `hit_targets_list_id` int(10) unsigned NOT NULL DEFAULT '0',
   `miss_targets_count` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `miss_targets_list_id` int(10) unsigned NOT NULL DEFAULT '0'
+  `miss_targets_list_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `src_position_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `dst_position_id` int(10) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_SPELL_GO\r\nsent when a spell is successfully casted';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.spell_cast_go_position
+DROP TABLE IF EXISTS `spell_cast_go_position`;
+CREATE TABLE IF NOT EXISTS `spell_cast_go_position` (
+  `id` int(10) unsigned NOT NULL,
+  `position_x` float NOT NULL DEFAULT '0',
+  `position_y` float NOT NULL DEFAULT '0',
+  `position_z` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='source and destination locations from SMSG_SPELL_GO';
 
 -- Data exporting was unselected.
 
@@ -1488,6 +1538,7 @@ CREATE TABLE IF NOT EXISTS `spell_cast_start` (
   `caster_id` int(10) unsigned NOT NULL DEFAULT '0',
   `caster_type` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `cast_time` int(10) unsigned NOT NULL DEFAULT '0',
   `cast_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `cast_flags_ex` int(10) unsigned NOT NULL DEFAULT '0',
   `target_guid` int(10) unsigned NOT NULL DEFAULT '0',

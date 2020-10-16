@@ -130,6 +130,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("spell_id", true)]
         public uint SpellId;
 
+        [DBFieldName("cast_time")]
+        public uint CastTime;
+
         [DBFieldName("cast_flags")]
         public uint CastFlags;
 
@@ -160,6 +163,22 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("target_type", true)]
         public string TargetType;
+    }
+
+    [DBTableName("spell_cast_go_position")]
+    public sealed class SpellCastGoPosition : IDataModel
+    {
+        [DBFieldName("id", true)]
+        public uint Id;
+
+        [DBFieldName("position_x")]
+        public float PositionX;
+
+        [DBFieldName("position_y")]
+        public float PositionY;
+
+        [DBFieldName("position_z")]
+        public float PositionZ;
     }
 
     [DBTableName("spell_cast_go")]
@@ -206,6 +225,12 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("miss_targets_list_id")]
         public uint MissTargetsListId;
+
+        [DBFieldName("src_position_id")]
+        public uint SrcPositionId;
+
+        [DBFieldName("dst_position_id")]
+        public uint DstPositionId;
     }
 
     public sealed class SpellCastData : IDataModel
@@ -215,6 +240,8 @@ namespace WowPacketParser.Store.Objects
         public WowGuid CasterGuid;
 
         public uint SpellID;
+
+        public uint CastTime;
 
         public uint CastFlags;
 
@@ -240,6 +267,8 @@ namespace WowPacketParser.Store.Objects
 
             MissTargetsList.Add(guid);
         }
+        public Vector3 SrcPosition;
+        public Vector3 DstPosition;
     }
 
     public sealed class SpellPetCooldown : IDataModel

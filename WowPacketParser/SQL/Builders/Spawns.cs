@@ -53,7 +53,8 @@ namespace WowPacketParser.SQL.Builders
             var movementRows = new RowList<CreatureMovement>();
             var movementCombatRows = new RowList<CreatureMovement>();
             var movementSplineRows = new RowList<CreatureMovementSpline>();
-            var updateRows = new RowList<CreatureUpdate>();
+            var updateValuesRows = new RowList<CreatureValuesUpdate>();
+            var updateSpeedRows = new RowList<CreatureSpeedUpdate>();
             var attackStartRows = new RowList<CreatureTargetChange>();
             var attackStopRows = new RowList<CreatureTargetChange>();
             var targetChangeRows = new RowList<CreatureTargetChange>();
@@ -165,8 +166,8 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.CurMana = (uint)unitData.CurMana;
                 row.Data.MaxHealth = (uint)unitData.MaxHealth;
                 row.Data.MaxMana = (uint)unitData.MaxMana;
-                row.Data.SpeedWalk = creature.OriginalMovement.WalkSpeed;
-                row.Data.SpeedRun = creature.OriginalMovement.RunSpeed;
+                row.Data.SpeedWalk = creature.OriginalMovement.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
+                row.Data.SpeedRun = creature.OriginalMovement.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
                 row.Data.Scale = creature.ObjectData.Scale;
                 row.Data.BaseAttackTime = unitData.AttackRoundBaseTime[0];
                 row.Data.RangedAttackTime = unitData.RangedAttackRoundBaseTime;
@@ -292,16 +293,30 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SqlTables.creature_update)
+                if (Settings.SqlTables.creature_values_update)
                 {
-                    if (Storage.UnitUpdates.ContainsKey(unit.Key))
+                    if (Storage.UnitValuesUpdates.ContainsKey(unit.Key))
                     {
-                        foreach (var update in Storage.UnitUpdates[unit.Key])
+                        foreach (var update in Storage.UnitValuesUpdates[unit.Key])
                         {
-                            var updateRow = new Row<CreatureUpdate>();
+                            var updateRow = new Row<CreatureValuesUpdate>();
                             updateRow.Data = update;
                             updateRow.Data.GUID = "@CGUID+" + creature.DbGuid;
-                            updateRows.Add(updateRow);
+                            updateValuesRows.Add(updateRow);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.creature_speed_update)
+                {
+                    if (Storage.UnitSpeedUpdates.ContainsKey(unit.Key))
+                    {
+                        foreach (var update in Storage.UnitSpeedUpdates[unit.Key])
+                        {
+                            var updateRow = new Row<CreatureSpeedUpdate>();
+                            updateRow.Data = update;
+                            updateRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            updateSpeedRows.Add(updateRow);
                         }
                     }
                 }
@@ -459,6 +474,7 @@ namespace WowPacketParser.SQL.Builders
             result.Append(delete.Build());
             var sql = new SQLInsert<Creature>(rows, false);
             result.Append(sql.Build());
+            result.AppendLine();
 
             if (Settings.SqlTables.creature_addon)
             {
@@ -466,6 +482,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(addonDelete.Build());
                 var addonSql = new SQLInsert<CreatureAddon>(addonRows, false);
                 result.Append(addonSql.Build());
+                result.AppendLine();
             }
 
             if (Settings.SqlTables.creature_client_interact)
@@ -474,6 +491,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(interactDelete.Build());
                 var interactSql = new SQLInsert<CreatureClientInteract>(interactRows, false);
                 result.Append(interactSql.Build());
+                result.AppendLine();
             }
 
             if (Settings.SqlTables.creature_create1_time)
@@ -482,6 +500,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(create1Delete.Build());
                 var createSql = new SQLInsert<CreatureCreate1>(create1Rows, false);
                 result.Append(createSql.Build());
+                result.AppendLine();
             }
 
             if (Settings.SqlTables.creature_create2_time)
@@ -490,6 +509,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(create2Delete.Build());
                 var createSql = new SQLInsert<CreatureCreate2>(create2Rows, false);
                 result.Append(createSql.Build());
+                result.AppendLine();
             }
 
             if (Settings.SqlTables.creature_destroy_time)
@@ -498,14 +518,25 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(destroyDelete.Build());
                 var destroySql = new SQLInsert<CreatureDestroy>(destroyRows, false);
                 result.Append(destroySql.Build());
+                result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_update)
+            if (Settings.SqlTables.creature_values_update)
             {
-                var updateDelete = new SQLDelete<CreatureUpdate>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                var updateDelete = new SQLDelete<CreatureValuesUpdate>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(updateDelete.Build());
-                var updateSql = new SQLInsert<CreatureUpdate>(updateRows, false);
+                var updateSql = new SQLInsert<CreatureValuesUpdate>(updateValuesRows, false);
                 result.Append(updateSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.creature_speed_update)
+            {
+                var updateDelete = new SQLDelete<CreatureSpeedUpdate>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                result.Append(updateDelete.Build());
+                var updateSql = new SQLInsert<CreatureSpeedUpdate>(updateSpeedRows, false);
+                result.Append(updateSql.Build());
+                result.AppendLine();
             }
 
             if (Settings.SqlTables.creature_movement)
@@ -515,12 +546,14 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(movementDelete.Build());
                 var movementSql = new SQLInsert<CreatureMovement>(movementRows, false);
                 result.Append(movementSql.Build());
+                result.AppendLine();
 
                 // creature_movement_spline
                 var movementSplineDelete = new SQLDelete<CreatureMovementSpline>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(movementSplineDelete.Build());
                 var movementSplineSql = new SQLInsert<CreatureMovementSpline>(movementSplineRows, false);
                 result.Append(movementSplineSql.Build());
+                result.AppendLine();
             }
 
             if (Settings.SqlTables.creature_movement_combat)
@@ -531,6 +564,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(movementDelete.Build());
                 var movementSql = new SQLInsert<CreatureMovement>(movementCombatRows, false, false, "creature_movement_combat");
                 result.Append(movementSql.Build());
+                result.AppendLine();
             }
 
             if (emoteRows != "")
@@ -547,8 +581,8 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(attackDelete.Build());
                 var attackSql = new SQLInsert<CreatureTargetChange>(attackStartRows, false, false, "creature_attack_start");
                 result.Append(attackSql.Build());
+                result.AppendLine();
             }
-
 
             if (Settings.SqlTables.creature_attack_stop)
             {
@@ -557,6 +591,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(attackDelete.Build());
                 var attackSql = new SQLInsert<CreatureTargetChange>(attackStopRows, false, false, "creature_attack_stop");
                 result.Append(attackSql.Build());
+                result.AppendLine();
             }
 
             if (Settings.SqlTables.creature_target_change)
@@ -566,6 +601,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(attackDelete.Build());
                 var attackSql = new SQLInsert<CreatureTargetChange>(targetChangeRows, false, false, "creature_target_change");
                 result.Append(attackSql.Build());
+                result.AppendLine();
             }
 
             return result.ToString();
@@ -779,7 +815,7 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SqlTables.gameobject_update)
+                if (Settings.SqlTables.gameobject_values_update)
                 {
                     if (Storage.GameObjectUpdates.ContainsKey(gameobject.Key))
                     {
@@ -915,7 +951,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(destroySql.Build());
             }
 
-            if (Settings.SqlTables.gameobject_update)
+            if (Settings.SqlTables.gameobject_values_update)
             {
                 var updateDelete = new SQLDelete<GameObjectUpdate>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
                 result.Append(updateDelete.Build());
