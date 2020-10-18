@@ -258,32 +258,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("unixtime", true)]
         public uint UnixTime;
 
-        [DBFieldName("speed_walk", true, false, true)]
-        public float? WalkSpeed;
+        [DBFieldName("type", true)]
+        public SpeedType SpeedType;
 
-        [DBFieldName("speed_run", true, false, true)]
-        public float? RunSpeed;
-
-        [DBFieldName("speed_run_back", true, false, true)]
-        public float? RunBackSpeed;
-
-        [DBFieldName("speed_swim", true, false, true)]
-        public float? SwimSpeed;
-
-        [DBFieldName("speed_swim_back", true, false, true)]
-        public float? SwimBackSpeed;
-
-        [DBFieldName("speed_fly", true, false, true)]
-        public float? FlightSpeed;
-
-        [DBFieldName("speed_fly_back", true, false, true)]
-        public float? FlightBackSpeed;
-
-        [DBFieldName("rate_turn", true, false, true)]
-        public float? TurnRate;
-
-        [DBFieldName("rate_pitch", true, false, true)]
-        public float? PitchRate;
+        [DBFieldName("speed", true)]
+        public float SpeedRate;
     }
 
     [DBTableName("creature_values_update")]

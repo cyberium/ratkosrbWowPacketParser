@@ -205,59 +205,80 @@ namespace WowPacketParser.Parsing.Parsers
             {
                 if (Storage.Objects.ContainsKey(guid))
                 {
-                    bool hasData = false;
-                    CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
                     var obj = Storage.Objects[guid].Item1 as Unit;
                     if (obj.Movement.WalkSpeed != moveInfo.WalkSpeed)
                     {
-                        hasData = true;
-                        speedUpdate.WalkSpeed = moveInfo.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
+                        CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                        speedUpdate.SpeedType = SpeedType.Walk;
+                        speedUpdate.SpeedRate = moveInfo.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
+                        speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                        Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
                     }
                     if (obj.Movement.RunSpeed != moveInfo.RunSpeed)
                     {
-                        hasData = true;
-                        speedUpdate.RunSpeed = moveInfo.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
+                        CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                        speedUpdate.SpeedType = SpeedType.Run;
+                        speedUpdate.SpeedRate = moveInfo.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
+                        speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                        Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
                     }
                     if (obj.Movement.RunBackSpeed != moveInfo.RunBackSpeed)
                     {
-                        hasData = true;
-                        speedUpdate.RunBackSpeed = moveInfo.RunBackSpeed / MovementInfo.DEFAULT_RUN_BACK_SPEED;
+                        CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                        speedUpdate.SpeedType = SpeedType.RunBack;
+                        speedUpdate.SpeedRate = moveInfo.RunBackSpeed / MovementInfo.DEFAULT_RUN_BACK_SPEED;
+                        speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                        Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
                     }
                     if (obj.Movement.SwimSpeed != moveInfo.SwimSpeed)
                     {
-                        hasData = true;
-                        speedUpdate.SwimSpeed = moveInfo.SwimSpeed / MovementInfo.DEFAULT_SWIM_SPEED;
+                        CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                        speedUpdate.SpeedType = SpeedType.Swim;
+                        speedUpdate.SpeedRate = moveInfo.SwimSpeed / MovementInfo.DEFAULT_SWIM_SPEED;
+                        speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                        Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
                     }
                     if (obj.Movement.SwimBackSpeed != moveInfo.SwimBackSpeed)
                     {
-                        hasData = true;
-                        speedUpdate.SwimBackSpeed = moveInfo.SwimBackSpeed / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
+                        CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                        speedUpdate.SpeedType = SpeedType.SwimBack;
+                        speedUpdate.SpeedRate = moveInfo.SwimBackSpeed / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
+                        speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                        Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
                     }
                     if (obj.Movement.FlightSpeed != moveInfo.FlightSpeed)
                     {
-                        hasData = true;
-                        speedUpdate.FlightSpeed = moveInfo.FlightSpeed / MovementInfo.DEFAULT_FLY_SPEED;
+                        CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                        speedUpdate.SpeedType = SpeedType.Fly;
+                        speedUpdate.SpeedRate = moveInfo.FlightSpeed / MovementInfo.DEFAULT_FLY_SPEED;
+                        speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                        Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
                     }
                     if (obj.Movement.FlightBackSpeed != moveInfo.FlightBackSpeed)
                     {
-                        hasData = true;
-                        speedUpdate.FlightBackSpeed = moveInfo.FlightBackSpeed / MovementInfo.DEFAULT_FLY_BACK_SPEED;
+                        CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                        speedUpdate.SpeedType = SpeedType.FlyBack;
+                        speedUpdate.SpeedRate = moveInfo.FlightBackSpeed / MovementInfo.DEFAULT_FLY_BACK_SPEED;
+                        speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                        Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+                        
                     }
                     if (obj.Movement.TurnRate != moveInfo.TurnRate)
                     {
-                        hasData = true;
-                        speedUpdate.TurnRate = moveInfo.TurnRate / MovementInfo.DEFAULT_TURN_RATE;
+                        CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                        speedUpdate.SpeedType = SpeedType.Turn;
+                        speedUpdate.SpeedRate = moveInfo.TurnRate / MovementInfo.DEFAULT_TURN_RATE;
+                        speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                        Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
                     }
                     if (obj.Movement.PitchRate != moveInfo.PitchRate)
                     {
-                        hasData = true;
-                        speedUpdate.PitchRate = moveInfo.PitchRate / MovementInfo.DEFAULT_PITCH_RATE;
-                    }
-                    if (hasData)
-                    {
+                        CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                        speedUpdate.SpeedType = SpeedType.Pitch;
+                        speedUpdate.SpeedRate = moveInfo.PitchRate / MovementInfo.DEFAULT_PITCH_RATE;
                         speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
                         Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
-                    } 
+                    }
                 }
             }
         }

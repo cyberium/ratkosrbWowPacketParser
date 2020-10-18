@@ -1388,7 +1388,8 @@ namespace WowPacketParser.Parsing.Parsers
             var guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
-            speedUpdate.WalkSpeed = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_WALK_SPEED;
+            speedUpdate.SpeedType = SpeedType.Walk;
+            speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_WALK_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1398,7 +1399,8 @@ namespace WowPacketParser.Parsing.Parsers
             var guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
-            speedUpdate.RunSpeed = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_RUN_SPEED;
+            speedUpdate.SpeedType = SpeedType.Run;
+            speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_RUN_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1408,7 +1410,8 @@ namespace WowPacketParser.Parsing.Parsers
             var guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
-            speedUpdate.RunBackSpeed = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_RUN_BACK_SPEED;
+            speedUpdate.SpeedType = SpeedType.RunBack;
+            speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_RUN_BACK_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1418,7 +1421,8 @@ namespace WowPacketParser.Parsing.Parsers
             var guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
-            speedUpdate.SwimSpeed = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_SWIM_SPEED;
+            speedUpdate.SpeedType = SpeedType.Swim;
+            speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_SWIM_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1428,7 +1432,8 @@ namespace WowPacketParser.Parsing.Parsers
             var guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
-            speedUpdate.SwimBackSpeed = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
+            speedUpdate.SpeedType = SpeedType.SwimBack;
+            speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1438,7 +1443,8 @@ namespace WowPacketParser.Parsing.Parsers
             var guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
-            speedUpdate.TurnRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_TURN_RATE;
+            speedUpdate.SpeedType = SpeedType.Turn;
+            speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_TURN_RATE;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1448,7 +1454,8 @@ namespace WowPacketParser.Parsing.Parsers
             var guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
-            speedUpdate.FlightSpeed = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_FLY_SPEED;
+            speedUpdate.SpeedType = SpeedType.Fly;
+            speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_FLY_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1458,7 +1465,8 @@ namespace WowPacketParser.Parsing.Parsers
             var guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
-            speedUpdate.FlightBackSpeed = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_FLY_BACK_SPEED;
+            speedUpdate.SpeedType = SpeedType.FlyBack;
+            speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_FLY_BACK_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1468,7 +1476,8 @@ namespace WowPacketParser.Parsing.Parsers
             var guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
-            speedUpdate.PitchRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_PITCH_RATE;
+            speedUpdate.SpeedType = SpeedType.Pitch;
+            speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_PITCH_RATE;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1479,7 +1488,8 @@ namespace WowPacketParser.Parsing.Parsers
             WowGuid guid = packet.ReadPackedGuid("Guid");
             packet.ReadUInt32("Movement Counter");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.WalkSpeed = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_WALK_SPEED;
+            speedUpdate.SpeedType = SpeedType.Walk;
+            speedUpdate.SpeedRate = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_WALK_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1492,7 +1502,8 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadByte("Unk Byte");
 
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.RunSpeed = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_RUN_SPEED;
+            speedUpdate.SpeedType = SpeedType.Run;
+            speedUpdate.SpeedRate = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_RUN_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1502,7 +1513,8 @@ namespace WowPacketParser.Parsing.Parsers
             WowGuid guid = packet.ReadPackedGuid("Guid");
             packet.ReadUInt32("Movement Counter");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.RunBackSpeed = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_RUN_BACK_SPEED;
+            speedUpdate.SpeedType = SpeedType.RunBack;
+            speedUpdate.SpeedRate = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_RUN_BACK_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1512,7 +1524,8 @@ namespace WowPacketParser.Parsing.Parsers
             WowGuid guid = packet.ReadPackedGuid("Guid");
             packet.ReadUInt32("Movement Counter");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.SwimSpeed = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_SWIM_SPEED;
+            speedUpdate.SpeedType = SpeedType.Swim;
+            speedUpdate.SpeedRate = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_SWIM_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1522,7 +1535,8 @@ namespace WowPacketParser.Parsing.Parsers
             WowGuid guid = packet.ReadPackedGuid("Guid");
             packet.ReadUInt32("Movement Counter");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.SwimBackSpeed = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
+            speedUpdate.SpeedType = SpeedType.SwimBack;
+            speedUpdate.SpeedRate = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1532,7 +1546,8 @@ namespace WowPacketParser.Parsing.Parsers
             WowGuid guid = packet.ReadPackedGuid("Guid");
             packet.ReadUInt32("Movement Counter");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.TurnRate = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_TURN_RATE;
+            speedUpdate.SpeedType = SpeedType.Turn;
+            speedUpdate.SpeedRate = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_TURN_RATE;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1542,7 +1557,8 @@ namespace WowPacketParser.Parsing.Parsers
             WowGuid guid = packet.ReadPackedGuid("Guid");
             packet.ReadUInt32("Movement Counter");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.FlightSpeed = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_FLY_SPEED;
+            speedUpdate.SpeedType = SpeedType.Fly;
+            speedUpdate.SpeedRate = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_FLY_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1552,7 +1568,8 @@ namespace WowPacketParser.Parsing.Parsers
             WowGuid guid = packet.ReadPackedGuid("Guid");
             packet.ReadUInt32("Movement Counter");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.FlightBackSpeed = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_FLY_BACK_SPEED;
+            speedUpdate.SpeedType = SpeedType.FlyBack;
+            speedUpdate.SpeedRate = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_FLY_BACK_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1562,7 +1579,8 @@ namespace WowPacketParser.Parsing.Parsers
             WowGuid guid = packet.ReadPackedGuid("Guid");
             packet.ReadUInt32("Movement Counter");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.PitchRate = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_PITCH_RATE;
+            speedUpdate.SpeedType = SpeedType.Pitch;
+            speedUpdate.SpeedRate = packet.ReadSingle("New Speed") / MovementInfo.DEFAULT_PITCH_RATE;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1973,7 +1991,8 @@ namespace WowPacketParser.Parsing.Parsers
         {
             WowGuid guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.WalkSpeed = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_WALK_SPEED;
+            speedUpdate.SpeedType = SpeedType.Walk;
+            speedUpdate.SpeedRate = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_WALK_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1982,7 +2001,8 @@ namespace WowPacketParser.Parsing.Parsers
         {
             WowGuid guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.RunSpeed = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_RUN_SPEED;
+            speedUpdate.SpeedType = SpeedType.Run;
+            speedUpdate.SpeedRate = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_RUN_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -1991,7 +2011,8 @@ namespace WowPacketParser.Parsing.Parsers
         {
             WowGuid guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.SwimSpeed = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_SWIM_SPEED;
+            speedUpdate.SpeedType = SpeedType.Swim;
+            speedUpdate.SpeedRate = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_SWIM_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -2000,7 +2021,8 @@ namespace WowPacketParser.Parsing.Parsers
         {
             WowGuid guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.FlightSpeed = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_FLY_SPEED;
+            speedUpdate.SpeedType = SpeedType.Fly;
+            speedUpdate.SpeedRate = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_FLY_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -2009,7 +2031,8 @@ namespace WowPacketParser.Parsing.Parsers
         {
             WowGuid guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.RunBackSpeed = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_RUN_BACK_SPEED;
+            speedUpdate.SpeedType = SpeedType.RunBack;
+            speedUpdate.SpeedRate = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_RUN_BACK_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -2018,7 +2041,8 @@ namespace WowPacketParser.Parsing.Parsers
         {
             WowGuid guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.SwimBackSpeed = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
+            speedUpdate.SpeedType = SpeedType.SwimBack;
+            speedUpdate.SpeedRate = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -2027,7 +2051,8 @@ namespace WowPacketParser.Parsing.Parsers
         {
             WowGuid guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.FlightBackSpeed = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_FLY_BACK_SPEED;
+            speedUpdate.SpeedType = SpeedType.FlyBack;
+            speedUpdate.SpeedRate = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_FLY_BACK_SPEED;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -2036,7 +2061,8 @@ namespace WowPacketParser.Parsing.Parsers
         {
             WowGuid guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.TurnRate = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_TURN_RATE;
+            speedUpdate.SpeedType = SpeedType.Turn;
+            speedUpdate.SpeedRate = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_TURN_RATE;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
@@ -2045,7 +2071,8 @@ namespace WowPacketParser.Parsing.Parsers
         {
             WowGuid guid = packet.ReadPackedGuid("GUID");
             CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
-            speedUpdate.PitchRate = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_PITCH_RATE;
+            speedUpdate.SpeedType = SpeedType.Pitch;
+            speedUpdate.SpeedRate = packet.ReadSingle("Amount") / MovementInfo.DEFAULT_PITCH_RATE;
             speedUpdate.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
             Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
         }
