@@ -52,6 +52,27 @@ CREATE TABLE IF NOT EXISTS `character_active_player` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.character_attack_log
+DROP TABLE IF EXISTS `character_attack_log`;
+CREATE TABLE IF NOT EXISTS `character_attack_log` (
+  `guid` int(10) unsigned NOT NULL,
+  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `unixtime` int(10) unsigned NOT NULL DEFAULT '0',
+  `hit_info` int(10) unsigned NOT NULL DEFAULT '0',
+  `damage` int(10) unsigned NOT NULL DEFAULT '0',
+  `original_damage` int(10) unsigned NOT NULL DEFAULT '0',
+  `overkill_damage` int(10) NOT NULL DEFAULT '0',
+  `blocked_damage` int(10) NOT NULL DEFAULT '0',
+  `victim_state` int(10) unsigned NOT NULL DEFAULT '0',
+  `attacker_state` int(10) NOT NULL DEFAULT '0',
+  `spell_id` int(10) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACKER_STATE_UPDATE';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.character_attack_start
 DROP TABLE IF EXISTS `character_attack_start`;
 CREATE TABLE IF NOT EXISTS `character_attack_start` (
@@ -115,17 +136,10 @@ CREATE TABLE IF NOT EXISTS `character_movement` (
 -- Dumping structure for table sniffs_new_test.character_speed_update
 DROP TABLE IF EXISTS `character_speed_update`;
 CREATE TABLE IF NOT EXISTS `character_speed_update` (
-  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `guid` int(10) unsigned NOT NULL,
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
-  `speed_walk` float unsigned DEFAULT NULL,
-  `speed_run` float unsigned DEFAULT NULL,
-  `speed_run_back` float unsigned DEFAULT NULL,
-  `speed_swim` float unsigned DEFAULT NULL,
-  `speed_swim_back` float unsigned DEFAULT NULL,
-  `speed_fly` float unsigned DEFAULT NULL,
-  `speed_fly_back` float unsigned DEFAULT NULL,
-  `rate_turn` float unsigned DEFAULT NULL,
-  `rate_pitch` float unsigned DEFAULT NULL
+  `speed_type` tinyint(3) unsigned NOT NULL,
+  `speed_rate` float unsigned NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to movement speed';
 
 -- Data exporting was unselected.
@@ -147,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `character_target_change` (
 -- Dumping structure for table sniffs_new_test.character_values_update
 DROP TABLE IF EXISTS `character_values_update`;
 CREATE TABLE IF NOT EXISTS `character_values_update` (
-  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `guid` int(10) unsigned NOT NULL,
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
   `entry` int(10) unsigned DEFAULT NULL,
   `scale` float unsigned DEFAULT NULL,
@@ -250,6 +264,27 @@ CREATE TABLE IF NOT EXISTS `creature_addon` (
   `auras` text,
   PRIMARY KEY (`guid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.creature_attack_log
+DROP TABLE IF EXISTS `creature_attack_log`;
+CREATE TABLE IF NOT EXISTS `creature_attack_log` (
+  `guid` int(10) unsigned NOT NULL,
+  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `unixtime` int(10) unsigned NOT NULL DEFAULT '0',
+  `hit_info` int(10) unsigned NOT NULL DEFAULT '0',
+  `damage` int(10) unsigned NOT NULL DEFAULT '0',
+  `original_damage` int(10) unsigned NOT NULL DEFAULT '0',
+  `overkill_damage` int(10) NOT NULL DEFAULT '0',
+  `blocked_damage` int(10) NOT NULL DEFAULT '0',
+  `victim_state` int(10) unsigned NOT NULL DEFAULT '0',
+  `attacker_state` int(10) NOT NULL DEFAULT '0',
+  `spell_id` int(10) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACKER_STATE_UPDATE';
 
 -- Data exporting was unselected.
 
@@ -495,17 +530,10 @@ CREATE TABLE IF NOT EXISTS `creature_questitem` (
 -- Dumping structure for table sniffs_new_test.creature_speed_update
 DROP TABLE IF EXISTS `creature_speed_update`;
 CREATE TABLE IF NOT EXISTS `creature_speed_update` (
-  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `guid` int(10) unsigned NOT NULL,
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
-  `speed_walk` float unsigned DEFAULT NULL,
-  `speed_run` float unsigned DEFAULT NULL,
-  `speed_run_back` float unsigned DEFAULT NULL,
-  `speed_swim` float unsigned DEFAULT NULL,
-  `speed_swim_back` float unsigned DEFAULT NULL,
-  `speed_fly` float unsigned DEFAULT NULL,
-  `speed_fly_back` float unsigned DEFAULT NULL,
-  `rate_turn` float unsigned DEFAULT NULL,
-  `rate_pitch` float unsigned DEFAULT NULL
+  `speed_type` tinyint(3) unsigned NOT NULL,
+  `speed_rate` float unsigned NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to movement speed';
 
 -- Data exporting was unselected.
