@@ -258,10 +258,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("unixtime", true)]
         public uint UnixTime;
 
-        [DBFieldName("type", true)]
+        [DBFieldName("speed_type", true)]
         public SpeedType SpeedType;
 
-        [DBFieldName("speed", true)]
+        [DBFieldName("speed_rate", true)]
         public float SpeedRate;
     }
 
@@ -379,6 +379,53 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("arcane_res", false, false, true)]
         public int? ArcaneResistance;
+    }
+
+    [DBTableName("creature_attack_log")]
+    public sealed class UnitMeleeAttackLog : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtime", true)]
+        public uint UnixTime;
+
+        [DBFieldName("victim_guid", false, true)]
+        public string VictimGuid;
+
+        [DBFieldName("victim_id")]
+        public uint VictimId;
+
+        [DBFieldName("victim_type")]
+        public string VictimType;
+
+        [DBFieldName("hit_info")]
+        public uint HitInfo;
+
+        [DBFieldName("damage")]
+        public uint Damage;
+
+        [DBFieldName("original_damage")]
+        public uint OriginalDamage;
+
+        [DBFieldName("overkill_damage")]
+        public int OverkillDamage;
+
+        [DBFieldName("blocked_damage")]
+        public int BlockedDamage;
+
+        [DBFieldName("victim_state")]
+        public uint VictimState;
+
+        [DBFieldName("attacker_state")]
+        public int AttackerState;
+
+        [DBFieldName("spell_id")]
+        public uint SpellId;
+
+        public WowGuid Attacker;
+        public WowGuid Victim;
+        public DateTime Time;
     }
 
     public sealed class CreatureEmote

@@ -395,9 +395,40 @@ namespace WowPacketParser.Store
                 Storage.Emotes.Add(guid, emotesList);
             }
         }
+        public static readonly Dictionary<WowGuid, List<UnitMeleeAttackLog>> UnitAttackLogs = new Dictionary<WowGuid, List<UnitMeleeAttackLog>>();
+        public static void StoreUnitAttackLog(UnitMeleeAttackLog attackData)
+        {
+            WowGuid attackerGuid = attackData.Attacker;
+
+            if (attackerGuid.GetObjectType() == ObjectType.Unit &&
+                attackerGuid.GetHighType() != HighGuidType.Pet)
+            {
+                if (!Settings.SqlTables.creature_attack_log)
+                    return;
+            }
+            else if (attackerGuid.GetObjectType() == ObjectType.Player ||
+                     attackerGuid.GetObjectType() == ObjectType.ActivePlayer)
+            {
+                if (!Settings.SqlTables.character_attack_log)
+                    return;
+            }
+            else
+                return;
+
+            if (Storage.UnitAttackLogs.ContainsKey(attackerGuid))
+            {
+                Storage.UnitAttackLogs[attackerGuid].Add(attackData);
+            }
+            else
+            {
+                List<UnitMeleeAttackLog> attacksList = new List<UnitMeleeAttackLog>();
+                attacksList.Add(attackData);
+                Storage.UnitAttackLogs.Add(attackerGuid, attacksList);
+            }
+        }
         public static readonly Dictionary<WowGuid, List<CreatureTargetData>> UnitAttackStartTimes = new Dictionary<WowGuid, List<CreatureTargetData>>();
         public static readonly Dictionary<WowGuid, List<CreatureTargetData>> UnitAttackStopTimes = new Dictionary<WowGuid, List<CreatureTargetData>>();
-        public static void StoreUnitAttack(WowGuid attackerGuid, WowGuid victimGuid, DateTime time, bool start)
+        public static void StoreUnitAttackToggle(WowGuid attackerGuid, WowGuid victimGuid, DateTime time, bool start)
         {
             Dictionary<WowGuid, List<CreatureTargetData>> store = null;
             if (start)
@@ -719,6 +750,7 @@ namespace WowPacketParser.Store
             QuestObjectives.Clear();
             QuestVisualEffects.Clear();
 
+            UnitAttackLogs.Clear();
             UnitAttackStartTimes.Clear();
             UnitAttackStopTimes.Clear();
             CreatureClientInteractTimes.Clear();

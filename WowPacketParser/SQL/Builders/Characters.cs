@@ -34,6 +34,7 @@ namespace WowPacketParser.SQL.Builders
             var characterRows = new RowList<CharacterTemplate>();
             var characterInventoryRows = new RowList<CharacterInventory>();
             var characterItemInstaceRows = new RowList<CharacterItemInstance>();
+            var characterAttackLogRows = new RowList<UnitMeleeAttackLog>();
             var characterAttackStartRows = new RowList<CreatureTargetChange>();
             var characterAttackStopRows = new RowList<CreatureTargetChange>();
             var characterTargetChangeRows = new RowList<CreatureTargetChange>();
@@ -124,6 +125,22 @@ namespace WowPacketParser.SQL.Builders
                         row.Data.EquipmentCache += " ";
 
                     row.Data.EquipmentCache += itemId;
+                }
+
+                if (Settings.SqlTables.character_attack_log)
+                {
+                    if (Storage.UnitAttackLogs.ContainsKey(objPair.Key))
+                    {
+                        foreach (var attack in Storage.UnitAttackLogs[objPair.Key])
+                        {
+                            Row<UnitMeleeAttackLog> attackRow = new Row<UnitMeleeAttackLog>();
+                            attackRow.Data = attack;
+                            attackRow.Data.GUID = row.Data.Guid;
+                            Storage.GetObjectDbGuidEntryType(attack.Victim, out attackRow.Data.VictimGuid, out attackRow.Data.VictimId, out attackRow.Data.VictimType);
+                            attackRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.Time);
+                            characterAttackLogRows.Add(attackRow);
+                        }
+                    }
                 }
 
                 if (Settings.SqlTables.character_attack_start)
@@ -274,6 +291,13 @@ namespace WowPacketParser.SQL.Builders
 
                 var movementSql = new SQLInsert<CharacterMovement>(movementRows, false);
                 result.Append(movementSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.character_attack_log)
+            {
+                var characterAttackLogSql = new SQLInsert<UnitMeleeAttackLog>(characterAttackLogRows, false, false, "character_attack_log");
+                result.Append(characterAttackLogSql.Build());
                 result.AppendLine();
             }
 

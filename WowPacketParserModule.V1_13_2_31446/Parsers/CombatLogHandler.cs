@@ -1,6 +1,8 @@
 ﻿using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParserModule.V1_13_2_31446.Parsers
 {
@@ -20,16 +22,18 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             packet.ReadByte("ScalesWithItemLevel", idx);
         }
 
-        public static void ReadAttackRoundInfo(Packet packet, params object[] indexes)
+        public static UnitMeleeAttackLog ReadAttackRoundInfo(Packet packet, params object[] indexes)
         {
+            UnitMeleeAttackLog attackData = new UnitMeleeAttackLog();
             var hitInfo = packet.ReadInt32E<SpellHitInfo>("HitInfo", indexes);
+            attackData.HitInfo = (uint)hitInfo;
 
-            packet.ReadPackedGuid128("AttackerGUID", indexes);
-            packet.ReadPackedGuid128("TargetGUID", indexes);
+            attackData.Attacker = packet.ReadPackedGuid128("AttackerGUID", indexes);
+            attackData.Victim = packet.ReadPackedGuid128("TargetGUID", indexes);
 
-            packet.ReadInt32("Damage", indexes);
-            packet.ReadInt32("OriginalDamage", indexes);
-            packet.ReadInt32("OverDamage", indexes);
+            attackData.Damage = (uint)packet.ReadInt32("Damage", indexes);
+            attackData.OriginalDamage = (uint)packet.ReadInt32("OriginalDamage", indexes);
+            attackData.OverkillDamage = packet.ReadInt32("OverDamage", indexes);
 
             var subDmgCount = packet.ReadBool("HasSubDmg", indexes);
             if (subDmgCount)
@@ -46,6 +50,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             }
 
             VictimStates victimStates = packet.ReadByteE<VictimStates>("VictimState", indexes);
+            attackData.VictimState = (uint)victimStates;
             if (victimStates == VictimStates.VICTIMSTATE_UNK32)
             {
                 packet.ReadInt32("UnkInt1", indexes);
@@ -53,11 +58,11 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 packet.ReadInt32("UnkInt3", indexes);
             }
 
-            packet.ReadInt32("AttackerState", indexes);
-            packet.ReadInt32<SpellId>("MeleeSpellID", indexes);
+            attackData.AttackerState = packet.ReadInt32("AttackerState", indexes);
+            attackData.SpellId = (uint)packet.ReadInt32<SpellId>("MeleeSpellID", indexes);
 
             if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_BLOCK))
-                packet.ReadInt32("BlockAmount", indexes);
+                attackData.BlockedDamage = packet.ReadInt32("BlockAmount", indexes);
 
             if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_RAGE_GAIN))
                 packet.ReadInt32("RageGained", indexes);
@@ -82,6 +87,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 packet.ReadSingle("Unk Float", indexes);
 
             ReadCombatLogContentTuning(packet, indexes, "ContentTuning");
+            return attackData;
         }
 
         [Parser(Opcode.SMSG_ATTACKER_STATE_UPDATE)]
@@ -94,7 +100,9 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
 
             packet.ReadInt32("Size");
 
-            ReadAttackRoundInfo(packet, "AttackRoundInfo");
+            UnitMeleeAttackLog attackData = ReadAttackRoundInfo(packet, "AttackRoundInfo");
+            attackData.Time = packet.Time;
+            Storage.StoreUnitAttackLog(attackData);
         }
 
         [Parser(Opcode.SMSG_SPELL_NON_MELEE_DAMAGE_LOG)]

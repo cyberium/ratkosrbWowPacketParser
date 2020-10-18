@@ -1,20 +1,24 @@
 ﻿using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParserModule.V7_0_3_22248.Parsers
 {
     public static class CombatLogHandler
     {
-        public static void ReadAttackRoundInfo(Packet packet, params object[] indexes)
+        public static UnitMeleeAttackLog ReadAttackRoundInfo(Packet packet, params object[] indexes)
         {
+            UnitMeleeAttackLog attackData = new UnitMeleeAttackLog();
             var hitInfo = packet.ReadInt32E<SpellHitInfo>("HitInfo", indexes);
+            attackData.HitInfo = (uint)hitInfo;
 
-            packet.ReadPackedGuid128("AttackerGUID", indexes);
-            packet.ReadPackedGuid128("TargetGUID", indexes);
+            attackData.Attacker = packet.ReadPackedGuid128("AttackerGUID", indexes);
+            attackData.Victim = packet.ReadPackedGuid128("TargetGUID", indexes);
 
-            packet.ReadInt32("Damage", indexes);
-            packet.ReadInt32("OverDamage", indexes);
+            attackData.Damage = (uint)packet.ReadInt32("Damage", indexes);
+            attackData.OverkillDamage = packet.ReadInt32("OverDamage", indexes);
 
             var subDmgCount = packet.ReadBool("HasSubDmg", indexes);
             if (subDmgCount)
@@ -30,13 +34,13 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                     packet.ReadInt32("DamageResisted", indexes);
             }
 
-            packet.ReadByteE<VictimStates>("VictimState", indexes);
-            packet.ReadInt32("AttackerState", indexes);
+            attackData.VictimState = (uint)packet.ReadByteE<VictimStates>("VictimState", indexes);
+            attackData.AttackerState = packet.ReadInt32("AttackerState", indexes);
 
-            packet.ReadInt32<SpellId>("MeleeSpellID", indexes);
+            attackData.SpellId = (uint)packet.ReadInt32<SpellId>("MeleeSpellID", indexes);
 
             if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_BLOCK))
-                packet.ReadInt32("BlockAmount", indexes);
+                attackData.BlockedDamage = packet.ReadInt32("BlockAmount", indexes);
 
             if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_RAGE_GAIN))
                 packet.ReadInt32("RageGained", indexes);
@@ -61,6 +65,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 packet.ReadSingle("Unk Float", indexes);
 
             ReadSandboxScalingData(packet, indexes, "SandboxScalingData");
+            return attackData;
         }
 
         public static void ReadSandboxScalingData(Packet packet, params object[] idx)
@@ -176,7 +181,9 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
 
             packet.ReadInt32("Size");
 
-            ReadAttackRoundInfo(packet, "AttackRoundInfo");
+            UnitMeleeAttackLog attackData = ReadAttackRoundInfo(packet, "AttackRoundInfo");
+            attackData.Time = packet.Time;
+            Storage.StoreUnitAttackLog(attackData);
         }
 
         [Parser(Opcode.SMSG_SPELL_PERIODIC_AURA_LOG, ClientVersionBuild.V7_0_3_22248, ClientVersionBuild.V7_2_0_23826)]

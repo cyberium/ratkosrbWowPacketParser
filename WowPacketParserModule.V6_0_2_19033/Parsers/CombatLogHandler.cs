@@ -1,6 +1,8 @@
 ﻿using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 using SpellParsers = WowPacketParserModule.V6_0_2_19033.Parsers.SpellHandler;
 
 namespace WowPacketParserModule.V6_0_2_19033.Parsers
@@ -305,7 +307,9 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
 
             packet.ReadInt32("Size");
 
-            CombatHandler.ReadAttackRoundInfo(packet);
+            UnitMeleeAttackLog attackData = CombatHandler.ReadAttackRoundInfo(packet);
+            attackData.Time = packet.Time;
+            Storage.StoreUnitAttackLog(attackData);
         }
 
         [Parser(Opcode.CMSG_SET_ADVANCED_COMBAT_LOGGING)]

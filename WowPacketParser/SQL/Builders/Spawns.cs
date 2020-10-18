@@ -55,6 +55,7 @@ namespace WowPacketParser.SQL.Builders
             var movementSplineRows = new RowList<CreatureMovementSpline>();
             var updateValuesRows = new RowList<CreatureValuesUpdate>();
             var updateSpeedRows = new RowList<CreatureSpeedUpdate>();
+            var attackLogRows = new RowList<UnitMeleeAttackLog>();
             var attackStartRows = new RowList<CreatureTargetChange>();
             var attackStopRows = new RowList<CreatureTargetChange>();
             var targetChangeRows = new RowList<CreatureTargetChange>();
@@ -386,6 +387,22 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
+                if (Settings.SqlTables.creature_attack_log)
+                {
+                    if (Storage.UnitAttackLogs.ContainsKey(unit.Key))
+                    {
+                        foreach (var attack in Storage.UnitAttackLogs[unit.Key])
+                        {
+                            var attackLogRow = new Row<UnitMeleeAttackLog>();
+                            attackLogRow.Data = attack;
+                            attackLogRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            Storage.GetObjectDbGuidEntryType(attack.Victim, out attackLogRow.Data.VictimGuid, out attackLogRow.Data.VictimId, out attackLogRow.Data.VictimType);
+                            attackLogRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.Time);
+                            attackLogRows.Add(attackLogRow);
+                        }
+                    }
+                }
+
                 if (Settings.SqlTables.creature_attack_start)
                 {
                     if (Storage.UnitAttackStartTimes.ContainsKey(unit.Key))
@@ -572,6 +589,16 @@ namespace WowPacketParser.SQL.Builders
                 result.Append("\nINSERT INTO `creature_emote` (`guid`, `emote_id`, `emote_name`, `unixtime`) VALUES\n");
                 result.Append(emoteRows);
                 result.Append(";\n\n");
+            }
+
+            if (Settings.SqlTables.creature_attack_log)
+            {
+                var attackDelete = new SQLDelete<UnitMeleeAttackLog>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                attackDelete.tableNameOverride = "creature_attack_log";
+                result.Append(attackDelete.Build());
+                var attackSql = new SQLInsert<UnitMeleeAttackLog>(attackLogRows, false, false, "creature_attack_log");
+                result.Append(attackSql.Build());
+                result.AppendLine();
             }
 
             if (Settings.SqlTables.creature_attack_start)

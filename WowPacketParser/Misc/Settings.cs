@@ -104,6 +104,7 @@ namespace WowPacketParser.Misc
             public static readonly bool conversation_template = Conf.GetBoolean("conversation_template", false);
             public static readonly bool characters = Conf.GetBoolean("characters", false);
             public static readonly bool character_active_player = Conf.GetBoolean("character_active_player", false);
+            public static readonly bool character_attack_log = Conf.GetBoolean("character_attack_log", false);
             public static readonly bool character_attack_start = Conf.GetBoolean("character_attack_start", false);
             public static readonly bool character_attack_stop = Conf.GetBoolean("character_attack_stop", false);
             public static readonly bool character_inventory = Conf.GetBoolean("character_inventory", false);
@@ -115,6 +116,7 @@ namespace WowPacketParser.Misc
             public static readonly bool client_release_spirit = Conf.GetBoolean("client_release_spirit", false);
             public static readonly bool creature = Conf.GetBoolean("creature", false);
             public static readonly bool creature_addon = Conf.GetBoolean("creature_addon", false);
+            public static readonly bool creature_attack_log = Conf.GetBoolean("creature_attack_log", false);
             public static readonly bool creature_attack_start = Conf.GetBoolean("creature_attack_start", false);
             public static readonly bool creature_attack_stop = Conf.GetBoolean("creature_attack_stop", false);
             public static readonly bool creature_client_interact = Conf.GetBoolean("creature_client_interact", false);
