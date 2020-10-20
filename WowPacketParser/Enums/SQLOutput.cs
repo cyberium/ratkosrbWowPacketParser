@@ -107,6 +107,8 @@
         trainer,
         vehicle_template_accessory,
         weather_updates,
+        world_state_init,
+        world_state_update,
         world_text,
 
         hotfix_data,

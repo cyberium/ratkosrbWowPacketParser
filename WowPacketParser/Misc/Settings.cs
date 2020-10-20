@@ -194,6 +194,8 @@ namespace WowPacketParser.Misc
             public static readonly bool trainer = Conf.GetBoolean("trainer", false);
             public static readonly bool vehicle_template_accessory = Conf.GetBoolean("vehicle_template_accessory", false);
             public static readonly bool weather_updates = Conf.GetBoolean("weather_updates", false);
+            public static readonly bool world_state_init = Conf.GetBoolean("world_state_init", false);
+            public static readonly bool world_state_update = Conf.GetBoolean("world_state_update", false);
             public static readonly bool world_text = Conf.GetBoolean("world_text", false);
 
             public static readonly bool hotfix_data = Conf.GetBoolean("hotfix_data", false);

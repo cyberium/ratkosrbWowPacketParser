@@ -1701,6 +1701,31 @@ CREATE TABLE IF NOT EXISTS `weather_update` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.world_state_init
+DROP TABLE IF EXISTS `world_state_init`;
+CREATE TABLE IF NOT EXISTS `world_state_init` (
+  `unixtime` int(10) unsigned NOT NULL,
+  `map` int(10) unsigned NOT NULL,
+  `zone_id` int(11) NOT NULL,
+  `area_id` int(11) NOT NULL,
+  `variable` int(11) NOT NULL,
+  `value` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_INIT_WORLD_STATES';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.world_state_update
+DROP TABLE IF EXISTS `world_state_update`;
+CREATE TABLE IF NOT EXISTS `world_state_update` (
+  `unixtime` int(10) unsigned NOT NULL,
+  `variable` int(11) NOT NULL,
+  `value` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_UPDATE_WORLD_STATE';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.world_text
 DROP TABLE IF EXISTS `world_text`;
 CREATE TABLE IF NOT EXISTS `world_text` (

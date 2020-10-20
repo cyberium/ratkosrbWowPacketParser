@@ -689,6 +689,10 @@ namespace WowPacketParser.Store
         public static readonly DataBag<SpellPetActions> SpellPetActions = new DataBag<SpellPetActions>(Settings.SqlTables.spell_pet_action);
         public static readonly DataBag<SpellTargetPosition> SpellTargetPositions = new DataBag<SpellTargetPosition>(Settings.SqlTables.spell_target_position);
 
+        // World state
+        public static readonly DataBag<WorldStateInit> WorldStateInits = new DataBag<WorldStateInit>(Settings.SqlTables.world_state_init);
+        public static readonly DataBag<WorldStateUpdate> WorldStateUpdates = new DataBag<WorldStateUpdate>(Settings.SqlTables.world_state_update);
+
         public static readonly DataBag<HotfixData> HotfixDatas = new DataBag<HotfixData>(Settings.SqlTables.hotfix_data);
         public static readonly DataBag<HotfixBlob> HotfixBlobs = new DataBag<HotfixBlob>(Settings.SqlTables.hotfix_blob);
         // Scenes
@@ -835,6 +839,9 @@ namespace WowPacketParser.Store
             LocalesQuestGreeting.Clear();
             LocalesQuestRequestItems.Clear();
             LocalesPageText.Clear();
+
+            WorldStateInits.Clear();
+            WorldStateUpdates.Clear();
 
             HotfixDatas.Clear();
 
