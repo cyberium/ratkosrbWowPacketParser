@@ -43,6 +43,8 @@ using WowPacketParser.Enums.Version.V8_2_0_30898;
 using WowPacketParser.Enums.Version.V8_2_5_31921;
 using WowPacketParser.Enums.Version.V8_3_0_32861;
 using WowPacketParser.Enums.Version.V1_13_2_31446;
+using WowPacketParser.Enums.Version.V1_13_4_33598;
+using WowPacketParser.Enums.Version.v1_13_5_34713;
 using WowPacketParser.Misc;
 
 namespace WowPacketParser.Enums.Version
