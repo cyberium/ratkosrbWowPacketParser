@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="Enums\MovementFlag.cs" />
     <Compile Include="Enums\MovementFlagExtra.cs" />
+    <Compile Include="Enums\SetCollisionHeightReason.cs" />
     <Compile Include="Enums\SplineFlag.cs" />
     <Compile Include="Enums\UpdateFields.cs" />
     <Compile Include="Parsers\BattlegroundHandler.cs" />
