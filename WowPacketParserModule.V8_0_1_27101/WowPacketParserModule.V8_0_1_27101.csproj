@@ -106,6 +106,7 @@
     <Compile Include="Hotfix\ContentTuningEntry.cs" />
     <Compile Include="Hotfix\ContentTuningXExpectedEntry.cs" />
     <Compile Include="Hotfix\ConversationLineEntry.cs" />
+    <Compile Include="Hotfix\CorruptionEffectsEntry.cs" />
     <Compile Include="Hotfix\CreatureDisplayInfoEntry.cs" />
     <Compile Include="Hotfix\CreatureDisplayInfoExtraEntry.cs" />
     <Compile Include="Hotfix\CreatureFamilyEntry.cs" />
