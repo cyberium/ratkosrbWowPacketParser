@@ -463,6 +463,7 @@
     <Compile Include="Enums\Version\V6_2_3_20726\Opcodes.cs" />
     <Compile Include="Enums\Version\V6_2_4_21315\Opcodes.cs" />
     <Compile Include="Enums\Version\V7_0_3_22248\Opcodes.cs" />
+    <Compile Include="Enums\Version\V7_0_3_22248\TutorialAction.cs" />
     <Compile Include="Enums\Version\V7_1_0_22900\Opcodes.cs" />
     <Compile Include="Enums\Version\V7_1_5_23360\Opcodes.cs" />
     <Compile Include="Enums\Version\V7_2_0_23826\Opcodes.cs" />
