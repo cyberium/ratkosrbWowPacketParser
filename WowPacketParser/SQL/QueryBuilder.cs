@@ -173,7 +173,7 @@ namespace WowPacketParser.SQL
                 else
                 {
                     whereClause.Append(" IN (");
-                    whereClause.Append(string.Join(',', pair.Value.Select(cond => cond.FieldValuePairs[secondField])));
+                    whereClause.Append(string.Join(",", pair.Value.Select(cond => cond.FieldValuePairs[secondField])));
                     whereClause.Append(")");
                 }
 
