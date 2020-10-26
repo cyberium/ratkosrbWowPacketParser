@@ -64,6 +64,21 @@
     <Compile Include="Hotfix\ArtifactTierEntry.cs" />
     <Compile Include="Hotfix\ArtifactUnlockEntry.cs" />
     <Compile Include="Hotfix\AuctionHouseEntry.cs" />
+    <Compile Include="Hotfix\AzeriteEmpoweredItemEntry.cs" />
+    <Compile Include="Hotfix\AzeriteEssenceEntry.cs" />
+    <Compile Include="Hotfix\AzeriteEssencePowerEntry.cs" />
+    <Compile Include="Hotfix\AzeriteItemEntry.cs" />
+    <Compile Include="Hotfix\AzeriteItemMilestonePowerEntry.cs" />
+    <Compile Include="Hotfix\AzeriteItemMilestonePowerEntry820.cs" />
+    <Compile Include="Hotfix\AzeriteKnowledgeMultiplierEntry.cs" />
+    <Compile Include="Hotfix\AzeriteLevelInfoEntry.cs" />
+    <Compile Include="Hotfix\AzeritePowerEntry.cs" />
+    <Compile Include="Hotfix\AzeritePowerSetMemberEntry.cs" />
+    <Compile Include="Hotfix\AzeritePowerSetMemberEntry810.cs" />
+    <Compile Include="Hotfix\AzeritePowerSetMemberEntry820.cs" />
+    <Compile Include="Hotfix\AzeriteTierUnlockEntry.cs" />
+    <Compile Include="Hotfix\AzeriteTierUnlockSetEntry.cs" />
+    <Compile Include="Hotfix\AzeriteUnlockMappingEntry.cs" />
     <Compile Include="Hotfix\BankBagSlotPricesEntry.cs" />
     <Compile Include="Hotfix\BannedAddonsEntry.cs" />
     <Compile Include="Hotfix\BarberShopStyleEntry.cs" />
@@ -98,6 +113,7 @@
     <Compile Include="Hotfix\CreatureTypeEntry.cs" />
     <Compile Include="Hotfix\CriteriaEntry.cs" />
     <Compile Include="Hotfix\CriteriaTreeEntry.cs" />
+    <Compile Include="Hotfix\CriteriaTreeEntry830.cs" />
     <Compile Include="Hotfix\CurrencyTypesEntry.cs" />
     <Compile Include="Hotfix\CurveEntry.cs" />
     <Compile Include="Hotfix\CurvePointEntry.cs" />
@@ -147,6 +163,7 @@
     <Compile Include="Hotfix\ImportPriceShieldEntry.cs" />
     <Compile Include="Hotfix\ImportPriceWeaponEntry.cs" />
     <Compile Include="Hotfix\ItemAppearanceEntry.cs" />
+    <Compile Include="Hotfix\ItemAppearanceEntry830.cs" />
     <Compile Include="Hotfix\ItemArmorQualityEntry.cs" />
     <Compile Include="Hotfix\ItemArmorShieldEntry.cs" />
     <Compile Include="Hotfix\ItemArmorTotalEntry.cs" />
@@ -172,6 +189,7 @@
     <Compile Include="Hotfix\ItemLevelSelectorQualitySetEntry.cs" />
     <Compile Include="Hotfix\ItemLimitCategoryConditionEntry.cs" />
     <Compile Include="Hotfix\ItemLimitCategoryEntry.cs" />
+    <Compile Include="Hotfix\ItemNameDescriptionEntry.cs" />
     <Compile Include="Hotfix\ItemModifiedAppearanceEntry.cs" />
     <Compile Include="Hotfix\ItemPriceBaseEntry.cs" />
     <Compile Include="Hotfix\ItemRandomPropertiesEntry.cs" />
@@ -243,6 +261,7 @@
     <Compile Include="Hotfix\SoundKitEntry810.cs" />
     <Compile Include="Hotfix\SoundKitEntry.cs" />
     <Compile Include="Hotfix\SpecializationSpellsEntry.cs" />
+    <Compile Include="Hotfix\SpecSetMemberEntry.cs" />
     <Compile Include="Hotfix\SpellAuraOptionsEntry.cs" />
     <Compile Include="Hotfix\SpellAuraRestrictionsEntry.cs" />
     <Compile Include="Hotfix\SpellCastingRequirementsEntry.cs" />
@@ -276,6 +295,8 @@
     <Compile Include="Hotfix\SpellShapeshiftFormEntry.cs" />
     <Compile Include="Hotfix\SpellTargetRestrictionsEntry.cs" />
     <Compile Include="Hotfix\SpellTotemsEntry.cs" />
+    <Compile Include="Hotfix\SpellVisualKitEntry.cs" />
+    <Compile Include="Hotfix\SpellVisualKitEntry830.cs" />
     <Compile Include="Hotfix\SpellXSpellVisualEntry.cs" />
     <Compile Include="Hotfix\SummonPropertiesEntry.cs" />
     <Compile Include="Hotfix\TactKeyEntry.cs" />
@@ -305,6 +326,7 @@
     <Compile Include="Hotfix\WorldEffectEntry.cs" />
     <Compile Include="Hotfix\WorldMapOverlayEntry.cs" />
     <Compile Include="Hotfix\WorldSafeLocsEntry.cs" />
+    <Compile Include="Hotfix\WorldStateExpressionEntry.cs" />
     <Compile Include="Parsers\BattlePetHandler.cs" />
     <Compile Include="Parsers\IslandHandler.cs" />
     <Compile Include="Parsers\AccountDataHandler.cs" />
