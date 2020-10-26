@@ -13,7 +13,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("QuestType")]
         public QuestType? QuestType;
 
-        [DBFieldName("QuestLevel", TargetedDatabase.Zero, TargetedDatabase.Shadowlands)]
+        [DBFieldName("QuestLevel", TargetedDatabase.Classic, TargetedDatabase.Shadowlands)]
         public int? QuestLevel;
 
         [DBFieldName("ScalingFactionGroup", TargetedDatabase.BattleForAzeroth, TargetedDatabase.Shadowlands)]
@@ -28,7 +28,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ContentTuningID", TargetedDatabase.Shadowlands)]
         public int? ContentTuningID;
 
-        [DBFieldName("MinLevel", TargetedDatabase.Zero, TargetedDatabase.Shadowlands)]
+        [DBFieldName("MinLevel", TargetedDatabase.Classic, TargetedDatabase.Shadowlands)]
         public int? MinLevel;
 
         [DBFieldName("MaxLevel", TargetedDatabase.Cataclysm, TargetedDatabase.WarlordsOfDraenor)]
