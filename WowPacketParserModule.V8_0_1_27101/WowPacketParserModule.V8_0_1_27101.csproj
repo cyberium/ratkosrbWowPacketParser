@@ -75,6 +75,7 @@
     <Compile Include="Hotfix\BattlePetSpeciesStateEntry.cs" />
     <Compile Include="Hotfix\BroadcastTextEntry.cs" />
     <Compile Include="Hotfix\Cfg_RegionsEntry.cs" />
+    <Compile Include="Hotfix\Cfg_RegionsEntry820.cs" />
     <Compile Include="Hotfix\CharacterFacialHairStylesEntry.cs" />
     <Compile Include="Hotfix\CharBaseSectionEntry.cs" />
     <Compile Include="Hotfix\CharSectionsEntry.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Hotfix\CinematicCameraEntry.cs" />
     <Compile Include="Hotfix\CinematicSequencesEntry.cs" />
     <Compile Include="Hotfix\ContentTuningEntry.cs" />
+    <Compile Include="Hotfix\ContentTuningXExpectedEntry.cs" />
     <Compile Include="Hotfix\ConversationLineEntry.cs" />
     <Compile Include="Hotfix\CreatureDisplayInfoEntry.cs" />
     <Compile Include="Hotfix\CreatureDisplayInfoExtraEntry.cs" />
@@ -120,6 +122,7 @@
     <Compile Include="Hotfix\GarrBuildingPlotInstEntry.cs" />
     <Compile Include="Hotfix\GarrClassSpecEntry.cs" />
     <Compile Include="Hotfix\GarrFollowerEntry.cs" />
+    <Compile Include="Hotfix\GarrFollowerEntry820.cs" />
     <Compile Include="Hotfix\GarrFollowerXAbilityEntry.cs" />
     <Compile Include="Hotfix\GarrPlotBuildingEntry.cs" />
     <Compile Include="Hotfix\GarrPlotEntry.cs" />
@@ -177,6 +180,7 @@
     <Compile Include="Hotfix\ItemSetEntry.cs" />
     <Compile Include="Hotfix\ItemSetSpellEntry.cs" />
     <Compile Include="Hotfix\ItemSparseEntry.cs" />
+    <Compile Include="Hotfix\ItemSparseEntry825.cs" />
     <Compile Include="Hotfix\ItemSpecEntry.cs" />
     <Compile Include="Hotfix\ItemSpecOverrideEntry.cs" />
     <Compile Include="Hotfix\ItemUpgradeEntry.cs" />
@@ -191,6 +195,7 @@
     <Compile Include="Hotfix\MapDifficultyEntry.cs" />
     <Compile Include="Hotfix\MapEntry.cs" />
     <Compile Include="Hotfix\ModifierTreeEntry.cs" />
+    <Compile Include="Hotfix\ModifierTreeEntry820.cs" />
     <Compile Include="Hotfix\MountCapabilityEntry.cs" />
     <Compile Include="Hotfix\MountEntry.cs" />
     <Compile Include="Hotfix\MountTypeXCapabilityEntry.cs" />
@@ -207,6 +212,7 @@
     <Compile Include="Hotfix\PlayerConditionEntry.cs" />
     <Compile Include="Hotfix\PowerDisplayEntry.cs" />
     <Compile Include="Hotfix\PowerTypeEntry.cs" />
+    <Compile Include="Hotfix\PowerTypeEntry825.cs" />
     <Compile Include="Hotfix\PrestigeLevelInfoEntry.cs" />
     <Compile Include="Hotfix\PVPDifficultyEntry.cs" />
     <Compile Include="Hotfix\PVPItemEntry.cs" />
@@ -247,6 +253,7 @@
     <Compile Include="Hotfix\SpellCooldownsEntry.cs" />
     <Compile Include="Hotfix\SpellDurationEntry.cs" />
     <Compile Include="Hotfix\SpellEffectEntry.cs" />
+    <Compile Include="Hotfix\SpellEffectEntry825.cs" />
     <Compile Include="Hotfix\SpellEquippedItemsEntry.cs" />
     <Compile Include="Hotfix\SpellFocusObjectEntry.cs" />
     <Compile Include="Hotfix\SpellInterruptsEntry.cs" />
@@ -255,6 +262,7 @@
     <Compile Include="Hotfix\SpellLearnSpellEntry.cs" />
     <Compile Include="Hotfix\SpellLevelsEntry.cs" />
     <Compile Include="Hotfix\SpellMiscEntry.cs" />
+    <Compile Include="Hotfix\SpellMiscEntry825.cs" />
     <Compile Include="Hotfix\SpellNameEntry.cs" />
     <Compile Include="Hotfix\SpellPowerDifficultyEntry.cs" />
     <Compile Include="Hotfix\SpellPowerEntry.cs" />
@@ -290,6 +298,7 @@
     <Compile Include="Hotfix\UiMapLinkEntry.cs" />
     <Compile Include="Hotfix\UiMapXMapArtEntry.cs" />
     <Compile Include="Hotfix\UnitPowerBarEntry.cs" />
+    <Compile Include="Hotfix\UnitPowerBarEntry825.cs" />
     <Compile Include="Hotfix\VehicleEntry.cs" />
     <Compile Include="Hotfix\VehicleSeatEntry.cs" />
     <Compile Include="Hotfix\WMOAreaTableEntry.cs" />
