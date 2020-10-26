@@ -168,6 +168,7 @@
     <Compile Include="DBC\Structures\Legion\SpellEntry.cs" />
     <Compile Include="Enums\AccountDataType.cs" />
     <Compile Include="Enums\ActionButtonType.cs" />
+    <Compile Include="Enums\AddressType.cs" />
     <Compile Include="Enums\AIReaction.cs" />
     <Compile Include="Enums\AmmoType.cs" />
     <Compile Include="Enums\AreaTriggerTemplateFlag.cs" />
@@ -213,6 +214,7 @@
     <Compile Include="Enums\ClassMask.cs" />
     <Compile Include="Enums\ClientType.cs" />
     <Compile Include="Enums\ClientVersionBuild.cs" />
+    <Compile Include="Enums\ConnectToSerial.cs" />
     <Compile Include="Enums\ConsumableTokenRedeem.cs" />
     <Compile Include="Enums\ContactEntryFlag.cs" />
     <Compile Include="Enums\ContactListFlag.cs" />
