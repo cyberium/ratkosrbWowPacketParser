@@ -134,7 +134,7 @@ namespace WowPacketParser.SQL.Builders
 
             var templatesDb = SQLDatabase.Get(Storage.QuestClientAcceptTimes);
 
-            return SQLUtil.Compare(Storage.QuestClientAcceptTimes, templatesDb, StoreNameType.Quest);
+            return SQLUtil.Compare(Storage.QuestClientAcceptTimes, templatesDb, StoreNameType.None);
         }
 
         [BuilderMethod]
@@ -148,7 +148,7 @@ namespace WowPacketParser.SQL.Builders
 
             var templatesDb = SQLDatabase.Get(Storage.QuestClientCompleteTimes);
 
-            return SQLUtil.Compare(Storage.QuestClientCompleteTimes, templatesDb, StoreNameType.Quest);
+            return SQLUtil.Compare(Storage.QuestClientCompleteTimes, templatesDb, StoreNameType.None);
         }
     }
 }
