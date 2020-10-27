@@ -170,6 +170,8 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.SpeedWalk = creature.OriginalMovement.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
                 row.Data.SpeedRun = creature.OriginalMovement.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
                 row.Data.Scale = creature.ObjectData.Scale;
+                row.Data.BoundingRadius = unitData.BoundingRadius;
+                row.Data.CombatReach = unitData.CombatReach;
                 row.Data.BaseAttackTime = unitData.AttackRoundBaseTime[0];
                 row.Data.RangedAttackTime = unitData.RangedAttackRoundBaseTime;
                 row.Data.NpcFlag = (uint)unitData.NpcFlags[0];

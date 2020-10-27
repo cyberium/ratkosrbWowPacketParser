@@ -99,6 +99,12 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("scale")]
         public float? Scale;
 
+        [DBFieldName("bounding_radius")]
+        public float? BoundingRadius;
+
+        [DBFieldName("combat_reach")]
+        public float? CombatReach;
+
         [DBFieldName("base_attack_time")]
         public uint? BaseAttackTime;
 
