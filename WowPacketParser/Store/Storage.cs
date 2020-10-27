@@ -112,6 +112,16 @@ namespace WowPacketParser.Store
             objectEntry = 0;
             objectType = "";
         }
+        public static uint GetObjectEntry(WowGuid guid)
+        {
+            if (guid.HasEntry())
+                return guid.GetEntry();
+
+            if (Objects.ContainsKey(guid))
+                return (uint)Objects[guid].Item1.ObjectData.EntryID;
+
+            return 0;
+        }
 
         public static readonly Dictionary<WowGuid, List<DateTime>> ObjectDestroyTimes = new Dictionary<WowGuid, List<DateTime>>();
         public static void StoreObjectDestroyTime(WowGuid guid, DateTime time)
@@ -153,7 +163,7 @@ namespace WowPacketParser.Store
             if (Storage.ObjectCreate1Times.ContainsKey(guid))
             {
                 ObjectCreate createData = new ObjectCreate();
-                createData.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                createData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
                 if (movement != null)
                 {
                     createData.PositionX = movement.Position.X;
@@ -167,7 +177,7 @@ namespace WowPacketParser.Store
             {
                 List<ObjectCreate> createList = new List<ObjectCreate>();
                 ObjectCreate createData = new ObjectCreate();
-                createData.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                createData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
                 if (movement != null)
                 {
                     createData.PositionX = movement.Position.X;
@@ -195,7 +205,7 @@ namespace WowPacketParser.Store
             if (Storage.ObjectCreate2Times.ContainsKey(guid))
             {
                 ObjectCreate createData = new ObjectCreate();
-                createData.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                createData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
                 if (movement != null)
                 {
                     createData.PositionX = movement.Position.X;
@@ -209,7 +219,7 @@ namespace WowPacketParser.Store
             {
                 List<ObjectCreate> createList = new List<ObjectCreate>();
                 ObjectCreate createData = new ObjectCreate();
-                createData.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(time);
+                createData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
                 if (movement != null)
                 {
                     createData.PositionX = movement.Position.X;
@@ -663,7 +673,7 @@ namespace WowPacketParser.Store
                     return;
             }
 
-            castData.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+            castData.Time = packet.Time;
 
             /*
             uncomment for unique casts only

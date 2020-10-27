@@ -483,7 +483,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             PlayMusic musicEntry = new PlayMusic
             {
                 Music = sound,
-                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time)
+                UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
             };
             Storage.Music.Add(musicEntry, packet.TimeSpan);
         }

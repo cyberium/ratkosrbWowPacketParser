@@ -59,7 +59,7 @@ namespace WowPacketParser.SQL.Builders
             var attackStartRows = new RowList<CreatureTargetChange>();
             var attackStopRows = new RowList<CreatureTargetChange>();
             var targetChangeRows = new RowList<CreatureTargetChange>();
-            string emoteRows = "";
+            var emoteRows = new RowList<CreatureEmote>();
             foreach (var unit in units)
             {
                 Row<Creature> row = new Row<Creature>();
@@ -209,7 +209,6 @@ namespace WowPacketParser.SQL.Builders
                 if (Settings.SqlTables.creature_addon)
                 {
                     addonRow.Data.GUID = "@CGUID+" + creature.DbGuid;
-                    addonRow.Data.PathID = 0;
                     addonRow.Data.Mount = (uint)unitData.MountDisplayID;
                     addonRow.Data.Bytes1 = creature.Bytes1;
                     addonRow.Data.StandState = unitData.StandState;
@@ -240,7 +239,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var interactRow = new Row<CreatureClientInteract>();
                             interactRow.Data.GUID = "@CGUID+" + creature.DbGuid;
-                            interactRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(interactTime);
+                            interactRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(interactTime);
                             interactRows.Add(interactRow);
                         }
                     }
@@ -258,7 +257,7 @@ namespace WowPacketParser.SQL.Builders
                             create1Row.Data.PositionY = createTime.PositionY;
                             create1Row.Data.PositionZ = createTime.PositionZ;
                             create1Row.Data.Orientation = createTime.Orientation;
-                            create1Row.Data.UnixTime = createTime.UnixTime;
+                            create1Row.Data.UnixTimeMs = createTime.UnixTimeMs;
                             create1Rows.Add(create1Row);
                         }
                     }
@@ -276,7 +275,7 @@ namespace WowPacketParser.SQL.Builders
                             create2Row.Data.PositionY = createTime.PositionY;
                             create2Row.Data.PositionZ = createTime.PositionZ;
                             create2Row.Data.Orientation = createTime.Orientation;
-                            create2Row.Data.UnixTime = createTime.UnixTime;
+                            create2Row.Data.UnixTimeMs = createTime.UnixTimeMs;
                             create2Rows.Add(create2Row);
                         }
                     }
@@ -290,7 +289,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var destroyRow = new Row<CreatureDestroy>();
                             destroyRow.Data.GUID = "@CGUID+" + creature.DbGuid;
-                            destroyRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(createTime);
+                            destroyRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(createTime);
                             destroyRows.Add(destroyRow);
                         }
                     }
@@ -382,9 +381,10 @@ namespace WowPacketParser.SQL.Builders
                     {
                         foreach (var emote in Storage.Emotes[unit.Key])
                         {
-                            if (emoteRows != "")
-                                emoteRows += ",\n";
-                            emoteRows += "(@CGUID+" + creature.DbGuid.ToString() + ", " + (uint)emote.emote + ", '" + emote.emote + "', " + (uint)Utilities.GetUnixTimeFromDateTime(emote.time) + ")";
+                            var emoteRow = new Row<CreatureEmote>();
+                            emoteRow.Data = emote;
+                            emoteRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            emoteRows.Add(emoteRow);
                         }
                     }
                 }
@@ -399,7 +399,7 @@ namespace WowPacketParser.SQL.Builders
                             attackLogRow.Data = attack;
                             attackLogRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                             Storage.GetObjectDbGuidEntryType(attack.Victim, out attackLogRow.Data.VictimGuid, out attackLogRow.Data.VictimId, out attackLogRow.Data.VictimType);
-                            attackLogRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.Time);
+                            attackLogRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(attack.Time);
                             attackLogRows.Add(attackLogRow);
                         }
                     }
@@ -415,7 +415,7 @@ namespace WowPacketParser.SQL.Builders
 
                             attackStartRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                             Storage.GetObjectDbGuidEntryType(attack.victim, out attackStartRow.Data.VictimGuid, out attackStartRow.Data.VictimId, out attackStartRow.Data.VictimType);
-                            attackStartRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.time);
+                            attackStartRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(attack.time);
                             attackStartRows.Add(attackStartRow);
                         }
                     }
@@ -431,7 +431,7 @@ namespace WowPacketParser.SQL.Builders
 
                             attackStopRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                             Storage.GetObjectDbGuidEntryType(attack.victim, out attackStopRow.Data.VictimGuid, out attackStopRow.Data.VictimId, out attackStopRow.Data.VictimType);
-                            attackStopRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.time);
+                            attackStopRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(attack.time);
                             attackStopRows.Add(attackStopRow);
                         }
                     }
@@ -447,7 +447,7 @@ namespace WowPacketParser.SQL.Builders
 
                             targetChangeRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                             Storage.GetObjectDbGuidEntryType(attack.victim, out targetChangeRow.Data.VictimGuid, out targetChangeRow.Data.VictimId, out targetChangeRow.Data.VictimType);
-                            targetChangeRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.time);
+                            targetChangeRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(attack.time);
                             targetChangeRows.Add(targetChangeRow);
                         }
                     }
@@ -586,11 +586,13 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (emoteRows != "")
+            if (Settings.SqlTables.creature_emote)
             {
-                result.Append("\nINSERT INTO `creature_emote` (`guid`, `emote_id`, `emote_name`, `unixtime`) VALUES\n");
-                result.Append(emoteRows);
-                result.Append(";\n\n");
+                var emoteDelete = new SQLDelete<CreatureEmote>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                result.Append(emoteDelete.Build());
+                var emoteSql = new SQLInsert<CreatureEmote>(emoteRows, false);
+                result.Append(emoteSql.Build());
+                result.AppendLine();
             }
 
             if (Settings.SqlTables.creature_attack_log)
@@ -778,7 +780,7 @@ namespace WowPacketParser.SQL.Builders
                             create1Row.Data.PositionY = createTime.PositionY;
                             create1Row.Data.PositionZ = createTime.PositionZ;
                             create1Row.Data.Orientation = createTime.Orientation;
-                            create1Row.Data.UnixTime = createTime.UnixTime;
+                            create1Row.Data.UnixTimeMs = createTime.UnixTimeMs;
                             create1Rows.Add(create1Row);
                         }
                     }
@@ -796,7 +798,7 @@ namespace WowPacketParser.SQL.Builders
                             create2Row.Data.PositionY = createTime.PositionY;
                             create2Row.Data.PositionZ = createTime.PositionZ;
                             create2Row.Data.Orientation = createTime.Orientation;
-                            create2Row.Data.UnixTime = createTime.UnixTime;
+                            create2Row.Data.UnixTimeMs = createTime.UnixTimeMs;
                             create2Rows.Add(create2Row);
                         }
                     }
@@ -824,7 +826,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var despawnAnimRow = new Row<GameObjectDespawnAnim>();
                             despawnAnimRow.Data.GUID = "@OGUID+" + go.DbGuid;
-                            despawnAnimRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(animTime);
+                            despawnAnimRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(animTime);
                             despawnAnimRows.Add(despawnAnimRow);
                         }
                     }
@@ -838,7 +840,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var destroyRow = new Row<GameObjectDestroy>();
                             destroyRow.Data.GUID = "@OGUID+" + go.DbGuid;
-                            destroyRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(destroyTime);
+                            destroyRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(destroyTime);
                             destroyRows.Add(destroyRow);
                         }
                     }
@@ -866,7 +868,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var useRow = new Row<GameObjectClientUse>();
                             useRow.Data.GUID = "@OGUID+" + go.DbGuid;
-                            useRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(useTime);
+                            useRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(useTime);
                             useRows.Add(useRow);
                         }
                     }
@@ -876,6 +878,7 @@ namespace WowPacketParser.SQL.Builders
                 //row.Data.SpawnTimeSecs = go.GetDefaultSpawnTime(go.DifficultyID);
                 row.Data.AnimProgress = go.GameObjectDataOriginal.PercentHealth;
                 row.Data.State = (uint)go.GameObjectDataOriginal.State;
+                row.Data.Faction = (uint)go.GameObjectDataOriginal.FactionTemplate;
                 row.Data.Flags = go.GameObjectDataOriginal.Flags;
                 row.Data.SniffId = go.SourceSniffId;
 

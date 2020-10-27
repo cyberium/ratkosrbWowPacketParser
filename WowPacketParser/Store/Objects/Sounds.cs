@@ -34,8 +34,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("sound", true)]
         public uint Sound;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
     }
 
     [DBTableName("play_music")]
@@ -44,7 +44,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("music", true)]
         public uint Music;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
     }
 }

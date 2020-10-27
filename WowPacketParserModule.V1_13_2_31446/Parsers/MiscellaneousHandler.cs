@@ -175,7 +175,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             packet.ReadByte("UnkByte");
             Storage.ClientReleaseSpiritTimes.Add(new WowPacketParser.Store.Objects.ClientReleaseSpirit
             {
-                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time)
+                UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
             }, packet.TimeSpan);
         }
     }

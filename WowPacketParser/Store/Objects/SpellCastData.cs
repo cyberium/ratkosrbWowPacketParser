@@ -27,8 +27,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("duration", false, false, true)]
         public uint? Duration;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
 
         public WowGuid Guid;
         public DateTime Time;
@@ -55,8 +55,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("reason", false, false, true)]
         public uint? Reason;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
 
         public WowGuid Guid;
         public DateTime Time;
@@ -83,8 +83,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("duration", false)]
         public int Duration;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
 
         public WowGuid Guid;
         public DateTime Time;
@@ -105,8 +105,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("duration", true)]
         public int Duration;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
 
         public WowGuid Guid;
         public DateTime Time;
@@ -115,8 +115,8 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("spell_cast_start")]
     public sealed class SpellCastStart : IDataModel
     {
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
 
         [DBFieldName("caster_guid", true, true)]
         public string CasterGuid;
@@ -184,8 +184,8 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("spell_cast_go")]
     public sealed class SpellCastGo : IDataModel
     {
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
 
         [DBFieldName("caster_guid", true, true)]
         public string CasterGuid;
@@ -235,7 +235,7 @@ namespace WowPacketParser.Store.Objects
 
     public sealed class SpellCastData : IDataModel
     {
-        public uint UnixTime = 0;
+        public DateTime Time;
 
         public WowGuid CasterGuid;
 

@@ -191,16 +191,6 @@ namespace WowPacketParser.Store.Objects
         public List<Vector3> SplinePoints = null;
     }
 
-    [DBTableName("creature_client_interact")]
-    public sealed class CreatureClientInteract : IDataModel
-    {
-        [DBFieldName("guid", true, true)]
-        public string GUID;
-
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
-    }
-
     [DBTableName("creature_create1_time")]
     public sealed class CreatureCreate1 : IDataModel
     {
@@ -219,8 +209,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("orientation")]
         public float? Orientation;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
     }
 
     [DBTableName("creature_create2_time")]
@@ -241,8 +231,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("orientation")]
         public float? Orientation;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
     }
 
     [DBTableName("creature_destroy_time")]
@@ -251,8 +241,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string GUID;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
     }
 
     [DBTableName("creature_speed_update")]
@@ -261,8 +251,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string GUID;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
 
         [DBFieldName("speed_type", true)]
         public SpeedType SpeedType;
@@ -277,8 +267,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string GUID;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
 
         [DBFieldName("entry", true, false, true)]
         public uint? Entry;
@@ -393,8 +383,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string GUID;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
 
         [DBFieldName("victim_guid", false, true)]
         public string VictimGuid;
@@ -434,11 +424,30 @@ namespace WowPacketParser.Store.Objects
         public DateTime Time;
     }
 
-    public sealed class CreatureEmote
+    [DBTableName("creature_emote")]
+    public sealed class CreatureEmote : IDataModel
     {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("emote_id")]
+        public uint EmoteId;
+
+        [DBFieldName("emote_name")]
+        public string EmoteName;
+
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
+        public CreatureEmote()
+        {
+        }
         public CreatureEmote(EmoteType emote_, DateTime time_)
         {
             emote = emote_;
+            EmoteId = (uint)emote_;
+            EmoteName = emote_.ToString();
+            UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time_);
             time = time_;
         }
         public EmoteType emote;
@@ -460,8 +469,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("victim_type")]
         public string VictimType;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
     }
 
     public sealed class CreatureTargetData

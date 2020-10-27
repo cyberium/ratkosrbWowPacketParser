@@ -9,8 +9,8 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("world_state_init")]
     public sealed class WorldStateInit : IDataModel
     {
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
 
         [DBFieldName("map", true)]
         public uint Map;
@@ -31,8 +31,8 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("world_state_update")]
     public sealed class WorldStateUpdate : IDataModel
     {
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
 
         [DBFieldName("variable", true)]
         public int Variable;

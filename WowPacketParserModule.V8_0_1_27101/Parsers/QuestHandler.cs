@@ -163,7 +163,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 objectType = "Creature";
             QuestStarter questStarter = new QuestStarter
             {
-                ObjectId = guid.GetEntry(),
+                ObjectId = Storage.GetObjectEntry(guid),
                 ObjectType = objectType,
                 QuestId = (uint)id
             };

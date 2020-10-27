@@ -58,7 +58,6 @@ namespace WowPacketParser.SQL.Builders
                 var addon = new CreatureTemplateAddon
                 {
                     Entry = unit.Key.GetEntry(),
-                    PathID = 0,
                     MountID = (uint)npc.UnitData.MountDisplayID,
                     Bytes1 = npc.Bytes1,
                     Bytes2 = npc.Bytes2,
@@ -1247,7 +1246,7 @@ namespace WowPacketParser.SQL.Builders
                 Row<PlaySound> row = new Row<PlaySound>();
                 row.Data.Sound = sound.sound;
                 Storage.GetObjectDbGuidEntryType(sound.guid, out row.Data.SourceGuid, out row.Data.SourceEntry, out row.Data.SourceType);
-                row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(sound.time);
+                row.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(sound.time);
                 soundRows.Add(row);
             }
 

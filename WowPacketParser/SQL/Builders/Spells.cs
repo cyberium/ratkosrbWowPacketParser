@@ -35,7 +35,7 @@ namespace WowPacketParser.SQL.Builders
             {
                 Row<SpellCastStart> row = new Row<SpellCastStart>();
 
-                row.Data.UnixTime = cast_pair.Item1.UnixTime;
+                row.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(cast_pair.Item1.Time);
                 row.Data.SpellId = cast_pair.Item1.SpellID;
                 row.Data.CastTime = cast_pair.Item1.CastTime;
                 row.Data.CastFlags = cast_pair.Item1.CastFlags;
@@ -69,7 +69,7 @@ namespace WowPacketParser.SQL.Builders
             {
                 Row<SpellCastGo> row = new Row<SpellCastGo>();
 
-                row.Data.UnixTime = cast_pair.Item1.UnixTime;
+                row.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(cast_pair.Item1.Time);
                 row.Data.SpellId = cast_pair.Item1.SpellID;
                 row.Data.CastFlags = cast_pair.Item1.CastFlags;
                 row.Data.CastFlagsEx = cast_pair.Item1.CastFlagsEx;
@@ -165,7 +165,7 @@ namespace WowPacketParser.SQL.Builders
                 Row<SpellChannelStart> row = new Row<SpellChannelStart>();
                 row.Data = channel.Item1;
                 Storage.GetObjectDbGuidEntryType(channel.Item1.Guid, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
-                row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(channel.Item1.Time);
+                row.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(channel.Item1.Time);
                 spellRows.Add(row);
             }
             var spellsSql = new SQLInsert<SpellChannelStart>(spellRows, false);
@@ -190,7 +190,7 @@ namespace WowPacketParser.SQL.Builders
                 Row<SpellChannelUpdate> row = new Row<SpellChannelUpdate>();
                 row.Data = channel.Item1;
                 Storage.GetObjectDbGuidEntryType(channel.Item1.Guid, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
-                row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(channel.Item1.Time);
+                row.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(channel.Item1.Time);
                 spellRows.Add(row);
             }
             var spellsSql = new SQLInsert<SpellChannelUpdate>(spellRows, false);
@@ -243,7 +243,7 @@ namespace WowPacketParser.SQL.Builders
                 Row<PlaySpellVisualKit> row = new Row<PlaySpellVisualKit>();
                 row.Data = spellVisual.Item1;
                 Storage.GetObjectDbGuidEntryType(spellVisual.Item1.Guid, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
-                row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(spellVisual.Item1.Time);
+                row.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(spellVisual.Item1.Time);
                 spellRows.Add(row);
             }
             var spellsSql = new SQLInsert<PlaySpellVisualKit>(spellRows, false);
@@ -268,7 +268,7 @@ namespace WowPacketParser.SQL.Builders
                 Row<SpellCastFailed> row = new Row<SpellCastFailed>();
                 row.Data = failedCast.Item1;
                 Storage.GetObjectDbGuidEntryType(failedCast.Item1.Guid, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
-                row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(failedCast.Item1.Time);
+                row.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(failedCast.Item1.Time);
                 spellRows.Add(row);
             }
             var spellsSql = new SQLInsert<SpellCastFailed>(spellRows, false);

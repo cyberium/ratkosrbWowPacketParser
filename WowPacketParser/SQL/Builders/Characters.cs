@@ -137,7 +137,7 @@ namespace WowPacketParser.SQL.Builders
                             attackRow.Data = attack;
                             attackRow.Data.GUID = row.Data.Guid;
                             Storage.GetObjectDbGuidEntryType(attack.Victim, out attackRow.Data.VictimGuid, out attackRow.Data.VictimId, out attackRow.Data.VictimType);
-                            attackRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.Time);
+                            attackRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(attack.Time);
                             characterAttackLogRows.Add(attackRow);
                         }
                     }
@@ -152,7 +152,7 @@ namespace WowPacketParser.SQL.Builders
                             Row<CreatureTargetChange> attackRow = new Row<CreatureTargetChange>();
                             attackRow.Data.GUID = row.Data.Guid;
                             Storage.GetObjectDbGuidEntryType(attack.victim, out attackRow.Data.VictimGuid, out attackRow.Data.VictimId, out attackRow.Data.VictimType);
-                            attackRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.time);
+                            attackRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(attack.time);
                             characterAttackStartRows.Add(attackRow);
                         }
                     }
@@ -167,7 +167,7 @@ namespace WowPacketParser.SQL.Builders
                             Row<CreatureTargetChange> attackRow = new Row<CreatureTargetChange>();
                             attackRow.Data.GUID = row.Data.Guid;
                             Storage.GetObjectDbGuidEntryType(attack.victim, out attackRow.Data.VictimGuid, out attackRow.Data.VictimId, out attackRow.Data.VictimType);
-                            attackRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.time);
+                            attackRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(attack.time);
                             characterAttackStopRows.Add(attackRow);
                         }
                     }
@@ -182,7 +182,7 @@ namespace WowPacketParser.SQL.Builders
                             Row<CreatureTargetChange> attackRow = new Row<CreatureTargetChange>();
                             attackRow.Data.GUID = row.Data.Guid;
                             Storage.GetObjectDbGuidEntryType(attack.victim, out attackRow.Data.VictimGuid, out attackRow.Data.VictimId, out attackRow.Data.VictimType);
-                            attackRow.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(attack.time);
+                            attackRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(attack.time);
                             characterTargetChangeRows.Add(attackRow);
                         }
                     }

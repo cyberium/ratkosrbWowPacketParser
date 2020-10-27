@@ -48,7 +48,7 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadGuid("Corpse GUID");
             Storage.ClientReclaimCorpseTimes.Add(new WowPacketParser.Store.Objects.ClientReclaimCorpse
             {
-                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time)
+                UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
             }, packet.TimeSpan);
         }
 

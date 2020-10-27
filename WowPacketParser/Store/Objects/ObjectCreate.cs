@@ -16,6 +16,6 @@ namespace WowPacketParser.Store.Objects
 
         public float? Orientation;
 
-        public uint UnixTime;
+        public ulong UnixTimeMs;
     }
 }

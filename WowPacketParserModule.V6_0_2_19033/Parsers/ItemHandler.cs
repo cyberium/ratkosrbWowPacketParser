@@ -161,7 +161,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 ItemClientUse newItemuse = new ItemClientUse
                 {
                     Entry = (uint)Storage.Objects[guid].Item1.ObjectData.EntryID,
-                    UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time),
+                    UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time),
                 };
                 Storage.ItemClientUseTimes.Add(newItemuse, packet.TimeSpan);
             }

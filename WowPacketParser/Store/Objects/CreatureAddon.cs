@@ -8,9 +8,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, noQuotes: true)]
         public string GUID;
 
-        [DBFieldName("path_id")]
-        public uint? PathID;
-
         [DBFieldName("mount")]
         public uint? Mount;
 

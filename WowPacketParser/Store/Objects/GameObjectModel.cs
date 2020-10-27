@@ -64,6 +64,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("state")]
         public uint? State;
 
+        [DBFieldName("faction")]
+        public uint? Faction;
+
         [DBFieldName("flags")]
         public uint? Flags;
 
@@ -92,8 +95,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("orientation")]
         public float? Orientation;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
     }
 
     [DBTableName("gameobject_create2_time")]
@@ -114,8 +117,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("orientation")]
         public float? Orientation;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
     }
 
     [DBTableName("gameobject_destroy_time")]
@@ -124,8 +127,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string GUID;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
     }
 
     [DBTableName("gameobject_values_update")]
@@ -134,8 +137,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string GUID;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
 
         [DBFieldName("flags", false, false, true)]
         public uint? Flags;
@@ -159,8 +162,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("as_despawn", false, false, true)]
         public bool? AsDespawn;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
     }
 
     [DBTableName("gameobject_despawn_anim")]
@@ -169,7 +172,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string GUID;
 
-        [DBFieldName("unixtime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
     }
 }

@@ -8,20 +8,20 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("creature_text")]
     public sealed class CreatureText : IDataModel
     {
-        [DBFieldName("CreatureGuid", true, true)]
+        [DBFieldName("guid", true, true)]
         public string Guid;
 
-        [DBFieldName("CreatureID", true)]
+        [DBFieldName("creature_id", true)]
         public uint? Entry;
 
-        [DBFieldName("GroupID", true)]
+        [DBFieldName("group_id", true)]
         public uint GroupId;
 
-        [DBFieldName("HealthPercent", false, false, true)]
+        [DBFieldName("health_percent", false, false, true)]
         public float? HealthPercent;
 
-        [DBFieldName("UnixTime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
 
         public WowGuid SenderGUID;
         public string Text;
@@ -30,31 +30,31 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("creature_text_template")]
     public sealed class CreatureTextTemplate : IDataModel
     {
-        [DBFieldName("CreatureID", true)]
+        [DBFieldName("creature_id", true)]
         public uint? Entry;
 
-        [DBFieldName("GroupID", true)]
+        [DBFieldName("group_id", true)]
         public uint GroupId;
 
-        [DBFieldName("Text")]
+        [DBFieldName("text")]
         public string Text;
 
-        [DBFieldName("Type")]
+        [DBFieldName("chat_type")]
         public ChatMessageType? Type;
 
-        [DBFieldName("Language")]
+        [DBFieldName("language")]
         public Language? Language;
 
-        [DBFieldName("Emote")]
+        [DBFieldName("emote")]
         public EmoteType? Emote;
 
-        [DBFieldName("Sound")]
+        [DBFieldName("sound")]
         public uint? Sound;
 
-        [DBFieldName("BroadcastTextId", false, true)]
+        [DBFieldName("broadcast_text_id", false, true)]
         public object BroadcastTextID = 0;
 
-        [DBFieldName("Comment")]
+        [DBFieldName("comment")]
         public string Comment;
 
         public WowGuid SenderGUID;
@@ -69,16 +69,16 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("world_text")]
     public sealed class WorldText : IDataModel
     {
-        [DBFieldName("UnixTime", true)]
-        public uint UnixTime;
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
 
-        [DBFieldName("Text")]
+        [DBFieldName("text")]
         public string Text;
 
-        [DBFieldName("Type")]
+        [DBFieldName("chat_type")]
         public ChatMessageType? Type;
 
-        [DBFieldName("Language")]
+        [DBFieldName("language")]
         public Language? Language;
     }
 }

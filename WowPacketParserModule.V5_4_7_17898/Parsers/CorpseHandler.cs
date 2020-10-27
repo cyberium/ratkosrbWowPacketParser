@@ -27,7 +27,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
 
             Storage.ClientReclaimCorpseTimes.Add(new WowPacketParser.Store.Objects.ClientReclaimCorpse
             {
-                UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time)
+                UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
             }, packet.TimeSpan);
         }
 

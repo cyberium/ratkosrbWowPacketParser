@@ -206,7 +206,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
                 CreatureText textEntry = new CreatureText();
                 textEntry.Entry = entry;
                 textEntry.Text = text.Text;
-                textEntry.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time);
+                textEntry.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
                 textEntry.SenderGUID = text.SenderGUID;
                 if (Storage.Objects.ContainsKey(text.SenderGUID))
                 {
@@ -220,7 +220,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             {
                 var worldText = new WorldText
                 {
-                    UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(packet.Time),
+                    UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time),
                     Type = text.Type,
                     Language = text.Language,
                     Text = text.Text
