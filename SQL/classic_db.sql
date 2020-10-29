@@ -253,7 +253,6 @@ CREATE TABLE IF NOT EXISTS `creature` (
 DROP TABLE IF EXISTS `creature_addon`;
 CREATE TABLE IF NOT EXISTS `creature_addon` (
   `guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `path_id` int(10) unsigned NOT NULL DEFAULT '0',
   `mount` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `bytes1` int(10) unsigned NOT NULL DEFAULT '0',
   `stand_state` int(10) unsigned NOT NULL DEFAULT '0',
@@ -610,11 +609,19 @@ CREATE TABLE IF NOT EXISTS `creature_template_addon` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `mount` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `bytes1` int(10) unsigned NOT NULL DEFAULT '0',
+  `stand_state` int(10) unsigned NOT NULL DEFAULT '0',
+  `pet_talent_points` int(10) unsigned NOT NULL DEFAULT '0',
+  `vis_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `anim_tier` int(10) unsigned NOT NULL DEFAULT '0',
   `bytes2` int(10) unsigned NOT NULL DEFAULT '0',
-  `emote` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `sheath_state` int(10) unsigned NOT NULL DEFAULT '0',
+  `pvp_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `pet_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `shapeshift_form` int(10) unsigned NOT NULL DEFAULT '0',
+  `emote` int(10) unsigned NOT NULL DEFAULT '0',
   `auras` text,
   PRIMARY KEY (`entry`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- Data exporting was unselected.
 
