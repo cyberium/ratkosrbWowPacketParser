@@ -29,16 +29,70 @@ namespace WowPacketParser.Parsing.Parsers
             return ReadMovementInfoGen(packet, guid, index);
         }
 
+        public static MovementFlag ConvertVanillaMovementFlags(MovementFlagVanilla flags)
+        {
+            MovementFlag newFlags = MovementFlag.None;
+
+            if (flags.HasAnyFlag(MovementFlagVanilla.Forward))
+                newFlags |= MovementFlag.Forward;
+            if (flags.HasAnyFlag(MovementFlagVanilla.Backward))
+                newFlags |= MovementFlag.Backward;
+            if (flags.HasAnyFlag(MovementFlagVanilla.StrafeLeft))
+                newFlags |= MovementFlag.StrafeLeft;
+            if (flags.HasAnyFlag(MovementFlagVanilla.StrafeRight))
+                newFlags |= MovementFlag.StrafeRight;
+            if (flags.HasAnyFlag(MovementFlagVanilla.TurnLeft))
+                newFlags |= MovementFlag.TurnLeft;
+            if (flags.HasAnyFlag(MovementFlagVanilla.TurnRight))
+                newFlags |= MovementFlag.TurnRight;
+            if (flags.HasAnyFlag(MovementFlagVanilla.PitchUp))
+                newFlags |= MovementFlag.PitchUp;
+            if (flags.HasAnyFlag(MovementFlagVanilla.PitchDown))
+                newFlags |= MovementFlag.PitchDown;
+            if (flags.HasAnyFlag(MovementFlagVanilla.WalkMode))
+                newFlags |= MovementFlag.WalkMode;
+            if (flags.HasAnyFlag(MovementFlagVanilla.OnTransport))
+                newFlags |= MovementFlag.OnTransport;
+            if (flags.HasAnyFlag(MovementFlagVanilla.Levitating))
+                newFlags |= MovementFlag.DisableGravity;
+            if (flags.HasAnyFlag(MovementFlagVanilla.Root))
+                newFlags |= MovementFlag.Root;
+            if (flags.HasAnyFlag(MovementFlagVanilla.Falling))
+                newFlags |= MovementFlag.Falling;
+            if (flags.HasAnyFlag(MovementFlagVanilla.FallingFar))
+                newFlags |= MovementFlag.FallingFar;
+            if (flags.HasAnyFlag(MovementFlagVanilla.Swimming))
+                newFlags |= MovementFlag.Swimming;
+            if (flags.HasAnyFlag(MovementFlagVanilla.SplineEnabled))
+                newFlags |= MovementFlag.SplineEnabled;
+            if (flags.HasAnyFlag(MovementFlagVanilla.CanFly))
+                newFlags |= MovementFlag.CanFly;
+            if (flags.HasAnyFlag(MovementFlagVanilla.Flying))
+                newFlags |= MovementFlag.Flying;
+            if (flags.HasAnyFlag(MovementFlagVanilla.SplineElevation))
+                newFlags |= MovementFlag.SplineElevation;
+            if (flags.HasAnyFlag(MovementFlagVanilla.Waterwalking))
+                newFlags |= MovementFlag.Waterwalking;
+            if (flags.HasAnyFlag(MovementFlagVanilla.CanSafeFall))
+                newFlags |= MovementFlag.CanSafeFall;
+            if (flags.HasAnyFlag(MovementFlagVanilla.Hover))
+                newFlags |= MovementFlag.Hover;
+
+            return newFlags;
+        }
+
         private static MovementInfo ReadMovementInfoGen(Packet packet, WowGuid guid, object index)
         {
-            var info = new MovementInfo
-            {
-                Flags = packet.ReadInt32E<MovementFlag>("Movement Flags", index)
-            };
+            var info = new MovementInfo();
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                info.Flags = packet.ReadInt32E<MovementFlag>("Movement Flags", index);
+            else
+                info.Flags = ConvertVanillaMovementFlags(packet.ReadInt32E<MovementFlagVanilla>("Movement Flags", index));
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
                 info.FlagsExtra = packet.ReadInt16E<MovementFlagExtra>("Extra Movement Flags", index);
-            else
+            else if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
                 info.FlagsExtra = packet.ReadByteE<MovementFlagExtra>("Extra Movement Flags", index);
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_2_2_14545))
