@@ -201,7 +201,8 @@ namespace WowPacketParser.Parsing.Parsers
 
             quest.QuestInfoID = packet.ReadInt32E<QuestInfo>("QuestInfoID");
 
-            quest.SuggestedGroupNum = packet.ReadUInt32("SuggestedGroupNum");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                quest.SuggestedGroupNum = packet.ReadUInt32("SuggestedGroupNum");
 
             quest.RequiredFactionID = new uint?[2];
             quest.RequiredFactionValue = new int?[2];
@@ -219,8 +220,13 @@ namespace WowPacketParser.Parsing.Parsers
             quest.RewardMoney = packet.ReadInt32("RewardMoney");
             quest.RewardBonusMoney = packet.ReadUInt32("RewardBonusMoney");
             quest.RewardDisplaySpell = (uint)packet.ReadInt32<SpellId>("RewardDisplaySpell");
-            quest.RewardSpell = packet.ReadInt32<SpellId>("RewardSpell");
-            quest.RewardHonor = packet.ReadInt32("RewardHonor");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                quest.RewardSpell = packet.ReadInt32<SpellId>("RewardSpell");
+            else
+                quest.RewardSpell = (int)quest.RewardDisplaySpell;
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                quest.RewardHonor = packet.ReadInt32("RewardHonor");
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_3_0_10958))
                 quest.RewardKillHonor = packet.ReadSingle("RewardKillHonor");
@@ -292,6 +298,7 @@ namespace WowPacketParser.Parsing.Parsers
             quest.POIx = packet.ReadSingle("POIx");
             quest.POIy = packet.ReadSingle("POIy");
             quest.POIPriority = packet.ReadUInt32("POIPriority");
+
             quest.LogTitle = packet.ReadCString("LogTitle");
             quest.LogDescription = packet.ReadCString("LogDescription");
             quest.QuestDescription = packet.ReadCString("QuestDescription");

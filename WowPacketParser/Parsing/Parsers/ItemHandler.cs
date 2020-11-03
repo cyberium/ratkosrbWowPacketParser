@@ -481,8 +481,6 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_ITEM_QUERY_SINGLE_RESPONSE)]
         public static void HandleItemQueryResponse(Packet packet)
         {
-
-
             var entry = packet.ReadEntry("Entry");
             if (entry.Value)
                 return;
@@ -491,9 +489,11 @@ namespace WowPacketParser.Parsing.Parsers
             {
                 Entry = (uint)entry.Key,
                 Class = packet.ReadInt32E<ItemClass>("Class"),
-                SubClass = packet.ReadUInt32("Sub Class"),
-                SoundOverrideSubclass = packet.ReadInt32("Sound Override Subclass")
+                SubClass = packet.ReadUInt32("Sub Class")
             };
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                item.SoundOverrideSubclass = packet.ReadInt32("Sound Override Subclass");
 
             var name = new string[4];
             for (int i = 0; i < 4; i++)
@@ -603,7 +603,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             item.Bonding = packet.ReadInt32E<ItemBonding>("Bonding");
 
-            item.Description = packet.ReadCString();
+            item.Description = packet.ReadCString("Description");
 
             item.PageText = packet.ReadUInt32("Page Text");
 
@@ -621,7 +621,8 @@ namespace WowPacketParser.Parsing.Parsers
 
             item.RandomPropery = packet.ReadInt32("Random Property");
 
-            item.RandomSuffix = packet.ReadUInt32("Random Suffix");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                item.RandomSuffix = packet.ReadUInt32("Random Suffix");
 
             item.Block = packet.ReadUInt32("Block");
 
@@ -636,23 +637,26 @@ namespace WowPacketParser.Parsing.Parsers
 
             item.BagFamily = packet.ReadInt32E<BagFamilyMask>("Bag Family");
 
-            item.TotemCategory = packet.ReadInt32E<TotemCategory>("Totem Category");
-
-            item.ItemSocketColors = new ItemSocketColor?[3];
-            item.SocketContent = new uint?[3];
-            for (int i = 0; i < 3; i++)
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
             {
-                item.ItemSocketColors[i] = packet.ReadInt32E<ItemSocketColor>("Socket Color", i);
-                item.SocketContent[i] = packet.ReadUInt32("Socket Item", i);
-            }
+                item.TotemCategory = packet.ReadInt32E<TotemCategory>("Totem Category");
 
-            item.SocketBonus = packet.ReadInt32("Socket Bonus");
+                item.ItemSocketColors = new ItemSocketColor?[3];
+                item.SocketContent = new uint?[3];
+                for (int i = 0; i < 3; i++)
+                {
+                    item.ItemSocketColors[i] = packet.ReadInt32E<ItemSocketColor>("Socket Color", i);
+                    item.SocketContent[i] = packet.ReadUInt32("Socket Item", i);
+                }
 
-            item.GemProperties = packet.ReadInt32("Gem Properties");
+                item.SocketBonus = packet.ReadInt32("Socket Bonus");
 
-            item.RequiredDisenchantSkill = packet.ReadInt32("Required Disenchant Skill");
+                item.GemProperties = packet.ReadInt32("Gem Properties");
 
-            item.ArmorDamageModifier = packet.ReadSingle("Armor Damage Modifier");
+                item.RequiredDisenchantSkill = packet.ReadInt32("Required Disenchant Skill");
+
+                item.ArmorDamageModifier = packet.ReadSingle("Armor Damage Modifier");
+            } 
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_4_2_8209))
                 item.Duration = packet.ReadUInt32("Duration");
