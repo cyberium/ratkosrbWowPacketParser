@@ -103,7 +103,10 @@ namespace WowPacketParser.SQL
 
                     if (attr.CheckVersionMismatch)
                     {
-                        if (!((ClientVersion.Expansion == ClientType.TheBurningCrusade &&
+                        if (!((ClientVersion.Expansion == ClientType.WorldOfWarcraft &&
+                               Settings.TargetedDatabase == TargetedDatabase.Zero)
+                              ||
+                              (ClientVersion.Expansion == ClientType.TheBurningCrusade &&
                                Settings.TargetedDatabase == TargetedDatabase.TheBurningCrusade)
                               ||
                               (ClientVersion.Expansion == ClientType.WrathOfTheLichKing &&

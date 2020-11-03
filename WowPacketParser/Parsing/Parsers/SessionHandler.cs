@@ -384,7 +384,8 @@ namespace WowPacketParser.Parsing.Parsers
 
             // Unknown, these two show the same as expansion payed for.
             // Eg. If account only has payed for Wotlk expansion it will show 2 for both.
-            packet.ReadByteE<ClientType>("Account Expansion");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadByteE<ClientType>("Account Expansion");
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_0_3_13329))
                 packet.ReadByteE<ClientType>("Account Expansion");
         }

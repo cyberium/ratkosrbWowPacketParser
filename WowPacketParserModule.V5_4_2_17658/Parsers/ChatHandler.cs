@@ -137,7 +137,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                 }
                 Storage.CreatureTexts.Add(textEntry);
             }
-            else if (text.SenderGUID.IsEmpty() && text.ReceiverGUID.IsEmpty() &&
+            else if (text.SenderGUID.IsEmpty() && (text.ReceiverGUID == null || text.ReceiverGUID.IsEmpty()) &&
                     (text.Type == ChatMessageType.BattlegroundNeutral))
             {
                 var worldText = new WorldText

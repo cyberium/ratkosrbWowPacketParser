@@ -1,5 +1,47 @@
 namespace WowPacketParser.Enums
 {
+    public enum ChatMessageTypeVanilla : uint
+    {
+        System = 10,
+        Say = 0,
+        Party = 1,
+        Raid = 2,
+        Guild = 3,
+        Officer = 4,
+        Yell = 5,
+        Whisper = 6,
+        WhisperInform = 7,
+        Emote = 8,
+        TextEmote = 9,
+        MonsterSay = 11,
+        MonsterYell = 12,
+        MonsterEmote = 13,
+        Channel = 14,
+        ChannelJoin = 15,
+        ChannelLeave = 16,
+        ChannelList = 17,
+        ChannelNotice = 18,
+        ChannelNoticeUser = 19,
+        Afk = 20,
+        Dnd = 21,
+        Ignored = 22,
+        Skill = 23,
+        Loot = 24,
+        MonsterWhisper = 26,
+        MonsterParty = 48,
+        BattlegroundNeutral = 82,
+        BattlegroundAlliance = 83,
+        BattlegroundHorde = 84,
+        RaidLeader = 87,
+        RaidWarning = 88,
+        RaidBossEmote = 90,
+        RaidBossWhisper = 91,
+        Battleground = 92,
+        BattlegroundLeader = 93,
+
+        Addon = uint.MaxValue
+    }
+
     public enum ChatMessageType : uint
     {
         System               = 0,

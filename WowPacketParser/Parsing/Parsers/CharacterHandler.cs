@@ -158,7 +158,8 @@ namespace WowPacketParser.Parsing.Parsers
                 {
                     packet.ReadInt32("Equip Display Id");
                     packet.ReadByteE<InventoryType>("Equip Inventory Type");
-                    packet.ReadInt32("Equip Aura Id");
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                        packet.ReadInt32("Equip Aura Id");
                 }
 
                 int bagCount = ClientVersion.AddedInVersion(ClientVersionBuild.V3_3_3_11685) ? 4 : 1;
@@ -166,7 +167,8 @@ namespace WowPacketParser.Parsing.Parsers
                 {
                     packet.ReadInt32("Bag Display Id");
                     packet.ReadByteE<InventoryType>("Bag Inventory Type");
-                    packet.ReadInt32("Bag Aura Id");
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                        packet.ReadInt32("Bag Aura Id");
                 }
 
                 if (firstLogin)

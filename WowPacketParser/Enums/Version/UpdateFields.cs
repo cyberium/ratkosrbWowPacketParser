@@ -193,6 +193,7 @@ namespace WowPacketParser.Enums.Version
             switch (build)
             {
                 case ClientVersionBuild.V1_12_1_5875:
+                    return "V1_12_1_5875";
                 case ClientVersionBuild.V2_0_1_6180:
                 case ClientVersionBuild.V2_0_3_6299:
                 case ClientVersionBuild.V2_0_6_6337:
