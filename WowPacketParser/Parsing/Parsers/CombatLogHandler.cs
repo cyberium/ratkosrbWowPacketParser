@@ -111,9 +111,26 @@ namespace WowPacketParser.Parsing.Parsers
             ReadSpellLogExecute(packet);
         }
 
+        private static void ReadSpellRemoveLogVanilla(Packet packet, object index = null)
+        {
+            packet.ReadPackedGuid("Target GUID", index);
+            packet.ReadPackedGuid("Caster GUID", index); // Can be 0
+
+            var count = packet.ReadInt32("Count", index);
+
+            for (int i = 0; i < count; i++)
+                packet.ReadInt32<SpellId>("Spell", index, i);
+        }
+
         // Unknown opcode name(s)
         private static void ReadSpellRemoveLog(Packet packet, object index = null)
         {
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V2_0_1_6180))
+            {
+                ReadSpellRemoveLogVanilla(packet, index);
+                return;
+            }
+
             packet.ReadPackedGuid("Target GUID", index);
             packet.ReadPackedGuid("Caster GUID", index); // Can be 0
             packet.ReadInt32<SpellId>("Spell", index); // Can be 0
@@ -133,8 +150,122 @@ namespace WowPacketParser.Parsing.Parsers
             }
         }
 
+        private static void ReadSpellLogExecuteVanilla(Packet packet, object index = null)
+        {
+            packet.ReadPackedGuid("Caster GUID", index);
+            packet.ReadInt32<SpellId>("Spell ID", index);
+            var count = packet.ReadInt32("Count", index);
+
+            for (int i = 0; i < count; i++)
+            {
+                var type = packet.ReadInt32E<SpellEffect>("Spell Effect", index, i);
+                var count2 = packet.ReadInt32("Count", index, i);
+                for (int j = 0; j < count2; j++)
+                {
+                    switch (type)
+                    {
+                        case SpellEffect.PowerDrain:
+                        {
+                            packet.ReadPackedGuid("Target GUID", index, i, j);
+                            packet.ReadInt32("Power taken", index, i, j);
+                            packet.ReadInt32("Power type", index, i, j);
+                            packet.ReadSingle("Multiplier", index, i, j);
+                            break;
+                        }
+                        case SpellEffect.Heal:
+                        case SpellEffect.HealMaxHealth:
+                        {
+                            packet.ReadPackedGuid("Target GUID", index, i, j);
+                            packet.ReadUInt32("Amount", index, i, j);
+                            packet.ReadBool("Critical", index, i, j);
+                            break;
+                        }
+                        case SpellEffect.Energize:
+                        {
+                            packet.ReadPackedGuid("Target GUID", index, i, j);
+                            packet.ReadInt32("Amount", index, i, j);
+                            packet.ReadInt32("Power type", index, i, j);
+                            break;
+                        }
+                        case SpellEffect.AddExtraAttacks:
+                        {
+                            packet.ReadPackedGuid("Target GUID", index, i, j);
+                            packet.ReadInt32("Amount", index, i, j);
+                            break;
+                        }
+                        case SpellEffect.CreateItem:
+                        case SpellEffect.CreateItem2:
+                        case SpellEffect.FeedPet:
+                        {
+                            packet.ReadInt32<ItemId>("Item Id", index, i, j);
+                            break;
+                        }
+                        case SpellEffect.InterruptCast:
+                        {
+                            packet.ReadPackedGuid("Target GUID", index, i, j);
+                            packet.ReadInt32<SpellId>("Interrupted Spell ID", index, i, j);
+                            break;
+                        }
+                        case SpellEffect.DurabilityDamage:
+                        {
+                            packet.ReadPackedGuid("Target GUID", index, i, j);
+                            packet.ReadInt32<ItemId>("Item", index, i, j);
+                            packet.ReadInt32("Slot", index, i, j);
+                            break;
+                        }
+                        case SpellEffect.Instakill:
+                        case SpellEffect.Resurrect:
+                        case SpellEffect.Dispel:
+                        case SpellEffect.Threat:
+                        case SpellEffect.Distract:
+                        case SpellEffect.Sanctuary:
+                        case SpellEffect.ThreatAll:
+                        case SpellEffect.DispelMechanic:
+                        case SpellEffect.ResurrectNew:
+                        case SpellEffect.AttackMe:
+                        case SpellEffect.SkinPlayerCorpse:
+                        case SpellEffect.ModifyThreatPercent:
+                        case SpellEffect.StealBeneficialBuff:
+                        case SpellEffect.OpenLock:
+                        case SpellEffect.CreateRandomItem:
+                        case SpellEffect.DismissPet:
+                        case SpellEffect.TransDoor:
+                        case SpellEffect.Summon:
+                        case SpellEffect.SummonPet:
+                        case SpellEffect.Jump:
+                        case SpellEffect.JumpDest:
+                        case SpellEffect.GameobjectDamage:
+                        case SpellEffect.GameobjectRepair:
+                        case SpellEffect.GameobjectSetDestructionState:
+                        case SpellEffect.KillCredit:
+                        case SpellEffect.UntrainTalents:
+                        case SpellEffect.ApplyGlyph:
+                        case SpellEffect.CastButton:
+                        case SpellEffect.SummonObjectWild:
+                        case SpellEffect.SummonObjectSlot1:
+                        case SpellEffect.SummonObjectSlot2:
+                        case SpellEffect.SummonObjectSlot3:
+                        case SpellEffect.SummonObjectSlot4:
+                        case SpellEffect.Unk112:
+                        {
+                            packet.ReadGuid("Target", i, j);
+                            break;
+                        }
+                        default:
+                            throw new InvalidDataException("Unknown Spell Effect: " + type);
+                    }
+                }
+            }
+        }
+
         private static void ReadSpellLogExecute(Packet packet, object index = null)
         {
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V2_0_1_6180))
+            {
+                ReadSpellLogExecuteVanilla(packet, index);
+                return;
+            }
+
             packet.ReadPackedGuid("Caster GUID", index);
             packet.ReadInt32<SpellId>("Spell ID", index);
             var count = packet.ReadInt32("Count", index); // v47
@@ -358,11 +489,14 @@ namespace WowPacketParser.Parsing.Parsers
 
             packet.ReadBool("Critical", index);
 
-            if (packet.ReadBool("Debug output", index))
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
             {
-                packet.ReadSingle("Unk float", index);
-                packet.ReadSingle("Unk float 2", index);
-            }
+                if (packet.ReadBool("Debug output", index))
+                {
+                    packet.ReadSingle("Unk float", index);
+                    packet.ReadSingle("Unk float 2", index);
+                }
+            } 
         }
 
         private static void ReadSpellEnergizeLog(Packet packet, object index = null)

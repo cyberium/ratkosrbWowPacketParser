@@ -214,7 +214,7 @@ namespace WowPacketParser.Parsing.Parsers
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_3_9183))
                 attackData.OverkillDamage = packet.ReadInt32("OverDamage");
 
-            var subDmgCount = packet.ReadByte();
+            var subDmgCount = packet.ReadByte("Sub Damage Count");
             for (var i = 0; i < subDmgCount; ++i)
             {
                 packet.ReadInt32("SchoolMask", i);

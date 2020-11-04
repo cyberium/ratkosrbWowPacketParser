@@ -80,15 +80,24 @@ namespace WowPacketParser.Parsing.Parsers
                 }
                 case ChatNotificationType.YouJoined:
                 {
-                    packet.ReadByteE<ChannelFlag>("Flags");
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                        packet.ReadByteE<ChannelFlag>("Flags");
+                    else
+                        packet.ReadUInt32E<ChannelFlag>("Flags");
                     packet.ReadInt32("Channel Id");
-                    packet.ReadInt32("Unk");
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                        packet.ReadInt32("Unk");
+                    else
+                        packet.ReadByte("Unk");
                     break;
                 }
                 case ChatNotificationType.YouLeft:
                 {
-                    packet.ReadInt32("Channel Id");
-                    packet.ReadBool("Unk");
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                    {
+                        packet.ReadInt32("Channel Id");
+                        packet.ReadBool("Unk");
+                    }  
                     break;
                 }
                 case ChatNotificationType.PlayerNotFound:

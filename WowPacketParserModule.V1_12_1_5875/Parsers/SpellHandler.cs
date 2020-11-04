@@ -12,6 +12,49 @@ namespace WowPacketParser.Parsing.Parsers
     [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
     public static class SpellHandler
     {
+        [Parser(Opcode.SMSG_CAST_FAILED)]
+        public static void HandleCastFailed(Packet packet)
+        {
+            packet.ReadUInt32<SpellId>("Spell ID");
+            var status = packet.ReadByte("Status");
+            if (status != 2)
+                return;
+
+            // i cba to add the whole enum
+            var result = packet.ReadByte("Reason");
+            switch (result)
+            {
+                case 94: // SPELL_FAILED_REQUIRES_SPELL_FOCUS
+                {
+                    packet.ReadUInt32("Required Spell Focus");
+                    break;
+                }
+                case 93: // SPELL_FAILED_REQUIRES_AREA
+                {
+                    packet.ReadUInt32("Required Area");
+                    break;
+                }
+                case 25: // SPELL_FAILED_EQUIPPED_ITEM_CLASS
+                {
+                    packet.ReadUInt32("Equipped Item Class");
+                    packet.ReadUInt32("Equipped Item Sub Class Mask");
+                    packet.ReadUInt32("Equipped Item Inventory Type Mask");
+                    break;
+                }
+            }
+        }
+
+        [Parser(Opcode.SMSG_SPELL_FAILURE)]
+        [Parser(Opcode.SMSG_SPELL_FAILED_OTHER)]
+        public static void HandleSpellFailedOther(Packet packet)
+        {
+            SpellCastFailed failData = new SpellCastFailed();
+            failData.Guid = packet.ReadGuid("Guid");
+            failData.SpellId = packet.ReadUInt32<SpellId>("Spell ID");
+            failData.Time = packet.Time;
+            Storage.SpellCastFailed.Add(failData);
+        }
+
         [Parser(Opcode.SMSG_INIT_EXTRA_AURA_INFO_OBSOLETE)] // 2.4.3
         public static void HandleInitExtraAuraInfo(Packet packet)
         {

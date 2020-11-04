@@ -20,7 +20,11 @@ namespace WowPacketParser.Parsing.Parsers
                     return;
             }
 
-            int buttonCount = ClientVersion.AddedInVersion(ClientVersionBuild.V3_2_0_10192) ? 144 : 132;
+            int buttonCount = 120;
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_2_0_10192))
+                buttonCount = 144;
+            else if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                buttonCount = 132;
 
             for (int i = 0; i < buttonCount; i++)
             {

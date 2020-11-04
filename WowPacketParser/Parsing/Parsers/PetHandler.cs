@@ -136,13 +136,17 @@ namespace WowPacketParser.Parsing.Parsers
                 StoreGetters.NameDict[guid] = petName;
 
             packet.ReadTime("Time");
-            var declined = packet.ReadBool("Declined");
 
-            const int maxDeclinedNameCases = 5;
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+            {
+                var declined = packet.ReadBool("Declined");
 
-            if (declined)
-                for (var i = 0; i < maxDeclinedNameCases; i++)
-                    packet.ReadCString("Declined name", i);
+                const int maxDeclinedNameCases = 5;
+
+                if (declined)
+                    for (var i = 0; i < maxDeclinedNameCases; i++)
+                        packet.ReadCString("Declined name", i);
+            }
         }
 
         [Parser(Opcode.SMSG_PET_MODE)]

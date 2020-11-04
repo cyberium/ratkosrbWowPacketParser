@@ -431,7 +431,11 @@ namespace WowPacketParser.Parsing.Parsers
         {
             WeatherState state = packet.ReadInt32E<WeatherState>("State");
             float grade = packet.ReadSingle("Grade");
-            byte unk = packet.ReadByte("Unk Byte"); // Type
+
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadUInt32("Sound");
+
+            byte instant = packet.ReadByte("Instant Change");
 
             Storage.WeatherUpdates.Add(new WeatherUpdate
             {
@@ -439,7 +443,7 @@ namespace WowPacketParser.Parsing.Parsers
                 ZoneId = 0, // fixme
                 State = state,
                 Grade = grade,
-                Unk = unk
+                Unk = instant
             }, packet.TimeSpan);
         }
 

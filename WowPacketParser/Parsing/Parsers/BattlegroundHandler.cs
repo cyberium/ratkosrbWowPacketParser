@@ -253,7 +253,20 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadInt32("Loser Honor Reward");
         }
 
-        [Parser(Opcode.SMSG_BATTLEFIELD_LIST, ClientVersionBuild.Zero, ClientVersionBuild.V4_0_6a_13623)]
+        [Parser(Opcode.SMSG_BATTLEFIELD_LIST, ClientVersionBuild.Zero, ClientVersionBuild.V2_0_1_6180)]
+        public static void HandleBattlefieldListServerVanilla(Packet packet)
+        {
+            packet.ReadGuid("GUID");
+            packet.ReadInt32<BgId>("BGType");
+            packet.ReadByte("UnkByte");
+            packet.ReadUInt32("UnkInt");
+            packet.ReadByte("UnkByte2");
+            var count = packet.ReadUInt32("BG Instance count");
+            for (var i = 0; i < count; i++)
+                packet.ReadUInt32("Instance ID", i);
+        }
+
+        [Parser(Opcode.SMSG_BATTLEFIELD_LIST, ClientVersionBuild.V2_0_1_6180, ClientVersionBuild.V4_0_6a_13623)]
         public static void HandleBattlefieldListServer(Packet packet)
         {
             packet.ReadGuid("GUID");
@@ -312,7 +325,35 @@ namespace WowPacketParser.Parsing.Parsers
         {
         }
 
-        [Parser(Opcode.SMSG_BATTLEFIELD_STATUS, ClientVersionBuild.Zero, ClientVersionBuild.V4_0_1_13164)]
+        [Parser(Opcode.SMSG_BATTLEFIELD_STATUS, ClientVersionBuild.Zero, ClientVersionBuild.V2_0_1_6180)]
+        public static void HandleBattlefieldStatusServerVanilla(Packet packet)
+        {
+            packet.ReadUInt32("Queue Slot");
+            var mapId = packet.ReadUInt32("Map Id");
+            if (mapId == 0)
+                return;
+
+            packet.ReadByte("UnkByte");
+            packet.ReadUInt32("Client Instance ID");
+
+            var status = packet.ReadUInt32E<BattlegroundStatus>("Status");
+            switch (status)
+            {
+                case BattlegroundStatus.WaitQueue:
+                    packet.ReadUInt32("Average Wait Time");
+                    packet.ReadUInt32("Time in queue");
+                    break;
+                case BattlegroundStatus.WaitJoin:
+                    packet.ReadUInt32("Time left");
+                    break;
+                case BattlegroundStatus.InProgress:
+                    packet.ReadUInt32("Instance Expiration");
+                    packet.ReadUInt32("Instance Start Time");
+                    break;
+            }
+        }
+
+        [Parser(Opcode.SMSG_BATTLEFIELD_STATUS, ClientVersionBuild.V2_0_1_6180, ClientVersionBuild.V4_0_1_13164)]
         public static void HandleBattlefieldStatusServer(Packet packet)
         {
             var slot = packet.ReadUInt32("Queue Slot");

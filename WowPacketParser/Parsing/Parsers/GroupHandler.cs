@@ -215,8 +215,8 @@ namespace WowPacketParser.Parsing.Parsers
             }
         }
 
-        [Parser(Opcode.SMSG_PARTY_MEMBER_STATS, ClientVersionBuild.Zero, ClientVersionBuild.V4_2_2_14545)]
-        [Parser(Opcode.SMSG_PARTY_MEMBER_STATS_FULL, ClientVersionBuild.Zero, ClientVersionBuild.V4_2_2_14545)]
+        [Parser(Opcode.SMSG_PARTY_MEMBER_STATS, ClientVersionBuild.V2_0_1_6180, ClientVersionBuild.V4_2_2_14545)]
+        [Parser(Opcode.SMSG_PARTY_MEMBER_STATS_FULL, ClientVersionBuild.V2_0_1_6180, ClientVersionBuild.V4_2_2_14545)]
         public static void HandlePartyMemberStats(Packet packet)
         {
             if (ClientVersion.AddedInVersion(ClientType.WrathOfTheLichKing) &&

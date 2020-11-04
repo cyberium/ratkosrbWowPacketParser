@@ -714,7 +714,7 @@ namespace WowPacketParser.Parsing.Parsers
             var spellId = packet.ReadInt32<SpellId>("Spell ID");
             dbdata.SpellID = (uint)spellId;
 
-            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056) && !isSpellGo)
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180) && ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056) && !isSpellGo)
                 packet.ReadByte("Cast Count");
 
             CastFlag flags;
@@ -725,7 +725,9 @@ namespace WowPacketParser.Parsing.Parsers
             dbdata.CastFlags = (uint)flags;
             dbdata.CastFlagsEx = 0;
 
-            dbdata.CastTime = packet.ReadUInt32("Time");
+            if (!isSpellGo || ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                dbdata.CastTime = packet.ReadUInt32("Time");
+
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_3_0_15005))
                 packet.ReadUInt32("Time2");
 
@@ -751,7 +753,7 @@ namespace WowPacketParser.Parsing.Parsers
                 }
             }
 
-            var targetFlags = packet.ReadInt32E<TargetFlag>("Target Flags");
+            var targetFlags = ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180) ? packet.ReadInt32E<TargetFlag>("Target Flags") : packet.ReadInt16E<TargetFlag>("Target Flags");
 
             WowGuid targetGUID = new WowGuid64();
             if (targetFlags.HasAnyFlag(TargetFlag.Unit | TargetFlag.CorpseEnemy | TargetFlag.GameObject |

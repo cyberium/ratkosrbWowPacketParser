@@ -197,14 +197,16 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadGuid("GUID");
             packet.ReadUInt32("From NPC");
             packet.ReadUInt32("Created");
-            packet.ReadUInt32("Unk Uint32");
+            packet.ReadUInt32("Show in chat");
             packet.ReadByte("Slot");
             packet.ReadInt32("Item Slot");
             packet.ReadUInt32<ItemId>("Entry");
             packet.ReadInt32("Suffix Factor");
             packet.ReadInt32("Random Property ID");
             packet.ReadUInt32("Count");
-            packet.ReadUInt32("Count of Items in inventory");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadUInt32("Count of Items in inventory");
         }
 
         [Parser(Opcode.SMSG_ITEM_ENCHANT_TIME_UPDATE)]

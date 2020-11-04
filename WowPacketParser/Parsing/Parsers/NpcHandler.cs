@@ -499,10 +499,12 @@ namespace WowPacketParser.Parsing.Parsers
             gossip.ObjectType = guid.GetObjectType();
             gossip.ObjectEntry = guid.GetEntry();
 
-            uint menuId = packet.ReadUInt32("Menu Id");
+            uint menuId = 0;
+            if (ClientVersion.AddedInVersion(ClientType.TheBurningCrusade))
+                menuId = packet.ReadUInt32("Menu Id");
             gossip.Entry = menuId;
 
-            if (guid.GetObjectType() == ObjectType.Unit)
+            if (menuId != 0 && guid.GetObjectType() == ObjectType.Unit)
             {
                 if (!Storage.CreatureDefaultGossips.ContainsKey(guid.GetEntry()))
                     Storage.CreatureDefaultGossips.Add(guid.GetEntry(), menuId);
@@ -536,13 +538,21 @@ namespace WowPacketParser.Parsing.Parsers
                 gossipOption.OptionIndex = gossipMenuOptionBox.OptionIndex = packet.ReadUInt32("Index", i);
                 gossipOption.OptionIcon = packet.ReadByteE<GossipOptionIcon>("Icon", i);
                 gossipMenuOptionBox.BoxCoded = packet.ReadBool("Box", i);
-                gossipMenuOptionBox.BoxMoney = packet.ReadUInt32("Required money", i);
-                gossipOption.OptionText = packet.ReadCString("Text", i);
-                gossipMenuOptionBox.BoxText = packet.ReadCString("Box Text", i);
 
-                Storage.GossipMenuOptions.Add(gossipOption, packet.TimeSpan);
-                if (!gossipMenuOptionBox.IsEmpty)
-                    Storage.GossipMenuOptionBoxes.Add(gossipMenuOptionBox, packet.TimeSpan);
+                if (ClientVersion.AddedInVersion(ClientType.TheBurningCrusade))
+                    gossipMenuOptionBox.BoxMoney = packet.ReadUInt32("Required money", i);
+
+                gossipOption.OptionText = packet.ReadCString("Text", i);
+
+                if (ClientVersion.AddedInVersion(ClientType.TheBurningCrusade))
+                    gossipMenuOptionBox.BoxText = packet.ReadCString("Box Text", i);
+
+                if (menuId != 0)
+                {
+                    Storage.GossipMenuOptions.Add(gossipOption, packet.TimeSpan);
+                    if (!gossipMenuOptionBox.IsEmpty)
+                        Storage.GossipMenuOptionBoxes.Add(gossipMenuOptionBox, packet.TimeSpan);
+                }
             }
 
             uint questgossips = packet.ReadUInt32("Amount of Quest gossips");
@@ -552,15 +562,21 @@ namespace WowPacketParser.Parsing.Parsers
 
                 packet.ReadUInt32("Icon", i);
                 packet.ReadInt32("Level", i);
-                packet.ReadUInt32E<QuestFlags>("Flags", i);
+
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                    packet.ReadUInt32E<QuestFlags>("Flags", i);
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V5_1_0_16309))
                     packet.ReadUInt32E<QuestFlagsEx>("Flags 2", i);
 
-                packet.ReadBool("Change Icon", i);
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                    packet.ReadBool("Change Icon", i);
+
                 packet.ReadCString("Title", i);
             }
 
-            Storage.Gossips.Add(gossip, packet.TimeSpan);
+            if (menuId != 0)
+                Storage.Gossips.Add(gossip, packet.TimeSpan);
+
             if (LastGossipOption.HasSelection)
             {
                 if ((packet.TimeSpan - LastGossipOption.TimeSpan).Duration() <= TimeSpan.FromMilliseconds(2500))

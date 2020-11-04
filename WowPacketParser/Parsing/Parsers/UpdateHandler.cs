@@ -3144,6 +3144,32 @@ namespace WowPacketParser.Parsing.Parsers
             return moveInfo;
         }
 
+        private static SplineFlag ConvertVanillaSplineFlags(SplineFlagVanilla flags)
+        {
+            SplineFlag newFlags = SplineFlag.None;
+            if (flags.HasAnyFlag(SplineFlagVanilla.Done))
+                newFlags |= SplineFlag.Done;
+            if (flags.HasAnyFlag(SplineFlagVanilla.Falling))
+                newFlags |= SplineFlag.Falling;
+            if (flags.HasAnyFlag(SplineFlagVanilla.Runmode))
+                newFlags |= SplineFlag.WalkMode;
+            if (flags.HasAnyFlag(SplineFlagVanilla.Flying))
+                newFlags |= SplineFlag.Flying;
+            if (flags.HasAnyFlag(SplineFlagVanilla.FinalPoint))
+                newFlags |= SplineFlag.FinalPoint;
+            if (flags.HasAnyFlag(SplineFlagVanilla.FinalTarget))
+                newFlags |= SplineFlag.FinalTarget;
+            if (flags.HasAnyFlag(SplineFlagVanilla.FinalOrientation))
+                newFlags |= SplineFlag.FinalOrientation;
+            if (flags.HasAnyFlag(SplineFlagVanilla.Cyclic))
+                newFlags |= SplineFlag.Cyclic;
+            if (flags.HasAnyFlag(SplineFlagVanilla.EnterCicle))
+                newFlags |= SplineFlag.EnterCicle;
+            if (flags.HasAnyFlag(SplineFlagVanilla.Frozen))
+                newFlags |= SplineFlag.Frozen;
+            return newFlags;
+        }
+
         private static MovementInfo ReadMovementUpdateBlock(Packet packet, WowGuid guid, object index)
         {
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V5_1_0_16309))
@@ -3265,7 +3291,7 @@ namespace WowPacketParser.Parsing.Parsers
                                 packet.ReadVector3("Final Spline Coords", index);
                         }
                     }
-                    else
+                    else if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
                     {
                         var splineFlags = packet.ReadInt32E<SplineFlag>("Spline Flags", index);
                         if (splineFlags.HasAnyFlag(SplineFlag.FinalTarget))
@@ -3273,6 +3299,16 @@ namespace WowPacketParser.Parsing.Parsers
                         else if (splineFlags.HasAnyFlag(SplineFlag.FinalOrientation))
                             packet.ReadSingle("Final Spline Orientation", index);
                         else if (splineFlags.HasAnyFlag(SplineFlag.FinalPoint))
+                            packet.ReadVector3("Final Spline Coords", index);
+                    }
+                    else
+                    {
+                        var splineFlags = packet.ReadInt32E<SplineFlagVanilla>("Spline Flags", index);
+                        if (splineFlags.HasAnyFlag(SplineFlagVanilla.FinalTarget))
+                            packet.ReadGuid("Final Spline Target GUID", index);
+                        else if (splineFlags.HasAnyFlag(SplineFlagVanilla.FinalOrientation))
+                            packet.ReadSingle("Final Spline Orientation", index);
+                        else if (splineFlags.HasAnyFlag(SplineFlagVanilla.FinalPoint))
                             packet.ReadVector3("Final Spline Coords", index);
                     }
 
