@@ -236,7 +236,7 @@ namespace WowPacketParser.Parsing.Parsers
             WowGuid guid = packet.ReadPackedGuid("GUID");
             Unit obj = null;
             CreatureMovement movementData = null;
-            if (guid.GetHighType() == HighGuidType.Creature && Storage.Objects != null && Storage.Objects.ContainsKey(guid))
+            if (guid.GetObjectType() == ObjectType.Unit && Storage.Objects != null && Storage.Objects.ContainsKey(guid))
             {
                 obj = Storage.Objects[guid].Item1 as Unit;
                 if (obj.UpdateFields != null)

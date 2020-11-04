@@ -78,10 +78,10 @@ namespace WowPacketParser.SQL.Builders
                 MovementInfo moveData = player.OriginalMovement == null ? player.Movement : player.OriginalMovement;
                 if (moveData != null)
                 {
-                    row.Data.PositionX = player.OriginalMovement.Position.X;
-                    row.Data.PositionY = player.OriginalMovement.Position.Y;
-                    row.Data.PositionZ = player.OriginalMovement.Position.Z;
-                    row.Data.Orientation = player.OriginalMovement.Orientation;
+                    row.Data.PositionX = moveData.Position.X;
+                    row.Data.PositionY = moveData.Position.Y;
+                    row.Data.PositionZ = moveData.Position.Z;
+                    row.Data.Orientation = moveData.Orientation;
                 }
                 row.Data.Map = player.Map;
                 row.Data.Health = (uint)player.UnitData.MaxHealth;

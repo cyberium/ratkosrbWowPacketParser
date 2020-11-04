@@ -3,6 +3,7 @@
     public interface IObjectData
     {
         int EntryID { get; }
+        uint TypeID { get; }
         uint DynamicFlags { get; }
         float Scale { get; }
     }
