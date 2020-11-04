@@ -130,7 +130,10 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.ReadUInt32E<QuestFlags>("Quest Flags");
 
                 packet.ReadInt32<SpellId>("Spell Id");
-                packet.ReadInt32<SpellId>("Spell Cast Id");
+
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                    packet.ReadInt32<SpellId>("Spell Cast Id");
+
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_4_0_8089))
                     packet.ReadUInt32("Title Id");
 
@@ -878,7 +881,8 @@ namespace WowPacketParser.Parsing.Parsers
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_3_3_11685))
                 flags = packet.ReadUInt32E<QuestFlags>("Quest Flags");
 
-            packet.ReadUInt32("Suggested Players");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadUInt32("Suggested Players");
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
                 packet.ReadByte("Unknown byte");
@@ -1190,7 +1194,8 @@ namespace WowPacketParser.Parsing.Parsers
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_3_3_11685))
                 packet.ReadUInt32E<QuestFlags>("Quest Flags");
 
-            packet.ReadUInt32("Suggested Players");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadUInt32("Suggested Players");
 
             uint count1 = packet.ReadUInt32("Emote Count");
             uint?[] emoteIDs = {0, 0, 0, 0};
@@ -1256,7 +1261,22 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadUInt32E<QuestReasonType>("Reason");
         }
 
-        [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_COMPLETE, ClientVersionBuild.Zero, ClientVersionBuild.V4_0_6a_13623)]
+        [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_COMPLETE, ClientVersionBuild.Zero, ClientVersionBuild.V2_0_1_6180)]
+        public static void HandleQuestCompletedVanilla(Packet packet)
+        {
+            packet.ReadUInt32<QuestId>("Quest ID");
+            packet.ReadUInt32("UnkInt");
+            packet.ReadUInt32("XP");
+            packet.ReadUInt32("Money");
+            uint items = packet.ReadUInt32("Reward Items Count");
+            for (uint i = 0; i < items; ++i)
+            {
+                packet.ReadInt32("Item Id", i);
+                packet.ReadInt32("Item Count", i);
+            }  
+        }
+
+        [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_COMPLETE, ClientVersionBuild.V2_0_1_6180, ClientVersionBuild.V4_0_6a_13623)]
         public static void HandleQuestCompleted(Packet packet)
         {
             packet.ReadInt32<QuestId>("Quest ID");

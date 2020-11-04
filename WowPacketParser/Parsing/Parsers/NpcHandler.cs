@@ -289,7 +289,9 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadInt32("Price", i);
                 packet.ReadInt32("Max Durability", i);
                 uint buyCount = packet.ReadUInt32("Buy Count", i);
-                vendor.ExtendedCost = packet.ReadUInt32("Extended Cost", i);
+
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                    vendor.ExtendedCost = packet.ReadUInt32("Extended Cost", i);
 
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_0_3_13329))
                     packet.ReadByte("Unk Byte", i);
