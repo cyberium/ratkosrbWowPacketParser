@@ -808,7 +808,9 @@ namespace WowPacketParser.Parsing.Parsers
         {
             packet.ReadGuid("GUID");
             packet.ReadUInt32<QuestId>("Quest ID");
-            packet.ReadByte("Start/End (1/2)");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadByte("Start/End (1/2)");
         }
 
         [Parser(Opcode.CMSG_QUEST_GIVER_ACCEPT_QUEST)]

@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Parsers\ChatHandler.cs" />
+    <Compile Include="Parsers\CombatHandler.cs" />
     <Compile Include="Parsers\ContactHandler.cs" />
     <Compile Include="Parsers\GroupHandler.cs" />
     <Compile Include="Parsers\QuestHandler.cs" />

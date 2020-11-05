@@ -282,7 +282,8 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.CMSG_REPOP_REQUEST)]
         public static void HandleRepopRequest(Packet packet)
         {
-            packet.ReadBool("Accept");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadBool("Accept");
         }
 
         [Parser(Opcode.SMSG_FEATURE_SYSTEM_STATUS, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_0_15005)]

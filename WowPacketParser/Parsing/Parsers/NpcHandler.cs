@@ -468,23 +468,23 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleNpcGossipSelectOption(Packet packet)
         {
             packet.ReadGuid("GUID");
-            var menuEntry = packet.ReadUInt32("Menu Id");
-            var gossipId = packet.ReadUInt32("GossipMenu Id");
+            var menuEntry = ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180) ? packet.ReadUInt32("Menu Id") : 0;
+            var optionIndex = packet.ReadUInt32("Option Index");
 
             if (packet.CanRead()) // if ( byte_F3777C[v3] & 1 )
                 packet.ReadCString("Box Text");
 
-            Storage.GossipSelects.Add(Tuple.Create(menuEntry, gossipId), null, packet.TimeSpan);
+            Storage.GossipSelects.Add(Tuple.Create(menuEntry, optionIndex), null, packet.TimeSpan);
 
             LastGossipOption.MenuId = menuEntry;
-            LastGossipOption.OptionIndex = gossipId;
+            LastGossipOption.OptionIndex = optionIndex;
             LastGossipOption.ActionMenuId = null;
             LastGossipOption.ActionPoiId = null;
             LastGossipOption.TimeSpan = packet.TimeSpan;
 
             TempGossipOptionPOI.Guid = LastGossipOption.Guid;
             TempGossipOptionPOI.MenuId = menuEntry;
-            TempGossipOptionPOI.OptionIndex = gossipId;
+            TempGossipOptionPOI.OptionIndex = optionIndex;
             TempGossipOptionPOI.ActionMenuId = null;
             TempGossipOptionPOI.ActionPoiId = null;
             TempGossipOptionPOI.TimeSpan = packet.TimeSpan;

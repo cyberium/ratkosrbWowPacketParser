@@ -1065,7 +1065,8 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadSingle("Group rate (unk)");
             }
 
-            packet.ReadBool("RAF Bonus");
+            if (ClientVersion.AddedInVersion(ClientType.TheBurningCrusade))
+                packet.ReadBool("RAF Bonus");
         }
 
         [Parser(Opcode.SMSG_TITLE_EARNED)]
