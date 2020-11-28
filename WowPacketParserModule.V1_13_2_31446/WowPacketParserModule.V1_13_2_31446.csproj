@@ -41,6 +41,7 @@
     <Compile Include="Enums\UpdateFields.cs" />
     <Compile Include="Parsers\ActionBarHandler.cs" />
     <Compile Include="Parsers\AuthenticationHandler.cs" />
+    <Compile Include="Parsers\BattlegroundHandler.cs" />
     <Compile Include="Parsers\CharacterHandler.cs" />
     <Compile Include="Parsers\ChatHandler.cs" />
     <Compile Include="Parsers\CombatLogHandler.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Parsers\LootHandler.cs" />
     <Compile Include="Parsers\MiscellaneousHandler.cs" />
     <Compile Include="Parsers\NpcHandler.cs" />
+    <Compile Include="Parsers\PetHandler.cs" />
     <Compile Include="Parsers\QuestHandler.cs" />
     <Compile Include="Parsers\AuctionHandler.cs" />
     <Compile Include="Parsers\SpellHandler.cs" />

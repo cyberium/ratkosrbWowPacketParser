@@ -721,7 +721,6 @@ namespace WowPacketParser.Enums.Version.V1_13_6_36231
 
         private static readonly BiDictionary<Opcode, int> ServerOpcodes = new BiDictionary<Opcode, int>
         {
-            // {Opcode.SMSG_PET_NEWLY_TAMED, 0x0000},         // Removed?
             // {Opcode.SMSG_BATTLEFIELD_PORT_DENIED, 0x0000}, // Removed?
 
             {Opcode.SMSG_ABORT_NEW_WORLD, 0x25AD},
@@ -1354,6 +1353,7 @@ namespace WowPacketParser.Enums.Version.V1_13_6_36231
             {Opcode.SMSG_PET_LEARNED_SPELLS, 0x2C4F},
             {Opcode.SMSG_PET_MODE, 0x2589},
             {Opcode.SMSG_PET_NAME_INVALID, 0x26F6},
+            {Opcode.SMSG_PET_NEWLY_TAMED, 0x2587},
             {Opcode.SMSG_PET_SLOT_UPDATED, 0x2588},
             {Opcode.SMSG_PET_SPELLS_MESSAGE, 0x2C25},
             {Opcode.SMSG_PET_STABLE_LIST, 0x25A9},
