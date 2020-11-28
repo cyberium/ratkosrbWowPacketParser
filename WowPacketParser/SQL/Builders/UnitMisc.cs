@@ -1180,12 +1180,7 @@ namespace WowPacketParser.SQL.Builders
 
                     var sameTextList = rows.Where(text2 => text2.Data.Entry == text.Key && text2.Data.Text == textValue.Item1.Text);
                     if (sameTextList.Count() != 0)
-                    {
-                        foreach (var textRow in sameTextList)
-                        {
-                            textValue.Item1.GroupId = textRow.Data.GroupId;
-                        }
-                    }
+                        continue;
 
                     var row = new Row<CreatureTextTemplate>
                     {
