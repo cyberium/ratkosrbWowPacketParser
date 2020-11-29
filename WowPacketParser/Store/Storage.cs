@@ -589,11 +589,104 @@ namespace WowPacketParser.Store
         public static readonly DataBag<NpcText> NpcTexts = new DataBag<NpcText>(Settings.SqlTables.npc_text);
         public static readonly DataBag<NpcTextMop> NpcTextsMop = new DataBag<NpcTextMop>(Settings.SqlTables.npc_text);
 
-        // Creature text (says, yells, etc.)
+        // Chat packet data (says, yells, etc.)
         public static readonly DataBag<WorldText> WorldTexts = new DataBag<WorldText>(Settings.SqlTables.world_text);
         public static readonly DataBag<CreatureText> CreatureTexts = new DataBag<CreatureText>(Settings.SqlTables.creature_text);
         public static readonly StoreMulti<uint, CreatureTextTemplate> CreatureTextTemplates = new StoreMulti<uint, CreatureTextTemplate>(Settings.SqlTables.creature_text_template);
+        public static readonly DataBag<GameObjectText> GameObjectTexts = new DataBag<GameObjectText>(Settings.SqlTables.gameobject_text);
+        public static readonly StoreMulti<uint, GameObjectTextTemplate> GameObjectTextTemplates = new StoreMulti<uint, GameObjectTextTemplate>(Settings.SqlTables.gameobject_text_template);
+        public static readonly DataBag<CharacterChat> CharacterTexts = new DataBag<CharacterChat>(Settings.SqlTables.character_chat);
 
+        public static void StoreText(ChatPacketData text, Packet packet)
+        {
+            uint creatureId = 0;
+            uint gameObjectId = 0;
+            if (text.SenderGUID.GetObjectType() == ObjectType.Unit)
+                creatureId = text.SenderGUID.GetEntry();
+            else if (text.ReceiverGUID != null && text.ReceiverGUID.GetObjectType() == ObjectType.Unit)
+                creatureId = text.ReceiverGUID.GetEntry();
+            else if (text.SenderGUID.GetObjectType() == ObjectType.GameObject)
+                gameObjectId = text.SenderGUID.GetEntry();
+            else if (text.ReceiverGUID != null && text.ReceiverGUID.GetObjectType() == ObjectType.GameObject)
+                gameObjectId = text.ReceiverGUID.GetEntry();
+
+            text.Time = packet.Time;
+
+            if (creatureId != 0)
+            {
+                if (Settings.SqlTables.creature_text_template)
+                {
+                    CreatureTextTemplate textTemplate = new CreatureTextTemplate(text);
+                    textTemplate.Entry = creatureId;
+                    Storage.CreatureTextTemplates.Add(creatureId, textTemplate, packet.TimeSpan);
+
+                    if (Settings.SqlTables.creature_text)
+                    {
+                        CreatureText textEntry = new CreatureText();
+                        textEntry.Entry = creatureId;
+                        textEntry.Text = textTemplate.Text;
+                        textEntry.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+                        textEntry.SenderGUID = textTemplate.SenderGUID;
+                        if (Storage.Objects.ContainsKey(textTemplate.SenderGUID))
+                        {
+                            var obj = Storage.Objects[textTemplate.SenderGUID].Item1 as Unit;
+                            textEntry.HealthPercent = obj.UnitData.HealthPercent;
+                        }
+                        Storage.CreatureTexts.Add(textEntry);
+                    }
+                }
+            }
+            else if (gameObjectId != 0)
+            {
+                if (Settings.SqlTables.gameobject_text_template)
+                {
+                    GameObjectTextTemplate textTemplate = new GameObjectTextTemplate(text);
+                    textTemplate.Entry = gameObjectId;
+                    Storage.GameObjectTextTemplates.Add(gameObjectId, textTemplate, packet.TimeSpan);
+
+                    if (Settings.SqlTables.gameobject_text)
+                    {
+                        GameObjectText textEntry = new GameObjectText();
+                        textEntry.Entry = gameObjectId;
+                        textEntry.Text = textTemplate.Text;
+                        textEntry.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+                        textEntry.SenderGUID = textTemplate.SenderGUID;
+                        Storage.GameObjectTexts.Add(textEntry);
+                    }
+                }
+            }
+            else if (((text.SenderGUID.GetObjectType() == ObjectType.Player) || (text.SenderName != null && text.Type == ChatMessageType.Channel)) &&
+                     (text.Language != Language.Addon && text.Language != Language.AddonBfA && text.Language != Language.AddonLogged))
+            {
+                if (Settings.SqlTables.character_chat)
+                {
+                    var textEntry = new CharacterChat
+                    {
+                        SenderGUID = text.SenderGUID,
+                        SenderName = text.SenderName,
+                        Text = text.Text,
+                        Type = text.Type,
+                        ChannelName = text.ChannelName,
+                        UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
+                    };
+                    Storage.CharacterTexts.Add(textEntry);
+                }
+            }
+            else if (text.SenderGUID.IsEmpty() && (text.Type == ChatMessageType.BattlegroundNeutral))
+            {
+                if (Settings.SqlTables.world_text)
+                {
+                    var worldText = new WorldText
+                    {
+                        UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time),
+                        Type = text.Type,
+                        Language = text.Language,
+                        Text = text.Text
+                    };
+                    Storage.WorldTexts.Add(worldText);
+                }
+            }
+        }
         // Points of Interest
         public static readonly DataBag<PointsOfInterest> GossipPOIs = new DataBag<PointsOfInterest>(Settings.SqlTables.points_of_interest);
 

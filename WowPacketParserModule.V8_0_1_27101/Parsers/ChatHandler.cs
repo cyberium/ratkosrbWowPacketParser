@@ -11,7 +11,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
         [Parser(Opcode.SMSG_CHAT)]
         public static void HandleServerChatMessage(Packet packet)
         {
-            var text = new CreatureTextTemplate
+            var text = new ChatPacketData
             {
                 Type = (ChatMessageType)packet.ReadByteE<ChatMessageTypeNew>("SlashCmd"),
                 Language = packet.ReadUInt32E<Language>("Language"),
@@ -45,46 +45,13 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             text.SenderName = packet.ReadWoWString("Sender Name", senderNameLen);
             text.ReceiverName = packet.ReadWoWString("Receiver Name", receiverNameLen);
             packet.ReadWoWString("Addon Message Prefix", prefixLen);
-            packet.ReadWoWString("Channel Name", channelLen);
+            text.ChannelName = packet.ReadWoWString("Channel Name", channelLen);
 
             text.Text = packet.ReadWoWString("Text", textLen);
             if (unk801bit)
                 packet.ReadUInt32("Unk801");
 
-            uint entry = 0;
-            if (text.SenderGUID.GetObjectType() == ObjectType.Unit)
-                entry = text.SenderGUID.GetEntry();
-            else if (text.ReceiverGUID.GetObjectType() == ObjectType.Unit)
-                entry = text.ReceiverGUID.GetEntry();
-
-            if (entry != 0)
-            {
-                text.Time = packet.Time;
-                Storage.CreatureTextTemplates.Add(entry, text, packet.TimeSpan);
-                CreatureText textEntry = new CreatureText();
-                textEntry.Entry = entry;
-                textEntry.Text = text.Text;
-                textEntry.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
-                textEntry.SenderGUID = text.SenderGUID;
-                if (Storage.Objects.ContainsKey(text.SenderGUID))
-                {
-                    var obj = Storage.Objects[text.SenderGUID].Item1 as Unit;
-                    textEntry.HealthPercent = obj.UnitData.HealthPercent;
-                }
-                Storage.CreatureTexts.Add(textEntry);
-            }
-            else if (text.SenderGUID.IsEmpty() && (text.ReceiverGUID == null || text.ReceiverGUID.IsEmpty()) &&
-                    (text.Type == ChatMessageType.BattlegroundNeutral))
-            {
-                var worldText = new WorldText
-                {
-                    UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time),
-                    Type = text.Type,
-                    Language = text.Language,
-                    Text = text.Text
-                };
-                Storage.WorldTexts.Add(worldText);
-            }
+            Storage.StoreText(text, packet);
         }
 
         [Parser(Opcode.CMSG_CHAT_ADDON_MESSAGE, ClientVersionBuild.V8_0_1_27101, ClientVersionBuild.V8_1_0_28724)]

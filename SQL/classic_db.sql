@@ -102,6 +102,21 @@ CREATE TABLE IF NOT EXISTS `character_attack_stop` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.character_chat
+DROP TABLE IF EXISTS `character_chat`;
+CREATE TABLE IF NOT EXISTS `character_chat` (
+  `guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `sender_name` varchar(12) NOT NULL DEFAULT '',
+  `text` longtext,
+  `chat_type` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `channel_name` varchar(255) DEFAULT '',
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`guid`,`sender_name`,`unixtimems`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='player chat packets';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.character_inventory
 DROP TABLE IF EXISTS `character_inventory`;
 CREATE TABLE IF NOT EXISTS `character_inventory` (
@@ -941,6 +956,36 @@ CREATE TABLE IF NOT EXISTS `gameobject_template_addon` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.gameobject_text
+DROP TABLE IF EXISTS `gameobject_text`;
+CREATE TABLE IF NOT EXISTS `gameobject_text` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
+  `gameobject_id` int(10) unsigned NOT NULL COMMENT 'gameobject template id',
+  `group_id` int(10) unsigned NOT NULL COMMENT 'counter of unique texts per gameobject id',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  PRIMARY KEY (`gameobject_id`,`group_id`,`unixtimems`,`guid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='individual instances of gameobjects sending a text message';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.gameobject_text_template
+DROP TABLE IF EXISTS `gameobject_text_template`;
+CREATE TABLE IF NOT EXISTS `gameobject_text_template` (
+  `gameobject_id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'gameobject template id',
+  `group_id` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'counter of unique texts per gameobject id',
+  `text` longtext COMMENT 'the actual text that was sent',
+  `chat_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'chat type',
+  `language` tinyint(3) NOT NULL DEFAULT '0' COMMENT 'references Languages.dbc',
+  `sound` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'references SoundEntries.dbc',
+  `broadcast_text_id` mediumint(6) NOT NULL DEFAULT '0' COMMENT 'must be manually set',
+  `comment` varchar(255) DEFAULT '',
+  PRIMARY KEY (`gameobject_id`,`group_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='unique texts per gameobject id';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.gameobject_values_update
 DROP TABLE IF EXISTS `gameobject_values_update`;
 CREATE TABLE IF NOT EXISTS `gameobject_values_update` (
@@ -1608,7 +1653,7 @@ CREATE TABLE IF NOT EXISTS `spell_channel_update` (
   `caster_id` int(10) unsigned NOT NULL DEFAULT '0',
   `caster_type` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `duration` int(10) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`unixtimems`,`caster_guid`,`caster_id`,`caster_type`)
+  PRIMARY KEY (`unixtimems`,`caster_guid`,`caster_id`,`caster_type`,`duration`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_SPELL_CHANNEL_UPDATE';
 
 -- Data exporting was unselected.

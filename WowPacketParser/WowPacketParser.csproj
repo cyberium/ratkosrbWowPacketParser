@@ -632,7 +632,7 @@
     <Compile Include="Store\Objects\CreatureTemplateAddon.cs" />
     <Compile Include="Store\Objects\CreatureTemplateLocale.cs" />
     <Compile Include="Store\Objects\CreatureTemplateScaling.cs" />
-    <Compile Include="Store\Objects\CreatureText.cs" />
+    <Compile Include="Store\Objects\TextTemplate.cs" />
     <Compile Include="Store\Objects\CreatureTrainer.cs" />
     <Compile Include="Store\Objects\ItemInstance.cs" />
     <Compile Include="Store\Objects\LootTemplate.cs" />

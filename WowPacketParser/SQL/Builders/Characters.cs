@@ -216,6 +216,18 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
+                if (Settings.SqlTables.character_chat)
+                {
+                    foreach (var text in Storage.CharacterTexts)
+                    {
+                        if (text.Item1.SenderGUID == objPair.Key)
+                        {
+                            text.Item1.Guid = "@PGUID+" + player.DbGuid;
+                            text.Item1.SenderName = row.Data.Name;
+                        }
+                    }
+                }
+
                 characterRows.Add(row);
 
                 if (maxDbGuid < player.DbGuid)
@@ -334,6 +346,22 @@ namespace WowPacketParser.SQL.Builders
                 var characterUpdateSql = new SQLInsert<CreatureSpeedUpdate>(characterSpeedUpdateRows, false, false, "character_speed_update");
                 result.Append(characterUpdateSql.Build());
                 result.AppendLine();
+            }
+
+            if (Settings.SqlTables.character_chat && !Storage.CharacterTexts.IsEmpty())
+            {
+                foreach (var text in Storage.CharacterTexts)
+                {
+                    if (text.Item1.Guid == null)
+                    {
+                        text.Item1.Guid = "0";
+                        if (String.IsNullOrEmpty(text.Item1.SenderName) && !text.Item1.SenderGUID.IsEmpty())
+                            text.Item1.SenderName = StoreGetters.GetName(text.Item1.SenderGUID);
+                    }
+                    if (text.Item1.ChannelName == null)
+                        text.Item1.ChannelName = "";
+                }
+                result.Append(SQLUtil.Compare(Storage.CharacterTexts, SQLDatabase.Get(Storage.CharacterTexts), t => t.SenderName));
             }
 
             return result.ToString();

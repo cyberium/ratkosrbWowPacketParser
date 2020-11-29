@@ -107,6 +107,7 @@ namespace WowPacketParser.Misc
             public static readonly bool character_attack_log = Conf.GetBoolean("character_attack_log", false);
             public static readonly bool character_attack_start = Conf.GetBoolean("character_attack_start", false);
             public static readonly bool character_attack_stop = Conf.GetBoolean("character_attack_stop", false);
+            public static readonly bool character_chat = Conf.GetBoolean("character_chat", false);
             public static readonly bool character_inventory = Conf.GetBoolean("character_inventory", false);
             public static readonly bool character_movement = Conf.GetBoolean("character_movement", false);
             public static readonly bool character_target_change = Conf.GetBoolean("character_target_change", false);
@@ -152,6 +153,8 @@ namespace WowPacketParser.Misc
             public static readonly bool gameobject_loot = Conf.GetBoolean("gameobject_loot", false);
             public static readonly bool gameobject_template = Conf.GetBoolean("gameobject_template", false);
             public static readonly bool gameobject_template_addon = Conf.GetBoolean("gameobject_template_addon", false);
+            public static readonly bool gameobject_text = Conf.GetBoolean("gameobject_text", false);
+            public static readonly bool gameobject_text_template = Conf.GetBoolean("gameobject_text_template", false);
             public static readonly bool gameobject_values_update = Conf.GetBoolean("gameobject_values_update", false);
             public static readonly bool gossip_menu = Conf.GetBoolean("gossip_menu", false);
             public static readonly bool gossip_menu_option = Conf.GetBoolean("gossip_menu_option", false);
