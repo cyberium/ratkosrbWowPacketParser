@@ -885,6 +885,9 @@ namespace WowPacketParser.Store
             WorldTexts.Clear();
             CreatureTexts.Clear();
             CreatureTextTemplates.Clear();
+            GameObjectTexts.Clear();
+            GameObjectTextTemplates.Clear();
+            CharacterTexts.Clear();
 
             GossipPOIs.Clear();
 
