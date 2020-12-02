@@ -40,6 +40,8 @@ namespace WowPacketParser.SQL.Builders
             var characterTargetChangeRows = new RowList<CreatureTargetChange>();
             var characterValuesUpdateRows = new RowList<CreatureValuesUpdate>();
             var characterSpeedUpdateRows = new RowList<CreatureSpeedUpdate>();
+            var characterServerMovementRows = new RowList<ServerSideMovement>();
+            var characterServerMovementSplineRows = new RowList<ServerSideMovementSpline>();
             Dictionary<int, uint> accountIdDictionary = new Dictionary<int, uint>();
             foreach (var objPair in Storage.Objects)
             {
@@ -228,6 +230,28 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
+                if (Settings.SqlTables.character_movement_server)
+                {
+                    foreach (ServerSideMovementSpline waypoint in player.CombatMovementSplines)
+                    {
+                        var movementSplineRow = new Row<ServerSideMovementSpline>();
+                        movementSplineRow.Data = waypoint;
+                        movementSplineRow.Data.GUID = "@PGUID+" + player.DbGuid;
+                        characterServerMovementSplineRows.Add(movementSplineRow);
+                    }
+
+                    foreach (ServerSideMovement waypoint in player.CombatMovements)
+                    {
+                        if (waypoint == null)
+                            break;
+
+                        var movementRow = new Row<ServerSideMovement>();
+                        movementRow.Data = waypoint;
+                        movementRow.Data.GUID = "@PGUID+" + player.DbGuid;
+                        characterServerMovementRows.Add(movementRow);
+                    }
+                }
+
                 characterRows.Add(row);
 
                 if (maxDbGuid < player.DbGuid)
@@ -271,9 +295,9 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.character_movement)
+            if (Settings.SqlTables.character_movement_client)
             {
-                var movementRows = new RowList<CharacterMovement>();
+                var movementRows = new RowList<ClientSideMovement>();
                 foreach (var movement in Storage.PlayerMovements)
                 {
                     if (Storage.Objects.ContainsKey(movement.guid))
@@ -286,7 +310,7 @@ namespace WowPacketParser.SQL.Builders
                            (movement.OpcodeDirection != Direction.ClientToServer))
                             continue;
 
-                        Row<CharacterMovement> row = new Row<CharacterMovement>();
+                        Row<ClientSideMovement> row = new Row<ClientSideMovement>();
                         row.Data.Guid = "@PGUID+" + player.DbGuid;
                         row.Data.MoveFlags = movement.MoveFlags;
                         row.Data.MoveTime = movement.MoveTime;
@@ -301,8 +325,19 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                var movementSql = new SQLInsert<CharacterMovement>(movementRows, false);
+                var movementSql = new SQLInsert<ClientSideMovement>(movementRows, false);
                 result.Append(movementSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.character_movement_server)
+            {
+                var movementSql = new SQLInsert<ServerSideMovement>(characterServerMovementRows, false, false, "character_movement_server");
+                result.Append(movementSql.Build());
+                result.AppendLine();
+
+                var movementSplineSql = new SQLInsert<ServerSideMovementSpline>(characterServerMovementSplineRows, false, false, "character_movement_server_spline");
+                result.Append(movementSplineSql.Build());
                 result.AppendLine();
             }
 

@@ -109,7 +109,8 @@ namespace WowPacketParser.Misc
             public static readonly bool character_attack_stop = Conf.GetBoolean("character_attack_stop", false);
             public static readonly bool character_chat = Conf.GetBoolean("character_chat", false);
             public static readonly bool character_inventory = Conf.GetBoolean("character_inventory", false);
-            public static readonly bool character_movement = Conf.GetBoolean("character_movement", false);
+            public static readonly bool character_movement_client = Conf.GetBoolean("character_movement_client", false);
+            public static readonly bool character_movement_server = Conf.GetBoolean("character_movement_server", false);
             public static readonly bool character_target_change = Conf.GetBoolean("character_target_change", false);
             public static readonly bool character_values_update = Conf.GetBoolean("character_values_update", false);
             public static readonly bool character_speed_update = Conf.GetBoolean("character_speed_update", false);
@@ -129,8 +130,9 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_emote = Conf.GetBoolean("creature_emote", false);
             public static readonly bool creature_gossip = Conf.GetBoolean("creature_gossip", false);
             public static readonly bool creature_loot = Conf.GetBoolean("creature_loot", false);
-            public static readonly bool creature_movement = Conf.GetBoolean("creature_movement", false);
-            public static readonly bool creature_movement_combat = Conf.GetBoolean("creature_movement_combat", false);
+            public static readonly bool creature_movement_client = Conf.GetBoolean("creature_movement_client", false);
+            public static readonly bool creature_movement_server = Conf.GetBoolean("creature_movement_server", false);
+            public static readonly bool creature_movement_server_combat = Conf.GetBoolean("creature_movement_server_combat", false);
             public static readonly bool creature_stats = Conf.GetBoolean("creature_stats", false);
             public static readonly bool creature_target_change = Conf.GetBoolean("creature_target_change", false);
             public static readonly bool creature_template = Conf.GetBoolean("creature_template", false);

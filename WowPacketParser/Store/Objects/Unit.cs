@@ -17,9 +17,10 @@ namespace WowPacketParser.Store.Objects
 
         public BlockingCollection<List<Aura>> AddedAuras = new BlockingCollection<List<Aura>>();
 
-        public List<CreatureMovement> Waypoints;
-        public List<CreatureMovement> CombatMovements;
-        public List<CreatureMovementSpline> MovementSplines;
+        public List<ServerSideMovement> Waypoints;
+        public List<ServerSideMovement> CombatMovements;
+        public List<ServerSideMovementSpline> WaypointSplines;
+        public List<ServerSideMovementSpline> CombatMovementSplines;
 
         public ushort? AIAnimKit;
         public ushort? MovementAnimKit;
@@ -38,14 +39,15 @@ namespace WowPacketParser.Store.Objects
         {
             UnitData = new UnitData(this);
             UnitDataOriginal = new OriginalUnitData(this);
+            CombatMovements = new List<ServerSideMovement>();
+            CombatMovementSplines = new List<ServerSideMovementSpline>();
 
             if (isCreature)
             {
                 DbGuid = ++UnitGuidCounter;
-                Waypoints = new List<CreatureMovement>();
-                CombatMovements = new List<CreatureMovement>();
-                MovementSplines = new List<CreatureMovementSpline>();
-            }
+                Waypoints = new List<ServerSideMovement>();
+                WaypointSplines = new List<ServerSideMovementSpline>();
+            }   
         }
 
         public override bool IsTemporarySpawn()
@@ -68,10 +70,10 @@ namespace WowPacketParser.Store.Objects
                 DynamicFlags  = UpdateFields.GetEnum<UnitField, UnitDynamicFlags?>(UnitField.UNIT_DYNAMIC_FLAGS);
         }
 
-        public void AddWaypoint(CreatureMovement movementData, Vector3 startPosition, DateTime packetTime)
+        public void AddWaypoint(ServerSideMovement movementData, Vector3 startPosition, DateTime packetTime)
         {
-            List<CreatureMovement> list = null;
-            if ((UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0)
+            List<ServerSideMovement> list = null;
+            if ((Type == ObjectType.Unit) && ((UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0))
                 list = Waypoints;
             else
                 list = CombatMovements;
@@ -90,21 +92,25 @@ namespace WowPacketParser.Store.Objects
                 movementData.EndPositionY = movementData.SplinePoints[index].Y;
                 movementData.EndPositionZ = movementData.SplinePoints[index].Z;
 
-                if (movementData.SplineCount > 1 &&
-                    // Only store out of combat splines.
-                    (UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0)
+                if (movementData.SplineCount > 1)
                 {
+                    List<ServerSideMovementSpline> splinesList = null;
+                    if ((Type == ObjectType.Unit) && ((UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0))
+                        splinesList = WaypointSplines;
+                    else
+                        splinesList = CombatMovementSplines;
+
                     uint counter = 0;
                     foreach (Vector3 vector in movementData.SplinePoints)
                     {
                         counter++;
-                        CreatureMovementSpline spline = new CreatureMovementSpline();
+                        ServerSideMovementSpline spline = new ServerSideMovementSpline();
                         spline.ParentPoint = movementData.Point;
                         spline.SplinePoint = counter;
                         spline.PositionX = vector.X;
                         spline.PositionY = vector.Y;
                         spline.PositionZ = vector.Z;
-                        MovementSplines.Add(spline);
+                        splinesList.Add(spline);
                     }
                 }
                 movementData.SplinePoints = null; // free memory

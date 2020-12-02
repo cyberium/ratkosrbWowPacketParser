@@ -127,8 +127,8 @@ namespace WowPacketParser.Store.Objects
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 
-    [DBTableName("creature_movement_spline")]
-    public sealed class CreatureMovementSpline : IDataModel
+    [DBTableName("creature_movement_server_spline")]
+    public sealed class ServerSideMovementSpline : IDataModel
     {
         [DBFieldName("guid", true, true)]
         public string GUID;
@@ -149,10 +149,10 @@ namespace WowPacketParser.Store.Objects
         public float PositionZ;
     }
 
-    [DBTableName("creature_movement")]
-    public sealed class CreatureMovement : IDataModel
+    [DBTableName("creature_movement_server")]
+    public sealed class ServerSideMovement : IDataModel
     {
-        [DBFieldName("id", true, true)]
+        [DBFieldName("guid", true, true)]
         public string GUID;
 
         [DBFieldName("point", true)]

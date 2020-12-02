@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using WowPacketParser.Enums;
+using WowPacketParser.Enums.Version;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
 using WowPacketParser.Store.Objects;
@@ -50,9 +51,11 @@ namespace WowPacketParser.SQL.Builders
             var create1Rows = new RowList<CreatureCreate1>();
             var create2Rows = new RowList<CreatureCreate2>();
             var destroyRows = new RowList<CreatureDestroy>();
-            var movementRows = new RowList<CreatureMovement>();
-            var movementCombatRows = new RowList<CreatureMovement>();
-            var movementSplineRows = new RowList<CreatureMovementSpline>();
+            var movementRows = new RowList<ServerSideMovement>();
+            var movementCombatRows = new RowList<ServerSideMovement>();
+            var movementCombatSplineRows = new RowList<ServerSideMovementSpline>();
+            var movementSplineRows = new RowList<ServerSideMovementSpline>();
+            var movementClientRows = new RowList<ClientSideMovement>();
             var updateValuesRows = new RowList<CreatureValuesUpdate>();
             var updateSpeedRows = new RowList<CreatureSpeedUpdate>();
             var attackLogRows = new RowList<UnitMeleeAttackLog>();
@@ -324,24 +327,46 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SqlTables.creature_movement &&
+                if (Settings.SqlTables.character_movement_client)
+                {
+                    foreach (var movement in Storage.PlayerMovements)
+                    {
+                        if (movement.guid != unit.Key)
+                            continue;
+
+                        Row<ClientSideMovement> clientMovementRow = new Row<ClientSideMovement>();
+                        clientMovementRow.Data.Guid = "@CGUID+" + creature.DbGuid;
+                        clientMovementRow.Data.MoveFlags = movement.MoveFlags;
+                        clientMovementRow.Data.MoveTime = movement.MoveTime;
+                        clientMovementRow.Data.Map = movement.Map;
+                        clientMovementRow.Data.PositionX = movement.Position.X;
+                        clientMovementRow.Data.PositionY = movement.Position.Y;
+                        clientMovementRow.Data.PositionZ = movement.Position.Z;
+                        clientMovementRow.Data.Orientation = movement.Position.O;
+                        clientMovementRow.Data.Opcode = Opcodes.GetOpcodeName(movement.Opcode, movement.OpcodeDirection);
+                        clientMovementRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(movement.Time);
+                        movementClientRows.Add(clientMovementRow);
+                    }
+                }
+
+                if (Settings.SqlTables.creature_movement_server &&
                         creature.Waypoints != null &&
                         creature.OriginalMovement.Position != null)
                 {
-                    if (creature.MovementSplines != null)
+                    if (creature.WaypointSplines != null)
                     {
-                        foreach (CreatureMovementSpline waypoint in creature.MovementSplines)
+                        foreach (ServerSideMovementSpline waypoint in creature.WaypointSplines)
                         {
-                            var movementRow = new Row<CreatureMovementSpline>();
-                            movementRow.Data = waypoint;
-                            movementRow.Data.GUID = "@CGUID+" + creature.DbGuid;
-                            movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false); ;
-                            movementSplineRows.Add(movementRow);
+                            var movementSplineRow = new Row<ServerSideMovementSpline>();
+                            movementSplineRow.Data = waypoint;
+                            movementSplineRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            movementSplineRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
+                            movementSplineRows.Add(movementSplineRow);
                         }
                     }
 
                     float maxDistanceFromSpawn = 0;
-                    foreach (CreatureMovement waypoint in creature.Waypoints)
+                    foreach (ServerSideMovement waypoint in creature.Waypoints)
                     {
                         if (waypoint == null)
                             break;
@@ -351,27 +376,39 @@ namespace WowPacketParser.SQL.Builders
                         if (distanceFromSpawn > maxDistanceFromSpawn)
                             maxDistanceFromSpawn = distanceFromSpawn;
 
-                        var movementRow = new Row<CreatureMovement>();
+                        var movementRow = new Row<ServerSideMovement>();
                         movementRow.Data = waypoint;
                         movementRow.Data.GUID = "@CGUID+" + creature.DbGuid;
-                        movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false); ;
+                        movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
                         movementRows.Add(movementRow);
                     }
                     row.Data.WanderDistance = maxDistanceFromSpawn;
                 }
 
-                if (Settings.SqlTables.creature_movement_combat &&
+                if (Settings.SqlTables.creature_movement_server_combat &&
                     creature.CombatMovements != null)
                 {
-                    foreach (CreatureMovement waypoint in creature.CombatMovements)
+                    if (creature.CombatMovementSplines != null)
+                    {
+                        foreach (ServerSideMovementSpline waypoint in creature.CombatMovementSplines)
+                        {
+                            var movementSplineRow = new Row<ServerSideMovementSpline>();
+                            movementSplineRow.Data = waypoint;
+                            movementSplineRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            movementSplineRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
+                            movementCombatSplineRows.Add(movementSplineRow);
+                        }
+                    }
+
+                    foreach (ServerSideMovement waypoint in creature.CombatMovements)
                     {
                         if (waypoint == null)
                             break;
 
-                        var movementCombatRow = new Row<CreatureMovement>();
+                        var movementCombatRow = new Row<ServerSideMovement>();
                         movementCombatRow.Data = waypoint;
                         movementCombatRow.Data.GUID = "@CGUID+" + creature.DbGuid;
-                        movementCombatRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false); ;
+                        movementCombatRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
                         movementCombatRows.Add(movementCombatRow);
                     }
                 }
@@ -556,31 +593,46 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_movement)
+            if (Settings.SqlTables.creature_movement_client)
             {
-                // creature_movement
-                var movementDelete = new SQLDelete<CreatureMovement>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                var clientMovementSql = new SQLInsert<ClientSideMovement>(movementClientRows, false, false, "creature_movement_client");
+                result.Append(clientMovementSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.creature_movement_server)
+            {
+                // creature_movement_server
+                var movementDelete = new SQLDelete<ServerSideMovement>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(movementDelete.Build());
-                var movementSql = new SQLInsert<CreatureMovement>(movementRows, false);
+                var movementSql = new SQLInsert<ServerSideMovement>(movementRows, false);
                 result.Append(movementSql.Build());
                 result.AppendLine();
 
-                // creature_movement_spline
-                var movementSplineDelete = new SQLDelete<CreatureMovementSpline>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                // creature_movement_server_spline
+                var movementSplineDelete = new SQLDelete<ServerSideMovementSpline>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(movementSplineDelete.Build());
-                var movementSplineSql = new SQLInsert<CreatureMovementSpline>(movementSplineRows, false);
+                var movementSplineSql = new SQLInsert<ServerSideMovementSpline>(movementSplineRows, false);
                 result.Append(movementSplineSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_movement_combat)
+            if (Settings.SqlTables.creature_movement_server_combat)
             {
-                // creature_movement
-                var movementDelete = new SQLDelete<CreatureMovement>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                movementDelete.tableNameOverride = "creature_movement_combat";
+                // creature_movement_server_combat
+                var movementDelete = new SQLDelete<ServerSideMovement>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                movementDelete.tableNameOverride = "creature_movement_server_combat";
                 result.Append(movementDelete.Build());
-                var movementSql = new SQLInsert<CreatureMovement>(movementCombatRows, false, false, "creature_movement_combat");
+                var movementSql = new SQLInsert<ServerSideMovement>(movementCombatRows, false, false, "creature_movement_server_combat");
                 result.Append(movementSql.Build());
+                result.AppendLine();
+
+                // creature_movement_server_combat_spline
+                var movementSplineDelete = new SQLDelete<ServerSideMovementSpline>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                movementSplineDelete.tableNameOverride = "creature_movement_server_combat_spline";
+                result.Append(movementSplineDelete.Build());
+                var movementSplineSql = new SQLInsert<ServerSideMovementSpline>(movementCombatSplineRows, false, false, "creature_movement_server_combat_spline");
+                result.Append(movementSplineSql.Build());
                 result.AppendLine();
             }
 

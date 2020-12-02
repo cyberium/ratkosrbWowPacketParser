@@ -110,8 +110,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("durability")]
         public uint Durability = 1;
     }
-    [DBTableName("character_movement")]
-    public sealed class CharacterMovement : IDataModel
+    [DBTableName("character_movement_client")]
+    public sealed class ClientSideMovement : IDataModel
     {
         [DBFieldName("guid", true, true)]
         public string Guid;

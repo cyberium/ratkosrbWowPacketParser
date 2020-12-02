@@ -132,9 +132,9 @@ CREATE TABLE IF NOT EXISTS `character_inventory` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.character_movement
-DROP TABLE IF EXISTS `character_movement`;
-CREATE TABLE IF NOT EXISTS `character_movement` (
+-- Dumping structure for table sniffs_new_test.character_movement_client
+DROP TABLE IF EXISTS `character_movement_client`;
+CREATE TABLE IF NOT EXISTS `character_movement_client` (
   `guid` int(10) unsigned NOT NULL,
   `opcode` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `move_time` int(10) unsigned NOT NULL DEFAULT '0',
@@ -146,7 +146,44 @@ CREATE TABLE IF NOT EXISTS `character_movement` (
   `orientation` float NOT NULL DEFAULT '0',
   `unixtimems` bigint(20) unsigned NOT NULL,
   PRIMARY KEY (`guid`,`opcode`,`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='shows all player movement packets';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='client side movement';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.character_movement_server
+DROP TABLE IF EXISTS `character_movement_server`;
+CREATE TABLE IF NOT EXISTS `character_movement_server` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'player guid',
+  `point` smallint(5) unsigned NOT NULL COMMENT 'counter of movements per guid',
+  `move_time` int(10) unsigned NOT NULL COMMENT 'how long it will take to move between these points',
+  `spline_flags` int(10) unsigned NOT NULL,
+  `spline_count` smallint(5) unsigned NOT NULL COMMENT 'number of splines belonging to this point',
+  `start_position_x` float NOT NULL COMMENT 'starting position',
+  `start_position_y` float NOT NULL,
+  `start_position_z` float NOT NULL,
+  `end_position_x` float NOT NULL COMMENT 'final position',
+  `end_position_y` float NOT NULL,
+  `end_position_z` float NOT NULL,
+  `orientation` float NOT NULL COMMENT 'final orientation',
+  `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
+  PRIMARY KEY (`guid`,`point`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='movement points from SMSG_ON_MONSTER_MOVE';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.character_movement_server_spline
+DROP TABLE IF EXISTS `character_movement_server_spline`;
+CREATE TABLE IF NOT EXISTS `character_movement_server_spline` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'player guid',
+  `parent_point` smallint(5) unsigned NOT NULL COMMENT 'point from character_movement_server to which the spline data belongs',
+  `spline_point` smallint(5) unsigned NOT NULL COMMENT 'order of points within the spline',
+  `position_x` float NOT NULL,
+  `position_y` float NOT NULL,
+  `position_z` float NOT NULL,
+  PRIMARY KEY (`guid`,`parent_point`,`spline_point`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='individual spline points for combat  movement';
 
 -- Data exporting was unselected.
 
@@ -467,10 +504,29 @@ CREATE TABLE IF NOT EXISTS `creature_loot_item` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.creature_movement
-DROP TABLE IF EXISTS `creature_movement`;
-CREATE TABLE IF NOT EXISTS `creature_movement` (
-  `id` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+-- Dumping structure for table sniffs_new_test.creature_movement_client
+DROP TABLE IF EXISTS `creature_movement_client`;
+CREATE TABLE IF NOT EXISTS `creature_movement_client` (
+  `guid` int(10) unsigned NOT NULL,
+  `opcode` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `move_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `map` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `position_x` float NOT NULL DEFAULT '0',
+  `position_y` float NOT NULL DEFAULT '0',
+  `position_z` float NOT NULL DEFAULT '0',
+  `orientation` float NOT NULL DEFAULT '0',
+  `unixtimems` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`guid`,`opcode`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='client side movement';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.creature_movement_server
+DROP TABLE IF EXISTS `creature_movement_server`;
+CREATE TABLE IF NOT EXISTS `creature_movement_server` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `point` smallint(5) unsigned NOT NULL COMMENT 'counter of movements per guid',
   `move_time` int(10) unsigned NOT NULL COMMENT 'how long it will take to move between these points',
   `spline_flags` int(10) unsigned NOT NULL,
@@ -483,16 +539,16 @@ CREATE TABLE IF NOT EXISTS `creature_movement` (
   `end_position_z` float NOT NULL,
   `orientation` float NOT NULL COMMENT 'final orientation',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
-  PRIMARY KEY (`id`,`point`)
+  PRIMARY KEY (`guid`,`point`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='out of combat movement points from SMSG_ON_MONSTER_MOVE';
 
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.creature_movement_combat
-DROP TABLE IF EXISTS `creature_movement_combat`;
-CREATE TABLE IF NOT EXISTS `creature_movement_combat` (
-  `id` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+-- Dumping structure for table sniffs_new_test.creature_movement_server_combat
+DROP TABLE IF EXISTS `creature_movement_server_combat`;
+CREATE TABLE IF NOT EXISTS `creature_movement_server_combat` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `point` smallint(5) unsigned NOT NULL COMMENT 'counter of movements per guid',
   `move_time` int(10) unsigned NOT NULL COMMENT 'how long it will take to move between these points',
   `spline_flags` int(10) unsigned NOT NULL,
@@ -505,17 +561,32 @@ CREATE TABLE IF NOT EXISTS `creature_movement_combat` (
   `end_position_z` float NOT NULL,
   `orientation` float NOT NULL COMMENT 'final orientation',
   `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
-  PRIMARY KEY (`id`,`point`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='in combat movement points from SMSG_ON_MONSTER_MOVE\r\nindividual splines are not saved';
+  PRIMARY KEY (`guid`,`point`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='in combat movement points from SMSG_ON_MONSTER_MOVE';
 
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.creature_movement_spline
-DROP TABLE IF EXISTS `creature_movement_spline`;
-CREATE TABLE IF NOT EXISTS `creature_movement_spline` (
+-- Dumping structure for table sniffs_new_test.creature_movement_server_combat_spline
+DROP TABLE IF EXISTS `creature_movement_server_combat_spline`;
+CREATE TABLE IF NOT EXISTS `creature_movement_server_combat_spline` (
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
-  `parent_point` smallint(5) unsigned NOT NULL COMMENT 'point from creature_movement to which the spline data belongs',
+  `parent_point` smallint(5) unsigned NOT NULL COMMENT 'point from creature_movement_server_combat to which the spline data belongs',
+  `spline_point` smallint(5) unsigned NOT NULL COMMENT 'order of points within the spline',
+  `position_x` float NOT NULL,
+  `position_y` float NOT NULL,
+  `position_z` float NOT NULL,
+  PRIMARY KEY (`guid`,`parent_point`,`spline_point`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='individual spline points for combat  movement';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.creature_movement_server_spline
+DROP TABLE IF EXISTS `creature_movement_server_spline`;
+CREATE TABLE IF NOT EXISTS `creature_movement_server_spline` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `parent_point` smallint(5) unsigned NOT NULL COMMENT 'point from creature_movement_server to which the spline data belongs',
   `spline_point` smallint(5) unsigned NOT NULL COMMENT 'order of points within the spline',
   `position_x` float NOT NULL,
   `position_y` float NOT NULL,
