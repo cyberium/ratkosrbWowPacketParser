@@ -137,7 +137,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
 
             packet.ReadBit("NoBirthAnim", index);
             packet.ReadBit("EnablePortals", index);
-            packet.ReadBit("PlayHoverAnim", index);
+            moveInfo.Hover = packet.ReadBit("PlayHoverAnim", index);
 
             var hasMovementUpdate = packet.ReadBit("HasMovementUpdate", index);
             var hasMovementTransport = packet.ReadBit("HasMovementTransport", index);

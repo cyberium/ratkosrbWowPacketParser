@@ -52,6 +52,8 @@ namespace WowPacketParser.Misc
 
         public float PitchRate;
 
+        public bool Hover;
+
         public uint VehicleId; // Not exactly related to movement but it is read in ReadMovementUpdateBlock
 
         public bool HasWpsOrRandMov; // waypoints or random movement
@@ -76,6 +78,7 @@ namespace WowPacketParser.Misc
             copy.FlightBackSpeed = this.FlightBackSpeed;
             copy.TurnRate = this.TurnRate;
             copy.PitchRate = this.PitchRate;
+            copy.Hover = this.Hover;
             copy.VehicleId = this.VehicleId;
             copy.HasWpsOrRandMov = this.HasWpsOrRandMov;
             return copy;

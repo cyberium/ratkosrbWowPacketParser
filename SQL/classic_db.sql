@@ -234,6 +234,7 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `orientation` float NOT NULL DEFAULT '0',
   `wander_distance` float NOT NULL DEFAULT '0',
   `movement_type` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `hover` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `temp` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `creator` int(10) unsigned NOT NULL DEFAULT '0',
   `summoner` int(10) unsigned NOT NULL DEFAULT '0',

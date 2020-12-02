@@ -120,7 +120,7 @@ namespace WowPacketParser.SQL.Builders
                     if (string.IsNullOrEmpty(data))
                         data = "0";
 
-                    row.Data.spawnDifficulties = data;
+                    row.Data.SpawnDifficulties = data;
                 }
 
                 row.Data.PhaseMask = creature.PhaseMask;
@@ -156,7 +156,8 @@ namespace WowPacketParser.SQL.Builders
                 // set some defaults
                 Store.Objects.UpdateFields.IUnitData unitData = creature.UnitDataOriginal != null ? creature.UnitDataOriginal : creature.UnitData;
                 row.Data.PhaseGroup = 0;
-                row.Data.TemporarySpawn = 0;
+                row.Data.Hover = (byte)(creature.OriginalMovement.Hover ? 1 : 0);
+                row.Data.TemporarySpawn = (byte)(creature.IsTemporarySpawn() ? 1 : 0);
                 row.Data.CreatedBy = unitData.CreatedBy.GetEntry();
                 row.Data.SummonedBy = unitData.SummonedBy.GetEntry();
                 row.Data.SummonSpell = (uint)unitData.CreatedBySpell;
@@ -457,9 +458,6 @@ namespace WowPacketParser.SQL.Builders
                 if (row.Data.WanderDistance > 20)
                     row.Data.MovementType = 2;
 
-                if (creature.IsTemporarySpawn())
-                    row.Data.TemporarySpawn = 1;
-
                 if (creature.IsOnTransport() && badTransport)
                 {
                     row.CommentOut = true;
@@ -705,14 +703,13 @@ namespace WowPacketParser.SQL.Builders
 
                 row.Data.SpawnMask = (uint)go.GetDefaultSpawnMask();
 
-
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V7_0_3_22248))
                 {
                     string data = string.Join(",", go.GetDefaultSpawnDifficulties());
                     if (string.IsNullOrEmpty(data))
                         data = "0";
 
-                    row.Data.spawnDifficulties = data;
+                    row.Data.SpawnDifficulties = data;
                 }
 
                 row.Data.PhaseMask = go.PhaseMask;
@@ -884,10 +881,7 @@ namespace WowPacketParser.SQL.Builders
 
                 // set some defaults
                 row.Data.PhaseGroup = 0;
-                row.Data.TemporarySpawn = 0;
-
-                if (go.IsTemporarySpawn())
-                    row.Data.TemporarySpawn = 1;
+                row.Data.TemporarySpawn = (byte)(go.IsTemporarySpawn() ? 1 : 0);
 
                 row.Comment = StoreGetters.GetName(StoreNameType.GameObject, (int)gameobject.Key.GetEntry(), false);
                 row.Comment += " (Area: " + StoreGetters.GetName(StoreNameType.Area, go.Area, false) + " - ";
