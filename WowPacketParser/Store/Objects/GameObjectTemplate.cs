@@ -38,6 +38,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("data", TargetedDatabase.Cataclysm, TargetedDatabase.WarlordsOfDraenor, 32, true)]
         [DBFieldName("data", TargetedDatabase.WarlordsOfDraenor, TargetedDatabase.BattleForAzeroth, 33, true)]
         [DBFieldName("data", TargetedDatabase.BattleForAzeroth, 34, true)]
+        [DBFieldName("data", TargetedDatabase.Classic, 34, true)]
         public int?[] Data;
 
         [DBFieldName("required_level", TargetedDatabase.Cataclysm)]
