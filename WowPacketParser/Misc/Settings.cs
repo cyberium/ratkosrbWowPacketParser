@@ -103,6 +103,7 @@ namespace WowPacketParser.Misc
             public static readonly bool conversation_line_template = Conf.GetBoolean("conversation_line_template", false);
             public static readonly bool conversation_template = Conf.GetBoolean("conversation_template", false);
             public static readonly bool characters = Conf.GetBoolean("characters", false);
+            public static readonly bool characters_addon = Conf.GetBoolean("characters_addon", false);
             public static readonly bool character_active_player = Conf.GetBoolean("character_active_player", false);
             public static readonly bool character_attack_log = Conf.GetBoolean("character_attack_log", false);
             public static readonly bool character_attack_start = Conf.GetBoolean("character_attack_start", false);

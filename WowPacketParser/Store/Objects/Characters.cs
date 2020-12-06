@@ -68,6 +68,57 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("equipmentCache")]
         public string EquipmentCache = "";
     }
+    [DBTableName("characters_addon")]
+    public sealed class CharacterTemplateAddon : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string Guid;
+
+        [DBFieldName("display_id")]
+        public uint? DisplayID;
+
+        [DBFieldName("mount_display_id")]
+        public uint? MountDisplayId;
+
+        [DBFieldName("faction")]
+        public uint? FactionTemplate;
+
+        [DBFieldName("current_health")]
+        public uint? CurHealth;
+
+        [DBFieldName("max_health")]
+        public uint? MaxHealth;
+
+        [DBFieldName("current_mana")]
+        public uint? CurMana;
+
+        [DBFieldName("max_mana")]
+        public uint? MaxMana;
+
+        [DBFieldName("speed_walk")]
+        public float? SpeedWalk;
+
+        [DBFieldName("speed_run")]
+        public float? SpeedRun;
+
+        [DBFieldName("scale")]
+        public float? Scale;
+
+        [DBFieldName("bounding_radius")]
+        public float? BoundingRadius;
+
+        [DBFieldName("combat_reach")]
+        public float? CombatReach;
+
+        [DBFieldName("base_attack_time")]
+        public uint? BaseAttackTime;
+
+        [DBFieldName("ranged_attack_time")]
+        public uint? RangedAttackTime;
+
+        [DBFieldName("unit_flags")]
+        public uint? UnitFlag;
+    }
     [DBTableName("character_inventory")]
     public sealed class CharacterInventory : IDataModel
     {
