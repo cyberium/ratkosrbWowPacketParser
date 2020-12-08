@@ -41,8 +41,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("data", TargetedDatabase.Classic, 34, true)]
         public int?[] Data;
 
-        [DBFieldName("required_level", TargetedDatabase.Cataclysm)]
+        [DBFieldName("RequiredLevel", TargetedDatabase.Cataclysm, TargetedDatabase.Shadowlands)]
         public int? RequiredLevel;
+
+        [DBFieldName("ContentTuningId", TargetedDatabase.Shadowlands)]
+        public int? ContentTuningId;
 
         [DBFieldName("VerifiedBuild")]
         public int? VerifiedBuild = ClientVersion.BuildInt;
