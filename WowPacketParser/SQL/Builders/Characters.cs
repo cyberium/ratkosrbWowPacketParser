@@ -141,8 +141,11 @@ namespace WowPacketParser.SQL.Builders
                     addonRow.Data.MaxHealth = (uint)player.UnitDataOriginal.MaxHealth;
                     addonRow.Data.CurMana = (uint)player.UnitDataOriginal.CurMana;
                     addonRow.Data.MaxMana = (uint)player.UnitDataOriginal.MaxMana;
-                    addonRow.Data.SpeedWalk = player.OriginalMovement.WalkSpeed;
-                    addonRow.Data.SpeedRun = player.OriginalMovement.RunSpeed;
+                    if (moveData != null)
+                    {
+                        addonRow.Data.SpeedWalk = moveData.WalkSpeed;
+                        addonRow.Data.SpeedRun = moveData.RunSpeed;
+                    }  
                     addonRow.Data.Scale = player.ObjectDataOriginal.Scale;
                     addonRow.Data.BoundingRadius = player.UnitDataOriginal.BoundingRadius;
                     addonRow.Data.CombatReach = player.UnitDataOriginal.CombatReach;
