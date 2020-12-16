@@ -117,7 +117,7 @@ namespace WowPacketParser.Store.Objects
         public uint? RangedAttackTime;
 
         [DBFieldName("unit_flags")]
-        public uint? UnitFlag;
+        public uint? UnitFlags;
     }
     [DBTableName("character_inventory")]
     public sealed class CharacterInventory : IDataModel

@@ -129,14 +129,6 @@ namespace WowPacketParserModule.V8_0_1_27101.UpdateFields.V8_1_0_28724
         public int LooksLikeCreatureID { get; set; }
         public int LookAtControllerID { get; set; }
 
-        // Player Fields
-        public int PlayerAccount { get; set; }
-        public int PlayerExperience { get; set; }
-        public int PlayerMoney { get; set; }
-        public uint PlayerBytes1 { get; set; }
-        public uint PlayerBytes2 { get; set; }
-        public int PlayerFlags { get; set; }
-
         public WowGuid GuildGUID { get; set; }
         public DynamicUpdateField<IPassiveSpellHistory> PassiveSpells { get; } = new DynamicUpdateField<IPassiveSpellHistory>();
         public DynamicUpdateField<int> WorldEffects { get; } = new DynamicUpdateField<int>();

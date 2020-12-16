@@ -131,14 +131,6 @@ namespace WowPacketParserModule.V8_0_1_27101.UpdateFields.V8_3_0_33062
         public int LookAtControllerID { get; set; }
         public int TaxiNodesID { get; set; }
 
-        // Player Fields
-        public int PlayerAccount { get; set; }
-        public int PlayerExperience { get; set; }
-        public int PlayerMoney { get; set; }
-        public uint PlayerBytes1 { get; set; }
-        public uint PlayerBytes2 { get; set; }
-        public int PlayerFlags { get; set; }
-
         public WowGuid GuildGUID { get; set; }
         public WowGuid SkinningOwnerGUID { get; set; }
         public DynamicUpdateField<IPassiveSpellHistory> PassiveSpells { get; } = new DynamicUpdateField<IPassiveSpellHistory>();

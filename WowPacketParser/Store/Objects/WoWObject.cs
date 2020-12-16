@@ -19,6 +19,7 @@ namespace WowPacketParser.Store.Objects
         public int Zone;
 
         public IObjectData ObjectData;
+        public IObjectData ObjectDataOriginal;
         public Dictionary<int, UpdateField> UpdateFields;
         public Dictionary<int, UpdateField> OriginalUpdateFields;
         public Dictionary<int, List<UpdateField>> DynamicUpdateFields;
@@ -36,6 +37,7 @@ namespace WowPacketParser.Store.Objects
         public WoWObject()
         {
             ObjectData = new ObjectData(this);
+            ObjectDataOriginal = new OriginalObjectData(this);
         }
 
         public virtual bool IsTemporarySpawn()

@@ -32,6 +32,7 @@ namespace WowPacketParser.SQL.Builders
             uint maxDbGuid = 0;
             uint itemGuidCounter = 0;
             var characterRows = new RowList<CharacterTemplate>();
+            var characterAddonRows = new RowList<CharacterTemplateAddon>();
             var characterInventoryRows = new RowList<CharacterInventory>();
             var characterItemInstaceRows = new RowList<CharacterItemInstance>();
             var characterAttackLogRows = new RowList<UnitMeleeAttackLog>();
@@ -42,7 +43,7 @@ namespace WowPacketParser.SQL.Builders
             var characterSpeedUpdateRows = new RowList<CreatureSpeedUpdate>();
             var characterServerMovementRows = new RowList<ServerSideMovement>();
             var characterServerMovementSplineRows = new RowList<ServerSideMovementSpline>();
-            Dictionary<int, uint> accountIdDictionary = new Dictionary<int, uint>();
+            Dictionary<WowGuid, uint> accountIdDictionary = new Dictionary<WowGuid, uint>();
             foreach (var objPair in Storage.Objects)
             {
                 if (objPair.Key.GetObjectType() != ObjectType.Player)
@@ -58,25 +59,25 @@ namespace WowPacketParser.SQL.Builders
                 Row<CharacterTemplate> row = new Row<CharacterTemplate>();
 
                 row.Data.Guid = "@PGUID+" + player.DbGuid;
-                if (accountIdDictionary.ContainsKey(player.UnitData.PlayerAccount))
-                    row.Data.Account = "@ACCID+" + accountIdDictionary[player.UnitData.PlayerAccount];
+                if (accountIdDictionary.ContainsKey(player.PlayerDataOriginal.WowAccount))
+                    row.Data.Account = "@ACCID+" + accountIdDictionary[player.PlayerDataOriginal.WowAccount];
                 else
                 {
                     uint id = (uint)accountIdDictionary.Count;
-                    accountIdDictionary.Add(player.UnitData.PlayerAccount, id);
+                    accountIdDictionary.Add(player.PlayerDataOriginal.WowAccount, id);
                     row.Data.Account = "@ACCID+" + id;
                 }
 
                 row.Data.Name = Settings.RandomizePlayerNames ? GetRandomString(8) : StoreGetters.GetName(objPair.Key);
-                row.Data.Race = player.UnitData.RaceId;
-                row.Data.Class = player.UnitData.ClassId;
-                row.Data.Gender = player.UnitData.Sex;
-                row.Data.Level = (uint)player.UnitData.Level;
-                row.Data.XP = (uint)player.UnitData.PlayerExperience;
-                row.Data.Money = (uint)player.UnitData.PlayerMoney;
-                row.Data.PlayerBytes = player.UnitData.PlayerBytes1;
-                row.Data.PlayerBytes2 = player.UnitData.PlayerBytes2;
-                row.Data.PlayerFlags = (uint)player.UnitData.PlayerFlags;
+                row.Data.Race = player.UnitDataOriginal.RaceId;
+                row.Data.Class = player.UnitDataOriginal.ClassId;
+                row.Data.Gender = player.UnitDataOriginal.Sex;
+                row.Data.Level = (uint)player.UnitDataOriginal.Level;
+                row.Data.XP = player.PlayerDataOriginal.Experience;
+                row.Data.Money = player.PlayerDataOriginal.Money;
+                row.Data.PlayerBytes = player.PlayerDataOriginal.PlayerBytes1;
+                row.Data.PlayerBytes2 = player.PlayerDataOriginal.PlayerBytes2;
+                row.Data.PlayerFlags = player.PlayerDataOriginal.PlayerFlags;
                 MovementInfo moveData = player.OriginalMovement == null ? player.Movement : player.OriginalMovement;
                 if (moveData != null)
                 {
@@ -86,8 +87,8 @@ namespace WowPacketParser.SQL.Builders
                     row.Data.Orientation = moveData.Orientation;
                 }
                 row.Data.Map = player.Map;
-                row.Data.Health = (uint)player.UnitData.MaxHealth;
-                row.Data.Power1 = (uint)player.UnitData.MaxMana;
+                row.Data.Health = (uint)player.UnitDataOriginal.MaxHealth;
+                row.Data.Power1 = (uint)player.UnitDataOriginal.MaxMana;
 
                 PlayerField visibleItemsStart = ClientVersion.AddedInVersion(ClientVersionBuild.V5_4_2_17658) ? PlayerField.PLAYER_VISIBLE_ITEM : PlayerField.PLAYER_VISIBLE_ITEM_1_ENTRYID;
                 for (int i = 0; i < 38; i++)
@@ -127,6 +128,28 @@ namespace WowPacketParser.SQL.Builders
                         row.Data.EquipmentCache += " ";
 
                     row.Data.EquipmentCache += itemId;
+                }
+
+                if (Settings.SqlTables.characters_addon)
+                {
+                    Row<CharacterTemplateAddon> addonRow = new Row<CharacterTemplateAddon>();
+                    addonRow.Data.Guid = row.Data.Guid;
+                    addonRow.Data.DisplayID = (uint)player.UnitDataOriginal.DisplayID;
+                    addonRow.Data.MountDisplayId = (uint)player.UnitDataOriginal.MountDisplayID;
+                    addonRow.Data.FactionTemplate = (uint)player.UnitDataOriginal.FactionTemplate;
+                    addonRow.Data.CurHealth = (uint)player.UnitDataOriginal.CurHealth;
+                    addonRow.Data.MaxHealth = (uint)player.UnitDataOriginal.MaxHealth;
+                    addonRow.Data.CurMana = (uint)player.UnitDataOriginal.CurMana;
+                    addonRow.Data.MaxMana = (uint)player.UnitDataOriginal.MaxMana;
+                    addonRow.Data.SpeedWalk = player.OriginalMovement.WalkSpeed;
+                    addonRow.Data.SpeedRun = player.OriginalMovement.RunSpeed;
+                    addonRow.Data.Scale = player.ObjectDataOriginal.Scale;
+                    addonRow.Data.BoundingRadius = player.UnitDataOriginal.BoundingRadius;
+                    addonRow.Data.CombatReach = player.UnitDataOriginal.CombatReach;
+                    addonRow.Data.BaseAttackTime = player.UnitDataOriginal.AttackRoundBaseTime[0];
+                    addonRow.Data.RangedAttackTime = player.UnitDataOriginal.RangedAttackRoundBaseTime;
+                    addonRow.Data.UnitFlags = player.UnitDataOriginal.Flags;
+                    characterAddonRows.Add(addonRow);
                 }
 
                 if (Settings.SqlTables.character_attack_log)
@@ -263,6 +286,15 @@ namespace WowPacketParser.SQL.Builders
             var characterSql = new SQLInsert<CharacterTemplate>(characterRows, false);
             result.Append(characterSql.Build());
             result.AppendLine();
+
+            if (Settings.SqlTables.characters_addon)
+            {
+                var addonDelete = new SQLDelete<CharacterTemplateAddon>(Tuple.Create("@IGUID+0", "@IGUID+" + itemGuidCounter));
+                result.Append(addonDelete.Build());
+                var addonSql = new SQLInsert<CharacterTemplateAddon>(characterAddonRows, false);
+                result.Append(addonSql.Build());
+                result.AppendLine();
+            }
 
             if (Settings.SqlTables.character_active_player)
             {

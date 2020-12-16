@@ -647,6 +647,7 @@
     <Compile Include="Store\Objects\UpdateFields\IUnlockedAzeriteEssence.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\AreaTriggerData.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\ConversationData.cs" />
+    <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\PlayerData.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\UnitData.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\UpdateFieldExtensions.cs" />
     <Compile Include="Store\Objects\GameObjectAddon.cs" />

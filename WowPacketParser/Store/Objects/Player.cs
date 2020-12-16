@@ -20,9 +20,14 @@ namespace WowPacketParser.Store.Objects
 
         public bool IsActivePlayer = false;
 
+        public IPlayerData PlayerData;
+        public IPlayerData PlayerDataOriginal;
+
         public Player() : base(false)
         {
             DbGuid = ++PlayerGuidCounter;
+            PlayerData = new PlayerData(this);
+            PlayerDataOriginal = new OriginalPlayerData(this);
         }
     }
 }
