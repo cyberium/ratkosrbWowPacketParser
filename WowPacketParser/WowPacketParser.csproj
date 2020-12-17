@@ -676,6 +676,7 @@
     <Compile Include="Store\Objects\QuestGreeting.cs" />
     <Compile Include="Store\Objects\QuestGreetingLocale.cs" />
     <Compile Include="Store\Objects\QuestObjectivesLocale.cs" />
+    <Compile Include="Store\Objects\QuestRewardDisplaySpell.cs" />
     <Compile Include="Store\Objects\ModelData.cs" />
     <Compile Include="Store\Objects\NpcText.cs" />
     <Compile Include="Store\Objects\NpcSpellClick.cs" />

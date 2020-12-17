@@ -655,6 +655,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<QuestTemplate> QuestTemplates = new DataBag<QuestTemplate>(Settings.SqlTables.quest_template);
         public static readonly DataBag<QuestObjective> QuestObjectives = new DataBag<QuestObjective>(Settings.SqlTables.quest_template);
         public static readonly DataBag<QuestVisualEffect> QuestVisualEffects = new DataBag<QuestVisualEffect>(Settings.SqlTables.quest_template);
+        public static readonly DataBag<QuestRewardDisplaySpell> QuestRewardDisplaySpells = new DataBag<QuestRewardDisplaySpell>(Settings.SqlTables.quest_template);
         public static readonly DataBag<CreatureTemplate> CreatureTemplates = new DataBag<CreatureTemplate>(Settings.SqlTables.creature_template_wdb);
         public static readonly DataBag<CreatureTemplateClassic> CreatureTemplatesClassic = new DataBag<CreatureTemplateClassic>(Settings.SqlTables.creature_template_wdb);
         public static readonly DataBag<CreatureTemplateNonWDB> CreatureTemplatesNonWDB = new DataBag<CreatureTemplateNonWDB>(Settings.SqlTables.creature_template);
@@ -987,6 +988,7 @@ namespace WowPacketParser.Store
             QuestTemplates.Clear();
             QuestObjectives.Clear();
             QuestVisualEffects.Clear();
+            QuestRewardDisplaySpells.Clear();
 
             UnitAttackLogs.Clear();
             UnitAttackStartTimes.Clear();
@@ -994,6 +996,7 @@ namespace WowPacketParser.Store
             CreatureClientInteractTimes.Clear();
             CreatureLoot.Clear();
             CreatureStats.Clear();
+
             CreatureTemplates.Clear();
             CreatureTemplatesClassic.Clear();
             CreatureTemplatesNonWDB.Clear();
