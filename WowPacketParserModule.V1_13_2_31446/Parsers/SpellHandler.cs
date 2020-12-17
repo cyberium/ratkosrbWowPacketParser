@@ -207,7 +207,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             {
                 var aura = new Aura();
 
-                packet.ReadByte("Slot", i);
+                aura.Slot = packet.ReadByte("Slot", i);
 
                 packet.ResetBitReader();
                 var hasAura = packet.ReadBit("HasAura", i);
@@ -215,12 +215,12 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 {
                     packet.ReadPackedGuid128("CastID", i);
                     aura.SpellId = (uint)packet.ReadInt32<SpellId>("SpellID", i);
-                    packet.ReadInt32("SpellXSpellVisualID", i);
+                    aura.VisualId = (uint)packet.ReadInt32("SpellXSpellVisualID", i);
                     aura.AuraFlags = packet.ReadByteE<AuraFlagMoP>("Flags", i);
-                    packet.ReadUInt32("ActiveFlags", i);
+                    aura.ActiveFlags = packet.ReadUInt32("ActiveFlags", i);
                     aura.Level = packet.ReadUInt16("CastLevel", i);
                     aura.Charges = packet.ReadByte("Applications", i);
-                    packet.ReadInt32("ContentTuningID", i);
+                    aura.ContentTuningId = packet.ReadInt32("ContentTuningID", i);
 
                     packet.ResetBitReader();
 
@@ -239,7 +239,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                         V8_0_1_27101.Parsers.SpellHandler.ReadContentTuningParams(packet, i, "ContentTuning");
 
                     if (hasCastUnit)
-                        packet.ReadPackedGuid128("CastUnit", i);
+                        aura.CasterGuid = packet.ReadPackedGuid128("CastUnit", i);
 
                     aura.Duration = hasDuration ? packet.ReadInt32("Duration", i) : 0;
                     aura.MaxDuration = hasRemaining ? packet.ReadInt32("Remaining", i) : 0;
