@@ -112,6 +112,7 @@ namespace WowPacketParser.Misc
             public static readonly bool character_inventory = Conf.GetBoolean("character_inventory", false);
             public static readonly bool character_movement_client = Conf.GetBoolean("character_movement_client", false);
             public static readonly bool character_movement_server = Conf.GetBoolean("character_movement_server", false);
+            public static readonly bool character_auras_update = Conf.GetBoolean("character_auras_update", false);
             public static readonly bool character_target_change = Conf.GetBoolean("character_target_change", false);
             public static readonly bool character_values_update = Conf.GetBoolean("character_values_update", false);
             public static readonly bool character_speed_update = Conf.GetBoolean("character_speed_update", false);
@@ -121,7 +122,7 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_addon = Conf.GetBoolean("creature_addon", false);
             public static readonly bool creature_attack_log = Conf.GetBoolean("creature_attack_log", false);
             public static readonly bool creature_attack_start = Conf.GetBoolean("creature_attack_start", false);
-            public static readonly bool creature_attack_stop = Conf.GetBoolean("creature_attack_stop", false);
+            public static readonly bool creature_attack_stop = Conf.GetBoolean("creature_attack_stop", false); 
             public static readonly bool creature_client_interact = Conf.GetBoolean("creature_client_interact", false);
             public static readonly bool creature_create1_time = Conf.GetBoolean("creature_create1_time", false);
             public static readonly bool creature_create2_time = Conf.GetBoolean("creature_create2_time", false);
@@ -143,6 +144,7 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_template_scaling = Conf.GetBoolean("creature_template_scaling", false);
             public static readonly bool creature_text = Conf.GetBoolean("creature_text", false);
             public static readonly bool creature_text_template = Conf.GetBoolean("creature_text_template", false);
+            public static readonly bool creature_auras_update = Conf.GetBoolean("creature_auras_update", false);
             public static readonly bool creature_values_update = Conf.GetBoolean("creature_values_update", false);
             public static readonly bool creature_speed_update = Conf.GetBoolean("creature_speed_update", false);
             public static readonly bool gameobject = Conf.GetBoolean("gameobject", false);

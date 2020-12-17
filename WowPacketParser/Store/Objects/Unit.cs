@@ -14,9 +14,6 @@ namespace WowPacketParser.Store.Objects
         public uint DbGuid;
 
         public List<Aura> Auras;
-
-        public BlockingCollection<List<Aura>> AddedAuras = new BlockingCollection<List<Aura>>();
-
         public List<ServerSideMovement> Waypoints;
         public List<ServerSideMovement> CombatMovements;
         public List<ServerSideMovementSpline> WaypointSplines;

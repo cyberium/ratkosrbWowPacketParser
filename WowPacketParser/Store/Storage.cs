@@ -53,7 +53,7 @@ namespace WowPacketParser.Store
         }
         public static void GetObjectDbGuidEntryType(WowGuid guid, out string objectGuid, out uint objectEntry, out string objectType)
         {
-            if (Objects.ContainsKey(guid))
+            if (guid != null && Objects.ContainsKey(guid))
             {
                 if (guid.GetObjectType() == ObjectType.Unit)
                 {
@@ -238,6 +238,47 @@ namespace WowPacketParser.Store
             else if (type == ObjectCreateType.Create2)
                 StoreObjectCreate2Time(guid, movement, time);
 
+        }
+        public static readonly Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>> UnitAurasUpdates = new Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>>();
+        public static void StoreUnitAurasUpdate(WowGuid guid, List<Aura> auras, DateTime time)
+        {
+            if (Storage.Objects.ContainsKey(guid))
+            {
+                var unit = Storage.Objects[guid].Item1 as Unit;
+                if (unit != null)
+                {
+                    // If this is the first packet that sends auras
+                    // (hopefully at spawn time) add it to the "Auras" field
+                    if (unit.Auras == null)
+                        unit.Auras = auras;
+                }
+            }
+
+            if (guid.GetObjectType() == ObjectType.Unit &&
+                guid.GetHighType() != HighGuidType.Pet)
+            {
+                if (!Settings.SqlTables.creature_auras_update)
+                    return;
+            }
+            else if (guid.GetObjectType() == ObjectType.Player ||
+                     guid.GetObjectType() == ObjectType.ActivePlayer)
+            {
+                if (!Settings.SqlTables.character_auras_update)
+                    return;
+            }
+            else
+                return;
+
+            if (Storage.UnitAurasUpdates.ContainsKey(guid))
+            {
+                Storage.UnitAurasUpdates[guid].Add(new Tuple<List<Aura>, DateTime>(auras, time));
+            }
+            else
+            {
+                List<Tuple<List<Aura>, DateTime>> updateList = new List<Tuple<List<Aura>, DateTime>>();
+                updateList.Add(new Tuple<List<Aura>, DateTime>(auras, time));
+                Storage.UnitAurasUpdates.Add(guid, updateList);
+            }
         }
         public static readonly Dictionary<WowGuid, List<CreatureValuesUpdate>> UnitValuesUpdates = new Dictionary<WowGuid, List<CreatureValuesUpdate>>();
         public static void StoreUnitValuesUpdate(WowGuid guid, CreatureValuesUpdate update)

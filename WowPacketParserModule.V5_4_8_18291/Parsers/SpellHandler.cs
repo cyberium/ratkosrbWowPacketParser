@@ -921,23 +921,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
 
             packet.ParseBitStream(guid, 2, 6, 7, 1, 3, 4, 0, 5);
             var GUID = packet.WriteGuid("Guid", guid);
-
-            if (Storage.Objects.ContainsKey(GUID))
-            {
-                var unit = Storage.Objects[GUID].Item1 as Unit;
-                if (unit != null)
-                {
-                    // If this is the first packet that sends auras
-                    // (hopefully at spawn time) add it to the "Auras" field,
-                    // if not create another row of auras in AddedAuras
-                    // (similar to ChangedUpdateFields)
-
-                    if (unit.Auras == null)
-                        unit.Auras = auras;
-                    else
-                        unit.AddedAuras.Add(auras);
-                }
-            }
+            Storage.StoreUnitAurasUpdate(GUID, auras, packet.Time);
         }
 
         [Parser(Opcode.SMSG_SEND_KNOWN_SPELLS)]

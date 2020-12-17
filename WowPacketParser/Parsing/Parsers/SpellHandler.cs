@@ -334,24 +334,7 @@ namespace WowPacketParser.Parsing.Parsers
                 if (aura != null)
                     auras.Add(aura);
             }
-
-            // This only works if the parser saw UPDATE_OBJECT before this packet
-            if (Storage.Objects.ContainsKey(guid))
-            {
-                var unit = Storage.Objects[guid].Item1 as Unit;
-                if (unit != null)
-                {
-                    // If this is the first packet that sends auras
-                    // (hopefully at spawn time) add it to the "Auras" field,
-                    // if not create another row of auras in AddedAuras
-                    // (similar to ChangedUpdateFields)
-
-                    if (unit.Auras == null)
-                        unit.Auras = auras;
-                    else
-                        unit.AddedAuras.Add(auras);
-                }
-            }
+            Storage.StoreUnitAurasUpdate(guid, auras, packet.Time);
         }
 
         [Parser(Opcode.CMSG_CAST_SPELL)]

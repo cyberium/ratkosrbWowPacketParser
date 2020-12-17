@@ -102,6 +102,31 @@ CREATE TABLE IF NOT EXISTS `character_attack_stop` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.character_auras_update
+DROP TABLE IF EXISTS `character_auras_update`;
+CREATE TABLE IF NOT EXISTS `character_auras_update` (
+  `guid` int(10) unsigned NOT NULL,
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  `update_id` int(10) unsigned NOT NULL COMMENT 'counting aura update packets for this guid',
+  `slot` int(10) unsigned NOT NULL,
+  `spell_id` int(10) unsigned NOT NULL,
+  `visual_id` int(10) unsigned DEFAULT NULL,
+  `aura_flags` int(10) unsigned NOT NULL,
+  `active_flags` int(10) unsigned DEFAULT NULL,
+  `level` int(10) unsigned NOT NULL,
+  `charges` int(10) unsigned NOT NULL,
+  `content_tuning_id` int(10) DEFAULT NULL,
+  `duration` int(10) NOT NULL,
+  `max_duration` int(10) NOT NULL,
+  `caster_guid` int(10) unsigned NOT NULL,
+  `caster_id` int(10) unsigned NOT NULL,
+  `caster_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`guid`,`update_id`,`slot`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='aura updates from SMSG_AURA_UPDATE';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.character_chat
 DROP TABLE IF EXISTS `character_chat`;
 CREATE TABLE IF NOT EXISTS `character_chat` (
@@ -371,6 +396,31 @@ CREATE TABLE IF NOT EXISTS `creature_attack_stop` (
   `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACK_STOP';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.creature_auras_update
+DROP TABLE IF EXISTS `creature_auras_update`;
+CREATE TABLE IF NOT EXISTS `creature_auras_update` (
+  `guid` int(10) unsigned NOT NULL,
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  `update_id` int(10) unsigned NOT NULL COMMENT 'counting aura update packets for this guid',
+  `slot` int(10) unsigned NOT NULL,
+  `spell_id` int(10) unsigned NOT NULL,
+  `visual_id` int(10) unsigned DEFAULT NULL,
+  `aura_flags` int(10) unsigned NOT NULL,
+  `active_flags` int(10) unsigned DEFAULT NULL,
+  `level` int(10) unsigned NOT NULL,
+  `charges` int(10) unsigned NOT NULL,
+  `content_tuning_id` int(10) DEFAULT NULL,
+  `duration` int(10) NOT NULL,
+  `max_duration` int(10) NOT NULL,
+  `caster_guid` int(10) unsigned NOT NULL,
+  `caster_id` int(10) unsigned NOT NULL,
+  `caster_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`guid`,`update_id`,`slot`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='aura updates from SMSG_AURA_UPDATE';
 
 -- Data exporting was unselected.
 
@@ -1008,6 +1058,16 @@ CREATE TABLE IF NOT EXISTS `gameobject_template` (
   `data21` int(10) unsigned NOT NULL DEFAULT '0',
   `data22` int(10) unsigned NOT NULL DEFAULT '0',
   `data23` int(10) unsigned NOT NULL DEFAULT '0',
+  `data24` int(10) unsigned NOT NULL DEFAULT '0',
+  `data25` int(10) unsigned NOT NULL DEFAULT '0',
+  `data26` int(10) unsigned NOT NULL DEFAULT '0',
+  `data27` int(10) unsigned NOT NULL DEFAULT '0',
+  `data28` int(10) unsigned NOT NULL DEFAULT '0',
+  `data29` int(10) unsigned NOT NULL DEFAULT '0',
+  `data30` int(10) unsigned NOT NULL DEFAULT '0',
+  `data31` int(10) unsigned NOT NULL DEFAULT '0',
+  `data32` int(10) unsigned NOT NULL DEFAULT '0',
+  `data33` int(10) unsigned NOT NULL DEFAULT '0',
   `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
   PRIMARY KEY (`entry`),
   KEY `idx_name` (`name`)

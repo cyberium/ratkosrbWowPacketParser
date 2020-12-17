@@ -39,6 +39,7 @@ namespace WowPacketParser.SQL.Builders
             var characterAttackStartRows = new RowList<CreatureTargetChange>();
             var characterAttackStopRows = new RowList<CreatureTargetChange>();
             var characterTargetChangeRows = new RowList<CreatureTargetChange>();
+            var characterAurasUpdateRows = new RowList<CreatureAurasUpdate>();
             var characterValuesUpdateRows = new RowList<CreatureValuesUpdate>();
             var characterSpeedUpdateRows = new RowList<CreatureSpeedUpdate>();
             var characterServerMovementRows = new RowList<ServerSideMovement>();
@@ -212,6 +213,37 @@ namespace WowPacketParser.SQL.Builders
                             Storage.GetObjectDbGuidEntryType(attack.victim, out attackRow.Data.VictimGuid, out attackRow.Data.VictimId, out attackRow.Data.VictimType);
                             attackRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(attack.time);
                             characterTargetChangeRows.Add(attackRow);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.character_auras_update)
+                {
+                    if (Storage.UnitAurasUpdates.ContainsKey(objPair.Key))
+                    {
+                        uint updateId = 0;
+                        foreach (var update in Storage.UnitAurasUpdates[objPair.Key])
+                        {
+                            updateId++;
+                            foreach (var aura in update.Item1)
+                            {
+                                var updateRow = new Row<CreatureAurasUpdate>();
+                                updateRow.Data.GUID = row.Data.Guid;
+                                updateRow.Data.UpdateId = updateId;
+                                updateRow.Data.Slot = aura.Slot;
+                                updateRow.Data.SpellId = aura.SpellId;
+                                updateRow.Data.VisualId = aura.VisualId;
+                                updateRow.Data.AuraFlags = aura.AuraFlags;
+                                updateRow.Data.ActiveFlags = aura.ActiveFlags;
+                                updateRow.Data.Level = aura.Level;
+                                updateRow.Data.Charges = aura.Charges;
+                                updateRow.Data.ContentTuningId = aura.ContentTuningId;
+                                updateRow.Data.Duration = aura.Duration;
+                                updateRow.Data.MaxDuration = aura.MaxDuration;
+                                Storage.GetObjectDbGuidEntryType(aura.CasterGuid, out updateRow.Data.CasterGuid, out updateRow.Data.CasterId, out updateRow.Data.CasterType);
+                                updateRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(update.Item2);
+                                characterAurasUpdateRows.Add(updateRow);
+                            }
                         }
                     }
                 }
@@ -402,6 +434,13 @@ namespace WowPacketParser.SQL.Builders
             {
                 var characterTargetChangeSql = new SQLInsert<CreatureTargetChange>(characterTargetChangeRows, false, false, "character_target_change");
                 result.Append(characterTargetChangeSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.character_auras_update)
+            {
+                var characterUpdateSql = new SQLInsert<CreatureAurasUpdate>(characterAurasUpdateRows, false, false, "character_auras_update");
+                result.Append(characterUpdateSql.Build());
                 result.AppendLine();
             }
 

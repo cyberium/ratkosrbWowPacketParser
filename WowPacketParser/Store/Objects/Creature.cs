@@ -248,6 +248,58 @@ namespace WowPacketParser.Store.Objects
         public ulong UnixTimeMs;
     }
 
+    [DBTableName("creature_auras_update")]
+    public sealed class CreatureAurasUpdate : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtimems")]
+        public ulong UnixTimeMs;
+
+        [DBFieldName("update_id", true)]
+        public uint UpdateId;
+
+        [DBFieldName("slot", true)]
+        public uint? Slot;
+
+        [DBFieldName("spell_id")]
+        public uint? SpellId;
+
+        [DBFieldName("visual_id", false, false, true)]
+        public uint? VisualId;
+
+        [DBFieldName("aura_flags")]
+        public Enum AuraFlags;
+
+        [DBFieldName("active_flags", false, false, true)]
+        public uint? ActiveFlags;
+
+        [DBFieldName("level")]
+        public uint? Level;
+
+        [DBFieldName("charges")]
+        public uint? Charges;
+
+        [DBFieldName("content_tuning_id", false, false, true)]
+        public int? ContentTuningId;
+
+        [DBFieldName("duration")]
+        public int? Duration;
+
+        [DBFieldName("max_duration")]
+        public int? MaxDuration;
+
+        [DBFieldName("caster_guid", false, true)]
+        public string CasterGuid;
+
+        [DBFieldName("caster_id")]
+        public uint CasterId;
+
+        [DBFieldName("caster_type")]
+        public string CasterType;
+    }
+
     [DBTableName("creature_speed_update")]
     public sealed class CreatureSpeedUpdate : IDataModel
     {
