@@ -146,6 +146,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("hover_height")]
         public float? HoverHeight;
 
+        [DBFieldName("auras")]
+        public string Auras;
+
     }
 
     [DBTableName("creature_questitem")]

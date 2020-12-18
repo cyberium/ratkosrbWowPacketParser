@@ -33,6 +33,8 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public uint Flags => UpdateFields.GetValue<GameObjectField, uint>(GameObjectField.GAMEOBJECT_FLAGS);
 
+        public int Level => UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_LEVEL);
+
         public Quaternion ParentRotation
         {
             get
@@ -79,6 +81,8 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         }
 
         public uint Flags => UpdateFields.GetValue<GameObjectField, uint>(GameObjectField.GAMEOBJECT_FLAGS);
+
+        public int Level => UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_LEVEL);
 
         public Quaternion ParentRotation
         {

@@ -63,11 +63,23 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("temp")]
         public byte? TemporarySpawn;
 
-        [DBFieldName("creator")]
-        public uint? CreatedBy;
+        [DBFieldName("creator_guid", false, true)]
+        public string CreatedByGuid;
 
-        [DBFieldName("summoner")]
-        public uint? SummonedBy;
+        [DBFieldName("creator_id")]
+        public uint CreatedById;
+
+        [DBFieldName("creator_type")]
+        public string CreatedByType;
+
+        [DBFieldName("summoner_guid", false, true)]
+        public string SummonedByGuid;
+
+        [DBFieldName("summoner_id")]
+        public uint SummonedById;
+
+        [DBFieldName("summoner_type")]
+        public string SummonedByType;
 
         [DBFieldName("summon_spell")]
         public uint? SummonSpell;
@@ -75,11 +87,20 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("display_id")]
         public uint? DisplayID;
 
+        [DBFieldName("mount_display_id")]
+        public uint? MountDisplayID;
+
         [DBFieldName("faction")]
         public uint? FactionTemplate;
 
         [DBFieldName("level")]
         public uint? Level;
+
+        [DBFieldName("npc_flags")]
+        public uint? NpcFlag;
+
+        [DBFieldName("unit_flags")]
+        public uint? UnitFlag;
 
         [DBFieldName("current_health")]
         public uint? CurHealth;
@@ -92,6 +113,36 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("max_mana")]
         public uint? MaxMana;
+
+        [DBFieldName("aura_state")]
+        public uint? AuraState;
+
+        [DBFieldName("emote_state")]
+        public uint? EmoteState;
+
+        [DBFieldName("stand_state")]
+        public uint? StandState;
+
+        [DBFieldName("pet_talent_points")]
+        public uint? PetTalentPoints;
+
+        [DBFieldName("vis_flags")]
+        public uint? VisFlags;
+
+        [DBFieldName("anim_tier")]
+        public uint? AnimTier;
+
+        [DBFieldName("sheath_state")]
+        public uint? SheatheState;
+
+        [DBFieldName("pvp_flags")]
+        public uint? PvpFlags;
+
+        [DBFieldName("pet_flags")]
+        public uint? PetFlags;
+
+        [DBFieldName("shapeshift_form")]
+        public uint? ShapeshiftForm;
 
         [DBFieldName("speed_walk")]
         public float? SpeedWalk;
@@ -114,11 +165,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ranged_attack_time")]
         public uint? RangedAttackTime;
 
-        [DBFieldName("npc_flags")]
-        public uint? NpcFlag;
-
-        [DBFieldName("unit_flags")]
-        public uint? UnitFlag;
+        [DBFieldName("auras")]
+        public string Auras;
 
         [DBFieldName("SniffId", false, false, false, true)]
         public int? SniffId;
@@ -334,17 +382,26 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("display_id", true, false, true)]
         public uint? DisplayID;
 
-        [DBFieldName("mount", true, false, true)]
+        [DBFieldName("mount_display_id", true, false, true)]
         public uint? MountDisplayID;
 
         [DBFieldName("faction", true, false, true)]
         public uint? FactionTemplate;
+
+        [DBFieldName("level", true, false, true)]
+        public uint? Level;
+
+        [DBFieldName("aura_state", true, false, true)]
+        public uint? AuraState;
 
         [DBFieldName("emote_state", true, false, true)]
         public uint? EmoteState;
 
         [DBFieldName("stand_state", true, false, true)]
         public uint? StandState;
+
+        [DBFieldName("sheath_state", true, false, true)]
+        public uint? SheathState;
 
         [DBFieldName("npc_flags", true, false, true)]
         public uint? NpcFlag;
@@ -363,6 +420,18 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("max_mana", true, false, true)]
         public uint? MaxMana;
+
+        [DBFieldName("bounding_radius", true, false, true)]
+        public float? BoundingRadius;
+
+        [DBFieldName("combat_reach", true, false, true)]
+        public float? CombatReach;
+
+        [DBFieldName("base_attack_time", true, false, true)]
+        public uint? BaseAttackTime;
+
+        [DBFieldName("ranged_attack_time", true, false, true)]
+        public uint? RangedAttackTime;
     }
 
     [DBTableName("creature_stats")]
@@ -370,6 +439,9 @@ namespace WowPacketParser.Store.Objects
     {
         [DBFieldName("entry", true)]
         public uint Entry;
+
+        [DBFieldName("level", true)]
+        public uint Level;
 
         [DBFieldName("dmg_min", false, false, true)]
         public float? DmgMin;

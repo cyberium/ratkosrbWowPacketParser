@@ -7,13 +7,13 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("page_text")]
     public sealed class PageText : IDataModel
     {
-        [DBFieldName("entry", true)]
+        [DBFieldName("ID", true)]
         public uint? ID;
 
-        [DBFieldName("text")]
+        [DBFieldName("Text")]
         public string Text;
 
-        [DBFieldName("next_page")]
+        [DBFieldName("NextPageID")]
         public uint? NextPageID;
 
         [DBFieldName("PlayerConditionID", TargetedDatabase.Legion)]

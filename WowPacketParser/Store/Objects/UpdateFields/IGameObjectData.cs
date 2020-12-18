@@ -6,6 +6,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields
     {
         WowGuid CreatedBy { get; }
         uint Flags { get; }
+        int Level { get; }
         Quaternion ParentRotation { get; }
         int FactionTemplate { get; }
         sbyte State { get; }

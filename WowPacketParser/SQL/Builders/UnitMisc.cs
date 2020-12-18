@@ -49,7 +49,7 @@ namespace WowPacketParser.SQL.Builders
                             aura.AuraFlags.HasAnyFlag(AuraFlag.NotCaster))))
                     {
                         auras += aura.SpellId + " ";
-                        commentAuras += StoreGetters.GetName(StoreNameType.Spell, (int) aura.SpellId, false) + ", ";
+                        commentAuras += StoreGetters.GetName(StoreNameType.Spell, (int)aura.SpellId, false) + ", ";
                     }
                     auras = auras.TrimEnd(' ');
                     commentAuras = commentAuras.TrimEnd(',', ' ');
@@ -60,16 +60,8 @@ namespace WowPacketParser.SQL.Builders
                     Entry = unit.Key.GetEntry(),
                     MountID = (uint)npc.UnitData.MountDisplayID,
                     Bytes1 = npc.Bytes1,
-                    StandState = npc.UnitData.StandState,
-                    PetTalentPoints = npc.UnitData.PetTalentPoints,
-                    VisFlags = npc.UnitData.VisFlags,
-                    AnimTier = npc.UnitData.AnimTier,
                     Bytes2 = npc.Bytes2,
-                    SheatheState = npc.UnitData.SheatheState,
-                    PvpFlags = npc.UnitData.PvpFlags,
-                    PetFlags = npc.UnitData.PetFlags,
-                    ShapeshiftForm = npc.UnitData.ShapeshiftForm,
-                    Emote = 0,
+                    Emote = (uint)npc.UnitData.EmoteState,
                     AIAnimKit = npc.AIAnimKit.GetValueOrDefault(0),
                     MovementAnimKit = npc.MovementAnimKit.GetValueOrDefault(0),
                     MeleeAnimKit = npc.MeleeAnimKit.GetValueOrDefault(0),
@@ -82,7 +74,7 @@ namespace WowPacketParser.SQL.Builders
 
                 addons.Add(addon);
             }
-            
+
             var addonsDb = SQLDatabase.Get(addons);
             return SQLUtil.Compare(addons, addonsDb,
                 addon =>
@@ -544,6 +536,7 @@ namespace WowPacketParser.SQL.Builders
             public Dictionary<UnitDynamicFlagsWOD, uint> DynamicFlagsWod = new Dictionary<UnitDynamicFlagsWOD, uint>();
             public Dictionary<uint, uint> VehicleIds = new Dictionary<uint, uint>();
             public Dictionary<float, uint> HoverHeights = new Dictionary<float, uint>();
+            public Dictionary<string, uint> Auras = new Dictionary<string, uint>();
         }
 
         [BuilderMethod(true, Units = true)]
@@ -609,71 +602,93 @@ namespace WowPacketParser.SQL.Builders
                         hasData = true;
                         creatureStats.RangedAttackPower = value.UInt32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT), out value))
+                    if (UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT) > 0)
                     {
-                        hasData = true;
-                        creatureStats.Strength = value.UInt32Value;
+                        if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT), out value))
+                        {
+                            hasData = true;
+                            creatureStats.Strength = value.UInt32Value;
+                        }
+                        if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT) + 1, out value))
+                        {
+                            hasData = true;
+                            creatureStats.Agility = value.UInt32Value;
+                        }
+                        if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT) + 2, out value))
+                        {
+                            hasData = true;
+                            creatureStats.Stamina = value.UInt32Value;
+                        }
+                        if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT) + 3, out value))
+                        {
+                            hasData = true;
+                            creatureStats.Intellect = value.UInt32Value;
+                        }
+                        if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT) + 4, out value))
+                        {
+                            hasData = true;
+                            creatureStats.Spirit = value.UInt32Value;
+                        }
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT)+1, out value))
+                    if (UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES) > 0)
                     {
-                        hasData = true;
-                        creatureStats.Agility = value.UInt32Value;
+                        if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES), out value))
+                        {
+                            hasData = true;
+                            creatureStats.Armor = value.Int32Value;
+                        }
+                        if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES) + 1, out value))
+                        {
+                            hasData = true;
+                            creatureStats.HolyResistance = value.Int32Value;
+                        }
+                        if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES) + 2, out value))
+                        {
+                            hasData = true;
+                            creatureStats.FireResistance = value.Int32Value;
+                        }
+                        if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES) + 3, out value))
+                        {
+                            hasData = true;
+                            creatureStats.NatureResistance = value.Int32Value;
+                        }
+                        if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES) + 4, out value))
+                        {
+                            hasData = true;
+                            creatureStats.FrostResistance = value.Int32Value;
+                        }
+                        if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES) + 5, out value))
+                        {
+                            hasData = true;
+                            creatureStats.ShadowResistance = value.Int32Value;
+                        }
+                        if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES) + 6, out value))
+                        {
+                            hasData = true;
+                            creatureStats.ArcaneResistance = value.Int32Value;
+                        }
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT)+2, out value))
-                    {
-                        hasData = true;
-                        creatureStats.Stamina = value.UInt32Value;
-                    }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT)+3, out value))
-                    {
-                        hasData = true;
-                        creatureStats.Intellect = value.UInt32Value;
-                    }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT)+4, out value))
-                    {
-                        hasData = true;
-                        creatureStats.Spirit = value.UInt32Value;
-                    }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES), out value))
-                    {
-                        hasData = true;
-                        creatureStats.Armor = value.Int32Value;
-                    }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES)+1, out value))
-                    {
-                        hasData = true;
-                        creatureStats.HolyResistance = value.Int32Value;
-                    }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES)+2, out value))
-                    {
-                        hasData = true;
-                        creatureStats.FireResistance = value.Int32Value;
-                    }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES)+3, out value))
-                    {
-                        hasData = true;
-                        creatureStats.NatureResistance = value.Int32Value;
-                    }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES)+4, out value))
-                    {
-                        hasData = true;
-                        creatureStats.FrostResistance = value.Int32Value;
-                    }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES)+5, out value))
-                    {
-                        hasData = true;
-                        creatureStats.ShadowResistance = value.Int32Value;
-                    }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES)+6, out value))
-                    {
-                        hasData = true;
-                        creatureStats.ArcaneResistance = value.Int32Value;
-                    }
+                    
                     if (hasData)
                     {
                         creatureStats.Entry = unit.Key.GetEntry();
+                        creatureStats.Level = (uint)unit.Value.UnitData.Level;
                         Storage.CreatureStats.Add(creatureStats);
                     }
+                }
+
+                var auras = string.Empty;
+                if (npc.Auras != null && npc.Auras.Count != 0)
+                {
+                    foreach (var aura in npc.Auras.Where(aura =>
+                        aura != null &&
+                        (ClientVersion.AddedInVersion(ClientType.MistsOfPandaria) ?
+                            aura.AuraFlags.HasAnyFlag(AuraFlagMoP.NoCaster) :
+                            aura.AuraFlags.HasAnyFlag(AuraFlag.NotCaster))))
+                    {
+                        auras += aura.SpellId + " ";
+                    }
+                    auras = auras.TrimEnd(' ');
                 }
 
                 if (!creatureExportData.ContainsKey(unit.Key.GetEntry()))
@@ -696,6 +711,7 @@ namespace WowPacketParser.SQL.Builders
                     data.DynamicFlagsWod.Add(npc.DynamicFlagsWod.GetValueOrDefault(UnitDynamicFlagsWOD.None), 1);
                     data.VehicleIds.Add(npc.Movement.VehicleId, 1);
                     data.HoverHeights.Add(npc.UnitData.HoverHeight, 1);
+                    data.Auras.Add(auras, 1);
                     creatureExportData.Add(unit.Key.GetEntry(), data);
                 }
                 else
@@ -781,6 +797,11 @@ namespace WowPacketParser.SQL.Builders
                         data.HoverHeights[npc.UnitData.HoverHeight]++;
                     else
                         data.HoverHeights.Add(npc.UnitData.HoverHeight, 1);
+
+                    if (data.Auras.ContainsKey(auras))
+                        data.Auras[auras]++;
+                    else
+                        data.Auras.Add(auras, 1);
                 }
             }
 
@@ -962,6 +983,17 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
+                string mostCommonAuras = "";
+                uint mmostCommonAurasCount = 0;
+                foreach (var aurasPair in npc.Value.Auras)
+                {
+                    if (aurasPair.Value > mmostCommonAurasCount)
+                    {
+                        mostCommonAuras = aurasPair.Key;
+                        mmostCommonAurasCount = aurasPair.Value;
+                    }
+                }
+
                 var template = new CreatureTemplateNonWDB
                 {
                     Entry = npc.Value.Entry,
@@ -982,7 +1014,8 @@ namespace WowPacketParser.SQL.Builders
                     DynamicFlags = mostCommonDynamicFlag,
                     DynamicFlagsWod = mostCommonDynamicFlagWod,
                     VehicleID = mostCommonVehicleId,
-                    HoverHeight = mostCommonHoverHeight
+                    HoverHeight = mostCommonHoverHeight,
+                    Auras = mostCommonAuras
                 };
 
                 if (Settings.UseDBC)

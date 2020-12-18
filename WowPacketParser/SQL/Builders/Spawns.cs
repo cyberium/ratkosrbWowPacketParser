@@ -162,16 +162,29 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.PhaseGroup = 0;
                 row.Data.Hover = (byte)(creature.OriginalMovement.Hover ? 1 : 0);
                 row.Data.TemporarySpawn = (byte)(creature.IsTemporarySpawn() ? 1 : 0);
-                row.Data.CreatedBy = unitData.CreatedBy.GetEntry();
-                row.Data.SummonedBy = unitData.SummonedBy.GetEntry();
+                Storage.GetObjectDbGuidEntryType(unitData.CreatedBy, out row.Data.CreatedByGuid, out row.Data.CreatedById, out row.Data.CreatedByType);
+                Storage.GetObjectDbGuidEntryType(unitData.SummonedBy, out row.Data.SummonedByGuid, out row.Data.SummonedById, out row.Data.SummonedByType);
                 row.Data.SummonSpell = (uint)unitData.CreatedBySpell;
                 row.Data.DisplayID = (uint)unitData.DisplayID;
+                row.Data.MountDisplayID = (uint)unitData.MountDisplayID;
                 row.Data.FactionTemplate = (uint)unitData.FactionTemplate;
                 row.Data.Level = (uint)unitData.Level;
+                row.Data.NpcFlag = (uint)unitData.NpcFlags[0];
+                row.Data.UnitFlag = (uint)unitData.Flags;
                 row.Data.CurHealth = (uint)unitData.CurHealth;
                 row.Data.CurMana = (uint)unitData.CurMana;
                 row.Data.MaxHealth = (uint)unitData.MaxHealth;
                 row.Data.MaxMana = (uint)unitData.MaxMana;
+                row.Data.AuraState = unitData.AuraState;
+                row.Data.EmoteState = (uint)unitData.EmoteState;
+                row.Data.StandState = unitData.StandState;
+                row.Data.PetTalentPoints = unitData.PetTalentPoints;
+                row.Data.VisFlags = unitData.VisFlags;
+                row.Data.AnimTier = unitData.AnimTier;
+                row.Data.SheatheState = unitData.SheatheState;
+                row.Data.PvpFlags = unitData.PvpFlags;
+                row.Data.PetFlags = unitData.PetFlags;
+                row.Data.ShapeshiftForm = unitData.ShapeshiftForm;
                 row.Data.SpeedWalk = creature.OriginalMovement.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
                 row.Data.SpeedRun = creature.OriginalMovement.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
                 row.Data.Scale = creature.ObjectDataOriginal.Scale;
@@ -179,8 +192,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.CombatReach = unitData.CombatReach;
                 row.Data.BaseAttackTime = unitData.AttackRoundBaseTime[0];
                 row.Data.RangedAttackTime = unitData.RangedAttackRoundBaseTime;
-                row.Data.NpcFlag = (uint)unitData.NpcFlags[0];
-                row.Data.UnitFlag = (uint)unitData.Flags;
+                
                 row.Data.SniffId = creature.SourceSniffId;
 
                 row.Comment = StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
@@ -210,21 +222,15 @@ namespace WowPacketParser.SQL.Builders
                     row.Comment += " (Auras: " + commentAuras + ")";
                 }
 
+                row.Data.Auras = auras;
+
                 var addonRow = new Row<CreatureAddon>();
                 if (Settings.SqlTables.creature_addon)
                 {
-                    addonRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                    addonRow.Data.GUID = "@CGUID+" + count;
                     addonRow.Data.Mount = (uint)unitData.MountDisplayID;
                     addonRow.Data.Bytes1 = creature.Bytes1;
-                    addonRow.Data.StandState = unitData.StandState;
-                    addonRow.Data.PetTalentPoints = unitData.PetTalentPoints;
-                    addonRow.Data.VisFlags = unitData.VisFlags;
-                    addonRow.Data.AnimTier = unitData.AnimTier;
                     addonRow.Data.Bytes2 = creature.Bytes2;
-                    addonRow.Data.SheatheState = unitData.SheatheState;
-                    addonRow.Data.PvpFlags = unitData.PvpFlags;
-                    addonRow.Data.PetFlags = unitData.PetFlags;
-                    addonRow.Data.ShapeshiftForm = unitData.ShapeshiftForm;
                     addonRow.Data.Emote = (uint)unitData.EmoteState;
                     addonRow.Data.Auras = auras;
                     addonRow.Data.AIAnimKit = creature.AIAnimKit.GetValueOrDefault(0);
@@ -963,13 +969,13 @@ namespace WowPacketParser.SQL.Builders
                         }
                     }
                 }
-
-                row.Data.CreatedBy = go.GameObjectData.CreatedBy.GetEntry();
+                Storage.GetObjectDbGuidEntryType(go.GameObjectDataOriginal.CreatedBy, out row.Data.CreatedByGuid, out row.Data.CreatedById, out row.Data.CreatedByType);
                 //row.Data.SpawnTimeSecs = go.GetDefaultSpawnTime(go.DifficultyID);
                 row.Data.AnimProgress = go.GameObjectDataOriginal.PercentHealth;
                 row.Data.State = (uint)go.GameObjectDataOriginal.State;
                 row.Data.Faction = (uint)go.GameObjectDataOriginal.FactionTemplate;
                 row.Data.Flags = go.GameObjectDataOriginal.Flags;
+                row.Data.Level = (uint)go.GameObjectDataOriginal.Level;
                 row.Data.SniffId = go.SourceSniffId;
 
                 // set some defaults

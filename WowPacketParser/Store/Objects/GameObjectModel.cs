@@ -55,8 +55,14 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("temp")]
         public byte? TemporarySpawn;
 
-        [DBFieldName("creator")]
-        public uint? CreatedBy;
+        [DBFieldName("creator_guid", false, true)]
+        public string CreatedByGuid;
+
+        [DBFieldName("creator_id")]
+        public uint CreatedById;
+
+        [DBFieldName("creator_type")]
+        public string CreatedByType;
 
         [DBFieldName("animprogress")]
         public uint? AnimProgress;
@@ -69,6 +75,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("flags")]
         public uint? Flags;
+
+        [DBFieldName("level")]
+        public uint? Level;
 
         [DBFieldName("SniffId", false, false, false, true)]
         public int? SniffId;

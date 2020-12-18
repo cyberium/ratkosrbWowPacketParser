@@ -33,6 +33,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         float BoundingRadius { get; }
         float CombatReach { get; }
         int MountDisplayID { get; }
+        uint AuraState { get; }
         int EmoteState { get; }
         byte StandState { get; }
         byte PetTalentPoints { get; }

@@ -357,6 +357,30 @@ namespace WowPacketParser.Parsing.Parsers
                             } 
                         }
                     }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_LEVEL))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.Level != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.Level = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_AURASTATE))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.AuraState != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.AuraState = update.Value.UInt32Value;
+                            }
+                        }
+                    }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_NPC_EMOTESTATE))
                     {
                         if (Storage.Objects.ContainsKey(guid))
@@ -378,6 +402,18 @@ namespace WowPacketParser.Parsing.Parsers
                             {
                                 hasData = true;
                                 creatureUpdate.StandState = (update.Value.UInt32Value & 0xFF);
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BYTES_2))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.SheatheState != (update.Value.UInt32Value & 0xFF))
+                            {
+                                hasData = true;
+                                creatureUpdate.SheathState = (update.Value.UInt32Value & 0xFF);
                             }
                         }
                     }
@@ -454,6 +490,54 @@ namespace WowPacketParser.Parsing.Parsers
                             {
                                 hasData = true;
                                 creatureUpdate.MaxMana = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BOUNDINGRADIUS))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.BoundingRadius != update.Value.FloatValue)
+                            {
+                                hasData = true;
+                                creatureUpdate.BoundingRadius = update.Value.FloatValue;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BASEATTACKTIME))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.AttackRoundBaseTime[0] != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.BaseAttackTime = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RANGEDATTACKTIME))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.RangedAttackRoundBaseTime != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.RangedAttackTime = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_COMBATREACH))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.CombatReach != update.Value.FloatValue)
+                            {
+                                hasData = true;
+                                creatureUpdate.CombatReach = update.Value.FloatValue;
                             }
                         }
                     }

@@ -122,6 +122,9 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public float CombatReach => UpdateFields.GetValue<UnitField, float?>(UnitField.UNIT_FIELD_COMBATREACH).GetValueOrDefault(1.5f);
 
         public int MountDisplayID => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MOUNTDISPLAYID);
+
+        public uint AuraState => UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_AURASTATE);
+
         public int EmoteState => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_NPC_EMOTESTATE);
 
         public byte StandState => (byte)(UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) & 0xFF);
@@ -270,6 +273,9 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public float CombatReach => UpdateFields.GetValue<UnitField, float?>(UnitField.UNIT_FIELD_COMBATREACH).GetValueOrDefault(1.5f);
 
         public int MountDisplayID => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MOUNTDISPLAYID);
+
+        public uint AuraState => UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_AURASTATE);
+
         public int EmoteState => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_NPC_EMOTESTATE);
 
         public byte StandState => (byte)(UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) & 0xFF);
