@@ -68,11 +68,59 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("equipmentCache")]
         public string EquipmentCache = "";
     }
-    [DBTableName("characters_addon")]
-    public sealed class CharacterTemplateAddon : IDataModel
+    [DBTableName("player")]
+    public sealed class PlayerTemplate : IDataModel
     {
         [DBFieldName("guid", true, true)]
         public string Guid;
+
+        [DBFieldName("map")]
+        public uint Map;
+
+        [DBFieldName("position_x")]
+        public float PositionX;
+
+        [DBFieldName("position_y")]
+        public float PositionY;
+
+        [DBFieldName("position_z")]
+        public float PositionZ;
+
+        [DBFieldName("orientation")]
+        public float Orientation;
+
+        [DBFieldName("name")]
+        public string Name;
+
+        [DBFieldName("race")]
+        public uint? Race;
+
+        [DBFieldName("class")]
+        public uint Class;
+
+        [DBFieldName("gender")]
+        public uint Gender;
+
+        [DBFieldName("level")]
+        public uint Level;
+
+        [DBFieldName("xp")]
+        public uint XP = 0;
+
+        [DBFieldName("money")]
+        public uint Money = 0;
+
+        [DBFieldName("player_bytes1")]
+        public uint PlayerBytes;
+
+        [DBFieldName("player_bytes2")]
+        public uint PlayerBytes2;
+
+        [DBFieldName("player_flags")]
+        public uint PlayerFlags;
+
+        [DBFieldName("scale")]
+        public float? Scale;
 
         [DBFieldName("display_id")]
         public uint? DisplayID;
@@ -82,6 +130,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("faction")]
         public uint? FactionTemplate;
+
+        [DBFieldName("unit_flags")]
+        public uint? UnitFlags;
 
         [DBFieldName("current_health")]
         public uint? CurHealth;
@@ -95,14 +146,41 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("max_mana")]
         public uint? MaxMana;
 
+        [DBFieldName("aura_state")]
+        public uint? AuraState;
+
+        [DBFieldName("emote_state")]
+        public uint? EmoteState;
+
+        [DBFieldName("stand_state")]
+        public uint? StandState;
+
+        [DBFieldName("pet_talent_points")]
+        public uint? PetTalentPoints;
+
+        [DBFieldName("vis_flags")]
+        public uint? VisFlags;
+
+        [DBFieldName("anim_tier")]
+        public uint? AnimTier;
+
+        [DBFieldName("sheath_state")]
+        public uint? SheatheState;
+
+        [DBFieldName("pvp_flags")]
+        public uint? PvpFlags;
+
+        [DBFieldName("pet_flags")]
+        public uint? PetFlags;
+
+        [DBFieldName("shapeshift_form")]
+        public uint? ShapeshiftForm;
+
         [DBFieldName("speed_walk")]
         public float? SpeedWalk;
 
         [DBFieldName("speed_run")]
         public float? SpeedRun;
-
-        [DBFieldName("scale")]
-        public float? Scale;
 
         [DBFieldName("bounding_radius")]
         public float? BoundingRadius;
@@ -116,9 +194,13 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ranged_attack_time")]
         public uint? RangedAttackTime;
 
-        [DBFieldName("unit_flags")]
-        public uint? UnitFlags;
+        [DBFieldName("equipment_cache")]
+        public string EquipmentCache = "";
+
+        [DBFieldName("auras")]
+        public string Auras;
     }
+
     [DBTableName("character_inventory")]
     public sealed class CharacterInventory : IDataModel
     {
@@ -161,7 +243,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("durability")]
         public uint Durability = 1;
     }
-    [DBTableName("character_movement_client")]
+    [DBTableName("player_movement_client")]
     public sealed class ClientSideMovement : IDataModel
     {
         [DBFieldName("guid", true, true)]
@@ -205,7 +287,7 @@ namespace WowPacketParser.Store.Objects
         public Direction OpcodeDirection;
         public DateTime Time;
     }
-    [DBTableName("character_active_player")]
+    [DBTableName("player_active_player")]
     public sealed class CharacterActivePlayer : IDataModel
     {
         [DBFieldName("guid", true, true)]

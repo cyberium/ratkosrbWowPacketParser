@@ -1378,7 +1378,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             MovementInfo movementInfo = ReadMovementInfo(packet, guid);
 
-            if (Settings.SqlTables.character_movement_client || Settings.SqlTables.creature_movement_client)
+            if (Settings.SqlTables.player_movement_client || Settings.SqlTables.creature_movement_client)
             {
                 PlayerMovement moveData = new PlayerMovement();
                 moveData.guid = guid;

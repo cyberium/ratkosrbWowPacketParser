@@ -51,9 +51,36 @@ namespace WowPacketParser.Store
             }
             return "0";
         }
+        public static string GetObjectTypeNameForDB(WowGuid guid)
+        {
+            if (guid.GetObjectType() == ObjectType.Unit)
+            {
+                if (guid.GetHighType() == HighGuidType.Pet)
+                    return "Pet";
+                else
+                    return "Creature";
+            }
+            else if (guid.GetObjectType() == ObjectType.Player ||
+                     guid.GetObjectType() == ObjectType.ActivePlayer)
+            {
+                return "Player";
+            }
+
+            return guid.GetObjectType().ToString();
+        }
         public static void GetObjectDbGuidEntryType(WowGuid guid, out string objectGuid, out uint objectEntry, out string objectType)
         {
-            if (guid != null && Objects.ContainsKey(guid))
+            if (guid == null || guid.IsEmpty())
+            {
+                objectGuid = "0";
+                objectEntry = 0;
+                objectType = "";
+                return;
+            }
+
+            objectType = GetObjectTypeNameForDB(guid);
+
+            if (Objects.ContainsKey(guid))
             {
                 if (guid.GetObjectType() == ObjectType.Unit)
                 {
@@ -64,11 +91,6 @@ namespace WowPacketParser.Store
                         objectGuid = "0";
 
                     objectEntry = guid.GetEntry();
-
-                    if (guid.GetHighType() == HighGuidType.Pet)
-                        objectType = "Pet";
-                    else
-                        objectType = "Creature";
 
                     return;
                 }
@@ -82,8 +104,6 @@ namespace WowPacketParser.Store
 
                     objectEntry = guid.GetEntry();
 
-                    objectType = "GameObject";
-
                     return;
                 }
                 else if (guid.GetObjectType() == ObjectType.Player ||
@@ -96,21 +116,12 @@ namespace WowPacketParser.Store
                         objectGuid = "0";
 
                     objectEntry = 0;
-                    objectType = "Player";
 
-                    return;
-                }
-                else
-                {
-                    objectGuid = "0";
-                    objectEntry = guid.GetEntry();
-                    objectType = guid.GetObjectType().ToString();
                     return;
                 }
             }
             objectGuid = "0";
-            objectEntry = 0;
-            objectType = "";
+            objectEntry = guid.GetEntry();
         }
         public static uint GetObjectEntry(WowGuid guid)
         {
@@ -263,7 +274,7 @@ namespace WowPacketParser.Store
             else if (guid.GetObjectType() == ObjectType.Player ||
                      guid.GetObjectType() == ObjectType.ActivePlayer)
             {
-                if (!Settings.SqlTables.character_auras_update)
+                if (!Settings.SqlTables.player_auras_update)
                     return;
             }
             else
@@ -280,6 +291,64 @@ namespace WowPacketParser.Store
                 Storage.UnitAurasUpdates.Add(guid, updateList);
             }
         }
+        public static readonly Dictionary<WowGuid, List<CreatureGuidValuesUpdate>> UnitGuidValuesUpdates = new Dictionary<WowGuid, List<CreatureGuidValuesUpdate>>();
+        public static void StoreUnitGuidValuesUpdate(WowGuid guid, CreatureGuidValuesUpdate update)
+        {
+            if (guid.GetObjectType() == ObjectType.Unit &&
+                guid.GetHighType() != HighGuidType.Pet)
+            {
+                if (!Settings.SqlTables.creature_guid_values_update)
+                    return;
+            }
+            else if (guid.GetObjectType() == ObjectType.Player ||
+                     guid.GetObjectType() == ObjectType.ActivePlayer)
+            {
+                if (!Settings.SqlTables.player_guid_values_update)
+                    return;
+            }
+            else
+                return;
+
+            if (Storage.UnitGuidValuesUpdates.ContainsKey(guid))
+            {
+                Storage.UnitGuidValuesUpdates[guid].Add(update);
+            }
+            else
+            {
+                List<CreatureGuidValuesUpdate> updateList = new List<CreatureGuidValuesUpdate>();
+                updateList.Add(update);
+                Storage.UnitGuidValuesUpdates.Add(guid, updateList);
+            }
+        }
+        public static readonly Dictionary<WowGuid, List<CreatureEquipmentValuesUpdate>> UnitEquipmentValuesUpdates = new Dictionary<WowGuid, List<CreatureEquipmentValuesUpdate>>();
+        public static void StoreUnitEquipmentValuesUpdate(WowGuid guid, CreatureEquipmentValuesUpdate update)
+        {
+            if (guid.GetObjectType() == ObjectType.Unit &&
+                guid.GetHighType() != HighGuidType.Pet)
+            {
+                if (!Settings.SqlTables.creature_equipment_values_update)
+                    return;
+            }
+            else if (guid.GetObjectType() == ObjectType.Player ||
+                     guid.GetObjectType() == ObjectType.ActivePlayer)
+            {
+                if (!Settings.SqlTables.player_equipment_values_update)
+                    return;
+            }
+            else
+                return;
+
+            if (Storage.UnitEquipmentValuesUpdates.ContainsKey(guid))
+            {
+                Storage.UnitEquipmentValuesUpdates[guid].Add(update);
+            }
+            else
+            {
+                List<CreatureEquipmentValuesUpdate> updateList = new List<CreatureEquipmentValuesUpdate>();
+                updateList.Add(update);
+                Storage.UnitEquipmentValuesUpdates.Add(guid, updateList);
+            }
+        }
         public static readonly Dictionary<WowGuid, List<CreatureValuesUpdate>> UnitValuesUpdates = new Dictionary<WowGuid, List<CreatureValuesUpdate>>();
         public static void StoreUnitValuesUpdate(WowGuid guid, CreatureValuesUpdate update)
         {
@@ -292,7 +361,7 @@ namespace WowPacketParser.Store
             else if (guid.GetObjectType() == ObjectType.Player ||
                      guid.GetObjectType() == ObjectType.ActivePlayer)
             {
-                if (!Settings.SqlTables.character_values_update)
+                if (!Settings.SqlTables.player_values_update)
                     return;
             }
             else
@@ -321,7 +390,7 @@ namespace WowPacketParser.Store
             else if (guid.GetObjectType() == ObjectType.Player ||
                      guid.GetObjectType() == ObjectType.ActivePlayer)
             {
-                if (!Settings.SqlTables.character_speed_update)
+                if (!Settings.SqlTables.player_speed_update)
                     return;
             }
             else
@@ -460,7 +529,7 @@ namespace WowPacketParser.Store
             else if (attackerGuid.GetObjectType() == ObjectType.Player ||
                      attackerGuid.GetObjectType() == ObjectType.ActivePlayer)
             {
-                if (!Settings.SqlTables.character_attack_log)
+                if (!Settings.SqlTables.player_attack_log)
                     return;
             }
             else
@@ -488,7 +557,7 @@ namespace WowPacketParser.Store
                     !Settings.SqlTables.creature_attack_start)
                     return;
                 else if ((attackerGuid.GetObjectType() == ObjectType.Player || attackerGuid.GetObjectType() == ObjectType.ActivePlayer) &&
-                         !Settings.SqlTables.character_attack_start)
+                         !Settings.SqlTables.player_attack_start)
                     return;
 
                 store = UnitAttackStartTimes;
@@ -499,7 +568,7 @@ namespace WowPacketParser.Store
                     !Settings.SqlTables.creature_attack_stop)
                     return;
                 else if ((attackerGuid.GetObjectType() == ObjectType.Player || attackerGuid.GetObjectType() == ObjectType.ActivePlayer) &&
-                         !Settings.SqlTables.character_attack_stop)
+                         !Settings.SqlTables.player_attack_stop)
                     return;
 
                 store = UnitAttackStopTimes;
@@ -514,35 +583,6 @@ namespace WowPacketParser.Store
                 List<CreatureTargetData> attackList = new List<CreatureTargetData>();
                 attackList.Add(new CreatureTargetData(victimGuid, time));
                 store.Add(attackerGuid, attackList);
-            }
-        }
-        public static readonly Dictionary<WowGuid, List<CreatureTargetData>> UnitTargetChanges = new Dictionary<WowGuid, List<CreatureTargetData>>();
-        public static void StoreUnitTargetChange(WowGuid ownGuid, WowGuid victimGuid, DateTime time)
-        {
-            if (ownGuid.GetObjectType() == ObjectType.Unit &&
-                ownGuid.GetHighType() != HighGuidType.Pet)
-            {
-                if (!Settings.SqlTables.creature_target_change)
-                    return;
-            }
-            else if (ownGuid.GetObjectType() == ObjectType.Player ||
-                     ownGuid.GetObjectType() == ObjectType.ActivePlayer)
-            {
-                if (!Settings.SqlTables.character_target_change)
-                    return;
-            }
-            else
-                return;
-
-            if (UnitTargetChanges.ContainsKey(ownGuid))
-            {
-                UnitTargetChanges[ownGuid].Add(new CreatureTargetData(victimGuid, time));
-            }
-            else
-            {
-                List<CreatureTargetData> attackList = new List<CreatureTargetData>();
-                attackList.Add(new CreatureTargetData(victimGuid, time));
-                UnitTargetChanges.Add(ownGuid, attackList);
             }
         }
         public static readonly List<PlayerMovement> PlayerMovements = new List<PlayerMovement>();
@@ -636,7 +676,7 @@ namespace WowPacketParser.Store
         public static readonly StoreMulti<uint, CreatureTextTemplate> CreatureTextTemplates = new StoreMulti<uint, CreatureTextTemplate>(Settings.SqlTables.creature_text_template);
         public static readonly DataBag<GameObjectText> GameObjectTexts = new DataBag<GameObjectText>(Settings.SqlTables.gameobject_text);
         public static readonly StoreMulti<uint, GameObjectTextTemplate> GameObjectTextTemplates = new StoreMulti<uint, GameObjectTextTemplate>(Settings.SqlTables.gameobject_text_template);
-        public static readonly DataBag<CharacterChat> CharacterTexts = new DataBag<CharacterChat>(Settings.SqlTables.character_chat);
+        public static readonly DataBag<CharacterChat> CharacterTexts = new DataBag<CharacterChat>(Settings.SqlTables.player_chat);
 
         public static void StoreText(ChatPacketData text, Packet packet)
         {
@@ -699,7 +739,7 @@ namespace WowPacketParser.Store
             else if (((text.SenderGUID.GetObjectType() == ObjectType.Player) || (text.SenderName != null && text.Type == ChatMessageType.Channel)) &&
                      (text.Language != Language.Addon && text.Language != Language.AddonBfA && text.Language != Language.AddonLogged))
             {
-                if (Settings.SqlTables.character_chat)
+                if (Settings.SqlTables.player_chat)
                 {
                     var textEntry = new CharacterChat
                     {
@@ -903,13 +943,15 @@ namespace WowPacketParser.Store
             CreatureClientInteractTimes.Clear();
             CreatureLoot.Clear();
             CreatureStats.Clear();
-            UnitTargetChanges.Clear();
             CreatureTemplates.Clear();
             CreatureTemplatesClassic.Clear();
             CreatureTemplatesNonWDB.Clear();
             CreatureTemplateQuestItems.Clear();
             CreatureTemplateScalings.Clear();
             CreatureTemplateModels.Clear();
+            UnitAurasUpdates.Clear();
+            UnitEquipmentValuesUpdates.Clear();
+            UnitGuidValuesUpdates.Clear();
             UnitValuesUpdates.Clear();
             UnitSpeedUpdates.Clear();
 

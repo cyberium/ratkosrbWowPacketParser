@@ -49,7 +49,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             if (hasFall)
                 ReadFallData(packet, idx, "FallData");
 
-            if (Settings.SqlTables.character_movement_client || Settings.SqlTables.creature_movement_client)
+            if (Settings.SqlTables.player_movement_client || Settings.SqlTables.creature_movement_client)
             {
                 moveData.Map = WowPacketParser.Parsing.Parsers.MovementHandler.CurrentMapId;
                 moveData.Opcode = packet.Opcode;

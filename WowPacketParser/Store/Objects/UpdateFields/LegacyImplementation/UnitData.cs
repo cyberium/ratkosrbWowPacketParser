@@ -44,6 +44,12 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
             }
         }
 
+        public WowGuid Charm => GetGuidValue(UnitField.UNIT_FIELD_CHARM);
+
+        public WowGuid Summon => GetGuidValue(UnitField.UNIT_FIELD_SUMMON);
+
+        public WowGuid CharmedBy => GetGuidValue(UnitField.UNIT_FIELD_CHARMEDBY);
+
         public WowGuid SummonedBy => GetGuidValue(UnitField.UNIT_FIELD_SUMMONEDBY);
 
         public WowGuid CreatedBy => GetGuidValue(UnitField.UNIT_FIELD_CREATEDBY);
@@ -195,6 +201,12 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
             }
         }
 
+        public WowGuid Charm => GetGuidValue(UnitField.UNIT_FIELD_CHARM);
+
+        public WowGuid Summon => GetGuidValue(UnitField.UNIT_FIELD_SUMMON);
+
+        public WowGuid CharmedBy => GetGuidValue(UnitField.UNIT_FIELD_CHARMEDBY);
+
         public WowGuid SummonedBy => GetGuidValue(UnitField.UNIT_FIELD_SUMMONEDBY);
 
         public WowGuid CreatedBy => GetGuidValue(UnitField.UNIT_FIELD_CREATEDBY);
@@ -250,6 +262,11 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                         };
                     }
                     return items;
+                }
+                else if (ClientVersion.InVersion(ClientVersionBuild.Zero, ClientVersionBuild.V3_0_2_9056))
+                {
+                    return UpdateFields.GetArray<UnitField, int>(UnitField.UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 3)
+                        .Select(rawId => new VisibleItem { ItemID = rawId }).ToArray();
                 }
                 else
                     return UpdateFields.GetArray<UnitField, int>(UnitField.UNIT_VIRTUAL_ITEM_SLOT_ID, 3)

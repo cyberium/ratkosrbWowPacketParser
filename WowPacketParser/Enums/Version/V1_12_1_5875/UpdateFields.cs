@@ -69,14 +69,7 @@
         UNIT_FIELD_FACTIONTEMPLATE                 = 0x1D + ObjectField.OBJECT_END, // Size:1
         UNIT_FIELD_BYTES_0                         = 0x1E + ObjectField.OBJECT_END, // Size:1
         UNIT_VIRTUAL_ITEM_SLOT_DISPLAY             = 0x1F + ObjectField.OBJECT_END, // Size:3
-        UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_01          = 0x20 + ObjectField.OBJECT_END,
-        UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_02          = 0x21 + ObjectField.OBJECT_END,
         UNIT_VIRTUAL_ITEM_INFO                     = 0x22 + ObjectField.OBJECT_END, // Size:6
-        UNIT_VIRTUAL_ITEM_INFO_01                  = 0x23 + ObjectField.OBJECT_END,
-        UNIT_VIRTUAL_ITEM_INFO_02                  = 0x24 + ObjectField.OBJECT_END,
-        UNIT_VIRTUAL_ITEM_INFO_03                  = 0x25 + ObjectField.OBJECT_END,
-        UNIT_VIRTUAL_ITEM_INFO_04                  = 0x26 + ObjectField.OBJECT_END,
-        UNIT_VIRTUAL_ITEM_INFO_05                  = 0x27 + ObjectField.OBJECT_END,
         UNIT_FIELD_FLAGS                           = 0x28 + ObjectField.OBJECT_END, // Size:1
         UNIT_FIELD_AURA                            = 0x29 + ObjectField.OBJECT_END, // Size:48
         UNIT_FIELD_AURA_LAST                       = 0x58 + ObjectField.OBJECT_END,

@@ -2,6 +2,12 @@
 
 namespace WowPacketParser.Store.Objects.UpdateFields
 {
+    public class VisiblePlayerItem
+    {
+        public uint ItemID;
+        public uint EnchantID;
+    }
+
     public interface IPlayerData
     {
         WowGuid WowAccount { get; }
@@ -10,5 +16,6 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         uint PlayerBytes1 { get; }
         uint PlayerBytes2 { get; }
         uint PlayerFlags { get; }
+        IVisibleItem[] VisibleItems { get; }
     }
 }

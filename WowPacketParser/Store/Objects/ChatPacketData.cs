@@ -18,7 +18,7 @@ namespace WowPacketParser.Store.Objects
         public DateTime Time;
     }
 
-    [DBTableName("character_chat")]
+    [DBTableName("player_chat")]
     public sealed class CharacterChat : IDataModel
     {
         [DBFieldName("guid", true, true)]

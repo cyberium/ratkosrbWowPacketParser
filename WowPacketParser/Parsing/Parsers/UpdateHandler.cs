@@ -403,6 +403,21 @@ namespace WowPacketParser.Parsing.Parsers
                                 hasData = true;
                                 creatureUpdate.StandState = (update.Value.UInt32Value & 0xFF);
                             }
+                            if (obj.UnitData.PetTalentPoints != ((update.Value.UInt32Value >> 8) & 0xFF))
+                            {
+                                hasData = true;
+                                creatureUpdate.PetTalentPoints = ((update.Value.UInt32Value >> 8) & 0xFF);
+                            }
+                            if (obj.UnitData.VisFlags != ((update.Value.UInt32Value >> 16) & 0xFF))
+                            {
+                                hasData = true;
+                                creatureUpdate.VisFlags = ((update.Value.UInt32Value >> 16) & 0xFF);
+                            }
+                            if (obj.UnitData.AnimTier != ((update.Value.UInt32Value >> 24) & 0xFF))
+                            {
+                                hasData = true;
+                                creatureUpdate.AnimTier = ((update.Value.UInt32Value >> 24) & 0xFF);
+                            }
                         }
                     }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BYTES_2))
@@ -414,6 +429,21 @@ namespace WowPacketParser.Parsing.Parsers
                             {
                                 hasData = true;
                                 creatureUpdate.SheathState = (update.Value.UInt32Value & 0xFF);
+                            }
+                            if (obj.UnitData.PvpFlags != ((update.Value.UInt32Value >> 8) & 0xFF))
+                            {
+                                hasData = true;
+                                creatureUpdate.PvpFlags = ((update.Value.UInt32Value >> 8) & 0xFF);
+                            }
+                            if (obj.UnitData.PetFlags != ((update.Value.UInt32Value >> 16) & 0xFF))
+                            {
+                                hasData = true;
+                                creatureUpdate.PetFlags = ((update.Value.UInt32Value >> 16) & 0xFF);
+                            }
+                            if (obj.UnitData.ShapeshiftForm != ((update.Value.UInt32Value >> 24) & 0xFF))
+                            {
+                                hasData = true;
+                                creatureUpdate.ShapeshiftForm = ((update.Value.UInt32Value >> 24) & 0xFF);
                             }
                         }
                     }
@@ -505,6 +535,18 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_COMBATREACH))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.CombatReach != update.Value.FloatValue)
+                            {
+                                hasData = true;
+                                creatureUpdate.CombatReach = update.Value.FloatValue;
+                            }
+                        }
+                    }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BASEATTACKTIME))
                     {
                         if (Storage.Objects.ContainsKey(guid))
@@ -529,27 +571,171 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
-                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_COMBATREACH))
+                    else if (UpdateFields.GetUpdateField(UnitField.UNIT_VIRTUAL_ITEM_SLOT_ID) > 0 &&
+                            update.Key >= UpdateFields.GetUpdateField(UnitField.UNIT_VIRTUAL_ITEM_SLOT_ID) &&
+                            update.Key <= (UpdateFields.GetUpdateField(UnitField.UNIT_VIRTUAL_ITEM_SLOT_ID) + (ClientVersion.AddedInVersion(ClientType.Legion) ? 5 : 2)))
                     {
                         if (Storage.Objects.ContainsKey(guid))
                         {
                             var obj = Storage.Objects[guid].Item1 as Unit;
-                            if (obj.UnitData.CombatReach != update.Value.FloatValue)
+                            uint slot = (uint)(update.Key - UpdateFields.GetUpdateField(UnitField.UNIT_VIRTUAL_ITEM_SLOT_ID));
+                            bool isItem = ClientVersion.AddedInVersion(ClientType.Legion) ? (slot % 2 == 0) : true;
+                            if (ClientVersion.AddedInVersion(ClientType.Legion))
+                                slot = slot / 2;
+                            if (isItem && obj.UnitData.VirtualItems[slot].ItemID != update.Value.UInt32Value)
                             {
-                                hasData = true;
-                                creatureUpdate.CombatReach = update.Value.FloatValue;
+                                CreatureEquipmentValuesUpdate equipmentUpdate = new CreatureEquipmentValuesUpdate();
+                                equipmentUpdate.ItemId = update.Value.UInt32Value;
+                                equipmentUpdate.Slot = slot;
+                                equipmentUpdate.time = time;
+                                Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
                             }
                         }
                     }
-                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_TARGET) &&
-                             Settings.SqlTables.creature_target_change)
+                    else if (UpdateFields.GetUpdateField(UnitField.UNIT_VIRTUAL_ITEM_SLOT_DISPLAY) > 0 &&
+                            update.Key >= UpdateFields.GetUpdateField(UnitField.UNIT_VIRTUAL_ITEM_SLOT_DISPLAY) &&
+                            update.Key <= (UpdateFields.GetUpdateField(UnitField.UNIT_VIRTUAL_ITEM_SLOT_DISPLAY) + 2))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            uint slot = (uint)(update.Key - UpdateFields.GetUpdateField(UnitField.UNIT_VIRTUAL_ITEM_SLOT_DISPLAY));
+                            if (obj.UnitData.VirtualItems[slot].ItemID != update.Value.UInt32Value)
+                            {
+                                CreatureEquipmentValuesUpdate equipmentUpdate = new CreatureEquipmentValuesUpdate();
+                                equipmentUpdate.ItemId = update.Value.UInt32Value;
+                                equipmentUpdate.Slot = slot;
+                                equipmentUpdate.time = time;
+                                Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
+                            }
+                        }
+                    }
+                    else if (UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM) > 0 &&
+                            update.Key >= UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM) &&
+                            update.Key <= (UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM) + 37))
+                    {
+                        int index = update.Key - UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM);
+                        if ((index % 2 == 0) && Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Player;
+                            uint slot = (uint)(index / 2);
+                            uint itemId = (uint)Math.Abs(update.Value.Int32Value);
+                            if (obj.PlayerData.VisibleItems[slot].ItemID != itemId)
+                            {
+                                CreatureEquipmentValuesUpdate equipmentUpdate = new CreatureEquipmentValuesUpdate();
+                                equipmentUpdate.ItemId = itemId;
+                                equipmentUpdate.Slot = slot;
+                                equipmentUpdate.time = time;
+                                Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
+                            }
+                        }
+                    }
+                    else if (UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM_1_ENTRYID) > 0 &&
+                            update.Key >= UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM_1_ENTRYID) &&
+                            update.Key <= (UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM_1_ENTRYID) + 37))
+                    {
+                        int index = update.Key - UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM_1_ENTRYID);
+                        if ((index % 2 == 0) && Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Player;
+                            uint slot = (uint)(index / 2);
+                            if (obj.PlayerData.VisibleItems[slot].ItemID != update.Value.UInt32Value)
+                            {
+                                CreatureEquipmentValuesUpdate equipmentUpdate = new CreatureEquipmentValuesUpdate();
+                                equipmentUpdate.ItemId = update.Value.UInt32Value;
+                                equipmentUpdate.Slot = slot;
+                                equipmentUpdate.time = time;
+                                Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_CHARM))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.Charm != GetGuidValue(updates, UnitField.UNIT_FIELD_CHARM))
+                            {
+                                CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
+                                guidUpdate.guid = GetGuidValue(updates, UnitField.UNIT_FIELD_CHARM);
+                                guidUpdate.time = time;
+                                guidUpdate.FieldName = "Charm";
+                                Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_SUMMON))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.Summon != GetGuidValue(updates, UnitField.UNIT_FIELD_SUMMON))
+                            {
+                                CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
+                                guidUpdate.guid = GetGuidValue(updates, UnitField.UNIT_FIELD_SUMMON);
+                                guidUpdate.time = time;
+                                guidUpdate.FieldName = "Summon";
+                                Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_CHARMEDBY))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.CharmedBy != GetGuidValue(updates, UnitField.UNIT_FIELD_CHARMEDBY))
+                            {
+                                CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
+                                guidUpdate.guid = GetGuidValue(updates, UnitField.UNIT_FIELD_CHARMEDBY);
+                                guidUpdate.time = time;
+                                guidUpdate.FieldName = "CharmedBy";
+                                Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_SUMMONEDBY))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.SummonedBy != GetGuidValue(updates, UnitField.UNIT_FIELD_SUMMONEDBY))
+                            {
+                                CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
+                                guidUpdate.guid = GetGuidValue(updates, UnitField.UNIT_FIELD_SUMMONEDBY);
+                                guidUpdate.time = time;
+                                guidUpdate.FieldName = "SummonedBy";
+                                Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_CREATEDBY))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.CreatedBy != GetGuidValue(updates, UnitField.UNIT_FIELD_CREATEDBY))
+                            {
+                                CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
+                                guidUpdate.guid = GetGuidValue(updates, UnitField.UNIT_FIELD_CREATEDBY);
+                                guidUpdate.time = time;
+                                guidUpdate.FieldName = "CreatedBy";
+                                Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_TARGET))
                     {
                         if (Storage.Objects.ContainsKey(guid))
                         {
                             var obj = Storage.Objects[guid].Item1 as Unit;
                             if (obj.UnitData.Target != GetGuidValue(updates, UnitField.UNIT_FIELD_TARGET))
                             {
-                                Storage.StoreUnitTargetChange(guid, GetGuidValue(updates, UnitField.UNIT_FIELD_TARGET), time);
+                                CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
+                                guidUpdate.guid = GetGuidValue(updates, UnitField.UNIT_FIELD_TARGET);
+                                guidUpdate.time = time;
+                                guidUpdate.FieldName = "Target";
+                                Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                             }
                         }
                     }

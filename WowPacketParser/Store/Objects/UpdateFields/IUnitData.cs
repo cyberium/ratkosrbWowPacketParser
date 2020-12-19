@@ -7,6 +7,9 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         uint Entry { get; }
         int DisplayID { get; }
         uint[] NpcFlags { get; }
+        WowGuid Charm { get; }
+        WowGuid Summon { get; }
+        WowGuid CharmedBy { get; }
         WowGuid SummonedBy { get; }
         WowGuid CreatedBy { get; }
         WowGuid Target { get; }

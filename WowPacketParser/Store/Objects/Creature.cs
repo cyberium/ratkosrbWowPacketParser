@@ -63,26 +63,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("temp")]
         public byte? TemporarySpawn;
 
-        [DBFieldName("creator_guid", false, true)]
-        public string CreatedByGuid;
-
-        [DBFieldName("creator_id")]
-        public uint CreatedById;
-
-        [DBFieldName("creator_type")]
-        public string CreatedByType;
-
-        [DBFieldName("summoner_guid", false, true)]
-        public string SummonedByGuid;
-
-        [DBFieldName("summoner_id")]
-        public uint SummonedById;
-
-        [DBFieldName("summoner_type")]
-        public string SummonedByType;
-
         [DBFieldName("summon_spell")]
         public uint? SummonSpell;
+
+        [DBFieldName("scale")]
+        public float? Scale;
 
         [DBFieldName("display_id")]
         public uint? DisplayID;
@@ -150,9 +135,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("speed_run")]
         public float? SpeedRun;
 
-        [DBFieldName("scale")]
-        public float? Scale;
-
         [DBFieldName("bounding_radius")]
         public float? BoundingRadius;
 
@@ -165,6 +147,15 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ranged_attack_time")]
         public uint? RangedAttackTime;
 
+        [DBFieldName("main_hand_slot_item")]
+        public uint? MainHandSlotItem;
+
+        [DBFieldName("off_hand_slot_item")]
+        public uint? OffHandSlotItem;
+
+        [DBFieldName("ranged_slot_item")]
+        public uint? RangedSlotItem;
+
         [DBFieldName("auras")]
         public string Auras;
 
@@ -173,6 +164,67 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("VerifiedBuild")]
         public int? VerifiedBuild = ClientVersion.BuildInt;
+    }
+
+    [DBTableName("creature_guid_values")]
+    public sealed class CreatureGuidValues : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("charm_guid", false, true)]
+        public string CharmGuid;
+
+        [DBFieldName("charm_id")]
+        public uint CharmId;
+
+        [DBFieldName("charm_type")]
+        public string CharmType;
+
+        [DBFieldName("summon_guid", false, true)]
+        public string SummonGuid;
+
+        [DBFieldName("summon_id")]
+        public uint SummonId;
+
+        [DBFieldName("summon_type")]
+        public string SummonType;
+
+        [DBFieldName("charmer_guid", false, true)]
+        public string CharmedByGuid;
+
+        [DBFieldName("charmer_id")]
+        public uint CharmedById;
+
+        [DBFieldName("charmer_type")]
+        public string CharmedByType;
+
+        [DBFieldName("creator_guid", false, true)]
+        public string CreatedByGuid;
+
+        [DBFieldName("creator_id")]
+        public uint CreatedById;
+
+        [DBFieldName("creator_type")]
+        public string CreatedByType;
+
+        [DBFieldName("summoner_guid", false, true)]
+        public string SummonedByGuid;
+
+        [DBFieldName("summoner_id")]
+        public uint SummonedById;
+
+        [DBFieldName("summoner_type")]
+        public string SummonedByType;
+
+        [DBFieldName("target_guid", false, true)]
+        public string TargetGuid;
+
+        [DBFieldName("target_id")]
+        public uint TargetId;
+
+        [DBFieldName("target_type")]
+        public string TargetType;
     }
 
     [DBTableName("creature_movement_server_spline")]
@@ -391,18 +443,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("level", true, false, true)]
         public uint? Level;
 
-        [DBFieldName("aura_state", true, false, true)]
-        public uint? AuraState;
-
-        [DBFieldName("emote_state", true, false, true)]
-        public uint? EmoteState;
-
-        [DBFieldName("stand_state", true, false, true)]
-        public uint? StandState;
-
-        [DBFieldName("sheath_state", true, false, true)]
-        public uint? SheathState;
-
         [DBFieldName("npc_flags", true, false, true)]
         public uint? NpcFlag;
 
@@ -421,6 +461,36 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("max_mana", true, false, true)]
         public uint? MaxMana;
 
+        [DBFieldName("aura_state", true, false, true)]
+        public uint? AuraState;
+
+        [DBFieldName("emote_state", true, false, true)]
+        public uint? EmoteState;
+
+        [DBFieldName("stand_state", true, false, true)]
+        public uint? StandState;
+
+        [DBFieldName("pet_talent_points", true, false, true)]
+        public uint? PetTalentPoints;
+
+        [DBFieldName("vis_flags", true, false, true)]
+        public uint? VisFlags;
+
+        [DBFieldName("anim_tier", true, false, true)]
+        public uint? AnimTier;
+
+        [DBFieldName("sheath_state", true, false, true)]
+        public uint? SheathState;
+
+        [DBFieldName("pvp_flags", true, false, true)]
+        public uint? PvpFlags;
+
+        [DBFieldName("pet_flags", true, false, true)]
+        public uint? PetFlags;
+
+        [DBFieldName("shapeshift_form", true, false, true)]
+        public uint? ShapeshiftForm;
+
         [DBFieldName("bounding_radius", true, false, true)]
         public float? BoundingRadius;
 
@@ -432,6 +502,49 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("ranged_attack_time", true, false, true)]
         public uint? RangedAttackTime;
+    }
+
+    [DBTableName("creature_guid_values_update")]
+    public sealed class CreatureGuidValuesUpdate : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
+        [DBFieldName("field_name", true)]
+        public string FieldName;
+
+        [DBFieldName("object_guid", false, true)]
+        public string ObjectGuid;
+
+        [DBFieldName("object_id")]
+        public uint ObjectId;
+
+        [DBFieldName("object_type")]
+        public string ObjectType;
+
+        public WowGuid guid;
+        public DateTime time;
+    }
+
+    [DBTableName("creature_equipment_values_update")]
+    public sealed class CreatureEquipmentValuesUpdate : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
+        [DBFieldName("slot", true)]
+        public uint? Slot;
+
+        [DBFieldName("item_id")]
+        public uint? ItemId;
+
+        public DateTime time;
     }
 
     [DBTableName("creature_stats")]

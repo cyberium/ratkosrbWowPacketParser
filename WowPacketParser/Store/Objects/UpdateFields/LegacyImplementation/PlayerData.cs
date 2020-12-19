@@ -35,6 +35,58 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public uint PlayerBytes1 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES);
         public uint PlayerBytes2 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_2);
         public uint PlayerFlags => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_FLAGS);
+
+        public class VisibleItem : IVisibleItem
+        {
+            public int ItemID { get; set; }
+            public ushort ItemAppearanceModID { get; set; }
+            public ushort ItemVisual { get; set; }
+        }
+
+        public const int MAX_VISIBLE_ITEM_OFFSET = 12;
+        public IVisibleItem[] VisibleItems
+        {
+            get
+            {
+                if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056))
+                {
+                    var items = new VisibleItem[19];
+                    for (var i = 0; i < 19; ++i)
+                    {
+                        int itemId = 0;
+                        UpdateField value;
+                        if (UpdateFields != null && UpdateFields.TryGetValue(WowPacketParser.Enums.Version.UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM_1_0) + (i * MAX_VISIBLE_ITEM_OFFSET), out value))
+                            itemId = value.Int32Value;
+
+                        items[i] = new VisibleItem
+                        {
+                            ItemID = itemId
+                        };
+                    }
+                    return items;
+                }
+                else
+                {
+                    PlayerField field;
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V5_4_2_17658))
+                        field = PlayerField.PLAYER_VISIBLE_ITEM;
+                    else
+                        field = PlayerField.PLAYER_VISIBLE_ITEM_1_ENTRYID;
+
+                    var raw = UpdateFields.GetArray<PlayerField, int>(field, 38);
+                    var items = new VisibleItem[19];
+                    for (var i = 0; i < 19; ++i)
+                    {
+                        items[i] = new VisibleItem
+                        {
+                            ItemID = System.Math.Abs(raw[i * 2]),
+                            ItemVisual = (ushort)raw[i * 2 + 1]
+                        };
+                    }
+                    return items;
+                }
+            }
+        }
     }
 
     public class OriginalPlayerData : IPlayerData
@@ -67,6 +119,57 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public uint PlayerBytes1 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES);
         public uint PlayerBytes2 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_2);
         public uint PlayerFlags => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_FLAGS);
+
+        public class VisibleItem : IVisibleItem
+        {
+            public int ItemID { get; set; }
+            public ushort ItemAppearanceModID { get; set; }
+            public ushort ItemVisual { get; set; }
+        }
+        public const int MAX_VISIBLE_ITEM_OFFSET = 12;
+        public IVisibleItem[] VisibleItems
+        {
+            get
+            {
+                if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056))
+                {
+                    var items = new VisibleItem[19];
+                    for (var i = 0; i < 19; ++i)
+                    {
+                        int itemId = 0;
+                        UpdateField value;
+                        if (UpdateFields != null && UpdateFields.TryGetValue(WowPacketParser.Enums.Version.UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM_1_0) + (i * MAX_VISIBLE_ITEM_OFFSET), out value))
+                            itemId = value.Int32Value;
+
+                        items[i] = new VisibleItem
+                        {
+                            ItemID = itemId
+                        };
+                    }
+                    return items;
+                }
+                else
+                {
+                    PlayerField field;
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V5_4_2_17658))
+                        field = PlayerField.PLAYER_VISIBLE_ITEM;
+                    else
+                        field = PlayerField.PLAYER_VISIBLE_ITEM_1_ENTRYID;
+
+                    var raw = UpdateFields.GetArray<PlayerField, int>(field, 38);
+                    var items = new VisibleItem[19];
+                    for (var i = 0; i < 19; ++i)
+                    {
+                        items[i] = new VisibleItem
+                        {
+                            ItemID = System.Math.Abs(raw[i * 2]),
+                            ItemVisual = (ushort)raw[i * 2 + 1]
+                        };
+                    }
+                    return items;
+                }
+            }
+        }
     }
 }
 

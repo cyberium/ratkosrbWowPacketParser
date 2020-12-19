@@ -25,25 +25,27 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string CharactersBuilder()
         {
-            if (!Settings.SqlTables.characters)
+            if (!Settings.SqlTables.characters && !Settings.SqlTables.player)
                 return string.Empty;
 
             StringBuilder result = new StringBuilder();
             uint maxDbGuid = 0;
             uint itemGuidCounter = 0;
             var characterRows = new RowList<CharacterTemplate>();
-            var characterAddonRows = new RowList<CharacterTemplateAddon>();
             var characterInventoryRows = new RowList<CharacterInventory>();
             var characterItemInstaceRows = new RowList<CharacterItemInstance>();
-            var characterAttackLogRows = new RowList<UnitMeleeAttackLog>();
-            var characterAttackStartRows = new RowList<CreatureTargetChange>();
-            var characterAttackStopRows = new RowList<CreatureTargetChange>();
-            var characterTargetChangeRows = new RowList<CreatureTargetChange>();
-            var characterAurasUpdateRows = new RowList<CreatureAurasUpdate>();
-            var characterValuesUpdateRows = new RowList<CreatureValuesUpdate>();
-            var characterSpeedUpdateRows = new RowList<CreatureSpeedUpdate>();
-            var characterServerMovementRows = new RowList<ServerSideMovement>();
-            var characterServerMovementSplineRows = new RowList<ServerSideMovementSpline>();
+            var playerRows = new RowList<PlayerTemplate>();
+            var playerGuidValuesRows = new RowList<CreatureGuidValues>();
+            var playerAttackLogRows = new RowList<UnitMeleeAttackLog>();
+            var playerAttackStartRows = new RowList<CreatureTargetChange>();
+            var playerAttackStopRows = new RowList<CreatureTargetChange>();
+            var playerAurasUpdateRows = new RowList<CreatureAurasUpdate>();
+            var playerEquipmentValuesUpdateRows = new RowList<CreatureEquipmentValuesUpdate>();
+            var playerGuidValuesUpdateRows = new RowList<CreatureGuidValuesUpdate>();
+            var playerValuesUpdateRows = new RowList<CreatureValuesUpdate>();
+            var playerSpeedUpdateRows = new RowList<CreatureSpeedUpdate>();
+            var playerServerMovementRows = new RowList<ServerSideMovement>();
+            var playerServerMovementSplineRows = new RowList<ServerSideMovementSpline>();
             Dictionary<WowGuid, uint> accountIdDictionary = new Dictionary<WowGuid, uint>();
             foreach (var objPair in Storage.Objects)
             {
@@ -91,72 +93,124 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.Health = (uint)player.UnitDataOriginal.MaxHealth;
                 row.Data.Power1 = (uint)player.UnitDataOriginal.MaxMana;
 
-                PlayerField visibleItemsStart = ClientVersion.AddedInVersion(ClientVersionBuild.V5_4_2_17658) ? PlayerField.PLAYER_VISIBLE_ITEM : PlayerField.PLAYER_VISIBLE_ITEM_1_ENTRYID;
-                for (int i = 0; i < 38; i++)
+                Store.Objects.UpdateFields.IVisibleItem[] visibleItems = player.PlayerDataOriginal.VisibleItems;
+
+                for (int i = 0; i < 19; i++)
                 {
-                    int itemId = 0;
+                    int itemId = visibleItems[i].ItemID;
+                    ushort enchantId = visibleItems[i].ItemVisual;
 
-                    if (player.UpdateFields == null)
-                        break;
+                    Row<CharacterInventory> inventoryRow = new Row<CharacterInventory>();
+                    inventoryRow.Data.Guid = row.Data.Guid;
+                    inventoryRow.Data.Bag = 0;
+                    inventoryRow.Data.Slot = (uint)i / 2;
+                    inventoryRow.Data.ItemGuid = "@IGUID+" + itemGuidCounter;
+                    inventoryRow.Data.ItemTemplate = (uint)itemId;
+                    characterInventoryRows.Add(inventoryRow);
 
-                    UpdateField value;
-                    if (player.UpdateFields.TryGetValue(Enums.Version.UpdateFields.GetUpdateField(visibleItemsStart) + i, out value))
-                    {
-                        itemId = Math.Abs(value.Int32Value);
+                    Row<CharacterItemInstance> itemInstanceRow = new Row<CharacterItemInstance>();
+                    itemInstanceRow.Data.Guid = "@IGUID+" + itemGuidCounter;
+                    itemInstanceRow.Data.ItemEntry = (uint)itemId;
+                    itemInstanceRow.Data.OwnerGuid = row.Data.Guid;
+                    characterItemInstaceRows.Add(itemInstanceRow);
 
-                        // even indexes are item ids, odd indexes are enchant ids
-                        if ((itemId != 0) && (i % 2 == 0))
-                        {
-                            Row<CharacterInventory> inventoryRow = new Row<CharacterInventory>();
-                            inventoryRow.Data.Guid = row.Data.Guid;
-                            inventoryRow.Data.Bag = 0;
-                            inventoryRow.Data.Slot = (uint)i / 2;
-                            inventoryRow.Data.ItemGuid = "@IGUID+" + itemGuidCounter;
-                            inventoryRow.Data.ItemTemplate = (uint)itemId;
-                            characterInventoryRows.Add(inventoryRow);
-
-                            Row<CharacterItemInstance> itemInstanceRow = new Row<CharacterItemInstance>();
-                            itemInstanceRow.Data.Guid = "@IGUID+" + itemGuidCounter;
-                            itemInstanceRow.Data.ItemEntry = (uint)itemId;
-                            itemInstanceRow.Data.OwnerGuid = row.Data.Guid;
-                            characterItemInstaceRows.Add(itemInstanceRow);
-
-                            itemGuidCounter++;
-                        }
-                    }
+                    itemGuidCounter++;
 
                     if (row.Data.EquipmentCache.Length > 0)
                         row.Data.EquipmentCache += " ";
 
-                    row.Data.EquipmentCache += itemId;
+                    row.Data.EquipmentCache += itemId + " " + enchantId;
                 }
 
-                if (Settings.SqlTables.characters_addon)
+                if (Settings.SqlTables.player)
                 {
-                    Row<CharacterTemplateAddon> addonRow = new Row<CharacterTemplateAddon>();
+                    Row<PlayerTemplate> addonRow = new Row<PlayerTemplate>();
                     addonRow.Data.Guid = row.Data.Guid;
+                    addonRow.Data.Name = row.Data.Name;
+                    addonRow.Data.Race = row.Data.Race;
+                    addonRow.Data.Class = row.Data.Class;
+                    addonRow.Data.Gender = row.Data.Gender;
+                    addonRow.Data.Level = row.Data.Level;
+                    addonRow.Data.XP = row.Data.XP;
+                    addonRow.Data.Money = row.Data.Money;
+                    addonRow.Data.PlayerBytes = row.Data.PlayerBytes;
+                    addonRow.Data.PlayerBytes2 = row.Data.PlayerBytes2;
+                    addonRow.Data.PlayerFlags = row.Data.PlayerFlags;
+                    addonRow.Data.PositionX = row.Data.PositionX;
+                    addonRow.Data.PositionY = row.Data.PositionY;
+                    addonRow.Data.PositionZ = row.Data.PositionZ;
+                    addonRow.Data.Orientation = row.Data.Orientation;
+                    addonRow.Data.Map = row.Data.Map;
                     addonRow.Data.DisplayID = (uint)player.UnitDataOriginal.DisplayID;
                     addonRow.Data.MountDisplayId = (uint)player.UnitDataOriginal.MountDisplayID;
                     addonRow.Data.FactionTemplate = (uint)player.UnitDataOriginal.FactionTemplate;
+                    addonRow.Data.UnitFlags = player.UnitDataOriginal.Flags;
                     addonRow.Data.CurHealth = (uint)player.UnitDataOriginal.CurHealth;
                     addonRow.Data.MaxHealth = (uint)player.UnitDataOriginal.MaxHealth;
                     addonRow.Data.CurMana = (uint)player.UnitDataOriginal.CurMana;
                     addonRow.Data.MaxMana = (uint)player.UnitDataOriginal.MaxMana;
+                    addonRow.Data.AuraState = player.UnitDataOriginal.AuraState;
+                    addonRow.Data.EmoteState = (uint)player.UnitDataOriginal.EmoteState;
+                    addonRow.Data.StandState = player.UnitDataOriginal.StandState;
+                    addonRow.Data.PetTalentPoints = player.UnitDataOriginal.PetTalentPoints;
+                    addonRow.Data.VisFlags = player.UnitDataOriginal.VisFlags;
+                    addonRow.Data.AnimTier = player.UnitDataOriginal.AnimTier;
+                    addonRow.Data.SheatheState = player.UnitDataOriginal.SheatheState;
+                    addonRow.Data.PvpFlags = player.UnitDataOriginal.PvpFlags;
+                    addonRow.Data.PetFlags = player.UnitDataOriginal.PetFlags;
+                    addonRow.Data.ShapeshiftForm = player.UnitDataOriginal.ShapeshiftForm;
                     if (moveData != null)
                     {
-                        addonRow.Data.SpeedWalk = moveData.WalkSpeed;
-                        addonRow.Data.SpeedRun = moveData.RunSpeed;
-                    }  
+                        addonRow.Data.SpeedWalk = moveData.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
+                        addonRow.Data.SpeedRun = moveData.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
+                    }
                     addonRow.Data.Scale = player.ObjectDataOriginal.Scale;
                     addonRow.Data.BoundingRadius = player.UnitDataOriginal.BoundingRadius;
                     addonRow.Data.CombatReach = player.UnitDataOriginal.CombatReach;
                     addonRow.Data.BaseAttackTime = player.UnitDataOriginal.AttackRoundBaseTime[0];
                     addonRow.Data.RangedAttackTime = player.UnitDataOriginal.RangedAttackRoundBaseTime;
-                    addonRow.Data.UnitFlags = player.UnitDataOriginal.Flags;
-                    characterAddonRows.Add(addonRow);
+
+                    string auras = string.Empty;
+                    if (player.Auras != null && player.Auras.Count != 0)
+                    {
+                        foreach (Aura aura in player.Auras)
+                        {
+                            if (aura == null)
+                                continue;
+
+                            auras += aura.SpellId + " ";
+                        }
+
+                        auras = auras.TrimEnd(' ');
+                    }
+                    addonRow.Data.Auras = auras;
+                    addonRow.Data.EquipmentCache = row.Data.EquipmentCache;
+
+                    playerRows.Add(addonRow);
                 }
 
-                if (Settings.SqlTables.character_attack_log)
+                if (Settings.SqlTables.player_guid_values)
+                {
+                    if (!player.UnitDataOriginal.Charm.IsEmpty() ||
+                        !player.UnitDataOriginal.Summon.IsEmpty() ||
+                        !player.UnitDataOriginal.CharmedBy.IsEmpty() ||
+                        !player.UnitDataOriginal.CreatedBy.IsEmpty() ||
+                        !player.UnitDataOriginal.SummonedBy.IsEmpty() ||
+                        !player.UnitDataOriginal.Target.IsEmpty())
+                    {
+                        Row<CreatureGuidValues> guidsRow = new Row<CreatureGuidValues>();
+                        guidsRow.Data.GUID = row.Data.Guid;
+                        Storage.GetObjectDbGuidEntryType(player.UnitDataOriginal.Charm, out guidsRow.Data.CharmGuid, out guidsRow.Data.CharmId, out guidsRow.Data.CharmType);
+                        Storage.GetObjectDbGuidEntryType(player.UnitDataOriginal.Summon, out guidsRow.Data.SummonGuid, out guidsRow.Data.SummonId, out guidsRow.Data.SummonType);
+                        Storage.GetObjectDbGuidEntryType(player.UnitDataOriginal.CharmedBy, out guidsRow.Data.CharmedByGuid, out guidsRow.Data.CharmedById, out guidsRow.Data.CharmedByType);
+                        Storage.GetObjectDbGuidEntryType(player.UnitDataOriginal.CreatedBy, out guidsRow.Data.CreatedByGuid, out guidsRow.Data.CreatedById, out guidsRow.Data.CreatedByType);
+                        Storage.GetObjectDbGuidEntryType(player.UnitDataOriginal.SummonedBy, out guidsRow.Data.SummonedByGuid, out guidsRow.Data.SummonedById, out guidsRow.Data.SummonedByType);
+                        Storage.GetObjectDbGuidEntryType(player.UnitDataOriginal.Target, out guidsRow.Data.TargetGuid, out guidsRow.Data.TargetId, out guidsRow.Data.TargetType);
+                        playerGuidValuesRows.Add(guidsRow);
+                    }
+                }
+
+                if (Settings.SqlTables.player_attack_log)
                 {
                     if (Storage.UnitAttackLogs.ContainsKey(objPair.Key))
                     {
@@ -167,12 +221,12 @@ namespace WowPacketParser.SQL.Builders
                             attackRow.Data.GUID = row.Data.Guid;
                             Storage.GetObjectDbGuidEntryType(attack.Victim, out attackRow.Data.VictimGuid, out attackRow.Data.VictimId, out attackRow.Data.VictimType);
                             attackRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(attack.Time);
-                            characterAttackLogRows.Add(attackRow);
+                            playerAttackLogRows.Add(attackRow);
                         }
                     }
                 }
 
-                if (Settings.SqlTables.character_attack_start)
+                if (Settings.SqlTables.player_attack_start)
                 {
                     if (Storage.UnitAttackStartTimes.ContainsKey(objPair.Key))
                     {
@@ -182,12 +236,12 @@ namespace WowPacketParser.SQL.Builders
                             attackRow.Data.GUID = row.Data.Guid;
                             Storage.GetObjectDbGuidEntryType(attack.victim, out attackRow.Data.VictimGuid, out attackRow.Data.VictimId, out attackRow.Data.VictimType);
                             attackRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(attack.time);
-                            characterAttackStartRows.Add(attackRow);
+                            playerAttackStartRows.Add(attackRow);
                         }
                     }
                 }
 
-                if (Settings.SqlTables.character_attack_stop)
+                if (Settings.SqlTables.player_attack_stop)
                 {
                     if (Storage.UnitAttackStopTimes.ContainsKey(objPair.Key))
                     {
@@ -197,27 +251,43 @@ namespace WowPacketParser.SQL.Builders
                             attackRow.Data.GUID = row.Data.Guid;
                             Storage.GetObjectDbGuidEntryType(attack.victim, out attackRow.Data.VictimGuid, out attackRow.Data.VictimId, out attackRow.Data.VictimType);
                             attackRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(attack.time);
-                            characterAttackStopRows.Add(attackRow);
+                            playerAttackStopRows.Add(attackRow);
                         }
                     }
                 }
 
-                if (Settings.SqlTables.character_target_change)
+                if (Settings.SqlTables.player_equipment_values_update)
                 {
-                    if (Storage.UnitTargetChanges.ContainsKey(objPair.Key))
+                    if (Storage.UnitEquipmentValuesUpdates.ContainsKey(objPair.Key))
                     {
-                        foreach (var attack in Storage.UnitTargetChanges[objPair.Key])
+                        foreach (var update in Storage.UnitEquipmentValuesUpdates[objPair.Key])
                         {
-                            Row<CreatureTargetChange> attackRow = new Row<CreatureTargetChange>();
-                            attackRow.Data.GUID = row.Data.Guid;
-                            Storage.GetObjectDbGuidEntryType(attack.victim, out attackRow.Data.VictimGuid, out attackRow.Data.VictimId, out attackRow.Data.VictimType);
-                            attackRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(attack.time);
-                            characterTargetChangeRows.Add(attackRow);
+                            Row<CreatureEquipmentValuesUpdate> updateRow = new Row<CreatureEquipmentValuesUpdate>();
+                            updateRow.Data = update;
+                            updateRow.Data.GUID = row.Data.Guid;
+                            updateRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(update.time);
+                            playerEquipmentValuesUpdateRows.Add(updateRow);
                         }
                     }
                 }
 
-                if (Settings.SqlTables.character_auras_update)
+                if (Settings.SqlTables.player_guid_values_update)
+                {
+                    if (Storage.UnitGuidValuesUpdates.ContainsKey(objPair.Key))
+                    {
+                        foreach (var update in Storage.UnitGuidValuesUpdates[objPair.Key])
+                        {
+                            Row<CreatureGuidValuesUpdate> updateRow = new Row<CreatureGuidValuesUpdate>();
+                            updateRow.Data.GUID = row.Data.Guid;
+                            updateRow.Data.FieldName = update.FieldName;
+                            Storage.GetObjectDbGuidEntryType(update.guid, out updateRow.Data.ObjectGuid, out updateRow.Data.ObjectId, out updateRow.Data.ObjectType);
+                            updateRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(update.time);
+                            playerGuidValuesUpdateRows.Add(updateRow);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.player_auras_update)
                 {
                     if (Storage.UnitAurasUpdates.ContainsKey(objPair.Key))
                     {
@@ -242,13 +312,13 @@ namespace WowPacketParser.SQL.Builders
                                 updateRow.Data.MaxDuration = aura.MaxDuration;
                                 Storage.GetObjectDbGuidEntryType(aura.CasterGuid, out updateRow.Data.CasterGuid, out updateRow.Data.CasterId, out updateRow.Data.CasterType);
                                 updateRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(update.Item2);
-                                characterAurasUpdateRows.Add(updateRow);
+                                playerAurasUpdateRows.Add(updateRow);
                             }
                         }
                     }
                 }
 
-                if (Settings.SqlTables.character_values_update)
+                if (Settings.SqlTables.player_values_update)
                 {
                     if (Storage.UnitValuesUpdates.ContainsKey(objPair.Key))
                     {
@@ -257,12 +327,12 @@ namespace WowPacketParser.SQL.Builders
                             var updateRow = new Row<CreatureValuesUpdate>();
                             updateRow.Data = update;
                             updateRow.Data.GUID = row.Data.Guid;
-                            characterValuesUpdateRows.Add(updateRow);
+                            playerValuesUpdateRows.Add(updateRow);
                         }
                     }
                 }
 
-                if (Settings.SqlTables.character_speed_update)
+                if (Settings.SqlTables.player_speed_update)
                 {
                     if (Storage.UnitSpeedUpdates.ContainsKey(objPair.Key))
                     {
@@ -271,12 +341,12 @@ namespace WowPacketParser.SQL.Builders
                             var updateRow = new Row<CreatureSpeedUpdate>();
                             updateRow.Data = update;
                             updateRow.Data.GUID = row.Data.Guid;
-                            characterSpeedUpdateRows.Add(updateRow);
+                            playerSpeedUpdateRows.Add(updateRow);
                         }
                     }
                 }
 
-                if (Settings.SqlTables.character_chat)
+                if (Settings.SqlTables.player_chat)
                 {
                     foreach (var text in Storage.CharacterTexts)
                     {
@@ -288,14 +358,14 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SqlTables.character_movement_server)
+                if (Settings.SqlTables.player_movement_server)
                 {
                     foreach (ServerSideMovementSpline waypoint in player.CombatMovementSplines)
                     {
                         var movementSplineRow = new Row<ServerSideMovementSpline>();
                         movementSplineRow.Data = waypoint;
                         movementSplineRow.Data.GUID = "@PGUID+" + player.DbGuid;
-                        characterServerMovementSplineRows.Add(movementSplineRow);
+                        playerServerMovementSplineRows.Add(movementSplineRow);
                     }
 
                     foreach (ServerSideMovement waypoint in player.CombatMovements)
@@ -306,7 +376,7 @@ namespace WowPacketParser.SQL.Builders
                         var movementRow = new Row<ServerSideMovement>();
                         movementRow.Data = waypoint;
                         movementRow.Data.GUID = "@PGUID+" + player.DbGuid;
-                        characterServerMovementRows.Add(movementRow);
+                        playerServerMovementRows.Add(movementRow);
                     }
                 }
 
@@ -316,35 +386,12 @@ namespace WowPacketParser.SQL.Builders
                     maxDbGuid = player.DbGuid;
             }
 
-            var characterDelete = new SQLDelete<CharacterTemplate>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
-            result.Append(characterDelete.Build());
-            var characterSql = new SQLInsert<CharacterTemplate>(characterRows, false);
-            result.Append(characterSql.Build());
-            result.AppendLine();
-
-            if (Settings.SqlTables.characters_addon)
+            if (Settings.SqlTables.characters)
             {
-                var addonDelete = new SQLDelete<CharacterTemplateAddon>(Tuple.Create("@IGUID+0", "@IGUID+" + itemGuidCounter));
-                result.Append(addonDelete.Build());
-                var addonSql = new SQLInsert<CharacterTemplateAddon>(characterAddonRows, false);
-                result.Append(addonSql.Build());
-                result.AppendLine();
-            }
-
-            if (Settings.SqlTables.character_active_player)
-            {
-                var activePlayersRows = new RowList<CharacterActivePlayer>();
-                foreach (var itr in Storage.PlayerActiveCreateTime)
-                {
-                    Row<CharacterActivePlayer> row = new Row<CharacterActivePlayer>();
-                    row.Data.Guid = Storage.GetObjectDbGuid(itr.Guid);
-                    row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(itr.Time);
-                    activePlayersRows.Add(row);
-                }
-                var activePlayersDelete = new SQLDelete<CharacterActivePlayer>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
-                result.Append(activePlayersDelete.Build());
-                var activePlayersSql = new SQLInsert<CharacterActivePlayer>(activePlayersRows, false);
-                result.Append(activePlayersSql.Build());
+                var characterDelete = new SQLDelete<CharacterTemplate>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
+                result.Append(characterDelete.Build());
+                var characterSql = new SQLInsert<CharacterTemplate>(characterRows, false);
+                result.Append(characterSql.Build());
                 result.AppendLine();
             }
 
@@ -363,7 +410,43 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.character_movement_client)
+            if (Settings.SqlTables.player)
+            {
+                var playerDelete = new SQLDelete<PlayerTemplate>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
+                result.Append(playerDelete.Build());
+                var playerSql = new SQLInsert<PlayerTemplate>(playerRows, false);
+                result.Append(playerSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.player_guid_values)
+            {
+                var guidValuesDelete = new SQLDelete<CreatureGuidValues>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
+                guidValuesDelete.tableNameOverride = "player_guid_values";
+                result.Append(guidValuesDelete.Build());
+                var guidValuesSql = new SQLInsert<CreatureGuidValues>(playerGuidValuesRows, false, false, "player_guid_values");
+                result.Append(guidValuesSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.player_active_player)
+            {
+                var activePlayersRows = new RowList<CharacterActivePlayer>();
+                foreach (var itr in Storage.PlayerActiveCreateTime)
+                {
+                    Row<CharacterActivePlayer> row = new Row<CharacterActivePlayer>();
+                    row.Data.Guid = Storage.GetObjectDbGuid(itr.Guid);
+                    row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(itr.Time);
+                    activePlayersRows.Add(row);
+                }
+                var activePlayersDelete = new SQLDelete<CharacterActivePlayer>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
+                result.Append(activePlayersDelete.Build());
+                var activePlayersSql = new SQLInsert<CharacterActivePlayer>(activePlayersRows, false);
+                result.Append(activePlayersSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.player_movement_client)
             {
                 var movementRows = new RowList<ClientSideMovement>();
                 foreach (var movement in Storage.PlayerMovements)
@@ -398,67 +481,74 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.character_movement_server)
+            if (Settings.SqlTables.player_movement_server)
             {
-                var movementSql = new SQLInsert<ServerSideMovement>(characterServerMovementRows, false, false, "character_movement_server");
+                var movementSql = new SQLInsert<ServerSideMovement>(playerServerMovementRows, false, false, "player_movement_server");
                 result.Append(movementSql.Build());
                 result.AppendLine();
 
-                var movementSplineSql = new SQLInsert<ServerSideMovementSpline>(characterServerMovementSplineRows, false, false, "character_movement_server_spline");
+                var movementSplineSql = new SQLInsert<ServerSideMovementSpline>(playerServerMovementSplineRows, false, false, "character_movement_server_spline");
                 result.Append(movementSplineSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.character_attack_log)
+            if (Settings.SqlTables.player_attack_log)
             {
-                var characterAttackLogSql = new SQLInsert<UnitMeleeAttackLog>(characterAttackLogRows, false, false, "character_attack_log");
+                var characterAttackLogSql = new SQLInsert<UnitMeleeAttackLog>(playerAttackLogRows, false, false, "player_attack_log");
                 result.Append(characterAttackLogSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.character_attack_start)
+            if (Settings.SqlTables.player_attack_start)
             {
-                var characterAttackStartSql = new SQLInsert<CreatureTargetChange>(characterAttackStartRows, false, false, "character_attack_start");
+                var characterAttackStartSql = new SQLInsert<CreatureTargetChange>(playerAttackStartRows, false, false, "player_attack_start");
                 result.Append(characterAttackStartSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.character_attack_stop)
+            if (Settings.SqlTables.player_attack_stop)
             {
-                var characterAttackStopSql = new SQLInsert<CreatureTargetChange>(characterAttackStopRows, false, false, "character_attack_stop");
+                var characterAttackStopSql = new SQLInsert<CreatureTargetChange>(playerAttackStopRows, false, false, "player_attack_stop");
                 result.Append(characterAttackStopSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.character_target_change)
+            if (Settings.SqlTables.player_equipment_values_update)
             {
-                var characterTargetChangeSql = new SQLInsert<CreatureTargetChange>(characterTargetChangeRows, false, false, "character_target_change");
+                var characterTargetChangeSql = new SQLInsert<CreatureEquipmentValuesUpdate>(playerEquipmentValuesUpdateRows, false, false, "player_equipment_values_update");
                 result.Append(characterTargetChangeSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.character_auras_update)
+            if (Settings.SqlTables.player_guid_values_update)
             {
-                var characterUpdateSql = new SQLInsert<CreatureAurasUpdate>(characterAurasUpdateRows, false, false, "character_auras_update");
+                var characterTargetChangeSql = new SQLInsert<CreatureGuidValuesUpdate>(playerGuidValuesUpdateRows, false, false, "player_guid_values_update");
+                result.Append(characterTargetChangeSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.player_auras_update)
+            {
+                var characterUpdateSql = new SQLInsert<CreatureAurasUpdate>(playerAurasUpdateRows, false, false, "player_auras_update");
                 result.Append(characterUpdateSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.character_values_update)
+            if (Settings.SqlTables.player_values_update)
             {
-                var characterUpdateSql = new SQLInsert<CreatureValuesUpdate>(characterValuesUpdateRows, false, false, "character_values_update");
+                var characterUpdateSql = new SQLInsert<CreatureValuesUpdate>(playerValuesUpdateRows, false, false, "player_values_update");
                 result.Append(characterUpdateSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.character_speed_update)
+            if (Settings.SqlTables.player_speed_update)
             {
-                var characterUpdateSql = new SQLInsert<CreatureSpeedUpdate>(characterSpeedUpdateRows, false, false, "character_speed_update");
+                var characterUpdateSql = new SQLInsert<CreatureSpeedUpdate>(playerSpeedUpdateRows, false, false, "player_speed_update");
                 result.Append(characterUpdateSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.character_chat && !Storage.CharacterTexts.IsEmpty())
+            if (Settings.SqlTables.player_chat && !Storage.CharacterTexts.IsEmpty())
             {
                 var characterChatDelete = new SQLDelete<CharacterChat>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
                 result.Append(characterChatDelete.Build());

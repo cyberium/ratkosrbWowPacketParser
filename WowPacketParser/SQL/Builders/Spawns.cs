@@ -46,6 +46,7 @@ namespace WowPacketParser.SQL.Builders
             uint count = 0;
             uint maxDbGuid = 0;
             var rows = new RowList<Creature>();
+            var guidValuesRows = new RowList<CreatureGuidValues>();
             var addonRows = new RowList<CreatureAddon>();
             var interactRows = new RowList<CreatureClientInteract>();
             var create1Rows = new RowList<CreatureCreate1>();
@@ -62,7 +63,8 @@ namespace WowPacketParser.SQL.Builders
             var attackLogRows = new RowList<UnitMeleeAttackLog>();
             var attackStartRows = new RowList<CreatureTargetChange>();
             var attackStopRows = new RowList<CreatureTargetChange>();
-            var targetChangeRows = new RowList<CreatureTargetChange>();
+            var updateEquipmentValuesRows = new RowList<CreatureEquipmentValuesUpdate>();
+            var updateGuidValuesRows = new RowList<CreatureGuidValuesUpdate>();
             var emoteRows = new RowList<CreatureEmote>();
             foreach (var unit in units)
             {
@@ -162,8 +164,6 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.PhaseGroup = 0;
                 row.Data.Hover = (byte)(creature.OriginalMovement.Hover ? 1 : 0);
                 row.Data.TemporarySpawn = (byte)(creature.IsTemporarySpawn() ? 1 : 0);
-                Storage.GetObjectDbGuidEntryType(unitData.CreatedBy, out row.Data.CreatedByGuid, out row.Data.CreatedById, out row.Data.CreatedByType);
-                Storage.GetObjectDbGuidEntryType(unitData.SummonedBy, out row.Data.SummonedByGuid, out row.Data.SummonedById, out row.Data.SummonedByType);
                 row.Data.SummonSpell = (uint)unitData.CreatedBySpell;
                 row.Data.DisplayID = (uint)unitData.DisplayID;
                 row.Data.MountDisplayID = (uint)unitData.MountDisplayID;
@@ -192,7 +192,10 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.CombatReach = unitData.CombatReach;
                 row.Data.BaseAttackTime = unitData.AttackRoundBaseTime[0];
                 row.Data.RangedAttackTime = unitData.RangedAttackRoundBaseTime;
-                
+                row.Data.MainHandSlotItem = (uint)unitData.VirtualItems[0].ItemID;
+                row.Data.OffHandSlotItem = (uint)unitData.VirtualItems[1].ItemID;
+                row.Data.RangedSlotItem = (uint)unitData.VirtualItems[2].ItemID;
+
                 row.Data.SniffId = creature.SourceSniffId;
 
                 row.Comment = StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
@@ -206,10 +209,6 @@ namespace WowPacketParser.SQL.Builders
                     foreach (Aura aura in creature.Auras)
                     {
                         if (aura == null)
-                            continue;
-
-                        // usually "template auras" do not have caster
-                        if (ClientVersion.AddedInVersion(ClientType.MistsOfPandaria) ? !aura.AuraFlags.HasAnyFlag(AuraFlagMoP.NoCaster) : !aura.AuraFlags.HasAnyFlag(AuraFlag.NotCaster))
                             continue;
 
                         auras += aura.SpellId + " ";
@@ -240,6 +239,27 @@ namespace WowPacketParser.SQL.Builders
                     if (!string.IsNullOrWhiteSpace(auras))
                         addonRow.Comment += " - " + commentAuras;
                     addonRows.Add(addonRow);
+                }
+
+                if (Settings.SqlTables.creature_guid_values)
+                {
+                    if (!unitData.Charm.IsEmpty() ||
+                        !unitData.Summon.IsEmpty() ||
+                        !unitData.CharmedBy.IsEmpty() ||
+                        !unitData.CreatedBy.IsEmpty() ||
+                        !unitData.SummonedBy.IsEmpty() ||
+                        !unitData.Target.IsEmpty())
+                    {
+                        Row<CreatureGuidValues> guidsRow = new Row<CreatureGuidValues>();
+                        guidsRow.Data.GUID = "@CGUID+" + count;
+                        Storage.GetObjectDbGuidEntryType(unitData.Charm, out guidsRow.Data.CharmGuid, out guidsRow.Data.CharmId, out guidsRow.Data.CharmType);
+                        Storage.GetObjectDbGuidEntryType(unitData.Summon, out guidsRow.Data.SummonGuid, out guidsRow.Data.SummonId, out guidsRow.Data.SummonType);
+                        Storage.GetObjectDbGuidEntryType(unitData.CharmedBy, out guidsRow.Data.CharmedByGuid, out guidsRow.Data.CharmedById, out guidsRow.Data.CharmedByType);
+                        Storage.GetObjectDbGuidEntryType(unitData.CreatedBy, out guidsRow.Data.CreatedByGuid, out guidsRow.Data.CreatedById, out guidsRow.Data.CreatedByType);
+                        Storage.GetObjectDbGuidEntryType(unitData.SummonedBy, out guidsRow.Data.SummonedByGuid, out guidsRow.Data.SummonedById, out guidsRow.Data.SummonedByType);
+                        Storage.GetObjectDbGuidEntryType(unitData.Target, out guidsRow.Data.TargetGuid, out guidsRow.Data.TargetId, out guidsRow.Data.TargetType);
+                        guidValuesRows.Add(guidsRow);
+                    } 
                 }
 
                 if (Settings.SqlTables.creature_client_interact)
@@ -365,7 +385,7 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SqlTables.character_movement_client)
+                if (Settings.SqlTables.player_movement_client)
                 {
                     foreach (var movement in Storage.PlayerMovements)
                     {
@@ -513,18 +533,33 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SqlTables.creature_target_change)
+                if (Settings.SqlTables.creature_equipment_values_update)
                 {
-                    if (Storage.UnitTargetChanges.ContainsKey(unit.Key))
+                    if (Storage.UnitEquipmentValuesUpdates.ContainsKey(unit.Key))
                     {
-                        foreach (var attack in Storage.UnitTargetChanges[unit.Key])
+                        foreach (var update in Storage.UnitEquipmentValuesUpdates[unit.Key])
                         {
-                            var targetChangeRow = new Row<CreatureTargetChange>();
+                            Row<CreatureEquipmentValuesUpdate> updateRow = new Row<CreatureEquipmentValuesUpdate>();
+                            updateRow.Data = update;
+                            updateRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            updateRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(update.time);
+                            updateEquipmentValuesRows.Add(updateRow);
+                        }
+                    }
+                }
 
-                            targetChangeRow.Data.GUID = "@CGUID+" + creature.DbGuid;
-                            Storage.GetObjectDbGuidEntryType(attack.victim, out targetChangeRow.Data.VictimGuid, out targetChangeRow.Data.VictimId, out targetChangeRow.Data.VictimType);
-                            targetChangeRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(attack.time);
-                            targetChangeRows.Add(targetChangeRow);
+                if (Settings.SqlTables.creature_guid_values_update)
+                {
+                    if (Storage.UnitGuidValuesUpdates.ContainsKey(unit.Key))
+                    {
+                        foreach (var update in Storage.UnitGuidValuesUpdates[unit.Key])
+                        {
+                            Row<CreatureGuidValuesUpdate> updateRow = new Row<CreatureGuidValuesUpdate>();
+                            updateRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            updateRow.Data.FieldName = update.FieldName;
+                            Storage.GetObjectDbGuidEntryType(update.guid, out updateRow.Data.ObjectGuid, out updateRow.Data.ObjectId, out updateRow.Data.ObjectType);
+                            updateRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(update.time);
+                            updateGuidValuesRows.Add(updateRow);
                         }
                     }
                 }
@@ -574,6 +609,15 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(addonDelete.Build());
                 var addonSql = new SQLInsert<CreatureAddon>(addonRows, false);
                 result.Append(addonSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.creature_guid_values)
+            {
+                var guidValuesDelete = new SQLDelete<CreatureGuidValues>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                result.Append(guidValuesDelete.Build());
+                var guidValuesSql = new SQLInsert<CreatureGuidValues>(guidValuesRows, false);
+                result.Append(guidValuesSql.Build());
                 result.AppendLine();
             }
 
@@ -722,13 +766,21 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_target_change)
+            if (Settings.SqlTables.creature_equipment_values_update)
             {
-                var attackDelete = new SQLDelete<CreatureTargetChange>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                attackDelete.tableNameOverride = "creature_target_change";
-                result.Append(attackDelete.Build());
-                var attackSql = new SQLInsert<CreatureTargetChange>(targetChangeRows, false, false, "creature_target_change");
-                result.Append(attackSql.Build());
+                var updateDelete = new SQLDelete<CreatureEquipmentValuesUpdate>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                result.Append(updateDelete.Build());
+                var updateSql = new SQLInsert<CreatureEquipmentValuesUpdate>(updateEquipmentValuesRows, false, false);
+                result.Append(updateSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.creature_guid_values_update)
+            {
+                var updateDelete = new SQLDelete<CreatureGuidValuesUpdate>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                result.Append(updateDelete.Build());
+                var updateSql = new SQLInsert<CreatureGuidValuesUpdate>(updateGuidValuesRows, false, false);
+                result.Append(updateSql.Build());
                 result.AppendLine();
             }
 
