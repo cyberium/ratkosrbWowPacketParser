@@ -982,6 +982,7 @@ namespace WowPacketParser.Enums
         [UpdateField(UpdateFieldType.PackedQuaternion, ClientVersionBuild.V3_0_2_9056)]
         GAMEOBJECT_ROTATION,
         GAMEOBJECT_PARENTROTATION,
+        GAMEOBJECT_STATE,
         GAMEOBJECT_POS_X,
         GAMEOBJECT_POS_Y,
         GAMEOBJECT_POS_Z,

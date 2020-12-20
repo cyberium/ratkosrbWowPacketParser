@@ -119,6 +119,13 @@ namespace WowPacketParser.Store
 
                     return;
                 }
+                else if (guid.GetObjectType() == ObjectType.Item)
+                {
+                    objectGuid = "0";
+                    objectEntry = (uint)Objects[guid].Item1.ObjectData.EntryID;
+
+                    return;
+                }
             }
             objectGuid = "0";
             objectEntry = guid.GetEntry();
@@ -801,6 +808,8 @@ namespace WowPacketParser.Store
         public static readonly DataBag<QuestEnder> QuestEnders = new DataBag<QuestEnder>(Settings.SqlTables.quest_ender);
         public static readonly DataBag<QuestClientAccept> QuestClientAcceptTimes = new DataBag<QuestClientAccept>(Settings.SqlTables.client_quest_accept);
         public static readonly DataBag<QuestClientComplete> QuestClientCompleteTimes = new DataBag<QuestClientComplete>(Settings.SqlTables.client_quest_complete);
+        public static readonly DataBag<QuestCompleteTime> QuestCompleteTimes = new DataBag<QuestCompleteTime>(Settings.SqlTables.quest_complete_time);
+        public static readonly DataBag<QuestFailTime> QuestFailTimes = new DataBag<QuestFailTime>(Settings.SqlTables.quest_fail_time);
         public static readonly DataBag<QuestGreeting> QuestGreetings = new DataBag<QuestGreeting>(Settings.SqlTables.quest_template);
         public static readonly DataBag<QuestDetails> QuestDetails = new DataBag<QuestDetails>(Settings.SqlTables.quest_template);
         public static readonly DataBag<QuestRequestItems> QuestRequestItems = new DataBag<QuestRequestItems>(Settings.SqlTables.quest_template);
@@ -840,7 +849,7 @@ namespace WowPacketParser.Store
                 !Settings.SqlTables.spell_cast_go)
                 return;
 
-            if (!(Settings.SavePlayerCasts && castData.CasterGuid.GetObjectType() == ObjectType.Player))
+            if (!Settings.SavePlayerCasts && castData.CasterGuid.GetObjectType() == ObjectType.Player)
                 return;
 
             castData.Time = packet.Time;
@@ -994,6 +1003,8 @@ namespace WowPacketParser.Store
             QuestEnders.Clear();
             QuestClientAcceptTimes.Clear();
             QuestClientCompleteTimes.Clear();
+            QuestCompleteTimes.Clear();
+            QuestFailTimes.Clear();
             QuestGreetings.Clear();
             QuestDetails.Clear();
             QuestRequestItems.Clear();

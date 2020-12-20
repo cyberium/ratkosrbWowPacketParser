@@ -13,5 +13,6 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         sbyte State { get; }
         sbyte TypeID { get; }
         byte PercentHealth { get; }
+        byte AnimProgress { get; }
     }
 }

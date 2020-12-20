@@ -1027,7 +1027,7 @@ namespace WowPacketParser.SQL.Builders
                 Storage.GetObjectDbGuidEntryType(go.GameObjectDataOriginal.CreatedBy, out row.Data.CreatedByGuid, out row.Data.CreatedById, out row.Data.CreatedByType);
                 //row.Data.SpawnTimeSecs = go.GetDefaultSpawnTime(go.DifficultyID);
                 row.Data.DisplayID = (uint)go.GameObjectDataOriginal.DisplayID;
-                row.Data.AnimProgress = go.GameObjectDataOriginal.PercentHealth;
+                row.Data.AnimProgress = go.GameObjectDataOriginal.AnimProgress;
                 row.Data.State = (uint)go.GameObjectDataOriginal.State;
                 row.Data.Faction = (uint)go.GameObjectDataOriginal.FactionTemplate;
                 row.Data.Flags = go.GameObjectDataOriginal.Flags;

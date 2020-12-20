@@ -150,5 +150,33 @@ namespace WowPacketParser.SQL.Builders
 
             return SQLUtil.Compare(Storage.QuestClientCompleteTimes, templatesDb, StoreNameType.None);
         }
+
+        [BuilderMethod]
+        public static string QuestCompleteTimes()
+        {
+            if (!Settings.SqlTables.quest_complete_time)
+                return string.Empty;
+
+            if (Storage.QuestCompleteTimes.IsEmpty())
+                return string.Empty;
+
+            var templatesDb = SQLDatabase.Get(Storage.QuestCompleteTimes);
+
+            return SQLUtil.Compare(Storage.QuestCompleteTimes, templatesDb, StoreNameType.None);
+        }
+
+        [BuilderMethod]
+        public static string QuestFailTimes()
+        {
+            if (!Settings.SqlTables.quest_fail_time)
+                return string.Empty;
+
+            if (Storage.QuestFailTimes.IsEmpty())
+                return string.Empty;
+
+            var templatesDb = SQLDatabase.Get(Storage.QuestFailTimes);
+
+            return SQLUtil.Compare(Storage.QuestFailTimes, templatesDb, StoreNameType.None);
+        }
     }
 }

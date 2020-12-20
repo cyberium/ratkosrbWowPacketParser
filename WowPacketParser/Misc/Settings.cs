@@ -187,6 +187,8 @@ namespace WowPacketParser.Misc
             public static readonly bool points_of_interest = Conf.GetBoolean("points_of_interest", false);
             public static readonly bool client_quest_accept = Conf.GetBoolean("client_quest_accept", false);
             public static readonly bool client_quest_complete = Conf.GetBoolean("client_quest_complete", false);
+            public static readonly bool quest_complete_time = Conf.GetBoolean("quest_complete_time", false);
+            public static readonly bool quest_fail_time = Conf.GetBoolean("quest_fail_time", false);
             public static readonly bool quest_poi = Conf.GetBoolean("quest_poi", false);
             public static readonly bool quest_poi_points = Conf.GetBoolean("quest_poi_points", false);
             public static readonly bool quest_template = Conf.GetBoolean("quest_template", false);

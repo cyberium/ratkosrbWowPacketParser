@@ -685,15 +685,31 @@ namespace WowPacketParser.Parsing.Parsers
             }
         }
 
-        [Parser(Opcode.SMSG_QUEST_FORCE_REMOVED)]
-        [Parser(Opcode.CMSG_QUEST_CONFIRM_ACCEPT)]
-        [Parser(Opcode.SMSG_QUEST_UPDATE_FAILED)]
-        [Parser(Opcode.SMSG_QUEST_UPDATE_FAILED_TIMER)]
         [Parser(Opcode.SMSG_QUEST_UPDATE_COMPLETE, ClientVersionBuild.Zero, ClientVersionBuild.V4_2_2_14545)]
         [Parser(Opcode.SMSG_QUEST_UPDATE_COMPLETE, ClientVersionBuild.V4_3_4_15595, ClientVersionBuild.V5_1_0_16309)]
+        public static void HandleQuestUpdateComplete(Packet packet)
+        {
+            QuestCompleteTime questComplete = new QuestCompleteTime();
+            questComplete.QuestId = (uint)packet.ReadInt32<QuestId>("QuestID");
+            questComplete.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+            Storage.QuestCompleteTimes.Add(questComplete);
+        }
+
+        [Parser(Opcode.SMSG_QUEST_FORCE_REMOVED)]
+        [Parser(Opcode.CMSG_QUEST_CONFIRM_ACCEPT)]
         public static void HandleQuestForceRemoved(Packet packet)
         {
             packet.ReadInt32<QuestId>("QuestID");
+        }
+
+        [Parser(Opcode.SMSG_QUEST_UPDATE_FAILED)]
+        [Parser(Opcode.SMSG_QUEST_UPDATE_FAILED_TIMER)]
+        public static void HandleQuestUpdateFailed(Packet packet)
+        {
+            QuestFailTime questFail = new QuestFailTime();
+            questFail.QuestId = (uint)packet.ReadInt32<QuestId>("QuestID");
+            questFail.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+            Storage.QuestFailTimes.Add(questFail);
         }
 
         [Parser(Opcode.SMSG_QUEST_UPDATE_COMPLETE, ClientVersionBuild.V4_2_2_14545, ClientVersionBuild.V4_3_4_15595)]

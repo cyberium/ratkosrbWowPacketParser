@@ -804,6 +804,14 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         }
 
         [Parser(Opcode.SMSG_QUEST_UPDATE_COMPLETE)]
+        public static void HandleQuestUpdateComplete(Packet packet)
+        {
+            QuestCompleteTime questComplete = new QuestCompleteTime();
+            questComplete.QuestId = (uint)packet.ReadInt32<QuestId>("QuestID");
+            questComplete.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+            Storage.QuestCompleteTimes.Add(questComplete);
+        }
+
         [Parser(Opcode.CMSG_QUEST_CLOSE_AUTOACCEPT_QUEST)]
         public static void HandleQuestForceRemoved(Packet packet)
         {

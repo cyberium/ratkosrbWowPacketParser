@@ -802,10 +802,53 @@ namespace WowPacketParser.Parsing.Parsers
                 GameObjectUpdate goUpdate = new GameObjectUpdate();
                 foreach (var update in updates)
                 {
-                    if (update.Key == UpdateFields.GetUpdateField(GameObjectField.GAMEOBJECT_FLAGS))
+                    if (update.Key == UpdateFields.GetUpdateField(GameObjectField.GAMEOBJECT_DISPLAYID))
                     {
-                        hasData = true;
-                        goUpdate.Flags = update.Value.UInt32Value;
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as GameObject;
+                            if (obj.GameObjectData.DisplayID != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                goUpdate.DisplayID = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(GameObjectField.GAMEOBJECT_LEVEL))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as GameObject;
+                            if (obj.GameObjectData.Level != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                goUpdate.Level = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(GameObjectField.GAMEOBJECT_FACTION))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as GameObject;
+                            if (obj.GameObjectData.FactionTemplate != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                goUpdate.Faction = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(GameObjectField.GAMEOBJECT_FLAGS))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as GameObject;
+                            if (obj.GameObjectData.Flags != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                goUpdate.Flags = update.Value.UInt32Value;
+                            }
+                        }
                     }
                     else if (update.Key == UpdateFields.GetUpdateField(GameObjectField.GAMEOBJECT_BYTES_1))
                     {
@@ -824,10 +867,29 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
+                    else if (update.Key == UpdateFields.GetUpdateField(GameObjectField.GAMEOBJECT_STATE))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as GameObject;
+                            if (obj.GameObjectData.State != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                goUpdate.State = update.Value.UInt32Value;
+                            }
+                        }
+                    }
                     else if (update.Key == UpdateFields.GetUpdateField(GameObjectField.GAMEOBJECT_ANIMPROGRESS))
                     {
-                        hasData = true;
-                        goUpdate.AnimProgress = update.Value.UInt32Value;
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as GameObject;
+                            if (obj.GameObjectData.AnimProgress != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                goUpdate.AnimProgress = update.Value.UInt32Value;
+                            }
+                        }
                     }
                 }
 

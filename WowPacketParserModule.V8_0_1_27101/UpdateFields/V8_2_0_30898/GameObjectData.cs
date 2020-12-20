@@ -21,6 +21,7 @@ namespace WowPacketParserModule.V8_0_1_27101.UpdateFields.V8_2_0_30898
         public sbyte State { get; set; }
         public sbyte TypeID { get; set; }
         public byte PercentHealth { get; set; }
+        public byte AnimProgress => PercentHealth;
         public uint ArtKit { get; set; }
         public uint CustomParam { get; set; }
         public DynamicUpdateField<int> EnableDoodadSets { get; } = new DynamicUpdateField<int>();

@@ -49,11 +49,17 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public int FactionTemplate => UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_FACTION);
 
-        public sbyte State => (sbyte)(UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_BYTES_1) & 0x000000FF);
+        public sbyte State => (sbyte)(ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056)
+            ? (UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_BYTES_1) & 0x000000FF)
+            : UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_STATE));
 
         public sbyte TypeID => (sbyte)((UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_BYTES_1) & 0x0000FF00) >> 8);
 
         public byte PercentHealth => (byte)((UpdateFields.GetValue<GameObjectField, uint>(GameObjectField.GAMEOBJECT_BYTES_1) & 0xFF000000) >> 24);
+
+        public byte AnimProgress => (byte)(ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056)
+                ? ((UpdateFields.GetValue<GameObjectField, uint>(GameObjectField.GAMEOBJECT_BYTES_1) & 0xFF000000) >> 24)
+                : UpdateFields.GetValue<GameObjectField, uint>(GameObjectField.GAMEOBJECT_ANIMPROGRESS));
     }
     public class OriginalGameObjectData : IGameObjectData
     {
@@ -100,10 +106,16 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public int FactionTemplate => UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_FACTION);
 
-        public sbyte State => (sbyte)(UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_BYTES_1) & 0x000000FF);
+        public sbyte State => (sbyte)(ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056)
+            ? (UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_BYTES_1) & 0x000000FF)
+            : UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_STATE));
 
         public sbyte TypeID => (sbyte)((UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_BYTES_1) & 0x0000FF00) >> 8);
 
         public byte PercentHealth => (byte)((UpdateFields.GetValue<GameObjectField, uint>(GameObjectField.GAMEOBJECT_BYTES_1) & 0xFF000000) >> 24);
+
+        public byte AnimProgress => (byte)(ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056)
+                ? ((UpdateFields.GetValue<GameObjectField, uint>(GameObjectField.GAMEOBJECT_BYTES_1) & 0xFF000000) >> 24)
+                : UpdateFields.GetValue<GameObjectField, uint>(GameObjectField.GAMEOBJECT_ANIMPROGRESS));
     }
 }
