@@ -679,7 +679,7 @@ namespace WowPacketParser.Parsing.Parsers
                     {
                         for (uint i = 0; i < 19; ++i)
                         {
-                            const int MAX_VISIBLE_ITEM_OFFSET = 12;
+                            int MAX_VISIBLE_ITEM_OFFSET = ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180) ? 16 : 12;
                             if (update.Key == UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM_1_0) + (i * MAX_VISIBLE_ITEM_OFFSET))
                             {
                                 if (Storage.Objects.ContainsKey(guid))

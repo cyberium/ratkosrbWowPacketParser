@@ -50,7 +50,6 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
             public ushort ItemVisual { get; set; }
         }
 
-        public const int MAX_VISIBLE_ITEM_OFFSET = 12;
         public IVisibleItem[] VisibleItems
         {
             get
@@ -58,6 +57,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                 if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056))
                 {
                     var items = new VisibleItem[19];
+                    int MAX_VISIBLE_ITEM_OFFSET = ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180) ? 16 : 12;
                     for (var i = 0; i < 19; ++i)
                     {
                         int itemId = 0;
@@ -140,7 +140,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
             public ushort ItemAppearanceModID { get; set; }
             public ushort ItemVisual { get; set; }
         }
-        public const int MAX_VISIBLE_ITEM_OFFSET = 12;
+        
         public IVisibleItem[] VisibleItems
         {
             get
@@ -148,6 +148,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                 if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056))
                 {
                     var items = new VisibleItem[19];
+                    int MAX_VISIBLE_ITEM_OFFSET = ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180) ? 16 : 12;
                     for (var i = 0; i < 19; ++i)
                     {
                         int itemId = 0;
