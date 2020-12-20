@@ -125,8 +125,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("display_id")]
         public uint? DisplayID;
 
+        [DBFieldName("native_display_id")]
+        public uint? NativeDisplayID;
+
         [DBFieldName("mount_display_id")]
-        public uint? MountDisplayId;
+        public uint? MountDisplayID;
 
         [DBFieldName("faction")]
         public uint? FactionTemplate;
@@ -187,6 +190,12 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("combat_reach")]
         public float? CombatReach;
+
+        [DBFieldName("mod_melee_haste")]
+        public float? ModMeleeHaste;
+
+        [DBFieldName("mod_ranged_haste")]
+        public float? ModRangedHaste;
 
         [DBFieldName("base_attack_time")]
         public uint? BaseAttackTime;

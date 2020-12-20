@@ -72,6 +72,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("display_id")]
         public uint? DisplayID;
 
+        [DBFieldName("native_display_id")]
+        public uint? NativeDisplayID;
+
         [DBFieldName("mount_display_id")]
         public uint? MountDisplayID;
 
@@ -140,6 +143,12 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("combat_reach")]
         public float? CombatReach;
+
+        [DBFieldName("mod_melee_haste")]
+        public float? ModMeleeHaste;
+
+        [DBFieldName("mod_ranged_haste")]
+        public float? ModRangedHaste;
 
         [DBFieldName("base_attack_time")]
         public uint? BaseAttackTime;
@@ -497,6 +506,12 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("combat_reach", true, false, true)]
         public float? CombatReach;
 
+        [DBFieldName("mod_melee_haste", true, false, true)]
+        public float? ModMeleeHaste;
+
+        [DBFieldName("mod_ranged_haste", true, false, true)]
+        public float? ModRangedHaste;
+
         [DBFieldName("base_attack_time", true, false, true)]
         public uint? BaseAttackTime;
 
@@ -580,6 +595,12 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ranged_attack_power", false, false, true)]
         public uint? RangedAttackPower;
 
+        [DBFieldName("base_health", false, false, true)]
+        public uint? BaseHealth;
+
+        [DBFieldName("base_mana", false, false, true)]
+        public uint? BaseMana;
+
         [DBFieldName("strength", false, false, true)]
         public uint? Strength;
 
@@ -594,6 +615,36 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("spirit", false, false, true)]
         public uint? Spirit;
+
+        [DBFieldName("positive_strength", false, false, true)]
+        public uint? PositiveStrength;
+
+        [DBFieldName("positive_agility", false, false, true)]
+        public uint? PositiveAgility;
+
+        [DBFieldName("positive_stamina", false, false, true)]
+        public uint? PositiveStamina;
+
+        [DBFieldName("positive_intellect", false, false, true)]
+        public uint? PositiveIntellect;
+
+        [DBFieldName("positive_spirit", false, false, true)]
+        public uint? PositiveSpirit;
+
+        [DBFieldName("negative_strength", false, false, true)]
+        public uint? NegativeStrength;
+
+        [DBFieldName("negative_agility", false, false, true)]
+        public uint? NegativeAgility;
+
+        [DBFieldName("negative_stamina", false, false, true)]
+        public uint? NegativeStamina;
+
+        [DBFieldName("negative_intellect", false, false, true)]
+        public uint? NegativeIntellect;
+
+        [DBFieldName("negative_spirit", false, false, true)]
+        public uint? NegativeSpirit;
 
         [DBFieldName("armor", false, false, true)]
         public int? Armor;
@@ -615,6 +666,48 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("arcane_res", false, false, true)]
         public int? ArcaneResistance;
+
+        [DBFieldName("positive_armor", false, false, true)]
+        public int? PositiveArmor;
+
+        [DBFieldName("positive_holy_res", false, false, true)]
+        public int? PositiveHolyResistance;
+
+        [DBFieldName("positive_fire_res", false, false, true)]
+        public int? PositiveFireResistance;
+
+        [DBFieldName("positive_nature_res", false, false, true)]
+        public int? PositiveNatureResistance;
+
+        [DBFieldName("positive_frost_res", false, false, true)]
+        public int? PositiveFrostResistance;
+
+        [DBFieldName("positive_shadow_res", false, false, true)]
+        public int? PositiveShadowResistance;
+
+        [DBFieldName("positive_arcane_res", false, false, true)]
+        public int? PositiveArcaneResistance;
+
+        [DBFieldName("negative_armor", false, false, true)]
+        public int? NegativeArmor;
+
+        [DBFieldName("negative_holy_res", false, false, true)]
+        public int? NegativeHolyResistance;
+
+        [DBFieldName("negative_fire_res", false, false, true)]
+        public int? NegativeFireResistance;
+
+        [DBFieldName("negative_nature_res", false, false, true)]
+        public int? NegativeNatureResistance;
+
+        [DBFieldName("negative_frost_res", false, false, true)]
+        public int? NegativeFrostResistance;
+
+        [DBFieldName("negative_shadow_res", false, false, true)]
+        public int? NegativeShadowResistance;
+
+        [DBFieldName("negative_arcane_res", false, false, true)]
+        public int? NegativeArcaneResistance;
     }
 
     [DBTableName("creature_attack_log")]

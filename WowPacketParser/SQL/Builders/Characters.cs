@@ -122,6 +122,16 @@ namespace WowPacketParser.SQL.Builders
                     row.Data.EquipmentCache += itemId + " " + enchantId;
                 }
 
+                characterRows.Add(row);
+
+                if (maxDbGuid < player.DbGuid)
+                    maxDbGuid = player.DbGuid;
+
+                // Character wasn't actually seen in game, so there is no replay data.
+                // Object was constructed from characters enum packet (before enter world).
+                if (moveData == null)
+                    continue;
+
                 if (Settings.SqlTables.player)
                 {
                     Row<PlayerTemplate> addonRow = new Row<PlayerTemplate>();
@@ -142,7 +152,8 @@ namespace WowPacketParser.SQL.Builders
                     addonRow.Data.Orientation = row.Data.Orientation;
                     addonRow.Data.Map = row.Data.Map;
                     addonRow.Data.DisplayID = (uint)player.UnitDataOriginal.DisplayID;
-                    addonRow.Data.MountDisplayId = (uint)player.UnitDataOriginal.MountDisplayID;
+                    addonRow.Data.NativeDisplayID = (uint)player.UnitDataOriginal.NativeDisplayID;
+                    addonRow.Data.MountDisplayID = (uint)player.UnitDataOriginal.MountDisplayID;
                     addonRow.Data.FactionTemplate = (uint)player.UnitDataOriginal.FactionTemplate;
                     addonRow.Data.UnitFlags = player.UnitDataOriginal.Flags;
                     addonRow.Data.CurHealth = (uint)player.UnitDataOriginal.CurHealth;
@@ -159,14 +170,13 @@ namespace WowPacketParser.SQL.Builders
                     addonRow.Data.PvpFlags = player.UnitDataOriginal.PvpFlags;
                     addonRow.Data.PetFlags = player.UnitDataOriginal.PetFlags;
                     addonRow.Data.ShapeshiftForm = player.UnitDataOriginal.ShapeshiftForm;
-                    if (moveData != null)
-                    {
-                        addonRow.Data.SpeedWalk = moveData.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
-                        addonRow.Data.SpeedRun = moveData.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
-                    }
+                    addonRow.Data.SpeedWalk = moveData.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
+                    addonRow.Data.SpeedRun = moveData.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
                     addonRow.Data.Scale = player.ObjectDataOriginal.Scale;
                     addonRow.Data.BoundingRadius = player.UnitDataOriginal.BoundingRadius;
                     addonRow.Data.CombatReach = player.UnitDataOriginal.CombatReach;
+                    addonRow.Data.ModMeleeHaste = player.UnitDataOriginal.ModHaste;
+                    addonRow.Data.ModRangedHaste = player.UnitDataOriginal.ModRangedHaste;
                     addonRow.Data.BaseAttackTime = player.UnitDataOriginal.AttackRoundBaseTime[0];
                     addonRow.Data.RangedAttackTime = player.UnitDataOriginal.RangedAttackRoundBaseTime;
 
@@ -379,11 +389,6 @@ namespace WowPacketParser.SQL.Builders
                         playerServerMovementRows.Add(movementRow);
                     }
                 }
-
-                characterRows.Add(row);
-
-                if (maxDbGuid < player.DbGuid)
-                    maxDbGuid = player.DbGuid;
             }
 
             if (Settings.SqlTables.characters)

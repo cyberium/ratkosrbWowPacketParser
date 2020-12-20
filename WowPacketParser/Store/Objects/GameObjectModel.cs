@@ -64,11 +64,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("creator_type")]
         public string CreatedByType;
 
-        [DBFieldName("animprogress")]
-        public uint? AnimProgress;
+        [DBFieldName("display_id")]
+        public uint? DisplayID;
 
-        [DBFieldName("state")]
-        public uint? State;
+        [DBFieldName("level")]
+        public uint? Level;
 
         [DBFieldName("faction")]
         public uint? Faction;
@@ -76,8 +76,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("flags")]
         public uint? Flags;
 
-        [DBFieldName("level")]
-        public uint? Level;
+        [DBFieldName("state")]
+        public uint? State;
+
+        [DBFieldName("animprogress")]
+        public uint? AnimProgress;
 
         [DBFieldName("SniffId", false, false, false, true)]
         public int? SniffId;
@@ -148,6 +151,15 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("unixtimems", true)]
         public ulong UnixTimeMs;
+
+        [DBFieldName("display_id", false, false, true)]
+        public uint? DisplayID;
+
+        [DBFieldName("level", false, false, true)]
+        public uint? Level;
+
+        [DBFieldName("faction", false, false, true)]
+        public uint? Faction;
 
         [DBFieldName("flags", false, false, true)]
         public uint? Flags;

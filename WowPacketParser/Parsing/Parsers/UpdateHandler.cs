@@ -547,6 +547,30 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MOD_HASTE))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.ModHaste != update.Value.FloatValue)
+                            {
+                                hasData = true;
+                                creatureUpdate.ModMeleeHaste = update.Value.FloatValue;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MOD_RANGED_HASTE))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.ModRangedHaste != update.Value.FloatValue)
+                            {
+                                hasData = true;
+                                creatureUpdate.ModRangedHaste = update.Value.FloatValue;
+                            }
+                        }
+                    }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BASEATTACKTIME))
                     {
                         if (Storage.Objects.ContainsKey(guid))
@@ -646,6 +670,31 @@ namespace WowPacketParser.Parsing.Parsers
                                 equipmentUpdate.Slot = slot;
                                 equipmentUpdate.time = time;
                                 Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
+                            }
+                        }
+                    }
+                    else if (UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM_1_0) > 0 &&
+                            update.Key >= UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM_1_0) &&
+                            update.Key <= (UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM_19_0)))
+                    {
+                        for (uint i = 0; i < 19; ++i)
+                        {
+                            const int MAX_VISIBLE_ITEM_OFFSET = 12;
+                            if (update.Key == UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM_1_0) + (i * MAX_VISIBLE_ITEM_OFFSET))
+                            {
+                                if (Storage.Objects.ContainsKey(guid))
+                                {
+                                    var obj = Storage.Objects[guid].Item1 as Player;
+                                    if (obj.PlayerData.VisibleItems[i].ItemID != update.Value.UInt32Value)
+                                    {
+                                        CreatureEquipmentValuesUpdate equipmentUpdate = new CreatureEquipmentValuesUpdate();
+                                        equipmentUpdate.ItemId = update.Value.UInt32Value;
+                                        equipmentUpdate.Slot = i;
+                                        equipmentUpdate.time = time;
+                                        Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
+                                    }
+                                }
+                                break;
                             }
                         }
                     }

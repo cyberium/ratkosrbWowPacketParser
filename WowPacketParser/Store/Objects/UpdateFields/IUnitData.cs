@@ -6,6 +6,8 @@ namespace WowPacketParser.Store.Objects.UpdateFields
     {
         uint Entry { get; }
         int DisplayID { get; }
+        int NativeDisplayID { get; }
+        int MountDisplayID { get; }
         uint[] NpcFlags { get; }
         WowGuid Charm { get; }
         WowGuid Summon { get; }
@@ -35,7 +37,8 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         uint RangedAttackRoundBaseTime { get; }
         float BoundingRadius { get; }
         float CombatReach { get; }
-        int MountDisplayID { get; }
+        float ModHaste { get; }
+        float ModRangedHaste { get; }
         uint AuraState { get; }
         int EmoteState { get; }
         byte StandState { get; }

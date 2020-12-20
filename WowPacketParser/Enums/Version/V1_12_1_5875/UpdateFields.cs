@@ -170,10 +170,10 @@
         PLAYER_VISIBLE_ITEM_1_0                    = 0x48 + UnitField.UNIT_END, // Size:8
         PLAYER_VISIBLE_ITEM_1_PROPERTIES           = 0x50 + UnitField.UNIT_END, // Size:1
         PLAYER_VISIBLE_ITEM_1_PAD                  = 0x51 + UnitField.UNIT_END, // Size:1
-        PLAYER_VISIBLE_ITEM_LAST_CREATOR           = 0x11e + UnitField.UNIT_END,
-        PLAYER_VISIBLE_ITEM_LAST_0                 = 0x120 + UnitField.UNIT_END,
-        PLAYER_VISIBLE_ITEM_LAST_PROPERTIES        = 0x128 + UnitField.UNIT_END,
-        PLAYER_VISIBLE_ITEM_LAST_PAD               = 0x129 + UnitField.UNIT_END,
+        PLAYER_VISIBLE_ITEM_19_CREATOR             = 0x11e + UnitField.UNIT_END,
+        PLAYER_VISIBLE_ITEM_19_0                   = 0x120 + UnitField.UNIT_END,
+        PLAYER_VISIBLE_ITEM_19_PROPERTIES          = 0x128 + UnitField.UNIT_END,
+        PLAYER_VISIBLE_ITEM_19_PAD                 = 0x129 + UnitField.UNIT_END,
         PLAYER_FIELD_INV_SLOT_HEAD                 = 0x12a + UnitField.UNIT_END, // Size:46
         PLAYER_FIELD_PACK_SLOT_1                   = 0x158 + UnitField.UNIT_END, // Size:32
         PLAYER_FIELD_PACK_SLOT_LAST                = 0x176 + UnitField.UNIT_END,

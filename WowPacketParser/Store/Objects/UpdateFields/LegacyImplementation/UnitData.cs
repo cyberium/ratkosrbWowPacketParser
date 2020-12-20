@@ -33,6 +33,10 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public int DisplayID => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_DISPLAYID);
 
+        public int NativeDisplayID => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_NATIVEDISPLAYID);
+
+        public int MountDisplayID => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MOUNTDISPLAYID);
+
         public uint[] NpcFlags
         {
             get
@@ -127,7 +131,9 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public float CombatReach => UpdateFields.GetValue<UnitField, float?>(UnitField.UNIT_FIELD_COMBATREACH).GetValueOrDefault(1.5f);
 
-        public int MountDisplayID => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MOUNTDISPLAYID);
+        public float ModHaste => UpdateFields.GetValue<UnitField, float?>(UnitField.UNIT_FIELD_MOD_HASTE).GetValueOrDefault(1.0f);
+
+        public float ModRangedHaste => UpdateFields.GetValue<UnitField, float?>(UnitField.UNIT_FIELD_MOD_RANGED_HASTE).GetValueOrDefault(1.0f);
 
         public uint AuraState => UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_AURASTATE);
 
@@ -189,6 +195,10 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public uint Entry => UpdateFields.GetValue<ObjectField, uint>(ObjectField.OBJECT_FIELD_ENTRY);
 
         public int DisplayID => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_DISPLAYID);
+
+        public int NativeDisplayID => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_NATIVEDISPLAYID);
+
+        public int MountDisplayID => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MOUNTDISPLAYID);
 
         public uint[] NpcFlags
         {
@@ -289,7 +299,9 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public float CombatReach => UpdateFields.GetValue<UnitField, float?>(UnitField.UNIT_FIELD_COMBATREACH).GetValueOrDefault(1.5f);
 
-        public int MountDisplayID => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MOUNTDISPLAYID);
+        public float ModHaste => UpdateFields.GetValue<UnitField, float?>(UnitField.UNIT_FIELD_MOD_HASTE).GetValueOrDefault(1.0f);
+
+        public float ModRangedHaste => UpdateFields.GetValue<UnitField, float?>(UnitField.UNIT_FIELD_MOD_RANGED_HASTE).GetValueOrDefault(1.0f);
 
         public uint AuraState => UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_AURASTATE);
 

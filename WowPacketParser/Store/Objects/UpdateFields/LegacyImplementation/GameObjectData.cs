@@ -31,6 +31,8 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
             }
         }
 
+        public int DisplayID => UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_DISPLAYID);
+
         public uint Flags => UpdateFields.GetValue<GameObjectField, uint>(GameObjectField.GAMEOBJECT_FLAGS);
 
         public int Level => UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_LEVEL);
@@ -79,6 +81,8 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                 }
             }
         }
+
+        public int DisplayID => UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_DISPLAYID);
 
         public uint Flags => UpdateFields.GetValue<GameObjectField, uint>(GameObjectField.GAMEOBJECT_FLAGS);
 

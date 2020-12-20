@@ -165,7 +165,9 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.Hover = (byte)(creature.OriginalMovement.Hover ? 1 : 0);
                 row.Data.TemporarySpawn = (byte)(creature.IsTemporarySpawn() ? 1 : 0);
                 row.Data.SummonSpell = (uint)unitData.CreatedBySpell;
+                row.Data.Scale = creature.ObjectDataOriginal.Scale;
                 row.Data.DisplayID = (uint)unitData.DisplayID;
+                row.Data.NativeDisplayID = (uint)unitData.NativeDisplayID;
                 row.Data.MountDisplayID = (uint)unitData.MountDisplayID;
                 row.Data.FactionTemplate = (uint)unitData.FactionTemplate;
                 row.Data.Level = (uint)unitData.Level;
@@ -187,9 +189,10 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.ShapeshiftForm = unitData.ShapeshiftForm;
                 row.Data.SpeedWalk = creature.OriginalMovement.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
                 row.Data.SpeedRun = creature.OriginalMovement.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
-                row.Data.Scale = creature.ObjectDataOriginal.Scale;
                 row.Data.BoundingRadius = unitData.BoundingRadius;
                 row.Data.CombatReach = unitData.CombatReach;
+                row.Data.ModMeleeHaste = unitData.ModHaste;
+                row.Data.ModRangedHaste = unitData.ModRangedHaste;
                 row.Data.BaseAttackTime = unitData.AttackRoundBaseTime[0];
                 row.Data.RangedAttackTime = unitData.RangedAttackRoundBaseTime;
                 row.Data.MainHandSlotItem = (uint)unitData.VirtualItems[0].ItemID;
@@ -1023,6 +1026,7 @@ namespace WowPacketParser.SQL.Builders
                 }
                 Storage.GetObjectDbGuidEntryType(go.GameObjectDataOriginal.CreatedBy, out row.Data.CreatedByGuid, out row.Data.CreatedById, out row.Data.CreatedByType);
                 //row.Data.SpawnTimeSecs = go.GetDefaultSpawnTime(go.DifficultyID);
+                row.Data.DisplayID = (uint)go.GameObjectDataOriginal.DisplayID;
                 row.Data.AnimProgress = go.GameObjectDataOriginal.PercentHealth;
                 row.Data.State = (uint)go.GameObjectDataOriginal.State;
                 row.Data.Faction = (uint)go.GameObjectDataOriginal.FactionTemplate;
