@@ -214,7 +214,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.ItemClientUseTimes.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SqlTables.item_client_use)
+            if (!Settings.SqlTables.client_item_use)
                 return string.Empty;
 
             var templateDb = SQLDatabase.Get(Storage.ItemClientUseTimes, Settings.TDBDatabase);

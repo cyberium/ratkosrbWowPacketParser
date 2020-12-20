@@ -13,18 +13,16 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
         [Parser(Opcode.SMSG_WEATHER)]
         public static void HandleWeatherStatus(Packet packet)
         {
-            float grade = packet.ReadSingle("Grade");
-            WeatherState state = packet.ReadInt32E<WeatherState>("State");
-            Bit unk = packet.ReadBit("Unk Bit"); // Type
+            WeatherUpdate weatherUpdate = new WeatherUpdate();
+            weatherUpdate.MapId = CoreParsers.MovementHandler.CurrentMapId;
+            weatherUpdate.ZoneId = CoreParsers.WorldStateHandler.CurrentZoneId;
+            
+            weatherUpdate.Grade = packet.ReadSingle("Grade");
+            weatherUpdate.State = packet.ReadInt32E<WeatherState>("State");
+            weatherUpdate.Instant = packet.ReadBit("Instant");
 
-            Storage.WeatherUpdates.Add(new WeatherUpdate
-            {
-                MapId = CoreParsers.MovementHandler.CurrentMapId,
-                ZoneId = 0, // fixme
-                State = state,
-                Grade = grade,
-                Unk = unk
-            }, packet.TimeSpan);
+            weatherUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+            Storage.WeatherUpdates.Add(weatherUpdate, packet.TimeSpan);
         }
 
         [Parser(Opcode.SMSG_WEEKLY_SPELL_USAGE)]

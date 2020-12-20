@@ -4,7 +4,7 @@ using WowPacketParser.SQL;
 
 namespace WowPacketParser.Store.Objects
 {
-    [DBTableName("quest_client_accept")]
+    [DBTableName("client_quest_accept")]
     public sealed class QuestClientAccept : IDataModel
     {
         [DBFieldName("unixtimems", true)]
@@ -23,7 +23,7 @@ namespace WowPacketParser.Store.Objects
         public uint QuestId;
     }
 
-    [DBTableName("quest_client_complete")]
+    [DBTableName("client_quest_complete")]
     public sealed class QuestClientComplete : IDataModel
     {
         [DBFieldName("unixtimems", true)]
@@ -42,7 +42,7 @@ namespace WowPacketParser.Store.Objects
         public uint QuestId;
     }
 
-    [DBTableName("creature_client_interact")]
+    [DBTableName("client_creature_interact")]
     public sealed class CreatureClientInteract : IDataModel
     {
         [DBFieldName("guid", true, true)]
@@ -52,7 +52,7 @@ namespace WowPacketParser.Store.Objects
         public ulong UnixTimeMs;
     }
 
-    [DBTableName("gameobject_client_use")]
+    [DBTableName("client_gameobject_use")]
     public sealed class GameObjectClientUse : IDataModel
     {
         [DBFieldName("guid", true, true)]
@@ -62,7 +62,7 @@ namespace WowPacketParser.Store.Objects
         public ulong UnixTimeMs;
     }
 
-    [DBTableName("item_client_use")]
+    [DBTableName("client_item_use")]
     public sealed class ItemClientUse : IDataModel
     {
         [DBFieldName("entry", true, true)]

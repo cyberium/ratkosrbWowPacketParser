@@ -467,7 +467,7 @@ namespace WowPacketParser.Store
         public static readonly Dictionary<WowGuid, List<DateTime>> GameObjectClientUseTimes = new Dictionary<WowGuid, List<DateTime>>();
         public static void StoreGameObjectUse(WowGuid guid, DateTime time)
         {
-            if (!Settings.SqlTables.gameobject_client_use)
+            if (!Settings.SqlTables.client_gameobject_use)
                 return;
 
             if (Storage.GameObjectClientUseTimes.ContainsKey(guid))
@@ -484,7 +484,7 @@ namespace WowPacketParser.Store
         public static readonly Dictionary<WowGuid, List<DateTime>> CreatureClientInteractTimes = new Dictionary<WowGuid, List<DateTime>>();
         public static void StoreCreatureInteract(WowGuid guid, DateTime time)
         {
-            if (!Settings.SqlTables.creature_client_interact)
+            if (!Settings.SqlTables.client_creature_interact)
                 return;
 
             if (Storage.CreatureClientInteractTimes.ContainsKey(guid))
@@ -599,7 +599,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<ConversationTemplate> ConversationTemplates = new DataBag<ConversationTemplate>(Settings.SqlTables.conversation_template);
         public static readonly DataBag<GameObjectTemplate> GameObjectTemplates = new DataBag<GameObjectTemplate>(Settings.SqlTables.gameobject_template);
         public static readonly DataBag<GameObjectTemplateQuestItem> GameObjectTemplateQuestItems = new DataBag<GameObjectTemplateQuestItem>(Settings.SqlTables.gameobject_template);
-        public static readonly DataBag<ItemClientUse> ItemClientUseTimes = new DataBag<ItemClientUse>(Settings.SqlTables.item_client_use);
+        public static readonly DataBag<ItemClientUse> ItemClientUseTimes = new DataBag<ItemClientUse>(Settings.SqlTables.client_item_use);
         public static readonly DataBag<ItemTemplate> ItemTemplates = new DataBag<ItemTemplate>(Settings.SqlTables.item_template);
         public static readonly DataBag<QuestTemplate> QuestTemplates = new DataBag<QuestTemplate>(Settings.SqlTables.quest_template);
         public static readonly DataBag<QuestObjective> QuestObjectives = new DataBag<QuestObjective>(Settings.SqlTables.quest_template);
@@ -799,8 +799,8 @@ namespace WowPacketParser.Store
         // Quest Misc
         public static readonly DataBag<QuestStarter> QuestStarters = new DataBag<QuestStarter>(Settings.SqlTables.quest_starter);
         public static readonly DataBag<QuestEnder> QuestEnders = new DataBag<QuestEnder>(Settings.SqlTables.quest_ender);
-        public static readonly DataBag<QuestClientAccept> QuestClientAcceptTimes = new DataBag<QuestClientAccept>(Settings.SqlTables.quest_client_accept);
-        public static readonly DataBag<QuestClientComplete> QuestClientCompleteTimes = new DataBag<QuestClientComplete>(Settings.SqlTables.quest_client_complete);
+        public static readonly DataBag<QuestClientAccept> QuestClientAcceptTimes = new DataBag<QuestClientAccept>(Settings.SqlTables.client_quest_accept);
+        public static readonly DataBag<QuestClientComplete> QuestClientCompleteTimes = new DataBag<QuestClientComplete>(Settings.SqlTables.client_quest_complete);
         public static readonly DataBag<QuestGreeting> QuestGreetings = new DataBag<QuestGreeting>(Settings.SqlTables.quest_template);
         public static readonly DataBag<QuestDetails> QuestDetails = new DataBag<QuestDetails>(Settings.SqlTables.quest_template);
         public static readonly DataBag<QuestRequestItems> QuestRequestItems = new DataBag<QuestRequestItems>(Settings.SqlTables.quest_template);
@@ -840,12 +840,8 @@ namespace WowPacketParser.Store
                 !Settings.SqlTables.spell_cast_go)
                 return;
 
-            if (castData.CasterGuid.GetObjectType() != ObjectType.Unit   &&
-                castData.CasterGuid.GetObjectType() != ObjectType.GameObject)
-            {
-                if (!(Settings.SavePlayerCasts && castData.CasterGuid.GetObjectType() == ObjectType.Player))
-                    return;
-            }
+            if (!(Settings.SavePlayerCasts && castData.CasterGuid.GetObjectType() == ObjectType.Player))
+                return;
 
             castData.Time = packet.Time;
 

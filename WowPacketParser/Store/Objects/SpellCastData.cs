@@ -127,8 +127,20 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("caster_type", true)]
         public string CasterType;
 
+        [DBFieldName("caster_unit_guid", false, true)]
+        public string CasterUnitGuid;
+
+        [DBFieldName("caster_unit_id")]
+        public uint CasterUnitId;
+
+        [DBFieldName("caster_unit_type")]
+        public string CasterUnitType;
+
         [DBFieldName("spell_id", true)]
         public uint SpellId;
+
+        [DBFieldName("visual_id")]
+        public uint VisualId;
 
         [DBFieldName("cast_time")]
         public uint CastTime;
@@ -138,6 +150,12 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("cast_flags_ex")]
         public uint CastFlagsEx;
+
+        [DBFieldName("ammo_display_id")]
+        public int AmmoDisplayId;
+
+        [DBFieldName("ammo_inventory_type")]
+        public int AmmoInventoryType;
 
         [DBFieldName("target_guid", false, true)]
         public string TargetGuid;
@@ -196,14 +214,32 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("caster_type", true)]
         public string CasterType;
 
+        [DBFieldName("caster_unit_guid", false, true)]
+        public string CasterUnitGuid;
+
+        [DBFieldName("caster_unit_id")]
+        public uint CasterUnitId;
+
+        [DBFieldName("caster_unit_type")]
+        public string CasterUnitType;
+
         [DBFieldName("spell_id", true)]
         public uint SpellId;
+
+        [DBFieldName("visual_id")]
+        public uint VisualId;
 
         [DBFieldName("cast_flags")]
         public uint CastFlags;
 
         [DBFieldName("cast_flags_ex")]
         public uint CastFlagsEx;
+
+        [DBFieldName("ammo_display_id")]
+        public int AmmoDisplayId;
+
+        [DBFieldName("ammo_inventory_type")]
+        public int AmmoInventoryType;
 
         [DBFieldName("main_target_guid", false, true)]
         public string MainTargetGuid;
@@ -239,13 +275,21 @@ namespace WowPacketParser.Store.Objects
 
         public WowGuid CasterGuid;
 
+        public WowGuid CasterUnitGuid;
+
         public uint SpellID;
+
+        public uint VisualID;
 
         public uint CastTime;
 
         public uint CastFlags;
 
         public uint CastFlagsEx;
+
+        public int AmmoDisplayId;
+
+        public int AmmoInventoryType;
 
         public WowGuid MainTargetGuid;
 

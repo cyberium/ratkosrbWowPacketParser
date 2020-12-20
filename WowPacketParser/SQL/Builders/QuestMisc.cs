@@ -126,7 +126,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string QuestClientAcceptTimes()
         {
-            if (!Settings.SqlTables.quest_client_accept)
+            if (!Settings.SqlTables.client_quest_accept)
                 return string.Empty;
 
             if (Storage.QuestClientAcceptTimes.IsEmpty())
@@ -140,7 +140,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string QuestClientCompleteTimes()
         {
-            if (!Settings.SqlTables.quest_client_complete)
+            if (!Settings.SqlTables.client_quest_complete)
                 return string.Empty;
 
             if (Storage.QuestClientCompleteTimes.IsEmpty())

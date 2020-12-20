@@ -197,18 +197,16 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
         [Parser(Opcode.SMSG_WEATHER)]
         public static void HandleWeatherStatus(Packet packet)
         {
-            WeatherState state = packet.ReadInt32E<WeatherState>("State");
-            float grade = packet.ReadSingle("Grade");
-            Bit unk = packet.ReadBit("Unk Bit"); // Type
+            WeatherUpdate weatherUpdate = new WeatherUpdate();
+            weatherUpdate.MapId = CoreParsers.MovementHandler.CurrentMapId;
+            weatherUpdate.ZoneId = CoreParsers.WorldStateHandler.CurrentZoneId;
 
-            Storage.WeatherUpdates.Add(new WeatherUpdate
-            {
-                MapId = CoreParsers.MovementHandler.CurrentMapId,
-                ZoneId = 0, // fixme
-                State = state,
-                Grade = grade,
-                Unk = unk
-            }, packet.TimeSpan);
+            weatherUpdate.State = packet.ReadInt32E<WeatherState>("State");
+            weatherUpdate.Grade = packet.ReadSingle("Grade");
+            weatherUpdate.Instant = packet.ReadBit("Instant");
+
+            weatherUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+            Storage.WeatherUpdates.Add(weatherUpdate, packet.TimeSpan);
         }
 
         [Parser(Opcode.SMSG_FEATURE_SYSTEM_STATUS)]

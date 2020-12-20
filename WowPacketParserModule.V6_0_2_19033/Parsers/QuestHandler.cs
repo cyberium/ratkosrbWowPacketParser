@@ -106,7 +106,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             uint id = (uint)packet.ReadInt32("QuestID");
             packet.ReadInt32("ItemChoiceID");
 
-            if (Settings.SqlTables.quest_client_complete)
+            if (Settings.SqlTables.client_quest_complete)
             {
                 string objectGuid;
                 uint objectId;
@@ -131,7 +131,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             uint id = packet.ReadUInt32<QuestId>("QuestID");
             packet.ReadBit("StartCheat");
 
-            if (Settings.SqlTables.quest_client_accept)
+            if (Settings.SqlTables.client_quest_accept)
             {
                 string objectGuid;
                 uint objectId;

@@ -10,7 +10,7 @@ namespace WowPacketParser.Store.Objects
         public uint? MapId;
 
         [DBFieldName("zone_id")]
-        public uint? ZoneId;
+        public int ZoneId;
 
         [DBFieldName("weather_state")]
         public WeatherState? State;
@@ -18,7 +18,13 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("grade")]
         public float? Grade;
 
-        [DBFieldName("unk")]
-        public byte? Unk;
+        [DBFieldName("sound", TargetedDatabase.Zero, TargetedDatabase.TheBurningCrusade)]
+        public uint? Sound;
+
+        [DBFieldName("instant")]
+        public byte? Instant;
+
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
     }
 }

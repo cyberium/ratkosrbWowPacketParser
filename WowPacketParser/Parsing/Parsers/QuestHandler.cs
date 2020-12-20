@@ -822,7 +822,7 @@ namespace WowPacketParser.Parsing.Parsers
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_2_9901))
                 packet.ReadUInt32("Unk UInt32");
 
-            if (Settings.SqlTables.quest_client_accept)
+            if (Settings.SqlTables.client_quest_accept)
             {
                 string objectGuid;
                 uint objectId;
@@ -1232,7 +1232,7 @@ namespace WowPacketParser.Parsing.Parsers
             uint id = packet.ReadUInt32<QuestId>("Quest ID");
             packet.ReadUInt32("Reward");
 
-            if (Settings.SqlTables.quest_client_complete)
+            if (Settings.SqlTables.client_quest_complete)
             {
                 string objectGuid;
                 uint objectId;

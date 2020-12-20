@@ -37,11 +37,15 @@ namespace WowPacketParser.SQL.Builders
 
                 row.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(cast_pair.Item1.Time);
                 row.Data.SpellId = cast_pair.Item1.SpellID;
+                row.Data.VisualId = cast_pair.Item1.VisualID;
                 row.Data.CastTime = cast_pair.Item1.CastTime;
                 row.Data.CastFlags = cast_pair.Item1.CastFlags;
                 row.Data.CastFlagsEx = cast_pair.Item1.CastFlagsEx;
+                row.Data.AmmoDisplayId = cast_pair.Item1.AmmoDisplayId;
+                row.Data.AmmoInventoryType = cast_pair.Item1.AmmoInventoryType;
 
                 Storage.GetObjectDbGuidEntryType(cast_pair.Item1.CasterGuid, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
+                Storage.GetObjectDbGuidEntryType(cast_pair.Item1.CasterUnitGuid, out row.Data.CasterUnitGuid, out row.Data.CasterUnitId, out row.Data.CasterUnitType);
                 Storage.GetObjectDbGuidEntryType(cast_pair.Item1.MainTargetGuid, out row.Data.TargetGuid, out row.Data.TargetId, out row.Data.TargetType);
 
                 spellRows.Add(row);
@@ -71,12 +75,16 @@ namespace WowPacketParser.SQL.Builders
 
                 row.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(cast_pair.Item1.Time);
                 row.Data.SpellId = cast_pair.Item1.SpellID;
+                row.Data.VisualId = cast_pair.Item1.VisualID;
                 row.Data.CastFlags = cast_pair.Item1.CastFlags;
                 row.Data.CastFlagsEx = cast_pair.Item1.CastFlagsEx;
+                row.Data.AmmoDisplayId = cast_pair.Item1.AmmoDisplayId;
+                row.Data.AmmoInventoryType = cast_pair.Item1.AmmoInventoryType;
                 row.Data.HitTargetsCount = cast_pair.Item1.HitTargetsCount;
                 row.Data.MissTargetsCount = cast_pair.Item1.MissTargetsCount;
 
                 Storage.GetObjectDbGuidEntryType(cast_pair.Item1.CasterGuid, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
+                Storage.GetObjectDbGuidEntryType(cast_pair.Item1.CasterUnitGuid, out row.Data.CasterUnitGuid, out row.Data.CasterUnitId, out row.Data.CasterUnitType);
                 Storage.GetObjectDbGuidEntryType(cast_pair.Item1.MainTargetGuid, out row.Data.MainTargetGuid, out row.Data.MainTargetId, out row.Data.MainTargetType);
 
                 if (cast_pair.Item1.HitTargetsCount > 0)

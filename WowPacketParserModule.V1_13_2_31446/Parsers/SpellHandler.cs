@@ -103,14 +103,13 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
         public static void ReadSpellCastData(SpellCastData dbdata, Packet packet, params object[] idx)
         {
             dbdata.CasterGuid = packet.ReadPackedGuid128("CasterGUID", idx);
-
-            packet.ReadPackedGuid128("CasterUnit", idx);
+            dbdata.CasterUnitGuid = packet.ReadPackedGuid128("CasterUnit", idx);
 
             packet.ReadPackedGuid128("CastID", idx);
             packet.ReadPackedGuid128("OriginalCastID", idx);
 
             dbdata.SpellID = packet.ReadUInt32<SpellId>("SpellID", idx);
-            packet.ReadUInt32("SpellXSpellVisualID", idx);
+            dbdata.VisualID = packet.ReadUInt32("SpellXSpellVisualID", idx);
 
             dbdata.CastFlags = packet.ReadUInt32("CastFlags", idx);
             dbdata.CastFlagsEx = packet.ReadUInt32("CastFlagsEx", idx);
@@ -165,10 +164,10 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 V6_0_2_19033.Parsers.SpellHandler.ReadLocation(packet, idx, "TargetPoints", i);
 
             if (hasAmmoDisplayId)
-                packet.ReadInt32("AmmoDisplayId", idx);
+                dbdata.AmmoDisplayId = packet.ReadInt32("AmmoDisplayId", idx);
 
             if (hasAmmoInventoryType)
-                packet.ReadInt32E<InventoryType>("AmmoInventoryType", idx);
+                dbdata.AmmoInventoryType = (int)packet.ReadInt32E<InventoryType>("AmmoInventoryType", idx);
         }
 
         [Parser(Opcode.SMSG_SPELL_START)]

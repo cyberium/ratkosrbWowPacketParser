@@ -45,21 +45,20 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
         public static void ReadSpellCastData(SpellCastData dbdata, Packet packet, params object[] idx)
         {
             dbdata.CasterGuid = packet.ReadPackedGuid128("CasterGUID", idx);
-
-            packet.ReadPackedGuid128("CasterUnit", idx);
+            dbdata.CasterUnitGuid = packet.ReadPackedGuid128("CasterUnit", idx);
 
             packet.ReadPackedGuid128("CastID", idx);
             packet.ReadPackedGuid128("OriginalCastID", idx);
 
             dbdata.SpellID = packet.ReadUInt32<SpellId>("SpellID", idx);
-            packet.ReadUInt32("SpellXSpellVisualID", idx);
+            dbdata.VisualID = packet.ReadUInt32("SpellXSpellVisualID", idx);
 
             dbdata.CastFlags = packet.ReadUInt32("CastFlags", idx);
             dbdata.CastTime = packet.ReadUInt32("CastTime", idx);
 
             V6_0_2_19033.Parsers.SpellHandler.ReadMissileTrajectoryResult(packet, idx, "MissileTrajectory");
 
-            packet.ReadInt32("Ammo.DisplayID", idx);
+            dbdata.AmmoDisplayId = packet.ReadInt32("Ammo.DisplayID", idx);
 
             packet.ReadByte("DestLocSpellCastIndex", idx);
 

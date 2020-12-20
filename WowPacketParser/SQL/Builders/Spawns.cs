@@ -262,7 +262,7 @@ namespace WowPacketParser.SQL.Builders
                     } 
                 }
 
-                if (Settings.SqlTables.creature_client_interact)
+                if (Settings.SqlTables.client_creature_interact)
                 {
                     if (Storage.CreatureClientInteractTimes.ContainsKey(unit.Key))
                     {
@@ -621,7 +621,7 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_client_interact)
+            if (Settings.SqlTables.client_creature_interact)
             {
                 var interactDelete = new SQLDelete<CreatureClientInteract>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(interactDelete.Build());
@@ -1008,7 +1008,7 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SqlTables.gameobject_client_use)
+                if (Settings.SqlTables.client_gameobject_use)
                 {
                     if (Storage.GameObjectClientUseTimes.ContainsKey(gameobject.Key))
                     {
@@ -1136,7 +1136,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(updateSql.Build());
             }
 
-            if (Settings.SqlTables.gameobject_client_use)
+            if (Settings.SqlTables.client_gameobject_use)
             {
                 var useDelete = new SQLDelete<GameObjectClientUse>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
                 result.Append(useDelete.Build());
