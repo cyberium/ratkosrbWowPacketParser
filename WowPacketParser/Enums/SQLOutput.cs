@@ -55,6 +55,7 @@
         creature_text_template,
         creature_values_update,
         creature_speed_update,
+        dynamicobject,
         gameobject,
         gameobject_addon,
         client_gameobject_use,

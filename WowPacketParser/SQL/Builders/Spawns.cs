@@ -1150,5 +1150,153 @@ namespace WowPacketParser.SQL.Builders
 
             return result.ToString();
         }
+
+        [BuilderMethod()]
+        public static string DynamicObject()
+        {
+            if (!Settings.SqlTables.dynamicobject)
+                return string.Empty;
+
+            uint maxDbGuid = 0;
+            var rows = new RowList<DynamicObjectSpawn>();
+            var create1Rows = new RowList<DynamicObjectCreate1>();
+            var create2Rows = new RowList<DynamicObjectCreate2>();
+            var destroyRows = new RowList<DynamicObjectDestroy>();
+
+            foreach (var wowObject in Storage.Objects)
+            {
+                if (wowObject.Value.Item1.Type != ObjectType.DynamicObject)
+                    continue;
+
+                DynamicObject dynObject = wowObject.Value.Item1 as DynamicObject;
+                if (dynObject == null)
+                    continue;
+
+                Row<DynamicObjectSpawn> row = new Row<DynamicObjectSpawn>();
+                row.Data.GUID = "@DGUID+" + dynObject.DbGuid;
+
+                bool badTransport = false;
+                if (!dynObject.IsOnTransport())
+                    row.Data.Map = dynObject.Map;
+                else
+                {
+                    int mapId;
+                    badTransport = !GetTransportMap(dynObject, out mapId);
+                    if (mapId != -1)
+                        row.Data.Map = (uint)mapId;
+                }
+
+                if (!dynObject.IsOnTransport())
+                {
+                    row.Data.PositionX = dynObject.OriginalMovement.Position.X;
+                    row.Data.PositionY = dynObject.OriginalMovement.Position.Y;
+                    row.Data.PositionZ = dynObject.OriginalMovement.Position.Z;
+                    row.Data.Orientation = dynObject.OriginalMovement.Orientation;
+                }
+                else
+                {
+                    row.Data.PositionX = dynObject.OriginalMovement.TransportOffset.X;
+                    row.Data.PositionY = dynObject.OriginalMovement.TransportOffset.Y;
+                    row.Data.PositionZ = dynObject.OriginalMovement.TransportOffset.Z;
+                    row.Data.Orientation = dynObject.OriginalMovement.TransportOffset.O;
+                }
+
+                Storage.GetObjectDbGuidEntryType(dynObject.DynamicObjectDataOriginal.Caster, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
+                row.Data.SpellId = (uint)dynObject.DynamicObjectDataOriginal.SpellID;
+                row.Data.VisualId = (uint)dynObject.DynamicObjectDataOriginal.SpellXSpellVisualID;
+                row.Data.Radius = dynObject.DynamicObjectDataOriginal.Radius;
+                row.Data.Type = dynObject.DynamicObjectDataOriginal.Type;
+                row.Data.CastTime = dynObject.DynamicObjectDataOriginal.CastTime;
+
+                rows.Add(row);
+
+                if (Settings.SqlTables.dynamicobject_create1_time)
+                {
+                    if (Storage.ObjectCreate1Times.ContainsKey(wowObject.Key))
+                    {
+                        foreach (var createTime in Storage.ObjectCreate1Times[wowObject.Key])
+                        {
+                            var create1Row = new Row<DynamicObjectCreate1>();
+                            create1Row.Data.GUID = "@DGUID+" + dynObject.DbGuid;
+                            create1Row.Data.PositionX = createTime.PositionX;
+                            create1Row.Data.PositionY = createTime.PositionY;
+                            create1Row.Data.PositionZ = createTime.PositionZ;
+                            create1Row.Data.Orientation = createTime.Orientation;
+                            create1Row.Data.UnixTimeMs = createTime.UnixTimeMs;
+                            create1Rows.Add(create1Row);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.dynamicobject_create2_time)
+                {
+                    if (Storage.ObjectCreate2Times.ContainsKey(wowObject.Key))
+                    {
+                        foreach (var createTime in Storage.ObjectCreate2Times[wowObject.Key])
+                        {
+                            var create2Row = new Row<DynamicObjectCreate2>();
+                            create2Row.Data.GUID = "@DGUID+" + dynObject.DbGuid;
+                            create2Row.Data.PositionX = createTime.PositionX;
+                            create2Row.Data.PositionY = createTime.PositionY;
+                            create2Row.Data.PositionZ = createTime.PositionZ;
+                            create2Row.Data.Orientation = createTime.Orientation;
+                            create2Row.Data.UnixTimeMs = createTime.UnixTimeMs;
+                            create2Rows.Add(create2Row);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.dynamicobject_destroy_time)
+                {
+                    if (Storage.ObjectDestroyTimes.ContainsKey(wowObject.Key))
+                    {
+                        foreach (var destroyTime in Storage.ObjectDestroyTimes[wowObject.Key])
+                        {
+                            var destroyRow = new Row<DynamicObjectDestroy>();
+                            destroyRow.Data.GUID = "@DGUID+" + dynObject.DbGuid;
+                            destroyRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(destroyTime);
+                            destroyRows.Add(destroyRow);
+                        }
+                    }
+                }
+
+                if (maxDbGuid < dynObject.DbGuid)
+                    maxDbGuid = dynObject.DbGuid;
+            }
+            StringBuilder result = new StringBuilder();
+
+            // delete query for GUIDs
+            var delete = new SQLDelete<DynamicObjectSpawn>(Tuple.Create("@DGUID+0", "@DGUID+" + maxDbGuid));
+            result.Append(delete.Build());
+
+            var sql = new SQLInsert<DynamicObjectSpawn>(rows, false);
+            result.Append(sql.Build());
+
+            if (Settings.SqlTables.dynamicobject_create1_time)
+            {
+                var create1Delete = new SQLDelete<DynamicObjectCreate1>(Tuple.Create("@DGUID+0", "@DGUID+" + maxDbGuid));
+                result.Append(create1Delete.Build());
+                var createSql = new SQLInsert<DynamicObjectCreate1>(create1Rows, false);
+                result.Append(createSql.Build());
+            }
+
+            if (Settings.SqlTables.dynamicobject_create2_time)
+            {
+                var create2Delete = new SQLDelete<DynamicObjectCreate2>(Tuple.Create("@DGUID+0", "@DGUID+" + maxDbGuid));
+                result.Append(create2Delete.Build());
+                var createSql = new SQLInsert<DynamicObjectCreate2>(create2Rows, false);
+                result.Append(createSql.Build());
+            }
+
+            if (Settings.SqlTables.dynamicobject_destroy_time)
+            {
+                var destroyDelete = new SQLDelete<DynamicObjectDestroy>(Tuple.Create("@DGUID+0", "@DGUID+" + maxDbGuid));
+                result.Append(destroyDelete.Build());
+                var destroySql = new SQLInsert<DynamicObjectDestroy>(destroyRows, false);
+                result.Append(destroySql.Build());
+            }
+
+            return result.ToString();
+        }
     }
 }

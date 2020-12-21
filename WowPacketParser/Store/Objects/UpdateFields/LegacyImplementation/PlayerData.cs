@@ -99,7 +99,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
     public class OriginalPlayerData : IPlayerData
     {
         private WoWObject Object { get; }
-        private Dictionary<int, UpdateField> UpdateFields => Object.UpdateFields;
+        private Dictionary<int, UpdateField> UpdateFields => Object.OriginalUpdateFields;
 
         public OriginalPlayerData(WoWObject obj)
         {

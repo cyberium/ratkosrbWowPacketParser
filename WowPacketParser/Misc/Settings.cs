@@ -137,6 +137,10 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_guid_values_update = Conf.GetBoolean("creature_guid_values_update", false);
             public static readonly bool creature_values_update = Conf.GetBoolean("creature_values_update", false);
             public static readonly bool creature_speed_update = Conf.GetBoolean("creature_speed_update", false);
+            public static readonly bool dynamicobject = Conf.GetBoolean("dynamicobject", false);
+            public static readonly bool dynamicobject_create1_time = Conf.GetBoolean("dynamicobject_create1_time", false);
+            public static readonly bool dynamicobject_create2_time = Conf.GetBoolean("dynamicobject_create2_time", false);
+            public static readonly bool dynamicobject_destroy_time = Conf.GetBoolean("dynamicobject_destroy_time", false);
             public static readonly bool gameobject = Conf.GetBoolean("gameobject", false);
             public static readonly bool gameobject_addon = Conf.GetBoolean("gameobject_addon", false);
             public static readonly bool client_gameobject_use = Conf.GetBoolean("client_gameobject_use", false);

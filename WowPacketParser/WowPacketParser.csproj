@@ -636,6 +636,8 @@
     <Compile Include="Store\Objects\CreatureTemplateScaling.cs" />
     <Compile Include="Store\Objects\ChatPacketData.cs" />
     <Compile Include="Store\Objects\CreatureTrainer.cs" />
+    <Compile Include="Store\Objects\DynamicObject.cs" />
+    <Compile Include="Store\Objects\DynamicObjectSpawn.cs" />
     <Compile Include="Store\Objects\ItemInstance.cs" />
     <Compile Include="Store\Objects\LootTemplate.cs" />
     <Compile Include="Store\Objects\ObjectCreate.cs" />
@@ -647,6 +649,7 @@
     <Compile Include="Store\Objects\UpdateFields\IUnlockedAzeriteEssence.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\AreaTriggerData.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\ConversationData.cs" />
+    <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\DynamicObjectData.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\PlayerData.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\UnitData.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\UpdateFieldExtensions.cs" />

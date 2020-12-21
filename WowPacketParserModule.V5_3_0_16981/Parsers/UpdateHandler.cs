@@ -79,6 +79,9 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
                     case ObjectType.GameObject:
                         obj = new GameObject();
                         break;
+                    case ObjectType.DynamicObject:
+                        obj = new DynamicObject();
+                        break;
                     case ObjectType.Player:
                         obj = new Player();
                         break;

@@ -145,13 +145,17 @@ namespace WowPacketParser.Store
         public static void StoreObjectDestroyTime(WowGuid guid, DateTime time)
         {
             if (guid.GetObjectType() != ObjectType.Unit &&
-                guid.GetObjectType() != ObjectType.GameObject)
+                guid.GetObjectType() != ObjectType.GameObject &&
+                guid.GetObjectType() != ObjectType.DynamicObject)
                 return;
 
             if (guid.GetObjectType() == ObjectType.Unit && !Settings.SqlTables.creature_destroy_time)
                 return;
 
             if (guid.GetObjectType() == ObjectType.GameObject && !Settings.SqlTables.gameobject_destroy_time)
+                return;
+
+            if (guid.GetObjectType() == ObjectType.DynamicObject && !Settings.SqlTables.dynamicobject_destroy_time)
                 return;
 
             if (Storage.ObjectDestroyTimes.ContainsKey(guid))
@@ -169,13 +173,17 @@ namespace WowPacketParser.Store
         public static void StoreObjectCreate1Time(WowGuid guid, MovementInfo movement, DateTime time)
         {
             if (guid.GetObjectType() != ObjectType.Unit &&
-                guid.GetObjectType() != ObjectType.GameObject)
+                guid.GetObjectType() != ObjectType.GameObject &&
+                guid.GetObjectType() != ObjectType.DynamicObject)
                 return;
 
             if (guid.GetObjectType() == ObjectType.Unit && !Settings.SqlTables.creature_create1_time)
                 return;
 
             if (guid.GetObjectType() == ObjectType.GameObject && !Settings.SqlTables.gameobject_create1_time)
+                return;
+
+            if (guid.GetObjectType() == ObjectType.DynamicObject && !Settings.SqlTables.dynamicobject_create1_time)
                 return;
 
             if (Storage.ObjectCreate1Times.ContainsKey(guid))
@@ -211,13 +219,17 @@ namespace WowPacketParser.Store
         public static void StoreObjectCreate2Time(WowGuid guid, MovementInfo movement, DateTime time)
         {
             if (guid.GetObjectType() != ObjectType.Unit &&
-                guid.GetObjectType() != ObjectType.GameObject)
+                guid.GetObjectType() != ObjectType.GameObject &&
+                guid.GetObjectType() != ObjectType.DynamicObject)
                 return;
 
             if (guid.GetObjectType() == ObjectType.Unit && !Settings.SqlTables.creature_create2_time)
                 return;
 
             if (guid.GetObjectType() == ObjectType.GameObject && !Settings.SqlTables.gameobject_create2_time)
+                return;
+
+            if (guid.GetObjectType() == ObjectType.DynamicObject && !Settings.SqlTables.dynamicobject_create2_time)
                 return;
 
             if (Storage.ObjectCreate2Times.ContainsKey(guid))
