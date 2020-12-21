@@ -181,6 +181,9 @@ namespace WowPacketParser.Misc
             public static readonly bool player_attack_start = Conf.GetBoolean("player_attack_start", false);
             public static readonly bool player_attack_stop = Conf.GetBoolean("player_attack_stop", false);
             public static readonly bool player_chat = Conf.GetBoolean("player_chat", false);
+            public static readonly bool player_create1_time = Conf.GetBoolean("player_create1_time", false);
+            public static readonly bool player_create2_time = Conf.GetBoolean("player_create2_time", false);
+            public static readonly bool player_destroy_time = Conf.GetBoolean("player_destroy_time", false);
             public static readonly bool player_movement_client = Conf.GetBoolean("player_movement_client", false);
             public static readonly bool player_movement_server = Conf.GetBoolean("player_movement_server", false);
             public static readonly bool player_auras_update = Conf.GetBoolean("player_auras_update", false);

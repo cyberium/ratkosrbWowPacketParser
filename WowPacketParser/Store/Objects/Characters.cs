@@ -210,6 +210,60 @@ namespace WowPacketParser.Store.Objects
         public string Auras;
     }
 
+    [DBTableName("player_create1_time")]
+    public sealed class PlayerCreate1 : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("position_x")]
+        public float? PositionX;
+
+        [DBFieldName("position_y")]
+        public float? PositionY;
+
+        [DBFieldName("position_z")]
+        public float? PositionZ;
+
+        [DBFieldName("orientation")]
+        public float? Orientation;
+
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+    }
+
+    [DBTableName("player_create2_time")]
+    public sealed class PlayerCreate2 : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("position_x")]
+        public float? PositionX;
+
+        [DBFieldName("position_y")]
+        public float? PositionY;
+
+        [DBFieldName("position_z")]
+        public float? PositionZ;
+
+        [DBFieldName("orientation")]
+        public float? Orientation;
+
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+    }
+
+    [DBTableName("player_destroy_time")]
+    public sealed class PlayerDestroy : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+    }
+
     [DBTableName("character_inventory")]
     public sealed class CharacterInventory : IDataModel
     {

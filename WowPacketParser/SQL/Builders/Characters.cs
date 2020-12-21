@@ -40,6 +40,9 @@ namespace WowPacketParser.SQL.Builders
             var playerAttackStartRows = new RowList<CreatureTargetChange>();
             var playerAttackStopRows = new RowList<CreatureTargetChange>();
             var playerAurasUpdateRows = new RowList<CreatureAurasUpdate>();
+            var playerCreate1Rows = new RowList<PlayerCreate1>();
+            var playerCreate2Rows = new RowList<PlayerCreate2>();
+            var playerDestroyRows = new RowList<PlayerDestroy>();
             var playerEquipmentValuesUpdateRows = new RowList<CreatureEquipmentValuesUpdate>();
             var playerGuidValuesUpdateRows = new RowList<CreatureGuidValuesUpdate>();
             var playerValuesUpdateRows = new RowList<CreatureValuesUpdate>();
@@ -266,6 +269,56 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
+                if (Settings.SqlTables.player_create1_time)
+                {
+                    if (Storage.ObjectCreate1Times.ContainsKey(objPair.Key))
+                    {
+                        foreach (var createTime in Storage.ObjectCreate1Times[objPair.Key])
+                        {
+                            var create1Row = new Row<PlayerCreate1>();
+                            create1Row.Data.GUID = row.Data.Guid;
+                            create1Row.Data.PositionX = createTime.PositionX;
+                            create1Row.Data.PositionY = createTime.PositionY;
+                            create1Row.Data.PositionZ = createTime.PositionZ;
+                            create1Row.Data.Orientation = createTime.Orientation;
+                            create1Row.Data.UnixTimeMs = createTime.UnixTimeMs;
+                            playerCreate1Rows.Add(create1Row);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.player_create2_time)
+                {
+                    if (Storage.ObjectCreate2Times.ContainsKey(objPair.Key))
+                    {
+                        foreach (var createTime in Storage.ObjectCreate2Times[objPair.Key])
+                        {
+                            var create2Row = new Row<PlayerCreate2>();
+                            create2Row.Data.GUID = row.Data.Guid;
+                            create2Row.Data.PositionX = createTime.PositionX;
+                            create2Row.Data.PositionY = createTime.PositionY;
+                            create2Row.Data.PositionZ = createTime.PositionZ;
+                            create2Row.Data.Orientation = createTime.Orientation;
+                            create2Row.Data.UnixTimeMs = createTime.UnixTimeMs;
+                            playerCreate2Rows.Add(create2Row);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.player_destroy_time)
+                {
+                    if (Storage.ObjectDestroyTimes.ContainsKey(objPair.Key))
+                    {
+                        foreach (var createTime in Storage.ObjectDestroyTimes[objPair.Key])
+                        {
+                            var destroyRow = new Row<PlayerDestroy>();
+                            destroyRow.Data.GUID = row.Data.Guid;
+                            destroyRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(createTime);
+                            playerDestroyRows.Add(destroyRow);
+                        }
+                    }
+                }
+
                 if (Settings.SqlTables.player_equipment_values_update)
                 {
                     if (Storage.UnitEquipmentValuesUpdates.ContainsKey(objPair.Key))
@@ -448,6 +501,33 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(activePlayersDelete.Build());
                 var activePlayersSql = new SQLInsert<CharacterActivePlayer>(activePlayersRows, false);
                 result.Append(activePlayersSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.player_create1_time)
+            {
+                var create1Delete = new SQLDelete<PlayerCreate1>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
+                result.Append(create1Delete.Build());
+                var createSql = new SQLInsert<PlayerCreate1>(playerCreate1Rows, false);
+                result.Append(createSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.player_create2_time)
+            {
+                var create2Delete = new SQLDelete<PlayerCreate2>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
+                result.Append(create2Delete.Build());
+                var createSql = new SQLInsert<PlayerCreate2>(playerCreate2Rows, false);
+                result.Append(createSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.player_destroy_time)
+            {
+                var destroyDelete = new SQLDelete<PlayerDestroy>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
+                result.Append(destroyDelete.Build());
+                var destroySql = new SQLInsert<PlayerDestroy>(playerDestroyRows, false);
+                result.Append(destroySql.Build());
                 result.AppendLine();
             }
 

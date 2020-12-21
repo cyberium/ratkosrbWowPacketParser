@@ -146,7 +146,9 @@ namespace WowPacketParser.Store
         {
             if (guid.GetObjectType() != ObjectType.Unit &&
                 guid.GetObjectType() != ObjectType.GameObject &&
-                guid.GetObjectType() != ObjectType.DynamicObject)
+                guid.GetObjectType() != ObjectType.DynamicObject &&
+                guid.GetObjectType() != ObjectType.Player &&
+                guid.GetObjectType() != ObjectType.ActivePlayer)
                 return;
 
             if (guid.GetObjectType() == ObjectType.Unit && !Settings.SqlTables.creature_destroy_time)
@@ -156,6 +158,12 @@ namespace WowPacketParser.Store
                 return;
 
             if (guid.GetObjectType() == ObjectType.DynamicObject && !Settings.SqlTables.dynamicobject_destroy_time)
+                return;
+
+            if (guid.GetObjectType() == ObjectType.Player && !Settings.SqlTables.player_destroy_time)
+                return;
+
+            if (guid.GetObjectType() == ObjectType.ActivePlayer && !Settings.SqlTables.player_destroy_time)
                 return;
 
             if (Storage.ObjectDestroyTimes.ContainsKey(guid))
@@ -174,7 +182,9 @@ namespace WowPacketParser.Store
         {
             if (guid.GetObjectType() != ObjectType.Unit &&
                 guid.GetObjectType() != ObjectType.GameObject &&
-                guid.GetObjectType() != ObjectType.DynamicObject)
+                guid.GetObjectType() != ObjectType.DynamicObject &&
+                guid.GetObjectType() != ObjectType.Player &&
+                guid.GetObjectType() != ObjectType.ActivePlayer)
                 return;
 
             if (guid.GetObjectType() == ObjectType.Unit && !Settings.SqlTables.creature_create1_time)
@@ -184,6 +194,12 @@ namespace WowPacketParser.Store
                 return;
 
             if (guid.GetObjectType() == ObjectType.DynamicObject && !Settings.SqlTables.dynamicobject_create1_time)
+                return;
+
+            if (guid.GetObjectType() == ObjectType.Player && !Settings.SqlTables.player_create1_time)
+                return;
+
+            if (guid.GetObjectType() == ObjectType.ActivePlayer && !Settings.SqlTables.player_create1_time)
                 return;
 
             if (Storage.ObjectCreate1Times.ContainsKey(guid))
@@ -220,7 +236,9 @@ namespace WowPacketParser.Store
         {
             if (guid.GetObjectType() != ObjectType.Unit &&
                 guid.GetObjectType() != ObjectType.GameObject &&
-                guid.GetObjectType() != ObjectType.DynamicObject)
+                guid.GetObjectType() != ObjectType.DynamicObject &&
+                guid.GetObjectType() != ObjectType.Player &&
+                guid.GetObjectType() != ObjectType.ActivePlayer)
                 return;
 
             if (guid.GetObjectType() == ObjectType.Unit && !Settings.SqlTables.creature_create2_time)
@@ -230,6 +248,12 @@ namespace WowPacketParser.Store
                 return;
 
             if (guid.GetObjectType() == ObjectType.DynamicObject && !Settings.SqlTables.dynamicobject_create2_time)
+                return;
+
+            if (guid.GetObjectType() == ObjectType.Player && !Settings.SqlTables.player_create2_time)
+                return;
+
+            if (guid.GetObjectType() == ObjectType.ActivePlayer && !Settings.SqlTables.player_create2_time)
                 return;
 
             if (Storage.ObjectCreate2Times.ContainsKey(guid))
