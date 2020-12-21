@@ -72,137 +72,11 @@ CREATE TABLE IF NOT EXISTS `characters` (
   `orientation` float NOT NULL DEFAULT '0',
   `health` int(10) unsigned NOT NULL DEFAULT '0',
   `power1` int(10) unsigned NOT NULL DEFAULT '0',
-  `equipmentCache` longtext,
+  `equipmentCache` text,
   PRIMARY KEY (`guid`),
   KEY `idx_account` (`account`),
   KEY `idx_name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='player data in format used by vmangos db';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.characters_addon
-DROP TABLE IF EXISTS `characters_addon`;
-CREATE TABLE IF NOT EXISTS `characters_addon` (
-  `guid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Global Unique Identifier',
-  `display_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `mount_display_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `faction` int(10) unsigned NOT NULL DEFAULT '0',
-  `current_health` int(10) unsigned NOT NULL DEFAULT '0',
-  `max_health` int(10) unsigned NOT NULL DEFAULT '0',
-  `current_mana` int(10) unsigned NOT NULL DEFAULT '0',
-  `max_mana` int(10) unsigned NOT NULL DEFAULT '0',
-  `speed_walk` int(10) unsigned NOT NULL DEFAULT '0',
-  `speed_run` int(10) unsigned NOT NULL DEFAULT '0',
-  `scale` int(10) unsigned NOT NULL DEFAULT '0',
-  `bounding_radius` int(10) unsigned NOT NULL DEFAULT '0',
-  `combat_reach` int(10) unsigned NOT NULL DEFAULT '0',
-  `base_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
-  `ranged_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
-  `unit_flags` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`guid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='player data in format used by vmangos db';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.character_active_player
-DROP TABLE IF EXISTS `character_active_player`;
-CREATE TABLE IF NOT EXISTS `character_active_player` (
-  `guid` int(10) unsigned NOT NULL,
-  `unixtime` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`guid`,`unixtime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='shows which character was controlled by the client at a given time';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.character_attack_log
-DROP TABLE IF EXISTS `character_attack_log`;
-CREATE TABLE IF NOT EXISTS `character_attack_log` (
-  `guid` int(10) unsigned NOT NULL,
-  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `victim_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `hit_info` int(10) unsigned NOT NULL DEFAULT '0',
-  `damage` int(10) unsigned NOT NULL DEFAULT '0',
-  `original_damage` int(10) unsigned NOT NULL DEFAULT '0',
-  `overkill_damage` int(10) NOT NULL DEFAULT '0',
-  `blocked_damage` int(10) NOT NULL DEFAULT '0',
-  `victim_state` int(10) unsigned NOT NULL DEFAULT '0',
-  `attacker_state` int(10) NOT NULL DEFAULT '0',
-  `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`guid`,`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACKER_STATE_UPDATE';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.character_attack_start
-DROP TABLE IF EXISTS `character_attack_start`;
-CREATE TABLE IF NOT EXISTS `character_attack_start` (
-  `guid` int(10) unsigned NOT NULL,
-  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `victim_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`guid`,`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACK_START';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.character_attack_stop
-DROP TABLE IF EXISTS `character_attack_stop`;
-CREATE TABLE IF NOT EXISTS `character_attack_stop` (
-  `guid` int(10) unsigned NOT NULL,
-  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `victim_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`guid`,`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACK_STOP';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.character_auras_update
-DROP TABLE IF EXISTS `character_auras_update`;
-CREATE TABLE IF NOT EXISTS `character_auras_update` (
-  `guid` int(10) unsigned NOT NULL,
-  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
-  `update_id` int(10) unsigned NOT NULL COMMENT 'counting aura update packets for this guid',
-  `slot` int(10) unsigned NOT NULL,
-  `spell_id` int(10) unsigned NOT NULL,
-  `visual_id` int(10) unsigned DEFAULT NULL,
-  `aura_flags` int(10) unsigned NOT NULL,
-  `active_flags` int(10) unsigned DEFAULT NULL,
-  `level` int(10) unsigned NOT NULL,
-  `charges` int(10) unsigned NOT NULL,
-  `content_tuning_id` int(10) DEFAULT NULL,
-  `duration` int(10) NOT NULL,
-  `max_duration` int(10) NOT NULL,
-  `caster_guid` int(10) unsigned NOT NULL,
-  `caster_id` int(10) unsigned NOT NULL,
-  `caster_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`guid`,`update_id`,`slot`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='aura updates from SMSG_AURA_UPDATE';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.character_chat
-DROP TABLE IF EXISTS `character_chat`;
-CREATE TABLE IF NOT EXISTS `character_chat` (
-  `guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `sender_name` varchar(12) NOT NULL DEFAULT '',
-  `text` longtext,
-  `chat_type` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `channel_name` varchar(255) DEFAULT '',
-  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`guid`,`sender_name`,`unixtimems`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='player chat packets';
 
 -- Data exporting was unselected.
 
@@ -222,114 +96,63 @@ CREATE TABLE IF NOT EXISTS `character_inventory` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.character_movement_client
-DROP TABLE IF EXISTS `character_movement_client`;
-CREATE TABLE IF NOT EXISTS `character_movement_client` (
-  `guid` int(10) unsigned NOT NULL,
-  `opcode` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `move_time` int(10) unsigned NOT NULL DEFAULT '0',
-  `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
-  `map` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `position_x` float NOT NULL DEFAULT '0',
-  `position_y` float NOT NULL DEFAULT '0',
-  `position_z` float NOT NULL DEFAULT '0',
-  `orientation` float NOT NULL DEFAULT '0',
-  `unixtimems` bigint(20) unsigned NOT NULL,
-  PRIMARY KEY (`guid`,`opcode`,`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='client side movement';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.character_movement_server
-DROP TABLE IF EXISTS `character_movement_server`;
-CREATE TABLE IF NOT EXISTS `character_movement_server` (
-  `guid` int(10) unsigned NOT NULL COMMENT 'player guid',
-  `point` smallint(5) unsigned NOT NULL COMMENT 'counter of movements per guid',
-  `move_time` int(10) unsigned NOT NULL COMMENT 'how long it will take to move between these points',
-  `spline_flags` int(10) unsigned NOT NULL,
-  `spline_count` smallint(5) unsigned NOT NULL COMMENT 'number of splines belonging to this point',
-  `start_position_x` float NOT NULL COMMENT 'starting position',
-  `start_position_y` float NOT NULL,
-  `start_position_z` float NOT NULL,
-  `end_position_x` float NOT NULL COMMENT 'final position',
-  `end_position_y` float NOT NULL,
-  `end_position_z` float NOT NULL,
-  `orientation` float NOT NULL COMMENT 'final orientation',
-  `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
-  PRIMARY KEY (`guid`,`point`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='movement points from SMSG_ON_MONSTER_MOVE';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.character_movement_server_spline
-DROP TABLE IF EXISTS `character_movement_server_spline`;
-CREATE TABLE IF NOT EXISTS `character_movement_server_spline` (
-  `guid` int(10) unsigned NOT NULL COMMENT 'player guid',
-  `parent_point` smallint(5) unsigned NOT NULL COMMENT 'point from character_movement_server to which the spline data belongs',
-  `spline_point` smallint(5) unsigned NOT NULL COMMENT 'order of points within the spline',
-  `position_x` float NOT NULL,
-  `position_y` float NOT NULL,
-  `position_z` float NOT NULL,
-  PRIMARY KEY (`guid`,`parent_point`,`spline_point`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='individual spline points for combat  movement';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.character_speed_update
-DROP TABLE IF EXISTS `character_speed_update`;
-CREATE TABLE IF NOT EXISTS `character_speed_update` (
-  `guid` int(10) unsigned NOT NULL,
-  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
-  `speed_type` tinyint(3) unsigned NOT NULL,
-  `speed_rate` float unsigned NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to movement speed';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.character_target_change
-DROP TABLE IF EXISTS `character_target_change`;
-CREATE TABLE IF NOT EXISTS `character_target_change` (
-  `guid` int(10) unsigned NOT NULL,
-  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `victim_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+-- Dumping structure for table sniffs_new_test.client_creature_interact
+DROP TABLE IF EXISTS `client_creature_interact`;
+CREATE TABLE IF NOT EXISTS `client_creature_interact` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
   PRIMARY KEY (`guid`,`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to UNIT_FIELD_TARGET';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the client talked to the creature';
 
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.character_values_update
-DROP TABLE IF EXISTS `character_values_update`;
-CREATE TABLE IF NOT EXISTS `character_values_update` (
-  `guid` int(10) unsigned NOT NULL,
-  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
-  `entry` int(10) unsigned DEFAULT NULL,
-  `scale` float unsigned DEFAULT NULL,
-  `display_id` int(10) unsigned DEFAULT NULL,
-  `mount_display_id` int(10) unsigned DEFAULT NULL,
-  `faction` int(10) unsigned DEFAULT NULL,
-  `level` int(10) unsigned DEFAULT NULL,
-  `aura_state` int(10) unsigned DEFAULT NULL,
-  `emote_state` int(10) unsigned DEFAULT NULL,
-  `stand_state` int(10) unsigned DEFAULT NULL,
-  `sheath_state` int(10) unsigned DEFAULT NULL,
-  `npc_flags` int(10) unsigned DEFAULT NULL,
-  `unit_flags` int(10) unsigned DEFAULT NULL,
-  `current_health` int(10) unsigned DEFAULT NULL,
-  `max_health` int(10) unsigned DEFAULT NULL,
-  `current_mana` int(10) unsigned DEFAULT NULL,
-  `max_mana` int(10) unsigned DEFAULT NULL,
-  `bounding_radius` float unsigned DEFAULT NULL,
-  `combat_reach` float unsigned DEFAULT NULL,
-  `base_attack_time` int(10) unsigned DEFAULT NULL,
-  `ranged_attack_time` int(10) unsigned DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='values updates from SMSG_UPDATE_OBJECT';
+-- Dumping structure for table sniffs_new_test.client_gameobject_use
+DROP TABLE IF EXISTS `client_gameobject_use`;
+CREATE TABLE IF NOT EXISTS `client_gameobject_use` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
+  PRIMARY KEY (`guid`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when client used a gameobject\r\nfrom CMSG_GAME_OBJ_USE and CMSG_GAME_OBJ_REPORT_USE';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.client_item_use
+DROP TABLE IF EXISTS `client_item_use`;
+CREATE TABLE IF NOT EXISTS `client_item_use` (
+  `entry` int(10) unsigned NOT NULL COMMENT 'item template entry',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
+  PRIMARY KEY (`entry`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when client used an item\r\nfrom CMSG_USE_ITEM';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.client_quest_accept
+DROP TABLE IF EXISTS `client_quest_accept`;
+CREATE TABLE IF NOT EXISTS `client_quest_accept` (
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
+  `object_guid` int(10) unsigned NOT NULL COMMENT 'guid of the quest ender object',
+  `object_id` int(10) unsigned NOT NULL COMMENT 'entry of the quest ender object',
+  `object_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'type of the quest ender object',
+  `quest_id` int(10) unsigned NOT NULL COMMENT 'references quest_template',
+  PRIMARY KEY (`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when a quest was accepted by client';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.client_quest_complete
+DROP TABLE IF EXISTS `client_quest_complete`;
+CREATE TABLE IF NOT EXISTS `client_quest_complete` (
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
+  `object_guid` int(10) unsigned NOT NULL COMMENT 'guid of the quest ender object',
+  `object_id` int(10) unsigned NOT NULL COMMENT 'entry of the quest ender object',
+  `object_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'type of the quest ender object',
+  `quest_id` int(10) unsigned NOT NULL COMMENT 'references quest_template',
+  PRIMARY KEY (`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when a quest was turned in by client';
 
 -- Data exporting was unselected.
 
@@ -370,14 +193,10 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `movement_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'guessed movement generator',
   `hover` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `temp` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'is this a temporary summon',
-  `creator_guid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_CREATEDBY',
-  `creator_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_CREATEDBY',
-  `creator_type` varchar(32) NOT NULL DEFAULT '' COMMENT 'from UNIT_FIELD_CREATEDBY',
-  `summoner_guid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_SUMMONEDBY',
-  `summoner_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_SUMMONEDBY',
-  `summoner_type` varchar(32) NOT NULL DEFAULT '' COMMENT 'from UNIT_FIELD_SUMMONEDBY',
   `summon_spell` int(10) unsigned NOT NULL DEFAULT '0',
+  `scale` float NOT NULL DEFAULT '0',
   `display_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `native_display_id` int(10) unsigned NOT NULL DEFAULT '0',
   `mount_display_id` int(10) unsigned NOT NULL DEFAULT '0',
   `faction` int(10) unsigned NOT NULL DEFAULT '0',
   `level` int(10) unsigned NOT NULL DEFAULT '0',
@@ -399,11 +218,15 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `shapeshift_form` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
   `speed_walk` float NOT NULL DEFAULT '0',
   `speed_run` float NOT NULL DEFAULT '0',
-  `scale` float NOT NULL DEFAULT '0',
   `bounding_radius` float NOT NULL DEFAULT '0',
   `combat_reach` float NOT NULL DEFAULT '0',
+  `mod_melee_haste` float NOT NULL DEFAULT '0',
+  `mod_ranged_haste` float NOT NULL DEFAULT '0',
   `base_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
   `ranged_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `main_hand_slot_item` int(10) unsigned NOT NULL DEFAULT '0',
+  `off_hand_slot_item` int(10) unsigned NOT NULL DEFAULT '0',
+  `ranged_slot_item` int(10) unsigned NOT NULL DEFAULT '0',
   `auras` text,
   `SniffId` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
   `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
@@ -421,7 +244,7 @@ CREATE TABLE IF NOT EXISTS `creature_attack_log` (
   `guid` int(10) unsigned NOT NULL,
   `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `victim_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `victim_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
   `hit_info` int(10) unsigned NOT NULL DEFAULT '0',
   `damage` int(10) unsigned NOT NULL DEFAULT '0',
@@ -443,7 +266,7 @@ CREATE TABLE IF NOT EXISTS `creature_attack_start` (
   `guid` int(10) unsigned NOT NULL,
   `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `victim_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `victim_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_ATTACK_START';
@@ -457,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `creature_attack_stop` (
   `guid` int(10) unsigned NOT NULL,
   `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `victim_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `victim_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACK_STOP';
@@ -483,20 +306,9 @@ CREATE TABLE IF NOT EXISTS `creature_auras_update` (
   `max_duration` int(10) NOT NULL,
   `caster_guid` int(10) unsigned NOT NULL,
   `caster_id` int(10) unsigned NOT NULL,
-  `caster_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `caster_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`guid`,`update_id`,`slot`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='aura updates from SMSG_AURA_UPDATE';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.creature_client_interact
-DROP TABLE IF EXISTS `creature_client_interact`;
-CREATE TABLE IF NOT EXISTS `creature_client_interact` (
-  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
-  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
-  PRIMARY KEY (`guid`,`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the client talked to the creature';
 
 -- Data exporting was unselected.
 
@@ -568,6 +380,19 @@ CREATE TABLE IF NOT EXISTS `creature_emote` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_equipment_values_update
+DROP TABLE IF EXISTS `creature_equipment_values_update`;
+CREATE TABLE IF NOT EXISTS `creature_equipment_values_update` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  `slot` tinyint(3) unsigned NOT NULL,
+  `item_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`guid`,`unixtimems`,`slot`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to visual item slots';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_equip_template
 DROP TABLE IF EXISTS `creature_equip_template`;
 CREATE TABLE IF NOT EXISTS `creature_equip_template` (
@@ -591,6 +416,49 @@ CREATE TABLE IF NOT EXISTS `creature_gossip` (
   `VerifiedBuild` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`CreatureId`,`GossipMenuId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.creature_guid_values
+DROP TABLE IF EXISTS `creature_guid_values`;
+CREATE TABLE IF NOT EXISTS `creature_guid_values` (
+  `guid` int(10) unsigned NOT NULL,
+  `charm_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `charm_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `charm_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `summon_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `summon_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `summon_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `charmer_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `charmer_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `charmer_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `creator_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `creator_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `creator_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `summoner_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `summoner_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `summoner_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `target_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `target_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`guid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='initial value in guid type update fields';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.creature_guid_values_update
+DROP TABLE IF EXISTS `creature_guid_values_update`;
+CREATE TABLE IF NOT EXISTS `creature_guid_values_update` (
+  `guid` int(10) unsigned NOT NULL,
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `field_name` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `object_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `object_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `object_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`guid`,`unixtimems`,`field_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to guid type update fields';
 
 -- Data exporting was unselected.
 
@@ -750,11 +618,23 @@ CREATE TABLE IF NOT EXISTS `creature_stats` (
   `ranged_dmg_max` float DEFAULT NULL,
   `attack_power` int(10) unsigned DEFAULT NULL,
   `ranged_attack_power` int(10) unsigned DEFAULT NULL,
+  `base_health` int(10) unsigned DEFAULT NULL,
+  `base_mana` int(10) unsigned DEFAULT NULL,
   `strength` int(10) unsigned DEFAULT NULL,
   `agility` int(10) unsigned DEFAULT NULL,
   `stamina` int(10) unsigned DEFAULT NULL,
   `intellect` int(10) unsigned DEFAULT NULL,
   `spirit` int(10) unsigned DEFAULT NULL,
+  `positive_strength` int(10) unsigned DEFAULT NULL,
+  `positive_agility` int(10) unsigned DEFAULT NULL,
+  `positive_stamina` int(10) unsigned DEFAULT NULL,
+  `positive_intellect` int(10) unsigned DEFAULT NULL,
+  `positive_spirit` int(10) unsigned DEFAULT NULL,
+  `negative_strength` int(10) unsigned DEFAULT NULL,
+  `negative_agility` int(10) unsigned DEFAULT NULL,
+  `negative_stamina` int(10) unsigned DEFAULT NULL,
+  `negative_intellect` int(10) unsigned DEFAULT NULL,
+  `negative_spirit` int(10) unsigned DEFAULT NULL,
   `armor` int(11) DEFAULT NULL,
   `holy_res` int(11) DEFAULT NULL,
   `fire_res` int(11) DEFAULT NULL,
@@ -762,22 +642,22 @@ CREATE TABLE IF NOT EXISTS `creature_stats` (
   `frost_res` int(11) DEFAULT NULL,
   `shadow_res` int(11) DEFAULT NULL,
   `arcane_res` int(11) DEFAULT NULL,
+  `positive_armor` int(11) DEFAULT NULL,
+  `positive_holy_res` int(11) DEFAULT NULL,
+  `positive_fire_res` int(11) DEFAULT NULL,
+  `positive_nature_res` int(11) DEFAULT NULL,
+  `positive_frost_res` int(11) DEFAULT NULL,
+  `positive_shadow_res` int(11) DEFAULT NULL,
+  `positive_arcane_res` int(11) DEFAULT NULL,
+  `negative_armor` int(11) DEFAULT NULL,
+  `negative_holy_res` int(11) DEFAULT NULL,
+  `negative_fire_res` int(11) DEFAULT NULL,
+  `negative_nature_res` int(11) DEFAULT NULL,
+  `negative_frost_res` int(11) DEFAULT NULL,
+  `negative_shadow_res` int(11) DEFAULT NULL,
+  `negative_arcane_res` int(11) DEFAULT NULL,
   PRIMARY KEY (`entry`,`level`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='stats data from SMSG_UPDATE_OBJECT, server only sends it if the creature is mind controlled';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.creature_target_change
-DROP TABLE IF EXISTS `creature_target_change`;
-CREATE TABLE IF NOT EXISTS `creature_target_change` (
-  `guid` int(10) unsigned NOT NULL,
-  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `victim_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`guid`,`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to UNIT_FIELD_TARGET';
 
 -- Data exporting was unselected.
 
@@ -925,21 +805,93 @@ CREATE TABLE IF NOT EXISTS `creature_values_update` (
   `mount_display_id` int(10) unsigned DEFAULT NULL,
   `faction` int(10) unsigned DEFAULT NULL,
   `level` int(10) unsigned DEFAULT NULL,
-  `aura_state` int(10) unsigned DEFAULT NULL,
-  `emote_state` int(10) unsigned DEFAULT NULL,
-  `stand_state` int(10) unsigned DEFAULT NULL,
-  `sheath_state` int(10) unsigned DEFAULT NULL,
   `npc_flags` int(10) unsigned DEFAULT NULL,
   `unit_flags` int(10) unsigned DEFAULT NULL,
   `current_health` int(10) unsigned DEFAULT NULL,
   `max_health` int(10) unsigned DEFAULT NULL,
   `current_mana` int(10) unsigned DEFAULT NULL,
   `max_mana` int(10) unsigned DEFAULT NULL,
-  `bounding_radius` float unsigned DEFAULT NULL,
-  `combat_reach` float unsigned DEFAULT NULL,
+  `aura_state` int(10) unsigned DEFAULT NULL,
+  `emote_state` int(10) unsigned DEFAULT NULL,
+  `stand_state` int(10) unsigned DEFAULT NULL,
+  `pet_talent_points` int(10) unsigned DEFAULT NULL,
+  `vis_flags` int(10) unsigned DEFAULT NULL,
+  `anim_tier` int(10) unsigned DEFAULT NULL,
+  `sheath_state` int(10) unsigned DEFAULT NULL,
+  `pvp_flags` int(10) unsigned DEFAULT NULL,
+  `pet_flags` int(10) unsigned DEFAULT NULL,
+  `shapeshift_form` int(10) unsigned DEFAULT NULL,
+  `bounding_radius` float DEFAULT NULL,
+  `combat_reach` float DEFAULT NULL,
+  `mod_melee_haste` float DEFAULT NULL,
+  `mod_ranged_haste` float DEFAULT NULL,
   `base_attack_time` int(10) unsigned DEFAULT NULL,
   `ranged_attack_time` int(10) unsigned DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='values updates from SMSG_UPDATE_OBJECT';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.dynamicobject
+DROP TABLE IF EXISTS `dynamicobject`;
+CREATE TABLE IF NOT EXISTS `dynamicobject` (
+  `guid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Global Unique Identifier',
+  `map` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'Map Identifier',
+  `position_x` float NOT NULL DEFAULT '0',
+  `position_y` float NOT NULL DEFAULT '0',
+  `position_z` float NOT NULL DEFAULT '0',
+  `orientation` float NOT NULL DEFAULT '0',
+  `caster_guid` int(11) unsigned NOT NULL DEFAULT '0',
+  `caster_id` int(11) unsigned NOT NULL DEFAULT '0',
+  `caster_type` varchar(16) NOT NULL DEFAULT '',
+  `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `visual_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `radius` float NOT NULL DEFAULT '0',
+  `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `cast_time` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`guid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Gameobject System';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.dynamicobject_create1_time
+DROP TABLE IF EXISTS `dynamicobject_create1_time`;
+CREATE TABLE IF NOT EXISTS `dynamicobject_create1_time` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'dynamicobject spawn guid',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  `position_x` float NOT NULL,
+  `position_y` float NOT NULL,
+  `position_z` float NOT NULL,
+  `orientation` float NOT NULL,
+  PRIMARY KEY (`guid`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the object became visible to the client';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.dynamicobject_create2_time
+DROP TABLE IF EXISTS `dynamicobject_create2_time`;
+CREATE TABLE IF NOT EXISTS `dynamicobject_create2_time` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'dynamicobject spawn guid',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  `position_x` float NOT NULL,
+  `position_y` float NOT NULL,
+  `position_z` float NOT NULL,
+  `orientation` float NOT NULL,
+  PRIMARY KEY (`guid`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='the time at which the object spawned';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.dynamicobject_destroy_time
+DROP TABLE IF EXISTS `dynamicobject_destroy_time`;
+CREATE TABLE IF NOT EXISTS `dynamicobject_destroy_time` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'dynamicobject spawn guid',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  PRIMARY KEY (`guid`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the object was destroyed from the client''s prespective due to despawning, becoming invisible, or going out of range';
 
 -- Data exporting was unselected.
 
@@ -963,12 +915,13 @@ CREATE TABLE IF NOT EXISTS `gameobject` (
   `temp` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `creator_guid` int(11) unsigned NOT NULL DEFAULT '0',
   `creator_id` int(11) unsigned NOT NULL DEFAULT '0',
-  `creator_type` varchar(32) NOT NULL DEFAULT '',
-  `animprogress` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `state` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `creator_type` varchar(16) NOT NULL DEFAULT '',
+  `display_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `level` int(10) unsigned NOT NULL DEFAULT '0',
   `faction` int(10) unsigned NOT NULL DEFAULT '0',
   `flags` int(10) unsigned NOT NULL DEFAULT '0',
-  `level` int(10) unsigned NOT NULL DEFAULT '0',
+  `state` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `animprogress` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `SniffId` smallint(5) unsigned NOT NULL DEFAULT '0',
   `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
   PRIMARY KEY (`guid`)
@@ -993,17 +946,6 @@ CREATE TABLE IF NOT EXISTS `gameobject_addon` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.gameobject_client_use
-DROP TABLE IF EXISTS `gameobject_client_use`;
-CREATE TABLE IF NOT EXISTS `gameobject_client_use` (
-  `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
-  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
-  PRIMARY KEY (`guid`,`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when client used a gameobject\r\nfrom CMSG_GAME_OBJ_USE and CMSG_GAME_OBJ_REPORT_USE';
-
--- Data exporting was unselected.
-
-
 -- Dumping structure for table sniffs_new_test.gameobject_create1_time
 DROP TABLE IF EXISTS `gameobject_create1_time`;
 CREATE TABLE IF NOT EXISTS `gameobject_create1_time` (
@@ -1022,7 +964,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_create1_time` (
 -- Dumping structure for table sniffs_new_test.gameobject_create2_time
 DROP TABLE IF EXISTS `gameobject_create2_time`;
 CREATE TABLE IF NOT EXISTS `gameobject_create2_time` (
-  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   `position_x` float NOT NULL,
   `position_y` float NOT NULL,
@@ -1193,6 +1135,9 @@ DROP TABLE IF EXISTS `gameobject_values_update`;
 CREATE TABLE IF NOT EXISTS `gameobject_values_update` (
   `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  `display_id` int(10) unsigned DEFAULT NULL,
+  `level` int(10) unsigned DEFAULT NULL,
+  `faction` int(10) unsigned DEFAULT NULL,
   `flags` int(10) unsigned DEFAULT NULL,
   `state` int(10) unsigned DEFAULT NULL,
   `animprogress` int(10) unsigned DEFAULT NULL
@@ -1273,17 +1218,6 @@ CREATE TABLE IF NOT EXISTS `hotfix_data` (
   `VerifiedBuild` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Id`,`TableHash`,`RecordId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.item_client_use
-DROP TABLE IF EXISTS `item_client_use`;
-CREATE TABLE IF NOT EXISTS `item_client_use` (
-  `entry` int(10) unsigned NOT NULL COMMENT 'item template entry',
-  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
-  PRIMARY KEY (`entry`,`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when client used an item\r\nfrom CMSG_USE_ITEM';
 
 -- Data exporting was unselected.
 
@@ -1392,6 +1326,61 @@ CREATE TABLE IF NOT EXISTS `page_text_locale` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.player
+DROP TABLE IF EXISTS `player`;
+CREATE TABLE IF NOT EXISTS `player` (
+  `guid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Global Unique Identifier',
+  `map` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Map Identifier',
+  `position_x` float NOT NULL DEFAULT '0',
+  `position_y` float NOT NULL DEFAULT '0',
+  `position_z` float NOT NULL DEFAULT '0',
+  `orientation` float NOT NULL DEFAULT '0',
+  `name` varchar(12) NOT NULL DEFAULT '',
+  `race` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `class` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `gender` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `level` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `xp` int(10) unsigned NOT NULL DEFAULT '0',
+  `money` int(10) unsigned NOT NULL DEFAULT '0',
+  `player_bytes1` int(10) unsigned NOT NULL DEFAULT '0',
+  `player_bytes2` int(10) unsigned NOT NULL DEFAULT '0',
+  `player_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `scale` float NOT NULL DEFAULT '0',
+  `display_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `native_display_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `mount_display_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `faction` int(10) unsigned NOT NULL DEFAULT '0',
+  `unit_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `current_health` int(10) unsigned NOT NULL DEFAULT '0',
+  `max_health` int(10) unsigned NOT NULL DEFAULT '0',
+  `current_mana` int(10) unsigned NOT NULL DEFAULT '0',
+  `max_mana` int(10) unsigned NOT NULL DEFAULT '0',
+  `aura_state` int(10) unsigned NOT NULL DEFAULT '0',
+  `emote_state` int(10) unsigned NOT NULL DEFAULT '0',
+  `stand_state` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1',
+  `pet_talent_points` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1',
+  `vis_flags` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1',
+  `anim_tier` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1',
+  `sheath_state` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
+  `pvp_flags` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
+  `pet_flags` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
+  `shapeshift_form` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
+  `speed_walk` float NOT NULL DEFAULT '0',
+  `speed_run` float NOT NULL DEFAULT '0',
+  `bounding_radius` float NOT NULL DEFAULT '0',
+  `combat_reach` float NOT NULL DEFAULT '0',
+  `mod_melee_haste` float NOT NULL DEFAULT '0',
+  `mod_ranged_haste` float NOT NULL DEFAULT '0',
+  `base_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `ranged_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `equipment_cache` text,
+  `auras` text,
+  PRIMARY KEY (`guid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='player data in format used by vmangos db';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.playercreateinfo
 DROP TABLE IF EXISTS `playercreateinfo`;
 CREATE TABLE IF NOT EXISTS `playercreateinfo` (
@@ -1424,6 +1413,323 @@ CREATE TABLE IF NOT EXISTS `playercreateinfo_action` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.player_active_player
+DROP TABLE IF EXISTS `player_active_player`;
+CREATE TABLE IF NOT EXISTS `player_active_player` (
+  `guid` int(10) unsigned NOT NULL,
+  `unixtime` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`guid`,`unixtime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='shows which character was controlled by the client at a given time';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_attack_log
+DROP TABLE IF EXISTS `player_attack_log`;
+CREATE TABLE IF NOT EXISTS `player_attack_log` (
+  `guid` int(10) unsigned NOT NULL,
+  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `hit_info` int(10) unsigned NOT NULL DEFAULT '0',
+  `damage` int(10) unsigned NOT NULL DEFAULT '0',
+  `original_damage` int(10) unsigned NOT NULL DEFAULT '0',
+  `overkill_damage` int(10) NOT NULL DEFAULT '0',
+  `blocked_damage` int(10) NOT NULL DEFAULT '0',
+  `victim_state` int(10) unsigned NOT NULL DEFAULT '0',
+  `attacker_state` int(10) NOT NULL DEFAULT '0',
+  `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`guid`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACKER_STATE_UPDATE';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_attack_start
+DROP TABLE IF EXISTS `player_attack_start`;
+CREATE TABLE IF NOT EXISTS `player_attack_start` (
+  `guid` int(10) unsigned NOT NULL,
+  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`guid`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACK_START';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_attack_stop
+DROP TABLE IF EXISTS `player_attack_stop`;
+CREATE TABLE IF NOT EXISTS `player_attack_stop` (
+  `guid` int(10) unsigned NOT NULL,
+  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`guid`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACK_STOP';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_auras_update
+DROP TABLE IF EXISTS `player_auras_update`;
+CREATE TABLE IF NOT EXISTS `player_auras_update` (
+  `guid` int(10) unsigned NOT NULL,
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  `update_id` int(10) unsigned NOT NULL COMMENT 'counting aura update packets for this guid',
+  `slot` int(10) unsigned NOT NULL,
+  `spell_id` int(10) unsigned NOT NULL,
+  `visual_id` int(10) unsigned DEFAULT NULL,
+  `aura_flags` int(10) unsigned NOT NULL,
+  `active_flags` int(10) unsigned DEFAULT NULL,
+  `level` int(10) unsigned NOT NULL,
+  `charges` int(10) unsigned NOT NULL,
+  `content_tuning_id` int(10) DEFAULT NULL,
+  `duration` int(10) NOT NULL,
+  `max_duration` int(10) NOT NULL,
+  `caster_guid` int(10) unsigned NOT NULL,
+  `caster_id` int(10) unsigned NOT NULL,
+  `caster_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`guid`,`update_id`,`slot`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='aura updates from SMSG_AURA_UPDATE';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_chat
+DROP TABLE IF EXISTS `player_chat`;
+CREATE TABLE IF NOT EXISTS `player_chat` (
+  `guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `sender_name` varchar(12) NOT NULL DEFAULT '',
+  `text` longtext,
+  `chat_type` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `channel_name` varchar(255) DEFAULT '',
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`guid`,`sender_name`,`unixtimems`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='player chat packets';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_create1_time
+DROP TABLE IF EXISTS `player_create1_time`;
+CREATE TABLE IF NOT EXISTS `player_create1_time` (
+  `guid` int(10) unsigned NOT NULL,
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  `position_x` float NOT NULL,
+  `position_y` float NOT NULL,
+  `position_z` float NOT NULL,
+  `orientation` float NOT NULL,
+  PRIMARY KEY (`guid`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the object became visible to the client';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_create2_time
+DROP TABLE IF EXISTS `player_create2_time`;
+CREATE TABLE IF NOT EXISTS `player_create2_time` (
+  `guid` int(10) unsigned NOT NULL,
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  `position_x` float NOT NULL,
+  `position_y` float NOT NULL,
+  `position_z` float NOT NULL,
+  `orientation` float NOT NULL,
+  PRIMARY KEY (`guid`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='the time at which the object spawned';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_destroy_time
+DROP TABLE IF EXISTS `player_destroy_time`;
+CREATE TABLE IF NOT EXISTS `player_destroy_time` (
+  `guid` int(10) unsigned NOT NULL,
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  PRIMARY KEY (`guid`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the object was destroyed from the client''s prespective due to despawning, becoming invisible, or going out of range';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_emote
+DROP TABLE IF EXISTS `player_emote`;
+CREATE TABLE IF NOT EXISTS `player_emote` (
+  `guid` int(10) unsigned NOT NULL,
+  `emote_id` int(10) unsigned NOT NULL COMMENT 'references Emotes.dbc',
+  `emote_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  PRIMARY KEY (`guid`,`unixtimems`,`emote_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_EMOTE';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_equipment_values_update
+DROP TABLE IF EXISTS `player_equipment_values_update`;
+CREATE TABLE IF NOT EXISTS `player_equipment_values_update` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  `slot` tinyint(3) unsigned NOT NULL,
+  `item_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`guid`,`unixtimems`,`slot`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to visual item slots';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_guid_values
+DROP TABLE IF EXISTS `player_guid_values`;
+CREATE TABLE IF NOT EXISTS `player_guid_values` (
+  `guid` int(10) unsigned NOT NULL,
+  `charm_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `charm_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `charm_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `summon_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `summon_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `summon_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `charmer_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `charmer_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `charmer_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `creator_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `creator_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `creator_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `summoner_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `summoner_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `summoner_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `target_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `target_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`guid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='initial value in guid type update fields';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_guid_values_update
+DROP TABLE IF EXISTS `player_guid_values_update`;
+CREATE TABLE IF NOT EXISTS `player_guid_values_update` (
+  `guid` int(10) unsigned NOT NULL,
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `field_name` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `object_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `object_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `object_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`guid`,`unixtimems`,`field_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to guid type update fields';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_movement_client
+DROP TABLE IF EXISTS `player_movement_client`;
+CREATE TABLE IF NOT EXISTS `player_movement_client` (
+  `guid` int(10) unsigned NOT NULL,
+  `opcode` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `move_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `map` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `position_x` float NOT NULL DEFAULT '0',
+  `position_y` float NOT NULL DEFAULT '0',
+  `position_z` float NOT NULL DEFAULT '0',
+  `orientation` float NOT NULL DEFAULT '0',
+  `unixtimems` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`guid`,`opcode`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='client side movement';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_movement_server
+DROP TABLE IF EXISTS `player_movement_server`;
+CREATE TABLE IF NOT EXISTS `player_movement_server` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'player guid',
+  `point` smallint(5) unsigned NOT NULL COMMENT 'counter of movements per guid',
+  `move_time` int(10) unsigned NOT NULL COMMENT 'how long it will take to move between these points',
+  `spline_flags` int(10) unsigned NOT NULL,
+  `spline_count` smallint(5) unsigned NOT NULL COMMENT 'number of splines belonging to this point',
+  `start_position_x` float NOT NULL COMMENT 'starting position',
+  `start_position_y` float NOT NULL,
+  `start_position_z` float NOT NULL,
+  `end_position_x` float NOT NULL COMMENT 'final position',
+  `end_position_y` float NOT NULL,
+  `end_position_z` float NOT NULL,
+  `orientation` float NOT NULL COMMENT 'final orientation',
+  `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
+  PRIMARY KEY (`guid`,`point`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='movement points from SMSG_ON_MONSTER_MOVE';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_movement_server_spline
+DROP TABLE IF EXISTS `player_movement_server_spline`;
+CREATE TABLE IF NOT EXISTS `player_movement_server_spline` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'player guid',
+  `parent_point` smallint(5) unsigned NOT NULL COMMENT 'point from character_movement_server to which the spline data belongs',
+  `spline_point` smallint(5) unsigned NOT NULL COMMENT 'order of points within the spline',
+  `position_x` float NOT NULL,
+  `position_y` float NOT NULL,
+  `position_z` float NOT NULL,
+  PRIMARY KEY (`guid`,`parent_point`,`spline_point`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='individual spline points for combat  movement';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_speed_update
+DROP TABLE IF EXISTS `player_speed_update`;
+CREATE TABLE IF NOT EXISTS `player_speed_update` (
+  `guid` int(10) unsigned NOT NULL,
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  `speed_type` tinyint(3) unsigned NOT NULL,
+  `speed_rate` float unsigned NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to movement speed';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_values_update
+DROP TABLE IF EXISTS `player_values_update`;
+CREATE TABLE IF NOT EXISTS `player_values_update` (
+  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  `entry` int(10) unsigned DEFAULT NULL,
+  `scale` float unsigned DEFAULT NULL,
+  `display_id` int(10) unsigned DEFAULT NULL,
+  `mount_display_id` int(10) unsigned DEFAULT NULL,
+  `faction` int(10) unsigned DEFAULT NULL,
+  `level` int(10) unsigned DEFAULT NULL,
+  `npc_flags` int(10) unsigned DEFAULT NULL,
+  `unit_flags` int(10) unsigned DEFAULT NULL,
+  `current_health` int(10) unsigned DEFAULT NULL,
+  `max_health` int(10) unsigned DEFAULT NULL,
+  `current_mana` int(10) unsigned DEFAULT NULL,
+  `max_mana` int(10) unsigned DEFAULT NULL,
+  `aura_state` int(10) unsigned DEFAULT NULL,
+  `emote_state` int(10) unsigned DEFAULT NULL,
+  `stand_state` int(10) unsigned DEFAULT NULL,
+  `pet_talent_points` int(10) unsigned DEFAULT NULL,
+  `vis_flags` int(10) unsigned DEFAULT NULL,
+  `anim_tier` int(10) unsigned DEFAULT NULL,
+  `sheath_state` int(10) unsigned DEFAULT NULL,
+  `pvp_flags` int(10) unsigned DEFAULT NULL,
+  `pet_flags` int(10) unsigned DEFAULT NULL,
+  `shapeshift_form` int(10) unsigned DEFAULT NULL,
+  `bounding_radius` float DEFAULT NULL,
+  `combat_reach` float DEFAULT NULL,
+  `mod_melee_haste` float DEFAULT NULL,
+  `mod_ranged_haste` float DEFAULT NULL,
+  `base_attack_time` int(10) unsigned DEFAULT NULL,
+  `ranged_attack_time` int(10) unsigned DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='values updates from SMSG_UPDATE_OBJECT';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.play_music
 DROP TABLE IF EXISTS `play_music`;
 CREATE TABLE IF NOT EXISTS `play_music` (
@@ -1440,7 +1746,7 @@ DROP TABLE IF EXISTS `play_sound`;
 CREATE TABLE IF NOT EXISTS `play_sound` (
   `source_guid` int(10) unsigned NOT NULL COMMENT 'guid of the object which was the source of the sound',
   `source_id` int(10) unsigned NOT NULL COMMENT 'entry of the object which was the source of the sound',
-  `source_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT 'type of the object which was the source of the sound',
+  `source_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'type of the object which was the source of the sound',
   `sound` int(10) unsigned NOT NULL COMMENT 'references SoundEntries.dbc',
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   PRIMARY KEY (`unixtimems`,`source_guid`,`sound`,`source_id`,`source_type`)
@@ -1454,7 +1760,7 @@ DROP TABLE IF EXISTS `play_spell_visual_kit`;
 CREATE TABLE IF NOT EXISTS `play_spell_visual_kit` (
   `caster_guid` int(10) unsigned NOT NULL,
   `caster_id` int(10) unsigned NOT NULL,
-  `caster_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `caster_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
   `kit_id` int(10) unsigned NOT NULL COMMENT 'references SpellVisualKit.dbc',
   `kit_type` int(10) unsigned DEFAULT NULL,
   `duration` int(10) unsigned DEFAULT NULL,
@@ -1482,30 +1788,13 @@ CREATE TABLE IF NOT EXISTS `points_of_interest` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.quest_client_accept
-DROP TABLE IF EXISTS `quest_client_accept`;
-CREATE TABLE IF NOT EXISTS `quest_client_accept` (
-  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
-  `object_guid` int(10) unsigned NOT NULL COMMENT 'guid of the quest ender object',
-  `object_id` int(10) unsigned NOT NULL COMMENT 'entry of the quest ender object',
-  `object_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT 'type of the quest ender object',
-  `quest_id` int(10) unsigned NOT NULL COMMENT 'references quest_template',
-  PRIMARY KEY (`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when a quest was accepted by client';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.quest_client_complete
-DROP TABLE IF EXISTS `quest_client_complete`;
-CREATE TABLE IF NOT EXISTS `quest_client_complete` (
-  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
-  `object_guid` int(10) unsigned NOT NULL COMMENT 'guid of the quest ender object',
-  `object_id` int(10) unsigned NOT NULL COMMENT 'entry of the quest ender object',
-  `object_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT 'type of the quest ender object',
-  `quest_id` int(10) unsigned NOT NULL COMMENT 'references quest_template',
-  PRIMARY KEY (`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when a quest was turned in by client';
+-- Dumping structure for table sniffs_new_test.quest_complete_time
+DROP TABLE IF EXISTS `quest_complete_time`;
+CREATE TABLE IF NOT EXISTS `quest_complete_time` (
+  `quest_id` int(10) unsigned NOT NULL COMMENT 'quest template entry',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  PRIMARY KEY (`quest_id`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_QUEST_UPDATE_COMPLETE';
 
 -- Data exporting was unselected.
 
@@ -1533,10 +1822,21 @@ CREATE TABLE IF NOT EXISTS `quest_details` (
 DROP TABLE IF EXISTS `quest_ender`;
 CREATE TABLE IF NOT EXISTS `quest_ender` (
   `object_id` int(10) unsigned NOT NULL COMMENT 'entry of the quest ender object',
-  `object_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT 'type of the quest ender object',
+  `object_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'type of the quest ender object',
   `quest_id` int(10) unsigned NOT NULL COMMENT 'references quest_template',
   PRIMARY KEY (`object_id`,`object_type`,`quest_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='list of quests that can be turned in to a given creature or gameobject';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.quest_fail_time
+DROP TABLE IF EXISTS `quest_fail_time`;
+CREATE TABLE IF NOT EXISTS `quest_fail_time` (
+  `quest_id` int(10) unsigned NOT NULL COMMENT 'quest template entry',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  PRIMARY KEY (`quest_id`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_QUEST_UPDATE_FAILED and SMSG_QUEST_UPDATE_FAILED_TIMER';
 
 -- Data exporting was unselected.
 
@@ -1703,7 +2003,7 @@ CREATE TABLE IF NOT EXISTS `quest_request_items_locale` (
 DROP TABLE IF EXISTS `quest_starter`;
 CREATE TABLE IF NOT EXISTS `quest_starter` (
   `object_id` int(10) unsigned NOT NULL COMMENT 'entry of the quest giver object',
-  `object_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT 'type of the quest giver object',
+  `object_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'type of the quest giver object',
   `quest_id` int(10) unsigned NOT NULL COMMENT 'references quest_template',
   PRIMARY KEY (`object_id`,`object_type`,`quest_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='list of quests that can be picked up from a given creature or gameobject';
@@ -1862,7 +2162,7 @@ DROP TABLE IF EXISTS `spell_cast_failed`;
 CREATE TABLE IF NOT EXISTS `spell_cast_failed` (
   `caster_guid` int(10) unsigned NOT NULL,
   `caster_id` int(10) unsigned NOT NULL,
-  `caster_type` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `caster_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
   `spell_id` int(10) unsigned NOT NULL,
   `visual_id` int(10) unsigned DEFAULT NULL,
   `reason` int(10) unsigned DEFAULT NULL,
@@ -1879,10 +2179,16 @@ CREATE TABLE IF NOT EXISTS `spell_cast_go` (
   `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'when the packet was received',
   `caster_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `caster_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `caster_type` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `caster_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `caster_unit_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `caster_unit_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `caster_unit_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `visual_id` int(10) unsigned NOT NULL DEFAULT '0',
   `cast_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `cast_flags_ex` int(10) unsigned NOT NULL DEFAULT '0',
+  `ammo_display_id` int(10) NOT NULL DEFAULT '0',
+  `ammo_inventory_type` int(10) NOT NULL DEFAULT '0',
   `main_target_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `main_target_id` int(10) unsigned NOT NULL DEFAULT '0',
   `main_target_type` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
@@ -1917,7 +2223,7 @@ CREATE TABLE IF NOT EXISTS `spell_cast_go_target` (
   `list_id` int(10) unsigned NOT NULL DEFAULT '0',
   `target_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `target_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `target_type` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
+  `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='hit and miss targets from SMSG_SPELL_GO';
 
 -- Data exporting was unselected.
@@ -1929,11 +2235,17 @@ CREATE TABLE IF NOT EXISTS `spell_cast_start` (
   `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'when the packet was received',
   `caster_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `caster_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `caster_type` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `caster_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `caster_unit_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `caster_unit_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `caster_unit_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `visual_id` int(10) unsigned NOT NULL DEFAULT '0',
   `cast_time` int(10) unsigned NOT NULL DEFAULT '0',
   `cast_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `cast_flags_ex` int(10) unsigned NOT NULL DEFAULT '0',
+  `ammo_display_id` int(10) NOT NULL DEFAULT '0',
+  `ammo_inventory_type` int(10) NOT NULL DEFAULT '0',
   `target_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `target_id` int(10) unsigned NOT NULL DEFAULT '0',
   `target_type` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
@@ -1949,7 +2261,7 @@ CREATE TABLE IF NOT EXISTS `spell_channel_start` (
   `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'when the packet was received',
   `caster_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `caster_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `caster_type` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `caster_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
   `visual_id` int(10) unsigned DEFAULT NULL,
   `duration` int(10) NOT NULL DEFAULT '0',
@@ -1965,7 +2277,7 @@ CREATE TABLE IF NOT EXISTS `spell_channel_update` (
   `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'when the packet was received',
   `caster_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `caster_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `caster_type` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `caster_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `duration` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`unixtimems`,`caster_guid`,`caster_id`,`caster_type`,`duration`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_SPELL_CHANNEL_UPDATE';
@@ -2059,11 +2371,14 @@ CREATE TABLE IF NOT EXISTS `trainer_spell` (
 -- Dumping structure for table sniffs_new_test.weather_update
 DROP TABLE IF EXISTS `weather_update`;
 CREATE TABLE IF NOT EXISTS `weather_update` (
-  `map_id` int(11) NOT NULL DEFAULT '0',
+  `map_id` int(11) unsigned NOT NULL DEFAULT '0',
   `zone_id` int(11) NOT NULL DEFAULT '0',
-  `weather_state` int(11) NOT NULL DEFAULT '0',
-  `grade` int(11) NOT NULL DEFAULT '0',
-  `unk` int(11) NOT NULL DEFAULT '0'
+  `weather_state` int(11) unsigned NOT NULL DEFAULT '0',
+  `grade` float NOT NULL DEFAULT '0',
+  `sound` int(11) NOT NULL DEFAULT '0',
+  `instant` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.

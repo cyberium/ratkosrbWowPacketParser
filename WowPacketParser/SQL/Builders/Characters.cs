@@ -587,7 +587,7 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(movementSql.Build());
                 result.AppendLine();
 
-                var movementSplineSql = new SQLInsert<ServerSideMovementSpline>(playerServerMovementSplineRows, false, false, "character_movement_server_spline");
+                var movementSplineSql = new SQLInsert<ServerSideMovementSpline>(playerServerMovementSplineRows, false, false, "player_movement_server_spline");
                 result.Append(movementSplineSql.Build());
                 result.AppendLine();
             }
