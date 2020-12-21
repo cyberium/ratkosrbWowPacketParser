@@ -43,6 +43,7 @@ namespace WowPacketParser.SQL.Builders
             var playerCreate1Rows = new RowList<PlayerCreate1>();
             var playerCreate2Rows = new RowList<PlayerCreate2>();
             var playerDestroyRows = new RowList<PlayerDestroy>();
+            var playerEmoteRows = new RowList<CreatureEmote>();
             var playerEquipmentValuesUpdateRows = new RowList<CreatureEquipmentValuesUpdate>();
             var playerGuidValuesUpdateRows = new RowList<CreatureGuidValuesUpdate>();
             var playerValuesUpdateRows = new RowList<CreatureValuesUpdate>();
@@ -315,6 +316,20 @@ namespace WowPacketParser.SQL.Builders
                             destroyRow.Data.GUID = row.Data.Guid;
                             destroyRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(createTime);
                             playerDestroyRows.Add(destroyRow);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.player_emote)
+                {
+                    if (Storage.Emotes.ContainsKey(objPair.Key))
+                    {
+                        foreach (var emote in Storage.Emotes[objPair.Key])
+                        {
+                            var emoteRow = new Row<CreatureEmote>();
+                            emoteRow.Data = emote;
+                            emoteRow.Data.GUID = row.Data.Guid;
+                            playerEmoteRows.Add(emoteRow);
                         }
                     }
                 }
@@ -595,6 +610,16 @@ namespace WowPacketParser.SQL.Builders
             {
                 var characterAttackStopSql = new SQLInsert<CreatureTargetChange>(playerAttackStopRows, false, false, "player_attack_stop");
                 result.Append(characterAttackStopSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.player_emote)
+            {
+                var emoteDelete = new SQLDelete<CreatureEmote>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
+                emoteDelete.tableNameOverride = "player_emote";
+                result.Append(emoteDelete.Build());
+                var emoteSql = new SQLInsert<CreatureEmote>(playerEmoteRows, false, false, "player_emote");
+                result.Append(emoteSql.Build());
                 result.AppendLine();
             }
 

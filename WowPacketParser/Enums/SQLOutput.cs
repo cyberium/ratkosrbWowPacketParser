@@ -59,6 +59,7 @@
         player_create1_time,
         player_create2_time,
         player_destroy_time,
+        player_emote,
         player_equipment_values_update,
         player_guid_values,
         player_guid_values_update,

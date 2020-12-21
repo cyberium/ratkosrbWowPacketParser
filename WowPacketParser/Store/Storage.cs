@@ -542,9 +542,21 @@ namespace WowPacketParser.Store
             }
         }
         public static readonly Dictionary<WowGuid, List<CreatureEmote>> Emotes = new Dictionary<WowGuid, List<CreatureEmote>>();
-        public static void StoreCreatureEmote(WowGuid guid, EmoteType emote, DateTime time)
+        public static void StoreUnitEmote(WowGuid guid, EmoteType emote, DateTime time)
         {
-            if (!Settings.SqlTables.creature_emote)
+            if (guid.GetObjectType() == ObjectType.Unit &&
+                guid.GetHighType() != HighGuidType.Pet)
+            {
+                if (!Settings.SqlTables.creature_emote)
+                    return;
+            }
+            else if (guid.GetObjectType() == ObjectType.Player ||
+                     guid.GetObjectType() == ObjectType.ActivePlayer)
+            {
+                if (!Settings.SqlTables.player_emote)
+                    return;
+            }
+            else
                 return;
 
             if (Storage.Emotes.ContainsKey(guid))

@@ -41,9 +41,7 @@ namespace WowPacketParser.Parsing.Parsers
         {
             var emote = packet.ReadInt32E<EmoteType>("Emote ID");
             var guid = packet.ReadGuid("GUID");
-
-            if (guid.GetObjectType() == ObjectType.Unit)
-                Storage.StoreCreatureEmote(guid, emote, packet.Time);
+            Storage.StoreUnitEmote(guid, emote, packet.Time);
         }
 
         [Parser(Opcode.CMSG_SEND_TEXT_EMOTE)]

@@ -146,6 +146,7 @@ namespace WowPacketParser.Misc
             public static readonly bool player_create1_time = Conf.GetBoolean("player_create1_time", false);
             public static readonly bool player_create2_time = Conf.GetBoolean("player_create2_time", false);
             public static readonly bool player_destroy_time = Conf.GetBoolean("player_destroy_time", false);
+            public static readonly bool player_emote = Conf.GetBoolean("player_emote", false);
             public static readonly bool player_equipment_values_update = Conf.GetBoolean("player_equipment_values_update", false);
             public static readonly bool player_guid_values = Conf.GetBoolean("player_guid_values", false);
             public static readonly bool player_guid_values_update = Conf.GetBoolean("player_guid_values_update", false);
