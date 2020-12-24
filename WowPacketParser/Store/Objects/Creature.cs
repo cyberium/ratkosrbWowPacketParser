@@ -373,31 +373,31 @@ namespace WowPacketParser.Store.Objects
         public uint? Slot;
 
         [DBFieldName("spell_id")]
-        public uint? SpellId;
+        public uint SpellId;
 
         [DBFieldName("visual_id", false, false, true)]
-        public uint? VisualId;
+        public uint VisualId;
 
         [DBFieldName("aura_flags")]
-        public Enum AuraFlags;
+        public uint AuraFlags;
 
         [DBFieldName("active_flags", false, false, true)]
-        public uint? ActiveFlags;
+        public uint ActiveFlags;
 
         [DBFieldName("level")]
-        public uint? Level;
+        public uint Level;
 
         [DBFieldName("charges")]
-        public uint? Charges;
+        public uint Charges;
 
         [DBFieldName("content_tuning_id", false, false, true)]
-        public int? ContentTuningId;
+        public int ContentTuningId;
 
         [DBFieldName("duration")]
-        public int? Duration;
+        public int Duration;
 
         [DBFieldName("max_duration")]
-        public int? MaxDuration;
+        public int MaxDuration;
 
         [DBFieldName("caster_guid", false, true)]
         public string CasterGuid;

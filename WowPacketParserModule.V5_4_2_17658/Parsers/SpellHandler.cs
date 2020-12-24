@@ -62,9 +62,9 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
             var auras = new List<Aura>();
             for (var i = 0; i < bits0; ++i)
             {
+                var aura = new Aura();
                 if (hasAura[i])
                 {
-                    var aura = new Aura();
                     if (hasCasterGUID[i])
                     {
                         packet.ParseBitStream(casterGUID[i], 0, 3, 7, 1, 2, 5, 4, 6);
@@ -86,14 +86,14 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
 
                     aura.Charges = packet.ReadByte("Charges", i);
                     aura.SpellId = packet.ReadUInt32("Spell Id", i);
-                    aura.AuraFlags = packet.ReadByteE<AuraFlagMoP>("Flags", i);
+                    aura.AuraFlags = (uint)packet.ReadByteE<AuraFlagMoP>("Flags", i);
                     packet.ReadInt32("Effect Mask", i);
 
-                    auras.Add(aura);
                     packet.AddSniffData(StoreNameType.Spell, (int)aura.SpellId, "AURA_UPDATE");
                 }
 
-                packet.ReadByte("Slot", i);
+                aura.Slot = packet.ReadByte("Slot", i);
+                auras.Add(aura);
             }
 
             packet.ParseBitStream(guid, 5, 1, 2, 6, 0, 7, 4, 3);

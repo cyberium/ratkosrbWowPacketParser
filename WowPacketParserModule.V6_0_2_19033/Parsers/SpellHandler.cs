@@ -196,7 +196,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                     aura.SpellId = (uint)packet.ReadInt32<SpellId>("SpellID", i);
                     if (ClientVersion.AddedInVersion(ClientVersionBuild.V6_2_0_20173))
                         aura.VisualId = packet.ReadUInt32("SpellXSpellVisualID", i);
-                    aura.AuraFlags = packet.ReadByteE<AuraFlagMoP>("Flags", i);
+                    aura.AuraFlags = (uint)packet.ReadByteE<AuraFlagMoP>("Flags", i);
                     aura.ActiveFlags = packet.ReadUInt32("ActiveFlags", i);
                     aura.Level = packet.ReadUInt16("CastLevel", i);
                     aura.Charges = packet.ReadByte("Applications", i);
@@ -221,9 +221,9 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                     aura.Duration = hasDuration ? packet.ReadInt32("Duration", i) : 0;
                     aura.MaxDuration = hasMaxDuration ? packet.ReadInt32("Remaining", i) : 0;
 
-                    auras.Add(aura);
                     packet.AddSniffData(StoreNameType.Spell, (int)aura.SpellId, "AURA_UPDATE");
                 }
+                auras.Add(aura);
             }
 
             Storage.StoreUnitAurasUpdate(guid, auras, packet.Time);

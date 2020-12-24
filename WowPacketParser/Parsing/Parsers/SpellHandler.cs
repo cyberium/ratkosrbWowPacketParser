@@ -226,13 +226,13 @@ namespace WowPacketParser.Parsing.Parsers
 
             var id = packet.ReadInt32<SpellId>("Spell ID", i);
             if (id <= 0)
-                return null;
+                return aura;
             aura.SpellId = (uint)id;
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_2_0_14333))
-                aura.AuraFlags = packet.ReadInt16E<AuraFlag>("Flags", i);
+                aura.AuraFlags = (uint)packet.ReadInt16E<AuraFlag>("Flags", i);
             else
-                aura.AuraFlags = packet.ReadByteE<AuraFlag>("Flags", i);
+                aura.AuraFlags = (uint)packet.ReadByteE<AuraFlag>("Flags", i);
 
             aura.Level = packet.ReadByte("Level", i);
 
@@ -277,11 +277,11 @@ namespace WowPacketParser.Parsing.Parsers
 
             var id = packet.ReadInt32<SpellId>("Spell ID", i);
             if (id <= 0)
-                return null;
+                return aura;
 
             aura.SpellId = (uint)id;
 
-            aura.AuraFlags = packet.ReadByteE<AuraFlagMoP>("Flags", i);
+            aura.AuraFlags = (uint)packet.ReadByteE<AuraFlagMoP>("Flags", i);
 
             var mask = packet.ReadUInt32("Effect Mask", i);
 

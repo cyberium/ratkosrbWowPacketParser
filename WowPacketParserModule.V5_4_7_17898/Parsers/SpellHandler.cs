@@ -77,7 +77,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
                         packet.ReadSingle("Effect Value", i, j);
 
                     packet.ReadInt32("Effect Mask", i);
-                    aura.AuraFlags = packet.ReadByteE<AuraFlagMoP>("Flags", i);
+                    aura.AuraFlags = (uint)packet.ReadByteE<AuraFlagMoP>("Flags", i);
                     var id = packet.ReadInt32<SpellId>("Spell ID", i);
                     aura.SpellId = (uint)id;
                     aura.Level = packet.ReadUInt16("Caster Level", i);

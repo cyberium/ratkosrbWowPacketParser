@@ -136,10 +136,9 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
             var auras = new List<Aura>();
             for (var i = 0; i < bits4; ++i)
             {
+                var aura = new Aura();
                 if (hasAura[i])
                 {
-                    var aura = new Aura();
-
                     aura.Duration = hasDuration[i] ? packet.ReadInt32("Duration", i) : 0;
 
                     if (hasCasterGUID[i])
@@ -151,7 +150,7 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
                     else
                         aura.CasterGuid = new WowGuid64();
 
-                    aura.AuraFlags = packet.ReadByteE<AuraFlagMoP>("Flags", i);
+                    aura.AuraFlags = (uint)packet.ReadByteE<AuraFlagMoP>("Flags", i);
 
                     for (var j = 0; j < effectCount[i]; ++j)
                         packet.ReadSingle("Effect Value", i, j);
@@ -166,11 +165,11 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
                     aura.Charges = packet.ReadByte("Charges", i);
                     packet.ReadInt32("Effect Mask", i);
                     aura.Level = packet.ReadUInt16("Caster Level", i);
-                    auras.Add(aura);
                     packet.AddSniffData(StoreNameType.Spell, (int)aura.SpellId, "AURA_UPDATE");
                 }
 
-                packet.ReadByte("Slot", i);
+                aura.Slot = packet.ReadByte("Slot", i);
+                auras.Add(aura);
             }
 
             if (hasPowerData)
