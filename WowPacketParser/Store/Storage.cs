@@ -53,6 +53,9 @@ namespace WowPacketParser.Store
         }
         public static string GetObjectTypeNameForDB(WowGuid guid)
         {
+            if (guid.IsEmpty())
+                return "";
+
             if (guid.GetObjectType() == ObjectType.Unit)
             {
                 if (guid.GetHighType() == HighGuidType.Pet)
