@@ -296,12 +296,12 @@ CREATE TABLE IF NOT EXISTS `creature_auras_update` (
   `update_id` int(10) unsigned NOT NULL COMMENT 'counting aura update packets for this guid',
   `slot` int(10) unsigned NOT NULL,
   `spell_id` int(10) unsigned NOT NULL,
-  `visual_id` int(10) unsigned DEFAULT NULL,
+  `visual_id` int(10) unsigned NOT NULL,
   `aura_flags` int(10) unsigned NOT NULL,
-  `active_flags` int(10) unsigned DEFAULT NULL,
+  `active_flags` int(10) unsigned NOT NULL,
   `level` int(10) unsigned NOT NULL,
   `charges` int(10) unsigned NOT NULL,
-  `content_tuning_id` int(10) DEFAULT NULL,
+  `content_tuning_id` int(10) NOT NULL,
   `duration` int(10) NOT NULL,
   `max_duration` int(10) NOT NULL,
   `caster_guid` int(10) unsigned NOT NULL,
@@ -1482,12 +1482,12 @@ CREATE TABLE IF NOT EXISTS `player_auras_update` (
   `update_id` int(10) unsigned NOT NULL COMMENT 'counting aura update packets for this guid',
   `slot` int(10) unsigned NOT NULL,
   `spell_id` int(10) unsigned NOT NULL,
-  `visual_id` int(10) unsigned DEFAULT NULL,
+  `visual_id` int(10) unsigned NOT NULL,
   `aura_flags` int(10) unsigned NOT NULL,
-  `active_flags` int(10) unsigned DEFAULT NULL,
+  `active_flags` int(10) unsigned NOT NULL,
   `level` int(10) unsigned NOT NULL,
   `charges` int(10) unsigned NOT NULL,
-  `content_tuning_id` int(10) DEFAULT NULL,
+  `content_tuning_id` int(10) NOT NULL,
   `duration` int(10) NOT NULL,
   `max_duration` int(10) NOT NULL,
   `caster_guid` int(10) unsigned NOT NULL,
@@ -1788,17 +1788,6 @@ CREATE TABLE IF NOT EXISTS `points_of_interest` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.quest_complete_time
-DROP TABLE IF EXISTS `quest_complete_time`;
-CREATE TABLE IF NOT EXISTS `quest_complete_time` (
-  `quest_id` int(10) unsigned NOT NULL COMMENT 'quest template entry',
-  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
-  PRIMARY KEY (`quest_id`,`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_QUEST_UPDATE_COMPLETE';
-
--- Data exporting was unselected.
-
-
 -- Dumping structure for table sniffs_new_test.quest_details
 DROP TABLE IF EXISTS `quest_details`;
 CREATE TABLE IF NOT EXISTS `quest_details` (
@@ -1826,17 +1815,6 @@ CREATE TABLE IF NOT EXISTS `quest_ender` (
   `quest_id` int(10) unsigned NOT NULL COMMENT 'references quest_template',
   PRIMARY KEY (`object_id`,`object_type`,`quest_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='list of quests that can be turned in to a given creature or gameobject';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.quest_fail_time
-DROP TABLE IF EXISTS `quest_fail_time`;
-CREATE TABLE IF NOT EXISTS `quest_fail_time` (
-  `quest_id` int(10) unsigned NOT NULL COMMENT 'quest template entry',
-  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
-  PRIMARY KEY (`quest_id`,`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_QUEST_UPDATE_FAILED and SMSG_QUEST_UPDATE_FAILED_TIMER';
 
 -- Data exporting was unselected.
 
@@ -2142,6 +2120,28 @@ CREATE TABLE IF NOT EXISTS `quest_template_locale` (
   `VerifiedBuild` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`,`locale`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.quest_update_complete
+DROP TABLE IF EXISTS `quest_update_complete`;
+CREATE TABLE IF NOT EXISTS `quest_update_complete` (
+  `quest_id` int(10) unsigned NOT NULL COMMENT 'quest template entry',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  PRIMARY KEY (`quest_id`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_QUEST_UPDATE_COMPLETE';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.quest_update_failed
+DROP TABLE IF EXISTS `quest_update_failed`;
+CREATE TABLE IF NOT EXISTS `quest_update_failed` (
+  `quest_id` int(10) unsigned NOT NULL COMMENT 'quest template entry',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  PRIMARY KEY (`quest_id`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_QUEST_UPDATE_FAILED and SMSG_QUEST_UPDATE_FAILED_TIMER';
 
 -- Data exporting was unselected.
 

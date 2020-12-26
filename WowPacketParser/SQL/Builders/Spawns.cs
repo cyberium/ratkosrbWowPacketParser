@@ -68,9 +68,6 @@ namespace WowPacketParser.SQL.Builders
             var emoteRows = new RowList<CreatureEmote>();
             foreach (var unit in units)
             {
-                Row<Creature> row = new Row<Creature>();
-                bool badTransport = false;
-
                 Unit creature = unit.Value;
 
                 if (Settings.AreaFilters.Length > 0)
@@ -88,10 +85,11 @@ namespace WowPacketParser.SQL.Builders
                 if (creature.IsTemporarySpawn() && !Settings.SaveTempSpawns)
                     continue;
 
+                if ((unit.Key.GetHighType() == HighGuidType.Pet) && !Settings.SavePets)
+                    continue;
+
                 uint movementType = 0;
                 uint spawnDist = 0;
-                row.Data.AreaID = 0;
-                row.Data.ZoneID = 0;
 
                 if (creature.Movement.HasWpsOrRandMov)
                 {
@@ -99,9 +97,11 @@ namespace WowPacketParser.SQL.Builders
                     spawnDist = 10;
                 }
 
+                Row<Creature> row = new Row<Creature>();
                 row.Data.GUID = "@CGUID+" + creature.DbGuid;
-
                 row.Data.ID = entry;
+
+                bool badTransport = false;
                 if (!creature.IsOnTransport())
                     row.Data.Map = creature.Map;
                 else
@@ -112,9 +112,11 @@ namespace WowPacketParser.SQL.Builders
                         row.Data.Map = (uint)mapId;
                 }
 
+                row.Data.AreaID = 0;
                 if (creature.Area != -1)
                     row.Data.AreaID = (uint)creature.Area;
 
+                row.Data.ZoneID = 0;
                 if (creature.Zone != -1)
                     row.Data.ZoneID = (uint)creature.Zone;
 
@@ -229,7 +231,7 @@ namespace WowPacketParser.SQL.Builders
                 var addonRow = new Row<CreatureAddon>();
                 if (Settings.SqlTables.creature_addon)
                 {
-                    addonRow.Data.GUID = "@CGUID+" + count;
+                    addonRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                     addonRow.Data.Mount = (uint)unitData.MountDisplayID;
                     addonRow.Data.Bytes1 = creature.Bytes1;
                     addonRow.Data.Bytes2 = creature.Bytes2;
@@ -254,7 +256,7 @@ namespace WowPacketParser.SQL.Builders
                         !unitData.Target.IsEmpty())
                     {
                         Row<CreatureGuidValues> guidsRow = new Row<CreatureGuidValues>();
-                        guidsRow.Data.GUID = "@CGUID+" + count;
+                        guidsRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                         Storage.GetObjectDbGuidEntryType(unitData.Charm, out guidsRow.Data.CharmGuid, out guidsRow.Data.CharmId, out guidsRow.Data.CharmType);
                         Storage.GetObjectDbGuidEntryType(unitData.Summon, out guidsRow.Data.SummonGuid, out guidsRow.Data.SummonId, out guidsRow.Data.SummonType);
                         Storage.GetObjectDbGuidEntryType(unitData.CharmedBy, out guidsRow.Data.CharmedByGuid, out guidsRow.Data.CharmedById, out guidsRow.Data.CharmedByType);

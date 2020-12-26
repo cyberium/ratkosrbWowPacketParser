@@ -60,8 +60,8 @@ namespace WowPacketParser.SQL.Builders
             return SQLUtil.Compare(Storage.QuestVisualEffects, templateDb, StoreNameType.None);
         }
 
-        [BuilderMethod(true, Units = true)]
-        public static string CreatureTemplate(Dictionary<WowGuid, Unit> units)
+        [BuilderMethod(true)]
+        public static string CreatureTemplate()
         {
             if (!Settings.SqlTables.creature_template_wdb)
                 return string.Empty;

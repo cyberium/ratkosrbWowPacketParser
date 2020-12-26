@@ -28,6 +28,9 @@ namespace WowPacketParser.SQL.Builders
             var addons = new DataBag<CreatureTemplateAddon>();
             foreach (var unit in units)
             {
+                if (unit.Key.GetHighType() == HighGuidType.Pet)
+                    continue;
+
                 var npc = unit.Value;
 
                 if (Settings.AreaFilters.Length > 0)
@@ -120,6 +123,9 @@ namespace WowPacketParser.SQL.Builders
 
             foreach (var unit in units)
             {
+                if (unit.Key.GetHighType() == HighGuidType.Pet)
+                    continue;
+
                 if (Storage.CreatureTemplateScalings.Any(creature => creature.Item1.Entry == unit.Key.GetEntry()))
                     continue;
 
@@ -159,8 +165,13 @@ namespace WowPacketParser.SQL.Builders
                 return string.Empty;
 
             var models = new DataBag<ModelData>();
-            foreach (var npc in units.Select(unit => unit.Value))
+            foreach (var unit in units)
             {
+                if (unit.Key.GetHighType() == HighGuidType.Pet)
+                    continue;
+
+                var npc = unit.Value;
+
                 if (Settings.AreaFilters.Length > 0)
                     if (!(npc.Area.ToString(CultureInfo.InvariantCulture).MatchesFilters(Settings.AreaFilters)))
                         continue;
@@ -278,6 +289,9 @@ namespace WowPacketParser.SQL.Builders
             var equips = new DataBag<CreatureEquipment>();
             foreach (var npc in units)
             {
+                if (npc.Key.GetHighType() == HighGuidType.Pet)
+                    continue;
+
                 if (Settings.AreaFilters.Length > 0)
                     if (!(npc.Value.Area.ToString(CultureInfo.InvariantCulture).MatchesFilters(Settings.AreaFilters)))
                         continue;
@@ -550,6 +564,9 @@ namespace WowPacketParser.SQL.Builders
 
             foreach (var unit in units)
             {
+                if (unit.Key.GetHighType() == HighGuidType.Pet)
+                    continue;
+
                 var npc = unit.Value;
                 if (Settings.SqlTables.creature_stats)
                 {
@@ -836,9 +853,10 @@ namespace WowPacketParser.SQL.Builders
 
             foreach (var unit in units)
             {
-                var npc = unit.Value;
+                if (unit.Key.GetHighType() == HighGuidType.Pet)
+                    continue;
 
-                
+                var npc = unit.Value;
 
                 var auras = string.Empty;
                 if (npc.Auras != null && npc.Auras.Count != 0)

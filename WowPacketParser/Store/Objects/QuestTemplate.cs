@@ -378,7 +378,7 @@ namespace WowPacketParser.Store.Objects
         public uint? QuestId;
     }
 
-    [DBTableName("quest_complete_time")]
+    [DBTableName("quest_update_complete")]
     public sealed class QuestCompleteTime : IDataModel
     {
         [DBFieldName("quest_id", true)]
@@ -388,7 +388,7 @@ namespace WowPacketParser.Store.Objects
         public ulong UnixTimeMs;
     }
 
-    [DBTableName("quest_fail_time")]
+    [DBTableName("quest_update_failed")]
     public sealed class QuestFailTime : IDataModel
     {
         [DBFieldName("quest_id", true)]
