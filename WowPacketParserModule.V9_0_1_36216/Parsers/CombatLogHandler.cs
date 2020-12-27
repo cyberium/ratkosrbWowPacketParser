@@ -31,7 +31,8 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ReadPackedGuid128("CastID");
 
             packet.ReadInt32<SpellId>("SpellID");
-            SpellHandler.ReadSpellCastVisual(packet, "Visual");
+            uint temp;
+            SpellHandler.ReadSpellCastVisual(out temp, packet, "Visual");
             packet.ReadInt32("Damage");
             packet.ReadInt32("OriginalDamage");
             packet.ReadInt32("OverKill");

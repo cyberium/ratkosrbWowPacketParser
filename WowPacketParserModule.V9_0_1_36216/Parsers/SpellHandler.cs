@@ -9,24 +9,24 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
 {
     public static class SpellHandler
     {
-        public static void ReadSpellCastData(Packet packet, params object[] idx)
+        public static void ReadSpellCastData(SpellCastData dbdata, Packet packet, params object[] idx)
         {
-            packet.ReadPackedGuid128("CasterGUID", idx);
-            packet.ReadPackedGuid128("CasterUnit", idx);
+            dbdata.CasterGuid = packet.ReadPackedGuid128("CasterGUID", idx);
+            dbdata.CasterUnitGuid = packet.ReadPackedGuid128("CasterUnit", idx);
 
             packet.ReadPackedGuid128("CastID", idx);
             packet.ReadPackedGuid128("OriginalCastID", idx);
 
-            var spellID = packet.ReadUInt32<SpellId>("SpellID", idx);
-            ReadSpellCastVisual(packet, idx, "Visual");
+            dbdata.SpellID = packet.ReadUInt32<SpellId>("SpellID", idx);
+            ReadSpellCastVisual(out dbdata.VisualID, packet, idx, "Visual");
 
-            packet.ReadUInt32("CastFlags", idx);
-            packet.ReadUInt32("CastFlagsEx", idx);
-            packet.ReadUInt32("CastTime", idx);
+            dbdata.CastFlags = packet.ReadUInt32("CastFlags", idx);
+            dbdata.CastFlagsEx = packet.ReadUInt32("CastFlagsEx", idx);
+            dbdata.CastTime = packet.ReadUInt32("CastTime", idx);
 
             V6_0_2_19033.Parsers.SpellHandler.ReadMissileTrajectoryResult(packet, idx, "MissileTrajectory");
 
-            packet.ReadInt32("Ammo.DisplayID", idx);
+            dbdata.AmmoDisplayId = packet.ReadInt32("Ammo.DisplayID", idx);
 
             packet.ReadByte("DestLocSpellCastIndex", idx);
 
@@ -37,7 +37,9 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ResetBitReader();
 
             var hitTargetsCount = packet.ReadBits("HitTargetsCount", 16, idx);
+            dbdata.HitTargetsCount = hitTargetsCount;
             var missTargetsCount = packet.ReadBits("MissTargetsCount", 16, idx);
+            dbdata.MissTargetsCount = missTargetsCount;
             var hitStatusCount = packet.ReadBits("HitStatusCount", 16, idx);
             var missStatusCount = packet.ReadBits("MissStatusCount", 16, idx);
             var remainingPowerCount = packet.ReadBits("RemainingPowerCount", 9, idx);
@@ -48,13 +50,19 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             for (var i = 0; i < missStatusCount; ++i)
                 V6_0_2_19033.Parsers.SpellHandler.ReadSpellMissStatus(packet, idx, "MissStatus", i);
 
-            V8_0_1_27101.Parsers.SpellHandler.ReadSpellTargetData(packet, spellID, idx, "Target");
+            V8_0_1_27101.Parsers.SpellHandler.ReadSpellTargetData(dbdata, packet, dbdata.SpellID, idx, "Target");
 
             for (var i = 0; i < hitTargetsCount; ++i)
-                packet.ReadPackedGuid128("HitTarget", idx, i);
+            {
+                WowGuid hitTarget = packet.ReadPackedGuid128("HitTarget", idx, i);
+                dbdata.AddHitTarget(hitTarget);
+            }
 
             for (var i = 0; i < missTargetsCount; ++i)
-                packet.ReadPackedGuid128("MissTarget", idx, i);
+            {
+                WowGuid missTarget = packet.ReadPackedGuid128("MissTarget", idx, i);
+                dbdata.AddMissTarget(missTarget);
+            }
 
             for (var i = 0; i < hitStatusCount; ++i)
                 packet.ReadByte("HitStatus", idx, i);
@@ -72,19 +80,24 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
         [Parser(Opcode.SMSG_SPELL_START)]
         public static void HandleSpellStart(Packet packet)
         {
-            ReadSpellCastData(packet, "Cast");
+            SpellCastData castData = new SpellCastData();
+            ReadSpellCastData(castData, packet, "Cast");
+            Storage.StoreSpellCastData(castData, Storage.SpellCastStart, packet);
         }
 
         [Parser(Opcode.SMSG_SPELL_GO)]
         public static void HandleSpellGo(Packet packet)
         {
-            ReadSpellCastData(packet, "Cast");
+            SpellCastData castData = new SpellCastData();
+            ReadSpellCastData(castData, packet, "Cast");
 
             packet.ResetBitReader();
 
             var hasLogData = packet.ReadBit();
             if (hasLogData)
                 V8_0_1_27101.Parsers.SpellHandler.ReadSpellCastLogData(packet, "LogData");
+
+            Storage.StoreSpellCastData(castData, Storage.SpellCastGo, packet);
         }
 
         [HasSniffData]
@@ -99,7 +112,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             {
                 var aura = new Aura();
 
-                packet.ReadByte("Slot", i);
+                aura.Slot = packet.ReadByte("Slot", i);
 
                 packet.ResetBitReader();
                 var hasAura = packet.ReadBit("HasAura", i);
@@ -107,12 +120,12 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
                 {
                     packet.ReadPackedGuid128("CastID", i);
                     aura.SpellId = (uint)packet.ReadInt32<SpellId>("SpellID", i);
-                    ReadSpellCastVisual(packet, i, "Visual");
-                    aura.AuraFlags = packet.ReadUInt16E<AuraFlagMoP>("Flags", i);
-                    packet.ReadUInt32("ActiveFlags", i);
+                    ReadSpellCastVisual(out aura.VisualId, packet, i, "Visual");
+                    aura.AuraFlags = (uint)packet.ReadUInt16E<AuraFlagMoP>("Flags", i);
+                    aura.ActiveFlags = packet.ReadUInt32("ActiveFlags", i);
                     aura.Level = packet.ReadUInt16("CastLevel", i);
                     aura.Charges = packet.ReadByte("Applications", i);
-                    packet.ReadInt32("ContentTuningID", i);
+                    aura.ContentTuningId = packet.ReadInt32("ContentTuningID", i);
 
                     packet.ResetBitReader();
 
@@ -131,7 +144,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
                         CombatLogHandler.ReadContentTuningParams(packet, i, "ContentTuning");
 
                     if (hasCastUnit)
-                        packet.ReadPackedGuid128("CastUnit", i);
+                        aura.CasterGuid = packet.ReadPackedGuid128("CastUnit", i);
 
                     aura.Duration = hasDuration ? packet.ReadInt32("Duration", i) : 0;
                     aura.MaxDuration = hasRemaining ? packet.ReadInt32("Remaining", i) : 0;
@@ -145,29 +158,13 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
                     for (var j = 0; j < effectCount; ++j)
                         packet.ReadSingle("EstimatedPoints", i, j);
 
-                    auras.Add(aura);
                     packet.AddSniffData(StoreNameType.Spell, (int)aura.SpellId, "AURA_UPDATE");
                 }
+                auras.Add(aura);
             }
 
             var guid = packet.ReadPackedGuid128("UnitGUID");
-
-            if (Storage.Objects.ContainsKey(guid))
-            {
-                var unit = Storage.Objects[guid].Item1 as Unit;
-                if (unit != null)
-                {
-                    // If this is the first packet that sends auras
-                    // (hopefully at spawn time) add it to the "Auras" field,
-                    // if not create another row of auras in AddedAuras
-                    // (similar to ChangedUpdateFields)
-
-                    if (unit.Auras == null)
-                        unit.Auras = auras;
-                    else
-                        unit.AddedAuras.Add(auras);
-                }
-            }
+            Storage.StoreUnitAurasUpdate(guid, auras, packet.Time);
         }
 
         [Parser(Opcode.SMSG_CAST_FAILED)]
@@ -175,7 +172,8 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
         {
             packet.ReadPackedGuid128("CastID");
             packet.ReadInt32<SpellId>("SpellID");
-            ReadSpellCastVisual(packet, "Visual");
+            uint temp;
+            ReadSpellCastVisual(out temp, packet, "Visual");
             packet.ReadInt32("Reason");
             packet.ReadInt32("FailedArg1");
             packet.ReadInt32("FailedArg2");
@@ -184,21 +182,27 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
         [Parser(Opcode.SMSG_SPELL_FAILURE)]
         public static void HandleSpellFailure(Packet packet)
         {
-            packet.ReadPackedGuid128("CasterUnit");
+            SpellCastFailed failData = new SpellCastFailed();
+            failData.Guid = packet.ReadPackedGuid128("CasterUnit");
             packet.ReadPackedGuid128("CastID");
-            packet.ReadInt32<SpellId>("SpellID");
-            ReadSpellCastVisual(packet, "Visual");
-            packet.ReadInt16E<SpellCastFailureReason>("Reason");
+            failData.SpellId = (uint)packet.ReadInt32<SpellId>("SpellID");
+            ReadSpellCastVisual(out failData.VisualId, packet, "Visual");
+            failData.Reason = (uint)packet.ReadInt16E<SpellCastFailureReason>("Reason");
+            failData.Time = packet.Time;
+            Storage.SpellCastFailed.Add(failData);
         }
 
         [Parser(Opcode.SMSG_SPELL_FAILED_OTHER)]
         public static void HandleSpellFailedOther(Packet packet)
         {
-            packet.ReadPackedGuid128("CasterUnit");
+            SpellCastFailed failData = new SpellCastFailed();
+            failData.Guid = packet.ReadPackedGuid128("CasterUnit");
             packet.ReadPackedGuid128("CastID");
-            packet.ReadUInt32<SpellId>("SpellID");
-            ReadSpellCastVisual(packet, "Visual");
-            packet.ReadByteE<SpellCastFailureReason>("Reason");
+            failData.SpellId = packet.ReadUInt32<SpellId>("SpellID");
+            ReadSpellCastVisual(out failData.VisualId, packet, "Visual");
+            failData.Reason = (uint)packet.ReadByteE<SpellCastFailureReason>("Reason");
+            failData.Time = packet.Time;
+            Storage.SpellCastFailed.Add(failData);
         }
 
         [Parser(Opcode.SMSG_LEARNED_SPELLS)]
@@ -217,9 +221,9 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ReadBit("SuppressMessaging");
         }
 
-        public static void ReadSpellCastVisual(Packet packet, params object[] indexes)
+        public static void ReadSpellCastVisual(out uint VisualID, Packet packet, params object[] indexes)
         {
-            packet.ReadInt32("SpellXSpellVisualID", indexes);
+            VisualID = (uint)packet.ReadInt32("SpellXSpellVisualID", indexes);
             packet.ReadInt32("ScriptVisualID", indexes);
         }
     }

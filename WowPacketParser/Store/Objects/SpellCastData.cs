@@ -50,7 +50,7 @@ namespace WowPacketParser.Store.Objects
         public uint SpellId;
 
         [DBFieldName("visual_id", false, false, true)]
-        public uint? VisualId;
+        public uint VisualId;
 
         [DBFieldName("reason", false, false, true)]
         public uint? Reason;
