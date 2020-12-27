@@ -82,8 +82,8 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
                 Storage.CreatureTemplateModels.Add(model, packet.TimeSpan);
             }
 
-            creature.HealthModifier = packet.ReadSingle("HpMulti");
-            creature.ManaModifier = packet.ReadSingle("EnergyMulti");
+            creature.HealthMultiplier = packet.ReadSingle("HpMulti");
+            creature.ManaMultiplier = packet.ReadSingle("EnergyMulti");
 
             uint questItems = packet.ReadUInt32("QuestItems");
             creature.MovementID = (uint)packet.ReadInt32("CreatureMovementInfoID");
@@ -117,7 +117,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
 
             packet.AddSniffData(StoreNameType.Unit, entry.Key, "QUERY_RESPONSE");
 
-            Storage.CreatureTemplates.Add(creature.Entry.Value, creature, packet.TimeSpan);
+            Storage.CreatureTemplates.Add(creature, packet.TimeSpan);
 
             if (ClientLocale.PacketLocale != LocaleConstant.enUS)
             {
