@@ -48,6 +48,52 @@
     <Compile Include="Parsers\SpellHandler.cs" />
     <Compile Include="Parsers\HotfixHandler.cs" />
     <Compile Include="Parsers\QuestHandler.cs" />
+    <Compile Include="Parsers\UpdateFieldsHandler901.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ActivePlayerData.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ActivePlayerUnk901.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\AreaTriggerData.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ArenaCooldown.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ArtifactPower.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\AzeriteEmpoweredItemData.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\AzeriteItemData.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\CharacterRestriction.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ChrCustomizationChoice.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ContainerData.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ConversationActor.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ConversationData.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ConversationLine.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\CorpseData.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\CTROptions.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\DynamicObjectData.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\GameObjectData.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ItemData.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ItemEnchantment.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ItemMod.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ItemModList.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\MawPower.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\MultiFloorExplore.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ObjectData.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\PassiveSpellHistory.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\PlayerData.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\PVPInfo.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\QuestLog.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\QuestSession.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\RecipeProgressionInfo.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ReplayedQuest.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\Research.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\RestInfo.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\ScaleCurve.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\SceneObjectData.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\SelectedAzeriteEssences.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\SkillInfo.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\SocketedGem.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\SpellCastVisual.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\SpellFlatModByLabel.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\SpellPctModByLabel.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\UnitChannel.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\UnitData.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\UnlockedAzeriteEssence.cs" />
+    <Compile Include="UpdateFields\V9_0_1_36216\VisibleItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WowPacketParserModule.Substructures\WowPacketParserModule.Substructures.csproj">
@@ -68,7 +114,7 @@
       <Project>{749EA02D-C727-4697-B979-9ED80FB98085}</Project>
       <Private>false</Private>
     </ProjectReference>
-        <ProjectReference Include="..\WowPacketParser\WowPacketParser.csproj">
+    <ProjectReference Include="..\WowPacketParser\WowPacketParser.csproj">
       <Project>{0bf6f270-0b6f-4705-8e1a-f57db76db407}</Project>
       <Name>WowPacketParser</Name>
       <Private>False</Private>

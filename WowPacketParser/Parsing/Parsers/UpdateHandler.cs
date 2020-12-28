@@ -305,7 +305,7 @@ namespace WowPacketParser.Parsing.Parsers
                         if (Storage.Objects.ContainsKey(guid))
                         {
                             var obj = Storage.Objects[guid].Item1 as Unit;
-                            if (obj.UnitData.Entry != update.Value.UInt32Value)
+                            if (obj.ObjectData.EntryID != update.Value.UInt32Value)
                             {
                                 hasData = true;
                                 creatureUpdate.Entry = update.Value.UInt32Value;

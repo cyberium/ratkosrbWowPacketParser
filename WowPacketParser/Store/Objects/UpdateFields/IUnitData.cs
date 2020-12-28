@@ -4,7 +4,6 @@ namespace WowPacketParser.Store.Objects.UpdateFields
 {
     public interface IUnitData
     {
-        uint Entry { get; }
         int DisplayID { get; }
         int NativeDisplayID { get; }
         int MountDisplayID { get; }
