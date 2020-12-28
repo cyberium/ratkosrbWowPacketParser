@@ -292,10 +292,11 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
         [Parser(Opcode.SMSG_SPELL_CHANNEL_START, ClientVersionBuild.V7_2_0_23826)]
         public static void HandleSpellChannelStart(Packet packet)
         {
-            packet.ReadPackedGuid128("CasterGUID");
-            packet.ReadInt32<SpellId>("SpellID");
-            ReadSpellCastVisual(packet, "Visual");
-            packet.ReadInt32("ChannelDuration");
+            SpellChannelStart channel = new SpellChannelStart();
+            channel.Guid = packet.ReadPackedGuid128("CasterGUID");
+            channel.SpellId = (uint)packet.ReadInt32<SpellId>("SpellID");
+            ReadSpellCastVisual(out channel.VisualId, packet, "Visual");
+            channel.Duration = packet.ReadInt32("ChannelDuration");
 
             var hasInterruptImmunities = packet.ReadBit("HasInterruptImmunities");
             var hasHealPrediction = packet.ReadBit("HasHealPrediction");
@@ -305,16 +306,22 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
 
             if (hasHealPrediction)
                 V6_0_2_19033.Parsers.SpellHandler.ReadSpellTargetedHealPrediction(packet, "HealPrediction");
+
+            channel.Time = packet.Time;
+            Storage.SpellChannelStart.Add(channel);
         }
 
         [Parser(Opcode.SMSG_PLAY_SPELL_VISUAL_KIT)]
         public static void HandleCastVisualKit(Packet packet)
         {
-            packet.ReadPackedGuid128("Unit");
-            packet.ReadInt32("KitRecID");
-            packet.ReadInt32("KitType");
-            packet.ReadUInt32("Duration");
+            PlaySpellVisualKit visualKitData = new PlaySpellVisualKit();
+            visualKitData.Guid = packet.ReadPackedGuid128("Unit");
+            visualKitData.KitId = (uint)packet.ReadInt32("KitRecID");
+            visualKitData.KitType = (uint)packet.ReadInt32("KitType");
+            visualKitData.Duration = packet.ReadUInt32("Duration");
             packet.ReadBit("MountedVisual");
+            visualKitData.Time = packet.Time;
+            Storage.SpellPlayVisualKit.Add(visualKitData);
         }
     }
 }

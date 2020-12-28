@@ -322,6 +322,7 @@
     <Compile Include="Enums\LootRoolType.cs" />
     <Compile Include="Enums\LootSlotType.cs" />
     <Compile Include="Enums\LootType.cs" />
+    <Compile Include="Enums\LootItemType.cs" />
     <Compile Include="Enums\LootVoteFlags.cs" />
     <Compile Include="Enums\MailActionType.cs" />
     <Compile Include="Enums\MailErrorType.cs" />
