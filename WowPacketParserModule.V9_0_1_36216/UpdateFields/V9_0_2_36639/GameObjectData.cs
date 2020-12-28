@@ -20,6 +20,7 @@ namespace WowPacketParserModule.V9_0_1_36216.UpdateFields.V9_0_2_36639
         public sbyte State { get; set; }
         public sbyte TypeID { get; set; }
         public byte PercentHealth { get; set; }
+        public byte AnimProgress => PercentHealth;
         public uint ArtKit { get; set; }
         public uint CustomParam { get; set; }
         public int Level { get; set; }
