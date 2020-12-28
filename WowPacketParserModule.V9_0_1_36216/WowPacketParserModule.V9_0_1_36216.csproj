@@ -40,6 +40,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parsers\AreaTriggerHandler.cs" />
     <Compile Include="Parsers\CharacterHandler.cs" />
     <Compile Include="Parsers\CombatLogHandler.cs" />
     <Compile Include="Parsers\CreatureHandler.cs" />
