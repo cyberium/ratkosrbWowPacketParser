@@ -76,7 +76,12 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                                         unit.UnitData = data;
                                 }
                                 if ((updateTypeFlag & 0x0040) != 0)
-                                    handler.ReadUpdatePlayerData(fieldsData, null, i);
+                                {
+                                    var player = obj as Player;
+                                    var data = handler.ReadUpdatePlayerData(fieldsData, null, i);
+                                    if (player != null)
+                                        player.PlayerData = data;
+                                }
                                 if ((updateTypeFlag & 0x0080) != 0)
                                     handler.ReadUpdateActivePlayerData(fieldsData, null, i);
                                 if ((updateTypeFlag & 0x0100) != 0)
@@ -87,7 +92,12 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                                         go.GameObjectData = data;
                                 }
                                 if ((updateTypeFlag & 0x0200) != 0)
-                                    handler.ReadUpdateDynamicObjectData(fieldsData, null, i);
+                                {
+                                    DynamicObject dynobj = obj as DynamicObject;
+                                    var data = handler.ReadUpdateDynamicObjectData(fieldsData, null, i);
+                                    if (dynobj != null)
+                                        dynobj.DynamicObjectData = data;
+                                }
                                 if ((updateTypeFlag & 0x0400) != 0)
                                     handler.ReadUpdateCorpseData(fieldsData, null, i);
                                 if ((updateTypeFlag & 0x0800) != 0)
@@ -191,12 +201,16 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                             (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData;
                             break;
                         case ObjectType.Player:
-                            handler.ReadCreateUnitData(fieldsData, flags, index);
-                            handler.ReadCreatePlayerData(fieldsData, flags, index);
+                            (obj as Unit).UnitData = handler.ReadCreateUnitData(fieldsData, flags, index);
+                            (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData;
+                            (obj as Player).PlayerData = handler.ReadCreatePlayerData(fieldsData, flags, index);
+                            (obj as Player).PlayerDataOriginal = (obj as Player).PlayerData;
                             break;
                         case ObjectType.ActivePlayer:
-                            handler.ReadCreateUnitData(fieldsData, flags, index);
-                            handler.ReadCreatePlayerData(fieldsData, flags, index);
+                            (obj as Unit).UnitData = handler.ReadCreateUnitData(fieldsData, flags, index);
+                            (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData;
+                            (obj as Player).PlayerData = handler.ReadCreatePlayerData(fieldsData, flags, index);
+                            (obj as Player).PlayerDataOriginal = (obj as Player).PlayerData;
                             handler.ReadCreateActivePlayerData(fieldsData, flags, index);
                             break;
                         case ObjectType.GameObject:
@@ -204,7 +218,8 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                             (obj as GameObject).GameObjectDataOriginal = (obj as GameObject).GameObjectData;
                             break;
                         case ObjectType.DynamicObject:
-                            handler.ReadCreateDynamicObjectData(fieldsData, flags, index);
+                            (obj as DynamicObject).DynamicObjectData = handler.ReadCreateDynamicObjectData(fieldsData, flags, index);
+                            (obj as DynamicObject).DynamicObjectDataOriginal = (obj as DynamicObject).DynamicObjectData;
                             break;
                         case ObjectType.Corpse:
                             handler.ReadCreateCorpseData(fieldsData, flags, index);
