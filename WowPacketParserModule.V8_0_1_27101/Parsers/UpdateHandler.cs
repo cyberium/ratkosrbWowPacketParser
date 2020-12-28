@@ -8,6 +8,8 @@ using WowPacketParserModule.V7_0_3_22248.Parsers;
 using CoreParsers = WowPacketParser.Parsing.Parsers;
 using SplineFlag = WowPacketParserModule.V7_0_3_22248.Enums.SplineFlag;
 using CoreFields = WowPacketParser.Enums.Version;
+using WowPacketParser.Store.Objects.UpdateFields;
+using System;
 
 namespace WowPacketParserModule.V8_0_1_27101.Parsers
 {
@@ -53,9 +55,16 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                                 WoWObject obj;
                                 Storage.Objects.TryGetValue(guid, out obj);
 
+                                IObjectData oldObjectData = null;
+                                IGameObjectData oldGameObjectData = null;
+                                IUnitData oldUnitData = null;
+                                IPlayerData oldPlayerData = null;
+
                                 var updateTypeFlag = fieldsData.ReadUInt32();
                                 if ((updateTypeFlag & 0x0001) != 0)
                                 {
+                                    if (obj != null && obj.ObjectData != null)
+                                        oldObjectData = obj.ObjectData.Clone();
                                     var data = handler.ReadUpdateObjectData(fieldsData, obj?.ObjectData, i);
                                     if (obj != null)
                                         obj.ObjectData = data;
@@ -71,14 +80,19 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                                 if ((updateTypeFlag & 0x0020) != 0)
                                 {
                                     var unit = obj as Unit;
-                                    var data = handler.ReadUpdateUnitData(fieldsData, unit?.UnitData, i);
+                                    if (unit != null && unit.UnitData != null)
+                                        oldUnitData = unit.UnitData.Clone();
+                                        var data = handler.ReadUpdateUnitData(fieldsData, unit?.UnitData, i);
                                     if (unit != null)
                                         unit.UnitData = data;
+
                                 }
                                 if ((updateTypeFlag & 0x0040) != 0)
                                 {
                                     var player = obj as Player;
-                                    var data = handler.ReadUpdatePlayerData(fieldsData, null, i);
+                                    if (player != null && player.PlayerData != null)
+                                        oldPlayerData = player.PlayerData.Clone();
+                                    var data = handler.ReadUpdatePlayerData(fieldsData, player?.PlayerData, i);
                                     if (player != null)
                                         player.PlayerData = data;
                                 }
@@ -87,6 +101,8 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                                 if ((updateTypeFlag & 0x0100) != 0)
                                 {
                                     var go = obj as GameObject;
+                                    if (go != null && go.GameObjectData != null)
+                                        oldGameObjectData = go.GameObjectData.Clone();
                                     var data = handler.ReadUpdateGameObjectData(fieldsData, go?.GameObjectData, i);
                                     if (go != null)
                                         go.GameObjectData = data;
@@ -94,7 +110,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                                 if ((updateTypeFlag & 0x0200) != 0)
                                 {
                                     DynamicObject dynobj = obj as DynamicObject;
-                                    var data = handler.ReadUpdateDynamicObjectData(fieldsData, null, i);
+                                    var data = handler.ReadUpdateDynamicObjectData(fieldsData, dynobj?.DynamicObjectData, i);
                                     if (dynobj != null)
                                         dynobj.DynamicObjectData = data;
                                 }
@@ -111,6 +127,9 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                                     if (conversation != null)
                                         conversation.ConversationData = data;
                                 }
+
+                                if (obj != null)
+                                    StoreObjectUpdate(packet.Time, guid, obj, oldObjectData, oldGameObjectData, oldUnitData, oldPlayerData);
                             }
                         }
                         else
@@ -129,6 +148,288 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                         ReadCreateObjectBlock(packet, guid, map, i, ObjectCreateType.Create2);
                         break;
                     }
+                }
+            }
+        }
+
+        public static void StoreObjectUpdate(DateTime time, WowGuid guid, WoWObject obj, IObjectData oldObjectData, IGameObjectData oldGameObjectData, IUnitData oldUnitData, IPlayerData oldPlayerData)
+        {
+            if ((guid.GetObjectType() == ObjectType.Unit) ||
+                (guid.GetObjectType() == ObjectType.Player) ||
+                (guid.GetObjectType() == ObjectType.ActivePlayer))
+            {
+                Unit unit = obj as Unit;
+                bool hasData = false;
+                CreatureValuesUpdate creatureUpdate = new CreatureValuesUpdate();
+                if (oldObjectData != null)
+                {
+                    if (oldObjectData.EntryID != unit.ObjectData.EntryID)
+                    {
+                        hasData = true;
+                        creatureUpdate.Entry = (uint)unit.ObjectData.EntryID;
+                    }
+                    if (oldObjectData.Scale != unit.ObjectData.Scale)
+                    {
+                        hasData = true;
+                        creatureUpdate.Scale = unit.ObjectData.Scale;
+                    }
+                }
+                if (oldUnitData != null)
+                {
+                    if (oldUnitData.DisplayID != unit.UnitData.DisplayID)
+                    {
+                        hasData = true;
+                        creatureUpdate.DisplayID = (uint)unit.UnitData.DisplayID;
+                    }
+                    if (oldUnitData.MountDisplayID != unit.UnitData.MountDisplayID)
+                    {
+                        hasData = true;
+                        creatureUpdate.MountDisplayID = (uint)unit.UnitData.MountDisplayID;
+                    }
+                    if (oldUnitData.FactionTemplate != unit.UnitData.FactionTemplate)
+                    {
+                        hasData = true;
+                        creatureUpdate.FactionTemplate = (uint)unit.UnitData.FactionTemplate;
+                    }
+                    if (oldUnitData.Level != unit.UnitData.Level)
+                    {
+                        hasData = true;
+                        creatureUpdate.Level = (uint)unit.UnitData.Level;
+                    }
+                    if (oldUnitData.AuraState != unit.UnitData.AuraState)
+                    {
+                        hasData = true;
+                        creatureUpdate.AuraState = unit.UnitData.AuraState;
+                    }
+                    if (oldUnitData.EmoteState != unit.UnitData.EmoteState)
+                    {
+                        hasData = true;
+                        creatureUpdate.EmoteState = (uint)unit.UnitData.EmoteState;
+                    }
+                    if (oldUnitData.StandState != unit.UnitData.StandState)
+                    {
+                        hasData = true;
+                        creatureUpdate.StandState = unit.UnitData.StandState;
+                    }
+                    if (oldUnitData.PetTalentPoints != unit.UnitData.PetTalentPoints)
+                    {
+                        hasData = true;
+                        creatureUpdate.PetTalentPoints = unit.UnitData.PetTalentPoints;
+                    }
+                    if (oldUnitData.VisFlags != unit.UnitData.VisFlags)
+                    {
+                        hasData = true;
+                        creatureUpdate.VisFlags = unit.UnitData.VisFlags;
+                    }
+                    if (oldUnitData.AnimTier != unit.UnitData.AnimTier)
+                    {
+                        hasData = true;
+                        creatureUpdate.AnimTier = unit.UnitData.AnimTier;
+                    }
+                    if (oldUnitData.SheatheState != unit.UnitData.SheatheState)
+                    {
+                        hasData = true;
+                        creatureUpdate.SheathState = unit.UnitData.SheatheState;
+                    }
+                    if (oldUnitData.PvpFlags != unit.UnitData.PvpFlags)
+                    {
+                        hasData = true;
+                        creatureUpdate.PvpFlags = unit.UnitData.PvpFlags;
+                    }
+                    if (oldUnitData.PetFlags != unit.UnitData.PetFlags)
+                    {
+                        hasData = true;
+                        creatureUpdate.PetFlags = unit.UnitData.PetFlags;
+                    }
+                    if (oldUnitData.ShapeshiftForm != unit.UnitData.ShapeshiftForm)
+                    {
+                        hasData = true;
+                        creatureUpdate.ShapeshiftForm = unit.UnitData.ShapeshiftForm;
+                    }
+                    if (oldUnitData.NpcFlags[0] != unit.UnitData.NpcFlags[0])
+                    {
+                        hasData = true;
+                        creatureUpdate.NpcFlag = unit.UnitData.NpcFlags[0];
+                    }
+                    if (oldUnitData.Flags != unit.UnitData.Flags)
+                    {
+                        hasData = true;
+                        creatureUpdate.UnitFlag = unit.UnitData.Flags;
+                    }
+                    if (oldUnitData.CurHealth != unit.UnitData.CurHealth)
+                    {
+                        hasData = true;
+                        creatureUpdate.CurrentHealth = (uint)unit.UnitData.CurHealth;
+                    }
+                    if (oldUnitData.MaxHealth != unit.UnitData.MaxHealth)
+                    {
+                        hasData = true;
+                        creatureUpdate.MaxHealth = (uint)unit.UnitData.MaxHealth;
+                    }
+                    if (oldUnitData.CurMana != unit.UnitData.CurMana)
+                    {
+                        hasData = true;
+                        creatureUpdate.CurrentMana = (uint)unit.UnitData.CurMana;
+                    }
+                    if (oldUnitData.MaxMana != unit.UnitData.MaxMana)
+                    {
+                        hasData = true;
+                        creatureUpdate.MaxMana = (uint)unit.UnitData.MaxMana;
+                    }
+                    if (oldUnitData.BoundingRadius != unit.UnitData.BoundingRadius)
+                    {
+                        hasData = true;
+                        creatureUpdate.BoundingRadius = unit.UnitData.BoundingRadius;
+                    }
+                    if (oldUnitData.CombatReach != unit.UnitData.CombatReach)
+                    {
+                        hasData = true;
+                        creatureUpdate.CombatReach = unit.UnitData.CombatReach;
+                    }
+                    if (oldUnitData.ModHaste != unit.UnitData.ModHaste)
+                    {
+                        hasData = true;
+                        creatureUpdate.ModMeleeHaste = unit.UnitData.ModHaste;
+                    }
+                    if (oldUnitData.ModRangedHaste != unit.UnitData.ModRangedHaste)
+                    {
+                        hasData = true;
+                        creatureUpdate.ModRangedHaste = unit.UnitData.ModRangedHaste;
+                    }
+                    if (oldUnitData.AttackRoundBaseTime[0] != unit.UnitData.AttackRoundBaseTime[0])
+                    {
+                        hasData = true;
+                        creatureUpdate.BaseAttackTime = unit.UnitData.AttackRoundBaseTime[0];
+                    }
+                    if (oldUnitData.RangedAttackRoundBaseTime != unit.UnitData.RangedAttackRoundBaseTime)
+                    {
+                        hasData = true;
+                        creatureUpdate.RangedAttackTime = unit.UnitData.RangedAttackRoundBaseTime;
+                    }
+                    uint slot = 0;
+                    foreach (var item in unit.UnitData.VirtualItems)
+                    {
+                        if (oldUnitData.VirtualItems[slot].ItemID != unit.UnitData.VirtualItems[slot].ItemID)
+                        {
+                            CreatureEquipmentValuesUpdate equipmentUpdate = new CreatureEquipmentValuesUpdate();
+                            equipmentUpdate.ItemId = (uint)unit.UnitData.VirtualItems[slot].ItemID;
+                            equipmentUpdate.Slot = slot;
+                            equipmentUpdate.time = time;
+                            Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
+                        }
+                        slot++;
+                    }
+                    if (oldUnitData.Charm != unit.UnitData.Charm)
+                    {
+                        CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
+                        guidUpdate.guid = unit.UnitData.Charm;
+                        guidUpdate.time = time;
+                        guidUpdate.FieldName = "Charm";
+                        Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
+                    }
+                    if (oldUnitData.Summon != unit.UnitData.Summon)
+                    {
+                        CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
+                        guidUpdate.guid = unit.UnitData.Summon;
+                        guidUpdate.time = time;
+                        guidUpdate.FieldName = "Summon";
+                        Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
+                    }
+                    if (oldUnitData.CharmedBy != unit.UnitData.CharmedBy)
+                    {
+                        CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
+                        guidUpdate.guid = unit.UnitData.CharmedBy;
+                        guidUpdate.time = time;
+                        guidUpdate.FieldName = "CharmedBy";
+                        Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
+                    }
+                    if (oldUnitData.SummonedBy != unit.UnitData.SummonedBy)
+                    {
+                        CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
+                        guidUpdate.guid = unit.UnitData.SummonedBy;
+                        guidUpdate.time = time;
+                        guidUpdate.FieldName = "SummonedBy";
+                        Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
+                    }
+                    if (oldUnitData.CreatedBy != unit.UnitData.CreatedBy)
+                    {
+                        CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
+                        guidUpdate.guid = unit.UnitData.CreatedBy;
+                        guidUpdate.time = time;
+                        guidUpdate.FieldName = "CreatedBy";
+                        Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
+                    }
+                    if (oldUnitData.Target != unit.UnitData.Target)
+                    {
+                        CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
+                        guidUpdate.guid = unit.UnitData.Target;
+                        guidUpdate.time = time;
+                        guidUpdate.FieldName = "Target";
+                        Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
+                    }
+                }
+                if (oldPlayerData != null)
+                {
+                    Player player = obj as Player;
+                    uint slot = 0;
+                    foreach (var item in player.PlayerData.VisibleItems)
+                    {
+                        if (oldPlayerData.VisibleItems[slot].ItemID != player.PlayerData.VisibleItems[slot].ItemID)
+                        {
+                            CreatureEquipmentValuesUpdate equipmentUpdate = new CreatureEquipmentValuesUpdate();
+                            equipmentUpdate.ItemId = (uint)player.PlayerData.VisibleItems[slot].ItemID;
+                            equipmentUpdate.Slot = slot;
+                            equipmentUpdate.time = time;
+                            Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
+                        }
+                        slot++;
+                    }
+                }
+                if (hasData)
+                {
+                    creatureUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
+                    Storage.StoreUnitValuesUpdate(guid, creatureUpdate);
+                }
+            }
+            else if (guid.GetObjectType() == ObjectType.GameObject && oldGameObjectData != null)
+            {
+                GameObject go = obj as GameObject;
+                bool hasData = false;
+                GameObjectUpdate goUpdate = new GameObjectUpdate();
+                if (oldGameObjectData.DisplayID != go.GameObjectData.DisplayID)
+                {
+                    hasData = true;
+                    goUpdate.DisplayID = (uint)go.GameObjectData.DisplayID;
+                }
+                if (oldGameObjectData.Level != go.GameObjectData.Level)
+                {
+                    hasData = true;
+                    goUpdate.Level = (uint)go.GameObjectData.Level;
+                }
+                if (oldGameObjectData.FactionTemplate != go.GameObjectData.FactionTemplate)
+                {
+                    hasData = true;
+                    goUpdate.Faction = (uint)go.GameObjectData.FactionTemplate;
+                }
+                if (oldGameObjectData.Flags != go.GameObjectData.Flags)
+                {
+                    hasData = true;
+                    goUpdate.Flags = go.GameObjectData.Flags;
+                }
+                if (oldGameObjectData.AnimProgress != go.GameObjectData.AnimProgress)
+                {
+                    hasData = true;
+                    goUpdate.AnimProgress = go.GameObjectData.AnimProgress;
+                }
+                if (oldGameObjectData.State != go.GameObjectData.State)
+                {
+                    hasData = true;
+                    goUpdate.State = (uint)go.GameObjectData.State;
+                }
+                if (hasData)
+                {
+                    goUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
+                    Storage.StoreGameObjectUpdate(guid, goUpdate);
                 }
             }
         }
@@ -179,6 +480,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     var flags = fieldsData.ReadByteE<UpdateFieldFlag>("FieldFlags", index);
                     var handler = CoreFields.UpdateFields.GetHandler();
                     obj.ObjectData = handler.ReadCreateObjectData(fieldsData, flags, index);
+                    obj.ObjectDataOriginal = obj.ObjectData.Clone();
                     switch (objType)
                     {
                         case ObjectType.Item:
@@ -198,24 +500,24 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                             break;
                         case ObjectType.Unit:
                             (obj as Unit).UnitData = handler.ReadCreateUnitData(fieldsData, flags, index);
-                            (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData;
+                            (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData.Clone();
                             break;
                         case ObjectType.Player:
                             (obj as Unit).UnitData = handler.ReadCreateUnitData(fieldsData, flags, index);
-                            (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData;
+                            (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData.Clone();
                             (obj as Player).PlayerData = handler.ReadCreatePlayerData(fieldsData, flags, index);
-                            (obj as Player).PlayerDataOriginal = (obj as Player).PlayerData;
+                            (obj as Player).PlayerDataOriginal = (obj as Player).PlayerData.Clone();
                             break;
                         case ObjectType.ActivePlayer:
                             (obj as Unit).UnitData = handler.ReadCreateUnitData(fieldsData, flags, index);
-                            (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData;
+                            (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData.Clone();
                             (obj as Player).PlayerData = handler.ReadCreatePlayerData(fieldsData, flags, index);
-                            (obj as Player).PlayerDataOriginal = (obj as Player).PlayerData;
+                            (obj as Player).PlayerDataOriginal = (obj as Player).PlayerData.Clone();
                             handler.ReadCreateActivePlayerData(fieldsData, flags, index);
                             break;
                         case ObjectType.GameObject:
                             (obj as GameObject).GameObjectData = handler.ReadCreateGameObjectData(fieldsData, flags, index);
-                            (obj as GameObject).GameObjectDataOriginal = (obj as GameObject).GameObjectData;
+                            (obj as GameObject).GameObjectDataOriginal = (obj as GameObject).GameObjectData.Clone();
                             break;
                         case ObjectType.DynamicObject:
                             (obj as DynamicObject).DynamicObjectData = handler.ReadCreateDynamicObjectData(fieldsData, flags, index);

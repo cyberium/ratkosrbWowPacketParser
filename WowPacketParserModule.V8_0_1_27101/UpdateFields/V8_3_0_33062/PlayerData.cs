@@ -31,7 +31,7 @@ namespace WowPacketParserModule.V8_0_1_27101.UpdateFields.V8_3_0_33062
         public uint DuelTeam { get; set; }
         public int GuildTimeStamp { get; set; }
         public IQuestLog[] QuestLog { get; } = new IQuestLog[125];
-        public IVisibleItem[] VisibleItems { get; } = new IVisibleItem[19];
+        public IVisibleItem[] VisibleItems { get; set; } = new IVisibleItem[19];
         public int PlayerTitle { get; set; }
         public int FakeInebriation { get; set; }
         public uint VirtualPlayerRealm { get; set; }
@@ -48,6 +48,15 @@ namespace WowPacketParserModule.V8_0_1_27101.UpdateFields.V8_3_0_33062
         public DynamicUpdateField<IArenaCooldown> ArenaCooldowns { get; } = new DynamicUpdateField<IArenaCooldown>();
         public bool HasQuestSession { get; set; }
         public bool HasLevelLink { get; set; }
+
+        public IPlayerData Clone()
+        {
+            PlayerData copy = (PlayerData)MemberwiseClone();
+            copy.VisibleItems = new IVisibleItem[19];
+            for (int i = 0; i < 19; i++)
+                copy.VisibleItems[i] = VisibleItems[i].Clone();
+            return copy;
+        }
     }
 }
 

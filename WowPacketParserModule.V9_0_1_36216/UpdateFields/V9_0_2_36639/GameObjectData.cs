@@ -26,6 +26,8 @@ namespace WowPacketParserModule.V9_0_1_36216.UpdateFields.V9_0_2_36639
         public int Level { get; set; }
         public uint AnimGroupInstance { get; set; }
         public DynamicUpdateField<int> EnableDoodadSets { get; } = new DynamicUpdateField<int>();
+
+        public IGameObjectData Clone() { return (IGameObjectData)MemberwiseClone(); }
     }
 }
 
