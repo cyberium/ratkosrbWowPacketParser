@@ -2,6 +2,7 @@ using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
 using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 using CoreParsers = WowPacketParser.Parsing.Parsers;
 
 namespace WowPacketParserModule.V9_0_1_36216.Parsers
@@ -169,12 +170,12 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
         public static void HandlePlayObjectSound(Packet packet)
         {
             uint sound = packet.ReadUInt32<SoundId>("SoundId");
-            packet.ReadPackedGuid128("SourceObjectGUID");
+            WowGuid guid = packet.ReadPackedGuid128("SourceObjectGUID");
             packet.ReadPackedGuid128("TargetObjectGUID");
             packet.ReadVector3("Position");
             packet.ReadInt32("BroadcastTextID");
 
-            Storage.Sounds.Add(sound, packet.TimeSpan);
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, guid));
         }
     }
 }
