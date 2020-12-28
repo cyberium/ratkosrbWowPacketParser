@@ -52,6 +52,7 @@
     <Compile Include="Parsers\SpellHandler.cs" />
     <Compile Include="Parsers\HotfixHandler.cs" />
     <Compile Include="Parsers\QuestHandler.cs" />
+    <Compile Include="Parsers\ItemHandler.cs" />
     <Compile Include="Parsers\UpdateFieldsHandler901.cs" />
     <Compile Include="Parsers\UpdateFieldsHandler902.cs" />
     <Compile Include="UpdateFields\V9_0_1_36216\ActivePlayerData.cs" />
