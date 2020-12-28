@@ -436,9 +436,26 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
         [Parser(Opcode.CMSG_QUEST_GIVER_CHOOSE_REWARD)]
         public static void HandleQuestChooseReward(Packet packet)
         {
-            packet.ReadPackedGuid128("QuestGiverGUID");
-            packet.ReadInt32("QuestID");
+            WowGuid guid = packet.ReadPackedGuid128("QuestGiverGUID");
+            uint id = (uint)packet.ReadInt32("QuestID");
             ReadRewardItem(packet, "ItemChoice");
+
+            if (Settings.SqlTables.client_quest_complete)
+            {
+                string objectGuid;
+                uint objectId;
+                string objectType;
+                Storage.GetObjectDbGuidEntryType(guid, out objectGuid, out objectId, out objectType);
+                QuestClientComplete questComplete = new QuestClientComplete
+                {
+                    ObjectGuid = objectGuid,
+                    ObjectId = objectId,
+                    ObjectType = objectType,
+                    QuestId = id,
+                    UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
+                };
+                Storage.QuestClientCompleteTimes.Add(questComplete, packet.TimeSpan);
+            }
         }
 
         [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_DETAILS)]
