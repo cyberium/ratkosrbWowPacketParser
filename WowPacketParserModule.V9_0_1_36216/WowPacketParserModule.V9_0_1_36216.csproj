@@ -75,6 +75,7 @@
     <Compile Include="Hotfix\BannedAddonsEntry.cs" />
     <Compile Include="Hotfix\BarberShopStyleEntry.cs" />
     <Compile Include="Hotfix\BattlemasterListEntry.cs" />
+    <Compile Include="Hotfix\BattlemasterListEntry902.cs" />
     <Compile Include="Hotfix\BattlePetBreedQualityEntry.cs" />
     <Compile Include="Hotfix\BattlePetBreedStateEntry.cs" />
     <Compile Include="Hotfix\BattlePetSpeciesEntry.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Hotfix\CurveEntry.cs" />
     <Compile Include="Hotfix\CurvePointEntry.cs" />
     <Compile Include="Hotfix\DestructibleModelDataEntry.cs" />
+    <Compile Include="Hotfix\DestructibleModelDataEntry902.cs" />
     <Compile Include="Hotfix\DifficultyEntry.cs" />
     <Compile Include="Hotfix\DungeonEncounterEntry.cs" />
     <Compile Include="Hotfix\DurabilityCostsEntry.cs" />
