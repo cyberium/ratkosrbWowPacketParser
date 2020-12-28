@@ -81,12 +81,8 @@
     <Compile Include="Hotfix\BattlePetSpeciesStateEntry.cs" />
     <Compile Include="Hotfix\BroadcastTextEntry.cs" />
     <Compile Include="Hotfix\Cfg_RegionsEntry.cs" />
-    <Compile Include="Hotfix\CharacterFacialHairStylesEntry.cs" />
     <Compile Include="Hotfix\CharacterLoadoutEntry.cs" />
     <Compile Include="Hotfix\CharacterLoadoutItemEntry.cs" />
-    <Compile Include="Hotfix\CharBaseSectionEntry.cs" />
-    <Compile Include="Hotfix\CharSectionsEntry.cs" />
-    <Compile Include="Hotfix\CharStartOutfitEntry.cs" />
     <Compile Include="Hotfix\CharTitlesEntry.cs" />
     <Compile Include="Hotfix\ChatChannelsEntry.cs" />
     <Compile Include="Hotfix\ChrClassesEntry.cs" />
@@ -185,15 +181,12 @@
     <Compile Include="Hotfix\ItemModifiedAppearanceEntry.cs" />
     <Compile Include="Hotfix\ItemNameDescriptionEntry.cs" />
     <Compile Include="Hotfix\ItemPriceBaseEntry.cs" />
-    <Compile Include="Hotfix\ItemRandomPropertiesEntry.cs" />
-    <Compile Include="Hotfix\ItemRandomSuffixEntry.cs" />
     <Compile Include="Hotfix\ItemSearchNameEntry.cs" />
     <Compile Include="Hotfix\ItemSetEntry.cs" />
     <Compile Include="Hotfix\ItemSetSpellEntry.cs" />
     <Compile Include="Hotfix\ItemSparseEntry.cs" />
     <Compile Include="Hotfix\ItemSpecEntry.cs" />
     <Compile Include="Hotfix\ItemSpecOverrideEntry.cs" />
-    <Compile Include="Hotfix\ItemUpgradeEntry.cs" />
     <Compile Include="Hotfix\ItemXBonusTreeEntry.cs" />
     <Compile Include="Hotfix\KeyChainEntry.cs" />
     <Compile Include="Hotfix\LfgDungeonsEntry.cs" />
@@ -237,8 +230,6 @@
     <Compile Include="Hotfix\RewardPackEntry.cs" />
     <Compile Include="Hotfix\RewardPackXCurrencyTypeEntry.cs" />
     <Compile Include="Hotfix\RewardPackXItemEntry.cs" />
-    <Compile Include="Hotfix\RulesetItemUpgradeEntry.cs" />
-    <Compile Include="Hotfix\ScalingStatDistributionEntry.cs" />
     <Compile Include="Hotfix\ScenarioEntry.cs" />
     <Compile Include="Hotfix\ScenarioStepEntry.cs" />
     <Compile Include="Hotfix\SceneScriptEntry.cs" />
@@ -309,7 +300,6 @@
     <Compile Include="Hotfix\WMOAreaTableEntry.cs" />
     <Compile Include="Hotfix\WorldEffectEntry.cs" />
     <Compile Include="Hotfix\WorldMapOverlayEntry.cs" />
-    <Compile Include="Hotfix\WorldSafeLocsEntry.cs" />
     <Compile Include="Hotfix\WorldStateExpressionEntry.cs" />
     <Compile Include="Parsers\AreaTriggerHandler.cs" />
     <Compile Include="Parsers\BattlegroundHandler.cs" />
