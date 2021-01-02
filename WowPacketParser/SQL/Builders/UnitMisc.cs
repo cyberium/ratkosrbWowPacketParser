@@ -397,17 +397,77 @@ namespace WowPacketParser.SQL.Builders
             {
                 result += SQLUtil.Compare(Storage.GossipMenuOptions, SQLDatabase.Get(Storage.GossipMenuOptions), t => t.BroadcastTextIDHelper);
 
+                foreach (var gossip_pair in Storage.GossipMenuOptions)
+                {
+                    var gossipAction = gossip_pair.Item1;
+
+                    uint option_id = 0;
+                    uint npc_option_npcflag = 0;
+                    switch (gossipAction.OptionIcon)
+                    {
+                        case GossipOptionIcon.Gossip:
+                            option_id = 1;
+                            npc_option_npcflag = 1;
+                            break;
+                        case GossipOptionIcon.Vendor:
+                            option_id = 3;
+                            npc_option_npcflag = 4;
+                            break;
+                        case GossipOptionIcon.Taxi:
+                            option_id = 4;
+                            npc_option_npcflag = 8;
+                            break;
+                        case GossipOptionIcon.Trainer:
+                            option_id = 5;
+                            npc_option_npcflag = 16;
+                            break;
+                        case GossipOptionIcon.Healer:
+                            option_id = 6;
+                            npc_option_npcflag = 32;
+                            break;
+                        case GossipOptionIcon.Binder:
+                            option_id = 8;
+                            npc_option_npcflag = 128;
+                            break;
+                        case GossipOptionIcon.Banker:
+                            option_id = 9;
+                            npc_option_npcflag = 256;
+                            break;
+                        case GossipOptionIcon.Petition:
+                            option_id = 10;
+                            npc_option_npcflag = 512;
+                            break;
+                        case GossipOptionIcon.Tabard:
+                            option_id = 11;
+                            npc_option_npcflag = 1024;
+                            break;
+                        case GossipOptionIcon.Battlemaster:
+                            option_id = 12;
+                            npc_option_npcflag = 2048;
+                            break;
+                        case GossipOptionIcon.Auctioneer:
+                            option_id = 13;
+                            npc_option_npcflag = 4096;
+                            break;
+                    }
+
+                    if (option_id != 0)
+                        result += "UPDATE `gossip_menu_option` SET `option_id`=" + option_id + ", `npc_option_npcflag`=" + npc_option_npcflag + " WHERE `menu_id`=" + gossipAction.MenuId.ToString() + " && `id`=" + gossipAction.OptionIndex.ToString() + ";\r\n";
+                }
+
                 if (!Storage.GossipMenuOptionActions.IsEmpty())
                 {
                     foreach (var gossip_pair in Storage.GossipMenuOptionActions)
                     {
-                        string poiId = "0";
-                        if (gossip_pair.Item1.ActionPoiId != null)
-                            poiId = gossip_pair.Item1.ActionPoiId.ToString();
-                        else
-                            gossip_pair.Item1.ActionPoiId = 0;
+                        var gossipAction = gossip_pair.Item1;
 
-                        result += "UPDATE `gossip_menu_option` SET `action_menu_id`=" + gossip_pair.Item1.ActionMenuId.ToString() + ", `action_poi_id`=" + poiId + ", `option_id`=1, `npc_option_npcflag`=1 WHERE `menu_id`=" + gossip_pair.Item1.MenuId.ToString() + " && `id`=" + gossip_pair.Item1.OptionIndex.ToString() + ";\r\n";
+                        string poiId = "0";
+                        if (gossipAction.ActionPoiId != null)
+                            poiId = gossipAction.ActionPoiId.ToString();
+                        else
+                            gossipAction.ActionPoiId = 0;
+
+                        result += "UPDATE `gossip_menu_option` SET `action_menu_id`=" + gossipAction.ActionMenuId.ToString() + ", `action_poi_id`=" + poiId + ", `option_id`=1, `npc_option_npcflag`=1 WHERE `menu_id`=" + gossipAction.MenuId.ToString() + " && `id`=" + gossipAction.OptionIndex.ToString() + ";\r\n";
 
                     }
 
