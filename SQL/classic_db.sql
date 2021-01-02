@@ -50,52 +50,6 @@ CREATE TABLE IF NOT EXISTS `broadcast_text_locale` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.characters
-DROP TABLE IF EXISTS `characters`;
-CREATE TABLE IF NOT EXISTS `characters` (
-  `guid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Global Unique Identifier',
-  `account` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Account Identifier',
-  `name` varchar(12) NOT NULL DEFAULT '',
-  `race` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `class` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `gender` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `level` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `xp` int(10) unsigned NOT NULL DEFAULT '0',
-  `money` int(10) unsigned NOT NULL DEFAULT '0',
-  `playerBytes` int(10) unsigned NOT NULL DEFAULT '0',
-  `playerBytes2` int(10) unsigned NOT NULL DEFAULT '0',
-  `playerFlags` int(10) unsigned NOT NULL DEFAULT '0',
-  `position_x` float NOT NULL DEFAULT '0',
-  `position_y` float NOT NULL DEFAULT '0',
-  `position_z` float NOT NULL DEFAULT '0',
-  `map` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Map Identifier',
-  `orientation` float NOT NULL DEFAULT '0',
-  `health` int(10) unsigned NOT NULL DEFAULT '0',
-  `power1` int(10) unsigned NOT NULL DEFAULT '0',
-  `equipmentCache` text,
-  PRIMARY KEY (`guid`),
-  KEY `idx_account` (`account`),
-  KEY `idx_name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='player data in format used by vmangos db';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.character_inventory
-DROP TABLE IF EXISTS `character_inventory`;
-CREATE TABLE IF NOT EXISTS `character_inventory` (
-  `guid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Global Unique Identifier',
-  `bag` int(11) unsigned NOT NULL DEFAULT '0',
-  `slot` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `item` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Item Global Unique Identifier',
-  `item_template` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Item Identifier',
-  PRIMARY KEY (`item`),
-  KEY `idx_guid` (`guid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='player item data in format used by vmangos db';
-
--- Data exporting was unselected.
-
-
 -- Dumping structure for table sniffs_new_test.client_creature_interact
 DROP TABLE IF EXISTS `client_creature_interact`;
 CREATE TABLE IF NOT EXISTS `client_creature_interact` (
@@ -202,6 +156,7 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `level` int(10) unsigned NOT NULL DEFAULT '0',
   `npc_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `unit_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `unit_flags2` int(10) unsigned NOT NULL DEFAULT '0',
   `current_health` int(10) unsigned NOT NULL DEFAULT '0',
   `max_health` int(10) unsigned NOT NULL DEFAULT '0',
   `current_mana` int(10) unsigned NOT NULL DEFAULT '0',
@@ -521,7 +476,7 @@ CREATE TABLE IF NOT EXISTS `creature_movement_server` (
   `end_position_y` float NOT NULL,
   `end_position_z` float NOT NULL,
   `orientation` float NOT NULL COMMENT 'final orientation',
-  `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   PRIMARY KEY (`guid`,`point`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='out of combat movement points from SMSG_ON_MONSTER_MOVE';
 
@@ -543,7 +498,7 @@ CREATE TABLE IF NOT EXISTS `creature_movement_server_combat` (
   `end_position_y` float NOT NULL,
   `end_position_z` float NOT NULL,
   `orientation` float NOT NULL COMMENT 'final orientation',
-  `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   PRIMARY KEY (`guid`,`point`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='in combat movement points from SMSG_ON_MONSTER_MOVE';
 
@@ -807,6 +762,7 @@ CREATE TABLE IF NOT EXISTS `creature_values_update` (
   `level` int(10) unsigned DEFAULT NULL,
   `npc_flags` int(10) unsigned DEFAULT NULL,
   `unit_flags` int(10) unsigned DEFAULT NULL,
+  `unit_flags2` int(10) unsigned DEFAULT NULL,
   `current_health` int(10) unsigned DEFAULT NULL,
   `max_health` int(10) unsigned DEFAULT NULL,
   `current_mana` int(10) unsigned DEFAULT NULL,
@@ -1222,24 +1178,6 @@ CREATE TABLE IF NOT EXISTS `hotfix_data` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.item_instance
-DROP TABLE IF EXISTS `item_instance`;
-CREATE TABLE IF NOT EXISTS `item_instance` (
-  `guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `itemEntry` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `owner_guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `count` int(10) unsigned NOT NULL DEFAULT '1',
-  `charges` tinytext,
-  `enchantments` text NOT NULL,
-  `durability` smallint(5) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`guid`),
-  KEY `idx_owner_guid` (`owner_guid`),
-  KEY `idx_itemEntry` (`itemEntry`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='player item data in format used by vmangos db';
-
--- Data exporting was unselected.
-
-
 -- Dumping structure for table sniffs_new_test.npc_text
 DROP TABLE IF EXISTS `npc_text`;
 CREATE TABLE IF NOT EXISTS `npc_text` (
@@ -1351,6 +1289,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   `mount_display_id` int(10) unsigned NOT NULL DEFAULT '0',
   `faction` int(10) unsigned NOT NULL DEFAULT '0',
   `unit_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `unit_flags2` int(10) unsigned NOT NULL DEFAULT '0',
   `current_health` int(10) unsigned NOT NULL DEFAULT '0',
   `max_health` int(10) unsigned NOT NULL DEFAULT '0',
   `current_mana` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1658,7 +1597,7 @@ CREATE TABLE IF NOT EXISTS `player_movement_server` (
   `end_position_y` float NOT NULL,
   `end_position_z` float NOT NULL,
   `orientation` float NOT NULL COMMENT 'final orientation',
-  `unixtime` int(10) unsigned NOT NULL COMMENT 'when the packet was received',
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   PRIMARY KEY (`guid`,`point`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='movement points from SMSG_ON_MONSTER_MOVE';
 
@@ -1705,6 +1644,7 @@ CREATE TABLE IF NOT EXISTS `player_values_update` (
   `level` int(10) unsigned DEFAULT NULL,
   `npc_flags` int(10) unsigned DEFAULT NULL,
   `unit_flags` int(10) unsigned DEFAULT NULL,
+  `unit_flags2` int(10) unsigned DEFAULT NULL,
   `current_health` int(10) unsigned DEFAULT NULL,
   `max_health` int(10) unsigned DEFAULT NULL,
   `current_mana` int(10) unsigned DEFAULT NULL,
@@ -2164,8 +2104,8 @@ CREATE TABLE IF NOT EXISTS `spell_cast_failed` (
   `caster_id` int(10) unsigned NOT NULL,
   `caster_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
   `spell_id` int(10) unsigned NOT NULL,
-  `visual_id` int(10) unsigned DEFAULT NULL,
-  `reason` int(10) unsigned DEFAULT NULL,
+  `visual_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `reason` int(10) unsigned NOT NULL DEFAULT '0',
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   PRIMARY KEY (`caster_id`,`caster_type`,`spell_id`,`unixtimems`,`caster_guid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_SPELL_FAILURE and SMSG_SPELL_FAILED_OTHER';
@@ -2263,7 +2203,7 @@ CREATE TABLE IF NOT EXISTS `spell_channel_start` (
   `caster_id` int(10) unsigned NOT NULL DEFAULT '0',
   `caster_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `visual_id` int(10) unsigned DEFAULT NULL,
+  `visual_id` int(10) unsigned NOT NULL DEFAULT '0',
   `duration` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`unixtimems`,`caster_guid`,`caster_id`,`caster_type`,`spell_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_SPELL_CHANNEL_START\r\nsent when somebody starts channeling a spell';

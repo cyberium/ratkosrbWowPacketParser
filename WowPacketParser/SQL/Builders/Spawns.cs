@@ -203,31 +203,9 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.RangedSlotItem = (uint)unitData.VirtualItems[2].ItemID;
 
                 row.Data.SniffId = creature.SourceSniffId;
+                row.Data.VerifiedBuild = creature.SourceSniffBuild;
 
-                row.Comment = StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
-                row.Comment += " (Area: " + StoreGetters.GetName(StoreNameType.Area, creature.Area, false) + " - ";
-                row.Comment += "Difficulty: " + StoreGetters.GetName(StoreNameType.Difficulty, (int)creature.DifficultyID, false) + ")";
-
-                string auras = string.Empty;
-                string commentAuras = string.Empty;
-                if (creature.Auras != null && creature.Auras.Count != 0)
-                {
-                    foreach (Aura aura in creature.Auras)
-                    {
-                        if (aura == null)
-                            continue;
-
-                        auras += aura.SpellId + " ";
-                        commentAuras += aura.SpellId + " - " + StoreGetters.GetName(StoreNameType.Spell, (int)aura.SpellId, false) + ", ";
-                    }
-
-                    auras = auras.TrimEnd(' ');
-                    commentAuras = commentAuras.TrimEnd(',', ' ');
-
-                    row.Comment += " (Auras: " + commentAuras + ")";
-                }
-
-                row.Data.Auras = auras;
+                row.Data.Auras = creature.GetAurasString(false);
 
                 var addonRow = new Row<CreatureAddon>();
                 if (Settings.SqlTables.creature_addon)
@@ -237,13 +215,11 @@ namespace WowPacketParser.SQL.Builders
                     addonRow.Data.Bytes1 = creature.Bytes1;
                     addonRow.Data.Bytes2 = creature.Bytes2;
                     addonRow.Data.Emote = (uint)unitData.EmoteState;
-                    addonRow.Data.Auras = auras;
+                    addonRow.Data.Auras = creature.GetAurasString(true);
                     addonRow.Data.AIAnimKit = creature.AIAnimKit.GetValueOrDefault(0);
                     addonRow.Data.MovementAnimKit = creature.MovementAnimKit.GetValueOrDefault(0);
                     addonRow.Data.MeleeAnimKit = creature.MeleeAnimKit.GetValueOrDefault(0);
                     addonRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
-                    if (!string.IsNullOrWhiteSpace(auras))
-                        addonRow.Comment += " - " + commentAuras;
                     addonRows.Add(addonRow);
                 }
 
@@ -1036,14 +1012,11 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.Flags = go.GameObjectDataOriginal.Flags;
                 row.Data.Level = (uint)go.GameObjectDataOriginal.Level;
                 row.Data.SniffId = go.SourceSniffId;
+                row.Data.VerifiedBuild = go.SourceSniffBuild;
 
                 // set some defaults
                 row.Data.PhaseGroup = 0;
                 row.Data.TemporarySpawn = (byte)(go.IsTemporarySpawn() ? 1 : 0);
-
-                row.Comment = StoreGetters.GetName(StoreNameType.GameObject, (int)gameobject.Key.GetEntry(), false);
-                row.Comment += " (Area: " + StoreGetters.GetName(StoreNameType.Area, go.Area, false) + " - ";
-                row.Comment += "Difficulty: " + StoreGetters.GetName(StoreNameType.Difficulty, (int)go.DifficultyID, false) + ")";
 
                 if (go.IsTransport())
                 {

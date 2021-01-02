@@ -49,10 +49,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("spell_id", true)]
         public uint SpellId;
 
-        [DBFieldName("visual_id", false, false, true)]
+        [DBFieldName("visual_id")]
         public uint VisualId;
 
-        [DBFieldName("reason", false, false, true)]
+        [DBFieldName("reason")]
         public uint? Reason;
 
         [DBFieldName("unixtimems", true)]
@@ -77,10 +77,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("spell_id", true)]
         public uint SpellId;
 
-        [DBFieldName("visual_id", false, false, true)]
+        [DBFieldName("visual_id")]
         public uint VisualId;
 
-        [DBFieldName("duration", false)]
+        [DBFieldName("duration")]
         public int Duration;
 
         [DBFieldName("unixtimems", true)]

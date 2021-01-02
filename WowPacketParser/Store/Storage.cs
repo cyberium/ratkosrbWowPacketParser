@@ -23,6 +23,7 @@ namespace WowPacketParser.Store
             obj.OriginalUpdateFields = obj.UpdateFields != null ? new Dictionary<int, UpdateField>(obj.UpdateFields) : null;
             if (!string.IsNullOrWhiteSpace(Settings.SQLFileName) && Settings.DumpFormatWithSQL())
                 obj.SourceSniffId = Program.sniffFileNames.IndexOf(packet.FileName);
+            obj.SourceSniffBuild = ClientVersion.BuildInt;
             Storage.Objects.Add(guid, obj, packet.TimeSpan);
         }
         public static string GetObjectDbGuid(WowGuid guid)

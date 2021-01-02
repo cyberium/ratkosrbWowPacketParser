@@ -300,8 +300,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("orientation")]
         public float? Orientation;
 
-        [DBFieldName("unixtime")]
-        public uint? UnixTime;
+        [DBFieldName("unixtimems")]
+        public ulong? UnixTimeMs;
 
         public List<Vector3> SplinePoints = null;
     }

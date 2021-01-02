@@ -41,22 +41,7 @@ namespace WowPacketParser.SQL.Builders
                     if (!(npc.Map.ToString(CultureInfo.InvariantCulture).MatchesFilters(Settings.MapFilters)))
                         continue;
 
-                var auras = string.Empty;
-                var commentAuras = string.Empty;
-                if (npc.Auras != null && npc.Auras.Count != 0)
-                {
-                    foreach (var aura in npc.Auras.Where(aura =>
-                        aura != null &&
-                        (ClientVersion.AddedInVersion(ClientType.MistsOfPandaria) ?
-                            aura.AuraFlags.HasAnyFlag(AuraFlagMoP.NoCaster) :
-                            aura.AuraFlags.HasAnyFlag(AuraFlag.NotCaster))))
-                    {
-                        auras += aura.SpellId + " ";
-                        commentAuras += StoreGetters.GetName(StoreNameType.Spell, (int)aura.SpellId, false) + ", ";
-                    }
-                    auras = auras.TrimEnd(' ');
-                    commentAuras = commentAuras.TrimEnd(',', ' ');
-                }
+                var auras = npc.GetAurasString(true);
 
                 var addon = new CreatureTemplateAddon
                 {
@@ -69,7 +54,6 @@ namespace WowPacketParser.SQL.Builders
                     MovementAnimKit = npc.MovementAnimKit.GetValueOrDefault(0),
                     MeleeAnimKit = npc.MeleeAnimKit.GetValueOrDefault(0),
                     Auras = auras,
-                    CommentAuras = commentAuras
                 };
 
                 if (addons.ContainsKey(addon))
@@ -83,8 +67,6 @@ namespace WowPacketParser.SQL.Builders
                 addon =>
                 {
                     var comment = StoreGetters.GetName(StoreNameType.Unit, (int)addon.Entry.GetValueOrDefault());
-                    if (!string.IsNullOrEmpty(addon.CommentAuras))
-                        comment += " - " + addon.CommentAuras;
                     return comment;
                 });
         }

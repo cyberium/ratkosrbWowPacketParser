@@ -148,7 +148,6 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("auras")]
         public string Auras;
-
     }
 
     [DBTableName("creature_questitem")]
