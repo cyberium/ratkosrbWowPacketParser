@@ -61,8 +61,8 @@ namespace WowPacketParser.SQL.Builders
             var updateValuesRows = new RowList<CreatureValuesUpdate>();
             var updateSpeedRows = new RowList<CreatureSpeedUpdate>();
             var attackLogRows = new RowList<UnitMeleeAttackLog>();
-            var attackStartRows = new RowList<CreatureTargetChange>();
-            var attackStopRows = new RowList<CreatureTargetChange>();
+            var attackStartRows = new RowList<CreatureAttackToggle>();
+            var attackStopRows = new RowList<CreatureAttackToggle>();
             var updateEquipmentValuesRows = new RowList<CreatureEquipmentValuesUpdate>();
             var updateGuidValuesRows = new RowList<CreatureGuidValuesUpdate>();
             var emoteRows = new RowList<CreatureEmote>();
@@ -203,7 +203,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.RangedSlotItem = (uint)unitData.VirtualItems[2].ItemID;
 
                 row.Data.SniffId = creature.SourceSniffId;
-                row.Data.VerifiedBuild = creature.SourceSniffBuild;
+                row.Data.SniffBuild = creature.SourceSniffBuild;
 
                 row.Data.Auras = creature.GetAurasString(false);
 
@@ -489,7 +489,7 @@ namespace WowPacketParser.SQL.Builders
                     {
                         foreach (var attack in Storage.UnitAttackStartTimes[unit.Key])
                         {
-                            var attackStartRow = new Row<CreatureTargetChange>();
+                            var attackStartRow = new Row<CreatureAttackToggle>();
 
                             attackStartRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                             Storage.GetObjectDbGuidEntryType(attack.victim, out attackStartRow.Data.VictimGuid, out attackStartRow.Data.VictimId, out attackStartRow.Data.VictimType);
@@ -505,7 +505,7 @@ namespace WowPacketParser.SQL.Builders
                     {
                         foreach (var attack in Storage.UnitAttackStopTimes[unit.Key])
                         {
-                            var attackStopRow = new Row<CreatureTargetChange>();
+                            var attackStopRow = new Row<CreatureAttackToggle>();
 
                             attackStopRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                             Storage.GetObjectDbGuidEntryType(attack.victim, out attackStopRow.Data.VictimGuid, out attackStopRow.Data.VictimId, out attackStopRow.Data.VictimType);
@@ -605,8 +605,6 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.client_creature_interact)
             {
-                var interactDelete = new SQLDelete<CreatureClientInteract>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                result.Append(interactDelete.Build());
                 var interactSql = new SQLInsert<CreatureClientInteract>(interactRows, false);
                 result.Append(interactSql.Build());
                 result.AppendLine();
@@ -614,8 +612,6 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_create1_time)
             {
-                var create1Delete = new SQLDelete<CreatureCreate1>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                result.Append(create1Delete.Build());
                 var createSql = new SQLInsert<CreatureCreate1>(create1Rows, false);
                 result.Append(createSql.Build());
                 result.AppendLine();
@@ -623,8 +619,6 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_create2_time)
             {
-                var create2Delete = new SQLDelete<CreatureCreate2>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                result.Append(create2Delete.Build());
                 var createSql = new SQLInsert<CreatureCreate2>(create2Rows, false);
                 result.Append(createSql.Build());
                 result.AppendLine();
@@ -632,8 +626,6 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_destroy_time)
             {
-                var destroyDelete = new SQLDelete<CreatureDestroy>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                result.Append(destroyDelete.Build());
                 var destroySql = new SQLInsert<CreatureDestroy>(destroyRows, false);
                 result.Append(destroySql.Build());
                 result.AppendLine();
@@ -641,8 +633,6 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_auras_update)
             {
-                var updateDelete = new SQLDelete<CreatureAurasUpdate>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                result.Append(updateDelete.Build());
                 var updateSql = new SQLInsert<CreatureAurasUpdate>(updateAurasRows, false);
                 result.Append(updateSql.Build());
                 result.AppendLine();
@@ -650,8 +640,6 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_values_update)
             {
-                var updateDelete = new SQLDelete<CreatureValuesUpdate>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                result.Append(updateDelete.Build());
                 var updateSql = new SQLInsert<CreatureValuesUpdate>(updateValuesRows, false);
                 result.Append(updateSql.Build());
                 result.AppendLine();
@@ -659,8 +647,6 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_speed_update)
             {
-                var updateDelete = new SQLDelete<CreatureSpeedUpdate>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                result.Append(updateDelete.Build());
                 var updateSql = new SQLInsert<CreatureSpeedUpdate>(updateSpeedRows, false);
                 result.Append(updateSql.Build());
                 result.AppendLine();
@@ -676,15 +662,11 @@ namespace WowPacketParser.SQL.Builders
             if (Settings.SqlTables.creature_movement_server)
             {
                 // creature_movement_server
-                var movementDelete = new SQLDelete<ServerSideMovement>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                result.Append(movementDelete.Build());
                 var movementSql = new SQLInsert<ServerSideMovement>(movementRows, false);
                 result.Append(movementSql.Build());
                 result.AppendLine();
 
                 // creature_movement_server_spline
-                var movementSplineDelete = new SQLDelete<ServerSideMovementSpline>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                result.Append(movementSplineDelete.Build());
                 var movementSplineSql = new SQLInsert<ServerSideMovementSpline>(movementSplineRows, false);
                 result.Append(movementSplineSql.Build());
                 result.AppendLine();
@@ -693,17 +675,11 @@ namespace WowPacketParser.SQL.Builders
             if (Settings.SqlTables.creature_movement_server_combat)
             {
                 // creature_movement_server_combat
-                var movementDelete = new SQLDelete<ServerSideMovement>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                movementDelete.tableNameOverride = "creature_movement_server_combat";
-                result.Append(movementDelete.Build());
                 var movementSql = new SQLInsert<ServerSideMovement>(movementCombatRows, false, false, "creature_movement_server_combat");
                 result.Append(movementSql.Build());
                 result.AppendLine();
 
                 // creature_movement_server_combat_spline
-                var movementSplineDelete = new SQLDelete<ServerSideMovementSpline>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                movementSplineDelete.tableNameOverride = "creature_movement_server_combat_spline";
-                result.Append(movementSplineDelete.Build());
                 var movementSplineSql = new SQLInsert<ServerSideMovementSpline>(movementCombatSplineRows, false, false, "creature_movement_server_combat_spline");
                 result.Append(movementSplineSql.Build());
                 result.AppendLine();
@@ -711,8 +687,6 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_emote)
             {
-                var emoteDelete = new SQLDelete<CreatureEmote>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                result.Append(emoteDelete.Build());
                 var emoteSql = new SQLInsert<CreatureEmote>(emoteRows, false);
                 result.Append(emoteSql.Build());
                 result.AppendLine();
@@ -720,9 +694,6 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_attack_log)
             {
-                var attackDelete = new SQLDelete<UnitMeleeAttackLog>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                attackDelete.tableNameOverride = "creature_attack_log";
-                result.Append(attackDelete.Build());
                 var attackSql = new SQLInsert<UnitMeleeAttackLog>(attackLogRows, false, false, "creature_attack_log");
                 result.Append(attackSql.Build());
                 result.AppendLine();
@@ -730,28 +701,20 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_attack_start)
             {
-                var attackDelete = new SQLDelete<CreatureTargetChange>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                attackDelete.tableNameOverride = "creature_attack_start";
-                result.Append(attackDelete.Build());
-                var attackSql = new SQLInsert<CreatureTargetChange>(attackStartRows, false, false, "creature_attack_start");
+                var attackSql = new SQLInsert<CreatureAttackToggle>(attackStartRows, false, false, "creature_attack_start");
                 result.Append(attackSql.Build());
                 result.AppendLine();
             }
 
             if (Settings.SqlTables.creature_attack_stop)
             {
-                var attackDelete = new SQLDelete<CreatureTargetChange>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                attackDelete.tableNameOverride = "creature_attack_stop";
-                result.Append(attackDelete.Build());
-                var attackSql = new SQLInsert<CreatureTargetChange>(attackStopRows, false, false, "creature_attack_stop");
+                var attackSql = new SQLInsert<CreatureAttackToggle>(attackStopRows, false, false, "creature_attack_stop");
                 result.Append(attackSql.Build());
                 result.AppendLine();
             }
 
             if (Settings.SqlTables.creature_equipment_values_update)
             {
-                var updateDelete = new SQLDelete<CreatureEquipmentValuesUpdate>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                result.Append(updateDelete.Build());
                 var updateSql = new SQLInsert<CreatureEquipmentValuesUpdate>(updateEquipmentValuesRows, false, false);
                 result.Append(updateSql.Build());
                 result.AppendLine();
@@ -759,8 +722,6 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_guid_values_update)
             {
-                var updateDelete = new SQLDelete<CreatureGuidValuesUpdate>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-                result.Append(updateDelete.Build());
                 var updateSql = new SQLInsert<CreatureGuidValuesUpdate>(updateGuidValuesRows, false, false);
                 result.Append(updateSql.Build());
                 result.AppendLine();
@@ -1012,7 +973,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.Flags = go.GameObjectDataOriginal.Flags;
                 row.Data.Level = (uint)go.GameObjectDataOriginal.Level;
                 row.Data.SniffId = go.SourceSniffId;
-                row.Data.VerifiedBuild = go.SourceSniffBuild;
+                row.Data.SniffBuild = go.SourceSniffBuild;
 
                 // set some defaults
                 row.Data.PhaseGroup = 0;
@@ -1070,56 +1031,42 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.gameobject_create1_time)
             {
-                var create1Delete = new SQLDelete<GameObjectCreate1>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
-                result.Append(create1Delete.Build());
                 var createSql = new SQLInsert<GameObjectCreate1>(create1Rows, false);
                 result.Append(createSql.Build());
             }
 
             if (Settings.SqlTables.gameobject_create2_time)
             {
-                var create2Delete = new SQLDelete<GameObjectCreate2>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
-                result.Append(create2Delete.Build());
                 var createSql = new SQLInsert<GameObjectCreate2>(create2Rows, false);
                 result.Append(createSql.Build());
             }
 
             if (Settings.SqlTables.gameobject_custom_anim)
             {
-                var animDelete = new SQLDelete<GameObjectCustomAnim>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
-                result.Append(animDelete.Build());
                 var animSql = new SQLInsert<GameObjectCustomAnim>(customAnimRows, false);
                 result.Append(animSql.Build());
             }
 
             if (Settings.SqlTables.gameobject_despawn_anim)
             {
-                var animDelete = new SQLDelete<GameObjectDespawnAnim>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
-                result.Append(animDelete.Build());
                 var animSql = new SQLInsert<GameObjectDespawnAnim>(despawnAnimRows, false);
                 result.Append(animSql.Build());
             }
 
             if (Settings.SqlTables.gameobject_destroy_time)
             {
-                var destroyDelete = new SQLDelete<GameObjectDestroy>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
-                result.Append(destroyDelete.Build());
                 var destroySql = new SQLInsert<GameObjectDestroy>(destroyRows, false);
                 result.Append(destroySql.Build());
             }
 
             if (Settings.SqlTables.gameobject_values_update)
             {
-                var updateDelete = new SQLDelete<GameObjectUpdate>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
-                result.Append(updateDelete.Build());
                 var updateSql = new SQLInsert<GameObjectUpdate>(updateRows, false);
                 result.Append(updateSql.Build());
             }
 
             if (Settings.SqlTables.client_gameobject_use)
             {
-                var useDelete = new SQLDelete<GameObjectClientUse>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
-                result.Append(useDelete.Build());
                 var useSql = new SQLInsert<GameObjectClientUse>(useRows, false);
                 result.Append(useSql.Build());
             }
@@ -1250,24 +1197,18 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.dynamicobject_create1_time)
             {
-                var create1Delete = new SQLDelete<DynamicObjectCreate1>(Tuple.Create("@DGUID+0", "@DGUID+" + maxDbGuid));
-                result.Append(create1Delete.Build());
                 var createSql = new SQLInsert<DynamicObjectCreate1>(create1Rows, false);
                 result.Append(createSql.Build());
             }
 
             if (Settings.SqlTables.dynamicobject_create2_time)
             {
-                var create2Delete = new SQLDelete<DynamicObjectCreate2>(Tuple.Create("@DGUID+0", "@DGUID+" + maxDbGuid));
-                result.Append(create2Delete.Build());
                 var createSql = new SQLInsert<DynamicObjectCreate2>(create2Rows, false);
                 result.Append(createSql.Build());
             }
 
             if (Settings.SqlTables.dynamicobject_destroy_time)
             {
-                var destroyDelete = new SQLDelete<DynamicObjectDestroy>(Tuple.Create("@DGUID+0", "@DGUID+" + maxDbGuid));
-                result.Append(destroyDelete.Build());
                 var destroySql = new SQLInsert<DynamicObjectDestroy>(destroyRows, false);
                 result.Append(destroySql.Build());
             }

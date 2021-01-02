@@ -598,11 +598,11 @@ namespace WowPacketParser.Store
                 Storage.UnitAttackLogs.Add(attackerGuid, attacksList);
             }
         }
-        public static readonly Dictionary<WowGuid, List<CreatureTargetData>> UnitAttackStartTimes = new Dictionary<WowGuid, List<CreatureTargetData>>();
-        public static readonly Dictionary<WowGuid, List<CreatureTargetData>> UnitAttackStopTimes = new Dictionary<WowGuid, List<CreatureTargetData>>();
+        public static readonly Dictionary<WowGuid, List<CreatureAttackData>> UnitAttackStartTimes = new Dictionary<WowGuid, List<CreatureAttackData>>();
+        public static readonly Dictionary<WowGuid, List<CreatureAttackData>> UnitAttackStopTimes = new Dictionary<WowGuid, List<CreatureAttackData>>();
         public static void StoreUnitAttackToggle(WowGuid attackerGuid, WowGuid victimGuid, DateTime time, bool start)
         {
-            Dictionary<WowGuid, List<CreatureTargetData>> store = null;
+            Dictionary<WowGuid, List<CreatureAttackData>> store = null;
             if (start)
             {
                 if (attackerGuid.GetObjectType() == ObjectType.Unit &&
@@ -628,12 +628,12 @@ namespace WowPacketParser.Store
 
             if (store.ContainsKey(attackerGuid))
             {
-                store[attackerGuid].Add(new CreatureTargetData(victimGuid, time));
+                store[attackerGuid].Add(new CreatureAttackData(victimGuid, time));
             }
             else
             {
-                List<CreatureTargetData> attackList = new List<CreatureTargetData>();
-                attackList.Add(new CreatureTargetData(victimGuid, time));
+                List<CreatureAttackData> attackList = new List<CreatureAttackData>();
+                attackList.Add(new CreatureAttackData(victimGuid, time));
                 store.Add(attackerGuid, attackList);
             }
         }

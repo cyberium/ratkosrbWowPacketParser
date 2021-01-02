@@ -21,6 +21,9 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("player_chat")]
     public sealed class CharacterChat : IDataModel
     {
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
         [DBFieldName("guid", true, true)]
         public string Guid;
 
@@ -36,15 +39,15 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("channel_name")]
         public string ChannelName;
 
-        [DBFieldName("unixtimems", true)]
-        public ulong UnixTimeMs;
-
         public WowGuid SenderGUID;
     }
 
     [DBTableName("creature_text")]
     public sealed class CreatureText : IDataModel
     {
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
         [DBFieldName("guid", true, true)]
         public string Guid;
 
@@ -56,9 +59,6 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("health_percent", false, false, true)]
         public float? HealthPercent;
-
-        [DBFieldName("unixtimems", true)]
-        public ulong UnixTimeMs;
 
         public WowGuid SenderGUID;
         public string Text;
@@ -119,6 +119,9 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("gameobject_text")]
     public sealed class GameObjectText : IDataModel
     {
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
         [DBFieldName("guid", true, true)]
         public string Guid;
 
@@ -127,9 +130,6 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("group_id", true)]
         public uint GroupId;
-
-        [DBFieldName("unixtimems", true)]
-        public ulong UnixTimeMs;
 
         public WowGuid SenderGUID;
         public string Text;

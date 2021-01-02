@@ -1418,7 +1418,6 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                result += new SQLDelete<CreatureText>(Tuple.Create("0", "999999")).Build();
                 result += SQLUtil.Compare(Storage.CreatureTexts, SQLDatabase.Get(Storage.CreatureTexts),
                     t => t.Entry.ToString(), false);
             }
