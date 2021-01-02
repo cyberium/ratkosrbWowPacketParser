@@ -474,6 +474,18 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_FLAGS_2))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.Flags2 != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.UnitFlag2 = update.Value.UInt32Value;
+                            }
+                        }
+                    }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_HEALTH) &&
                              Settings.SaveHealthUpdates)
                     {

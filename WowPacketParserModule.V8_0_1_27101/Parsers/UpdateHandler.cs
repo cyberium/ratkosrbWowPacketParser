@@ -256,6 +256,11 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                         hasData = true;
                         creatureUpdate.UnitFlag = unit.UnitData.Flags;
                     }
+                    if (oldUnitData.Flags2 != unit.UnitData.Flags2)
+                    {
+                        hasData = true;
+                        creatureUpdate.UnitFlag2 = unit.UnitData.Flags2;
+                    }
                     if (oldUnitData.CurHealth != unit.UnitData.CurHealth)
                     {
                         hasData = true;

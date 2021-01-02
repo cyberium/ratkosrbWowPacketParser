@@ -160,6 +160,7 @@ namespace WowPacketParser.SQL.Builders
                     addonRow.Data.MountDisplayID = (uint)player.UnitDataOriginal.MountDisplayID;
                     addonRow.Data.FactionTemplate = (uint)player.UnitDataOriginal.FactionTemplate;
                     addonRow.Data.UnitFlags = player.UnitDataOriginal.Flags;
+                    addonRow.Data.UnitFlags2 = player.UnitDataOriginal.Flags2;
                     addonRow.Data.CurHealth = (uint)player.UnitDataOriginal.CurHealth;
                     addonRow.Data.MaxHealth = (uint)player.UnitDataOriginal.MaxHealth;
                     addonRow.Data.CurMana = (uint)player.UnitDataOriginal.CurMana;

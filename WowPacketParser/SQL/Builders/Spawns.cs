@@ -173,8 +173,9 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.MountDisplayID = (uint)unitData.MountDisplayID;
                 row.Data.FactionTemplate = (uint)unitData.FactionTemplate;
                 row.Data.Level = (uint)unitData.Level;
-                row.Data.NpcFlag = (uint)unitData.NpcFlags[0];
-                row.Data.UnitFlag = (uint)unitData.Flags;
+                row.Data.NpcFlag = unitData.NpcFlags[0];
+                row.Data.UnitFlag = unitData.Flags;
+                row.Data.UnitFlag2 = unitData.Flags2;
                 row.Data.CurHealth = (uint)unitData.CurHealth;
                 row.Data.CurMana = (uint)unitData.CurMana;
                 row.Data.MaxHealth = (uint)unitData.MaxHealth;

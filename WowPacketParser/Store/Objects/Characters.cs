@@ -137,6 +137,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("unit_flags")]
         public uint? UnitFlags;
 
+        [DBFieldName("unit_flags2")]
+        public uint? UnitFlags2;
+
         [DBFieldName("current_health")]
         public uint? CurHealth;
 

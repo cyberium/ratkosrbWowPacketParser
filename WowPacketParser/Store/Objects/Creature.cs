@@ -90,6 +90,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("unit_flags")]
         public uint? UnitFlag;
 
+        [DBFieldName("unit_flags2")]
+        public uint? UnitFlag2;
+
         [DBFieldName("current_health")]
         public uint? CurHealth;
 
@@ -457,6 +460,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("unit_flags", true, false, true)]
         public uint? UnitFlag;
+
+        [DBFieldName("unit_flags2", true, false, true)]
+        public uint? UnitFlag2;
 
         [DBFieldName("current_health", true, false, true)]
         public uint? CurrentHealth;
