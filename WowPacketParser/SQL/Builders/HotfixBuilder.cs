@@ -94,7 +94,7 @@ namespace WowPacketParser.SQL.Builders
         }
 
         // Special Hotfix Builders
-        [BuilderMethod(true)]
+        [BuilderMethod(false)]
         public static string BroadcastText()
         {
             if (Storage.BroadcastTexts.IsEmpty())
@@ -112,7 +112,7 @@ namespace WowPacketParser.SQL.Builders
             return SQLUtil.Compare(Storage.BroadcastTexts, templatesDb, StoreNameType.None);
         }
 
-        [BuilderMethod(true)]
+        [BuilderMethod(false)]
         public static string BroadcastTextLocales()
         {
             if (Storage.BroadcastTextLocales.IsEmpty())

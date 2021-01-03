@@ -13,8 +13,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("BlobIndex", TargetedDatabase.WarlordsOfDraenor, true)]
         public int? BlobIndex;
 
-        [DBFieldName("id", TargetedDatabase.Zero, TargetedDatabase.WarlordsOfDraenor, true)]
-        [DBFieldName("Idx1", TargetedDatabase.WarlordsOfDraenor, true)]
+        [DBFieldName("id", true)]
         public int? ID;
 
         [DBFieldName("ObjectiveIndex")]

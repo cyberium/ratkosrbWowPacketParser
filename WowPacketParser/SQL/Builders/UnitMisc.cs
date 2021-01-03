@@ -33,6 +33,10 @@ namespace WowPacketParser.SQL.Builders
 
                 var npc = unit.Value;
 
+                uint entry = (uint)npc.ObjectData.EntryID;
+                if (entry == 0)
+                    continue;   // broken entry
+
                 if (Settings.AreaFilters.Length > 0)
                     if (!(npc.Area.ToString(CultureInfo.InvariantCulture).MatchesFilters(Settings.AreaFilters)))
                         continue;
@@ -45,7 +49,7 @@ namespace WowPacketParser.SQL.Builders
 
                 var addon = new CreatureTemplateAddon
                 {
-                    Entry = unit.Key.GetEntry(),
+                    Entry = entry,
                     MountID = (uint)npc.UnitData.MountDisplayID,
                     Bytes1 = npc.Bytes1,
                     Bytes2 = npc.Bytes2,
@@ -274,6 +278,10 @@ namespace WowPacketParser.SQL.Builders
                 if (npc.Key.GetHighType() == HighGuidType.Pet)
                     continue;
 
+                uint entry = (uint)npc.Value.ObjectData.EntryID;
+                if (entry == 0)
+                    continue;   // broken entry
+
                 if (Settings.AreaFilters.Length > 0)
                     if (!(npc.Value.Area.ToString(CultureInfo.InvariantCulture).MatchesFilters(Settings.AreaFilters)))
                         continue;
@@ -291,7 +299,7 @@ namespace WowPacketParser.SQL.Builders
 
                 var equip = new CreatureEquipment
                 {
-                    CreatureID = npc.Key.GetEntry(),
+                    CreatureID = entry,
                     ItemID1 = (uint)equipment[0].ItemID,
                     ItemID2 = (uint)equipment[1].ItemID,
                     ItemID3 = (uint)equipment[2].ItemID,
@@ -374,6 +382,111 @@ namespace WowPacketParser.SQL.Builders
             }
         }
 
+        public static void AssignNpcFlagsToGossipOption(GossipMenuOption gossipOption)
+        {
+            if (Settings.TargetedDatabase == TargetedDatabase.Zero ||
+                Settings.TargetedDatabase == TargetedDatabase.Classic)
+            {
+                switch (gossipOption.OptionIcon)
+                {
+                    case GossipOptionIcon.Gossip:
+                        gossipOption.OptionId = 1;
+                        gossipOption.NpcOptionNpcFlag = 1;
+                        break;
+                    case GossipOptionIcon.Vendor:
+                        gossipOption.OptionId = 3;
+                        gossipOption.NpcOptionNpcFlag = 4;
+                        break;
+                    case GossipOptionIcon.Taxi:
+                        gossipOption.OptionId = 4;
+                        gossipOption.NpcOptionNpcFlag = 8;
+                        break;
+                    case GossipOptionIcon.Trainer:
+                        gossipOption.OptionId = 5;
+                        gossipOption.NpcOptionNpcFlag = 16;
+                        break;
+                    case GossipOptionIcon.Healer:
+                        gossipOption.OptionId = 6;
+                        gossipOption.NpcOptionNpcFlag = 32;
+                        break;
+                    case GossipOptionIcon.Binder:
+                        gossipOption.OptionId = 8;
+                        gossipOption.NpcOptionNpcFlag = 128;
+                        break;
+                    case GossipOptionIcon.Banker:
+                        gossipOption.OptionId = 9;
+                        gossipOption.NpcOptionNpcFlag = 256;
+                        break;
+                    case GossipOptionIcon.Petition:
+                        gossipOption.OptionId = 10;
+                        gossipOption.NpcOptionNpcFlag = 512;
+                        break;
+                    case GossipOptionIcon.Tabard:
+                        gossipOption.OptionId = 11;
+                        gossipOption.NpcOptionNpcFlag = 1024;
+                        break;
+                    case GossipOptionIcon.Battlemaster:
+                        gossipOption.OptionId = 12;
+                        gossipOption.NpcOptionNpcFlag = 2048;
+                        break;
+                    case GossipOptionIcon.Auctioneer:
+                        gossipOption.OptionId = 13;
+                        gossipOption.NpcOptionNpcFlag = 4096;
+                        break;
+                }
+            }
+            else // tbc+
+            {
+                switch (gossipOption.OptionIcon)
+                {
+                    case GossipOptionIcon.Gossip:
+                        gossipOption.OptionId = 1;
+                        gossipOption.NpcOptionNpcFlag = 1;
+                        break;
+                    case GossipOptionIcon.Vendor:
+                        gossipOption.OptionId = 3;
+                        gossipOption.NpcOptionNpcFlag = 128;
+                        break;
+                    case GossipOptionIcon.Taxi:
+                        gossipOption.OptionId = 4;
+                        gossipOption.NpcOptionNpcFlag = 8192;
+                        break;
+                    case GossipOptionIcon.Trainer:
+                        gossipOption.OptionId = 5;
+                        gossipOption.NpcOptionNpcFlag = 16;
+                        break;
+                    case GossipOptionIcon.Healer:
+                        gossipOption.OptionId = 6;
+                        gossipOption.NpcOptionNpcFlag = 16384;
+                        break;
+                    case GossipOptionIcon.Binder:
+                        gossipOption.OptionId = 8;
+                        gossipOption.NpcOptionNpcFlag = 65536;
+                        break;
+                    case GossipOptionIcon.Banker:
+                        gossipOption.OptionId = 9;
+                        gossipOption.NpcOptionNpcFlag = 131072;
+                        break;
+                    case GossipOptionIcon.Petition:
+                        gossipOption.OptionId = 10;
+                        gossipOption.NpcOptionNpcFlag = 262144;
+                        break;
+                    case GossipOptionIcon.Tabard:
+                        gossipOption.OptionId = 11;
+                        gossipOption.NpcOptionNpcFlag = 524288;
+                        break;
+                    case GossipOptionIcon.Battlemaster:
+                        gossipOption.OptionId = 12;
+                        gossipOption.NpcOptionNpcFlag = 1048576;
+                        break;
+                    case GossipOptionIcon.Auctioneer:
+                        gossipOption.OptionId = 13;
+                        gossipOption.NpcOptionNpcFlag = 2097152;
+                        break;
+                }
+            }
+        }
+
         [BuilderMethod]
         public static string Gossip()
         {
@@ -395,65 +508,14 @@ namespace WowPacketParser.SQL.Builders
             // `gossip_menu_option`
             if (Settings.SqlTables.gossip_menu_option)
             {
-                result += SQLUtil.Compare(Storage.GossipMenuOptions, SQLDatabase.Get(Storage.GossipMenuOptions), t => t.BroadcastTextIDHelper);
-
                 foreach (var gossip_pair in Storage.GossipMenuOptions)
                 {
-                    var gossipAction = gossip_pair.Item1;
+                    var gossipOption = gossip_pair.Item1;
 
-                    uint option_id = 0;
-                    uint npc_option_npcflag = 0;
-                    switch (gossipAction.OptionIcon)
-                    {
-                        case GossipOptionIcon.Gossip:
-                            option_id = 1;
-                            npc_option_npcflag = 1;
-                            break;
-                        case GossipOptionIcon.Vendor:
-                            option_id = 3;
-                            npc_option_npcflag = 4;
-                            break;
-                        case GossipOptionIcon.Taxi:
-                            option_id = 4;
-                            npc_option_npcflag = 8;
-                            break;
-                        case GossipOptionIcon.Trainer:
-                            option_id = 5;
-                            npc_option_npcflag = 16;
-                            break;
-                        case GossipOptionIcon.Healer:
-                            option_id = 6;
-                            npc_option_npcflag = 32;
-                            break;
-                        case GossipOptionIcon.Binder:
-                            option_id = 8;
-                            npc_option_npcflag = 128;
-                            break;
-                        case GossipOptionIcon.Banker:
-                            option_id = 9;
-                            npc_option_npcflag = 256;
-                            break;
-                        case GossipOptionIcon.Petition:
-                            option_id = 10;
-                            npc_option_npcflag = 512;
-                            break;
-                        case GossipOptionIcon.Tabard:
-                            option_id = 11;
-                            npc_option_npcflag = 1024;
-                            break;
-                        case GossipOptionIcon.Battlemaster:
-                            option_id = 12;
-                            npc_option_npcflag = 2048;
-                            break;
-                        case GossipOptionIcon.Auctioneer:
-                            option_id = 13;
-                            npc_option_npcflag = 4096;
-                            break;
-                    }
-
-                    if (option_id != 0)
-                        result += "UPDATE `gossip_menu_option` SET `option_id`=" + option_id + ", `npc_option_npcflag`=" + npc_option_npcflag + " WHERE `menu_id`=" + gossipAction.MenuId.ToString() + " && `id`=" + gossipAction.OptionIndex.ToString() + ";\r\n";
+                    AssignNpcFlagsToGossipOption(gossipOption);
                 }
+
+                result += SQLUtil.Compare(Storage.GossipMenuOptions, SQLDatabase.Get(Storage.GossipMenuOptions), t => t.BroadcastTextIDHelper);
 
                 if (!Storage.GossipMenuOptionActions.IsEmpty())
                 {
@@ -493,15 +555,15 @@ namespace WowPacketParser.SQL.Builders
             if (units.Count == 0)
                 return null;
 
-            var entries = units.GroupBy(unit => unit.Key.GetEntry());
+            var entries = units.GroupBy(unit => unit.Value.ObjectData.EntryID);
             var list = new Dictionary<uint, List<uint>>();
 
             foreach (var pair in entries.SelectMany(entry => entry))
             {
-                if (list.ContainsKey(pair.Key.GetEntry()))
-                    list[pair.Key.GetEntry()].Add((uint)pair.Value.UnitData.Level);
+                if (list.ContainsKey((uint)pair.Value.ObjectData.EntryID))
+                    list[(uint)pair.Value.ObjectData.EntryID].Add((uint)pair.Value.UnitData.Level);
                 else
-                    list.Add(pair.Key.GetEntry(), new List<uint> { (uint)pair.Value.UnitData.Level });
+                    list.Add((uint)pair.Value.ObjectData.EntryID, new List<uint> { (uint)pair.Value.UnitData.Level });
             }
 
             var result = list.ToDictionary(pair => pair.Key, pair => Tuple.Create(pair.Value.Min(), pair.Value.Max()));
@@ -595,7 +657,7 @@ namespace WowPacketParser.SQL.Builders
             public Dictionary<string, uint> Auras = new Dictionary<string, uint>();
         }
 
-        [BuilderMethod(true, Units = true)]
+        [BuilderMethod(false, Units = true)]
         public static string CreatureStats(Dictionary<WowGuid, Unit> units)
         {
             if (units.Count == 0)
@@ -604,10 +666,18 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.creature_stats)
                 return string.Empty;
 
+            // Update fields system changed in BfA.
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_1_0_28724))
+                return string.Empty;
+
             foreach (var unit in units)
             {
                 if (unit.Key.GetHighType() == HighGuidType.Pet)
                     continue;
+
+                uint entry = (uint)unit.Value.ObjectData.EntryID;
+                if (entry == 0)
+                    continue;   // broken entry
 
                 var npc = unit.Value;
                 if (Settings.SqlTables.creature_stats)
@@ -866,7 +936,7 @@ namespace WowPacketParser.SQL.Builders
 
                     if (hasData)
                     {
-                        creatureStats.Entry = unit.Key.GetEntry();
+                        creatureStats.Entry = entry;
                         creatureStats.Level = (uint)unit.Value.UnitData.Level;
                         Storage.CreatureStats.Add(creatureStats);
                     }
@@ -879,7 +949,7 @@ namespace WowPacketParser.SQL.Builders
             return result;
         }
 
-        [BuilderMethod(true, Units = true)]
+        [BuilderMethod(false, Units = true)]
         public static string CreatureTemplateNonWDB(Dictionary<WowGuid, Unit> units)
         {
             if (units.Count == 0)
@@ -900,6 +970,10 @@ namespace WowPacketParser.SQL.Builders
 
                 var npc = unit.Value;
 
+                uint entry = (uint)npc.ObjectData.EntryID;
+                if (entry == 0)
+                    continue;   // broken entry
+
                 var auras = string.Empty;
                 if (npc.Auras != null && npc.Auras.Count != 0)
                 {
@@ -914,10 +988,10 @@ namespace WowPacketParser.SQL.Builders
                     auras = auras.TrimEnd(' ');
                 }
 
-                if (!creatureExportData.ContainsKey(unit.Key.GetEntry()))
+                if (!creatureExportData.ContainsKey(entry))
                 {
                     CreatureTemplateNonWdbExport data = new CreatureTemplateNonWdbExport();
-                    data.Entry = unit.Key.GetEntry();
+                    data.Entry = entry;
                     data.Factions.Add((uint)npc.UnitData.FactionTemplate, 1);
                     data.NpcFlags1.Add(npc.UnitData.NpcFlags[0], 1);
                     data.NpcFlags2.Add(npc.UnitData.NpcFlags[1], 1);
@@ -935,11 +1009,11 @@ namespace WowPacketParser.SQL.Builders
                     data.VehicleIds.Add(npc.Movement.VehicleId, 1);
                     data.HoverHeights.Add(npc.UnitData.HoverHeight, 1);
                     data.Auras.Add(auras, 1);
-                    creatureExportData.Add(unit.Key.GetEntry(), data);
+                    creatureExportData.Add(entry, data);
                 }
                 else
                 {
-                    CreatureTemplateNonWdbExport data = creatureExportData[unit.Key.GetEntry()];
+                    CreatureTemplateNonWdbExport data = creatureExportData[entry];
 
                     if (data.Factions.ContainsKey((uint)npc.UnitData.FactionTemplate))
                         data.Factions[(uint)npc.UnitData.FactionTemplate]++;

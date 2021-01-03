@@ -63,6 +63,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("temp")]
         public byte? TemporarySpawn;
 
+        [DBFieldName("pet")]
+        public byte? IsPet;
+
         [DBFieldName("summon_spell")]
         public uint? SummonSpell;
 

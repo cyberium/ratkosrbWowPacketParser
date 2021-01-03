@@ -51,7 +51,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string Guid;
 
-        [DBFieldName("creature_id", true)]
+        [DBFieldName("entry", true)]
         public uint? Entry;
 
         [DBFieldName("group_id", true)]
@@ -67,7 +67,7 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("creature_text_template")]
     public sealed class CreatureTextTemplate : IDataModel
     {
-        [DBFieldName("creature_id", true)]
+        [DBFieldName("entry", true)]
         public uint? Entry;
 
         [DBFieldName("group_id", true)]
@@ -125,7 +125,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string Guid;
 
-        [DBFieldName("gameobject_id", true)]
+        [DBFieldName("entry", true)]
         public uint? Entry;
 
         [DBFieldName("group_id", true)]
@@ -138,7 +138,7 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("gameobject_text_template")]
     public sealed class GameObjectTextTemplate : IDataModel
     {
-        [DBFieldName("gameobject_id", true)]
+        [DBFieldName("entry", true)]
         public uint? Entry;
 
         [DBFieldName("group_id", true)]

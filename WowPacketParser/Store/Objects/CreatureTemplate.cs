@@ -277,7 +277,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("movement_id")]
         public uint? MovementID;
 
-        [DBFieldName("VerifiedBuild")]
-        public int? VerifiedBuild = ClientVersion.BuildInt;
+        [DBFieldName("sniff_build")]
+        public int? SniffBuild = ClientVersion.BuildInt;
     }
 }

@@ -49,8 +49,8 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
 
             gameObject.Size = packet.ReadSingle("Size");
 
-            byte questItemsCount = packet.ReadByte("QuestItemsCount");
-            for (uint i = 0; i < questItemsCount; i++)
+            gameObject.QuestItems = packet.ReadByte("QuestItemsCount");
+            for (uint i = 0; i < gameObject.QuestItems; i++)
             {
                 GameObjectTemplateQuestItem questItem = new GameObjectTemplateQuestItem
                 {

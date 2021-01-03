@@ -166,6 +166,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.PhaseGroup = 0;
                 row.Data.Hover = (byte)(creature.OriginalMovement.Hover ? 1 : 0);
                 row.Data.TemporarySpawn = (byte)(creature.IsTemporarySpawn() ? 1 : 0);
+                row.Data.IsPet = (byte)((unit.Key.GetHighType() == HighGuidType.Pet) ? 1 : 0);
                 row.Data.SummonSpell = (uint)unitData.CreatedBySpell;
                 row.Data.Scale = creature.ObjectDataOriginal.Scale;
                 row.Data.DisplayID = (uint)unitData.DisplayID;
