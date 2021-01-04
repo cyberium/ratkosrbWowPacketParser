@@ -82,8 +82,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ItemId", DbType = (TargetedDbType.TRINITY))]
         public uint? ItemId;
 
-        [DBFieldName("sniff_build", TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.WPP))]
-        [DBFieldName("VerifiedBuild", TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 }
