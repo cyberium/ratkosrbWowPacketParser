@@ -137,10 +137,13 @@ namespace WowPacketParser.SQL
 
         public static string GetTableName<T>() where T : IDataModel
         {
-            var tableAttrs =
-                (DBTableNameAttribute[])typeof(T).GetCustomAttributes(typeof(DBTableNameAttribute), false);
-            if (tableAttrs.Length > 0)
-                return AddBackQuotes(tableAttrs[0].Name);
+            var tableAttrs = (DBTableNameAttribute[])typeof(T).GetCustomAttributes(typeof(DBTableNameAttribute), false);
+
+            foreach (var tableName in tableAttrs)
+            {
+                if (tableName.IsNameAppropriateForDatabaseType())
+                    return AddBackQuotes(tableName.Name);
+            }
 
             //convert CamelCase name to camel_case
             var name = typeof(T).Name;

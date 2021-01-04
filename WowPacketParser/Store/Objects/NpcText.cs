@@ -374,7 +374,8 @@ namespace WowPacketParser.Store.Objects
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 
-    [DBTableName("npc_text")]
+    [DBTableName("npc_text", TargetedDbType.WPP | TargetedDbType.TRINITY | TargetedDbType.VMANGOS)]
+    [DBTableName("npc_text_broadcast_text", TargetedDbType.CMANGOS)]
     public class NpcTextMop : IDataModel
     {
         public float[] Probabilities;
@@ -404,58 +405,93 @@ namespace WowPacketParser.Store.Objects
             BroadcastTextId7 = BroadcastTextId[7];
         }
 
-        [DBFieldName("ID", true)]
+        [DBFieldName("entry", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("ID", true, DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("Id", true, DbType = (TargetedDbType.CMANGOS))]
         public uint? ID;
 
-        [DBFieldName("Probability0")]
+        [DBFieldName("probability1", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Probability0", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("Prob0", DbType = (TargetedDbType.CMANGOS))]
         public float? Prob0;
 
-        [DBFieldName("Probability1")]
+        [DBFieldName("probability2", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Probability1", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("Prob1", DbType = (TargetedDbType.CMANGOS))]
         public float? Prob1;
 
-        [DBFieldName("Probability2")]
+        [DBFieldName("probability3", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Probability2", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("Prob2", DbType = (TargetedDbType.CMANGOS))]
         public float? Prob2;
 
-        [DBFieldName("Probability3")]
+        [DBFieldName("probability4", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Probability3", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("Prob3", DbType = (TargetedDbType.CMANGOS))]
         public float? Prob3;
 
-        [DBFieldName("Probability4")]
+        [DBFieldName("probability5", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Probability4", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("Prob4", DbType = (TargetedDbType.CMANGOS))]
         public float? Prob4;
 
-        [DBFieldName("Probability5")]
+        [DBFieldName("probability6", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Probability5", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("Prob5", DbType = (TargetedDbType.CMANGOS))]
         public float? Prob5;
 
-        [DBFieldName("Probability6")]
+        [DBFieldName("probability7", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Probability6", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("Prob6", DbType = (TargetedDbType.CMANGOS))]
         public float? Prob6;
 
-        [DBFieldName("Probability7")]
+        [DBFieldName("probability8", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Probability7", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("Prob7", DbType = (TargetedDbType.CMANGOS))]
         public float? Prob7;
 
-        [DBFieldName("BroadcastTextId0")]
+        [DBFieldName("broadcast_text_id1", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("BroadcastTextID0", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("BroadcastTextId0", DbType = (TargetedDbType.CMANGOS))]
         public uint? BroadcastTextId0;
 
-        [DBFieldName("BroadcastTextId1")]
+        [DBFieldName("broadcast_text_id2", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("BroadcastTextID1", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("BroadcastTextId1", DbType = (TargetedDbType.CMANGOS))]
         public uint? BroadcastTextId1;
 
-        [DBFieldName("BroadcastTextId2")]
+        [DBFieldName("broadcast_text_id3", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("BroadcastTextID2", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("BroadcastTextId2", DbType = (TargetedDbType.CMANGOS))]
         public uint? BroadcastTextId2;
 
-        [DBFieldName("BroadcastTextId3")]
+        [DBFieldName("broadcast_text_id4", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("BroadcastTextID3", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("BroadcastTextId3", DbType = (TargetedDbType.CMANGOS))]
         public uint? BroadcastTextId3;
 
-        [DBFieldName("BroadcastTextId4")]
+        [DBFieldName("broadcast_text_id5", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("BroadcastTextID4", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("BroadcastTextId4", DbType = (TargetedDbType.CMANGOS))]
         public uint? BroadcastTextId4;
 
-        [DBFieldName("BroadcastTextId5")]
+        [DBFieldName("broadcast_text_id6", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("BroadcastTextID5", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("BroadcastTextId5", DbType = (TargetedDbType.CMANGOS))]
         public uint? BroadcastTextId5;
 
-        [DBFieldName("BroadcastTextId6")]
+        [DBFieldName("broadcast_text_id7", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("BroadcastTextID6", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("BroadcastTextId6", DbType = (TargetedDbType.CMANGOS))]
         public uint? BroadcastTextId6;
 
-        [DBFieldName("BroadcastTextId7")]
+        [DBFieldName("broadcast_text_id8", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("BroadcastTextID7", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
+        [DBFieldName("BroadcastTextId7", DbType = (TargetedDbType.CMANGOS))]
         public uint? BroadcastTextId7;
 
-        [DBFieldName("VerifiedBuild")]
+        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 }

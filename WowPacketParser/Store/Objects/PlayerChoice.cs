@@ -10,19 +10,19 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ChoiceId", true)]
         public int? ChoiceId;
 
-        [DBFieldName("UiTextureKitId", TargetedDatabase.Legion)]
+        [DBFieldName("UiTextureKitId", TargetedDbExpansion.Legion)]
         public int? UiTextureKitId;
 
-        [DBFieldName("SoundKitId", TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("SoundKitId", TargetedDbExpansion.BattleForAzeroth)]
         public uint? SoundKitId;
 
         [DBFieldName("Question")]
         public string Question;
 
-        [DBFieldName("HideWarboardHeader", TargetedDatabase.Legion)]
+        [DBFieldName("HideWarboardHeader", TargetedDbExpansion.Legion)]
         public int HideWarboardHeader;
 
-        [DBFieldName("KeepOpenAfterChoice", TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("KeepOpenAfterChoice", TargetedDbExpansion.BattleForAzeroth)]
         public int KeepOpenAfterChoice;
 
         [DBFieldName("VerifiedBuild")]
@@ -44,28 +44,28 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ChoiceArtFileId")]
         public int? ChoiceArtFileId;
 
-        [DBFieldName("Flags", TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("Flags", TargetedDbExpansion.BattleForAzeroth)]
         public int? Flags;
 
-        [DBFieldName("WidgetSetId", TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("WidgetSetId", TargetedDbExpansion.BattleForAzeroth)]
         public uint? WidgetSetId;
 
-        [DBFieldName("UiTextureAtlasElementID", TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("UiTextureAtlasElementID", TargetedDbExpansion.BattleForAzeroth)]
         public uint? UiTextureAtlasElementID;
 
-        [DBFieldName("SoundKitId", TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("SoundKitId", TargetedDbExpansion.BattleForAzeroth)]
         public uint? SoundKitId;
 
-        [DBFieldName("GroupId", TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("GroupId", TargetedDbExpansion.BattleForAzeroth)]
         public int? GroupId;
 
-        [DBFieldName("Header", TargetedDatabase.Legion)]
+        [DBFieldName("Header", TargetedDbExpansion.Legion)]
         public string Header;
 
-        [DBFieldName("Subheader", TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("Subheader", TargetedDbExpansion.BattleForAzeroth)]
         public string Subheader;
 
-        [DBFieldName("ButtonTooltip", TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("ButtonTooltip", TargetedDbExpansion.BattleForAzeroth)]
         public string ButtonTooltip;
 
         [DBFieldName("Answer")]
@@ -74,10 +74,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Description")]
         public string Description;
 
-        [DBFieldName("Confirmation", TargetedDatabase.Legion)]
+        [DBFieldName("Confirmation", TargetedDbExpansion.Legion)]
         public string Confirmation;
 
-        [DBFieldName("RewardQuestID", TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("RewardQuestID", TargetedDbExpansion.BattleForAzeroth)]
         public uint? RewardQuestID;
 
         [DBFieldName("VerifiedBuild")]

@@ -36,7 +36,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
         {
             var entry = packet.ReadEntry("Entry");
 
-            CreatureTemplateClassic creature = new CreatureTemplateClassic
+            CreatureTemplate creature = new CreatureTemplate
             {
                 Entry = (uint)entry.Key
             };
@@ -91,31 +91,34 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             creature.DisplayTotalCount = displayIdCount;
             creature.DisplayTotalProbability = packet.ReadSingle("TotalProbability");
 
+            creature.DisplayIDs = new uint?[4];
+            for (uint i = 0; i < 4; ++i)
+                creature.DisplayIDs[i] = 0;
             for (uint i = 0; i < displayIdCount; ++i)
             {
                 if (i == 0)
                 {
-                    creature.DisplayId1 = (uint)packet.ReadInt32("DisplayId1", i);
+                    creature.DisplayIDs[i] = (uint)packet.ReadInt32("DisplayId1", i);
                     creature.DisplayScale1 = packet.ReadSingle("DisplayScale1", i);
                     creature.DisplayProbability1 = packet.ReadSingle("DisplayProbability1", i);
                 }
                 if (i == 1)
                 {
-                    creature.DisplayId2 = (uint)packet.ReadInt32("DisplayId2", i);
+                    creature.DisplayIDs[i] = (uint)packet.ReadInt32("DisplayId2", i);
                     creature.DisplayScale2 = packet.ReadSingle("DisplayScale2", i);
                     creature.DisplayProbability2 = packet.ReadSingle("DisplayProbability2", i);
                 }
 
                 if (i == 2)
                 {
-                    creature.DisplayId3 = (uint)packet.ReadInt32("DisplayId3", i);
+                    creature.DisplayIDs[i] = (uint)packet.ReadInt32("DisplayId3", i);
                     creature.DisplayScale3 = packet.ReadSingle("DisplayScale3", i);
                     creature.DisplayProbability3 = packet.ReadSingle("DisplayProbability3", i);
                 }
 
                 if (i == 3)
                 {
-                    creature.DisplayId4 = (uint)packet.ReadInt32("DisplayId4", i);
+                    creature.DisplayIDs[i] = (uint)packet.ReadInt32("DisplayId4", i);
                     creature.DisplayScale4 = packet.ReadSingle("DisplayScale4", i);
                     creature.DisplayProbability4 = packet.ReadSingle("DisplayProbability4", i);
                 }
@@ -153,7 +156,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
 
             packet.AddSniffData(StoreNameType.Unit, entry.Key, "QUERY_RESPONSE");
 
-            Storage.CreatureTemplatesClassic.Add(creature, packet.TimeSpan);
+            Storage.CreatureTemplates.Add(creature, packet.TimeSpan);
 
             if (ClientLocale.PacketLocale != LocaleConstant.enUS)
             {

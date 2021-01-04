@@ -30,8 +30,8 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.quest_template)
                 return string.Empty;
 
-            if (Settings.TargetedDatabase == TargetedDatabase.WrathOfTheLichKing ||
-                Settings.TargetedDatabase == TargetedDatabase.Cataclysm)
+            if (Settings.TargetedDbExpansion == TargetedDbExpansion.WrathOfTheLichKing ||
+                Settings.TargetedDbExpansion == TargetedDbExpansion.Cataclysm)
                 return string.Empty;
 
             if (Storage.QuestObjectives.IsEmpty())
@@ -48,8 +48,8 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.quest_template)
                 return string.Empty;
 
-            if (Settings.TargetedDatabase == TargetedDatabase.WrathOfTheLichKing ||
-                Settings.TargetedDatabase == TargetedDatabase.Cataclysm)
+            if (Settings.TargetedDbExpansion == TargetedDbExpansion.WrathOfTheLichKing ||
+                Settings.TargetedDbExpansion == TargetedDbExpansion.Cataclysm)
                 return string.Empty;
 
             if (Storage.QuestVisualEffects.IsEmpty())
@@ -66,7 +66,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.quest_template)
                 return string.Empty;
 
-            if (Settings.TargetedDatabase != TargetedDatabase.Shadowlands)
+            if (Settings.TargetedDbExpansion != TargetedDbExpansion.Shadowlands)
                 return string.Empty;
 
             if (Storage.QuestRewardDisplaySpells.IsEmpty())
@@ -83,7 +83,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.creature_template_wdb)
                 return string.Empty;
 
-            if (!Storage.CreatureTemplates.IsEmpty() && Settings.TargetedDatabase != TargetedDatabase.Classic)
+            if (!Storage.CreatureTemplates.IsEmpty())
             {
                 foreach (var creatureTemplate in Storage.CreatureTemplates)
                 {
@@ -93,18 +93,6 @@ namespace WowPacketParser.SQL.Builders
 
                 var templatesDb = SQLDatabase.Get(Storage.CreatureTemplates);
                 return SQLUtil.Compare(Storage.CreatureTemplates, templatesDb, StoreNameType.Unit);
-            }
-
-            if (!Storage.CreatureTemplatesClassic.IsEmpty() && Settings.TargetedDatabase == TargetedDatabase.Classic)
-            {
-                foreach (var creatureTemplate in Storage.CreatureTemplatesClassic)
-                {
-                    if (creatureTemplate.Item1.FemaleName == null)
-                        creatureTemplate.Item1.FemaleName = string.Empty;
-                }
-
-                var templatesDb = SQLDatabase.Get(Storage.CreatureTemplatesClassic);
-                return SQLUtil.Compare(Storage.CreatureTemplatesClassic, templatesDb, StoreNameType.Unit);
             }
 
             return string.Empty;
@@ -119,7 +107,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.CreatureTemplateModels.IsEmpty())
                 return string.Empty;
 
-            //if (Settings.TargetedDatabase < TargetedDatabase.BattleForAzeroth)
+            //if (Settings.TargetedDbExpansion < TargetedDbExpansion.BattleForAzeroth)
             //    return string.Empty;
 
             var templatesDb = SQLDatabase.Get(Storage.CreatureTemplateModels);
@@ -133,8 +121,8 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.creature_template)
                 return string.Empty;
 
-            if (Settings.TargetedDatabase <= TargetedDatabase.WarlordsOfDraenor &&
-                Settings.TargetedDatabase != TargetedDatabase.Classic)
+            if (Settings.TargetedDbExpansion <= TargetedDbExpansion.WarlordsOfDraenor &&
+                Settings.TargetedDbExpansion != TargetedDbExpansion.Classic)
                 return string.Empty;
 
             if (Storage.CreatureTemplateQuestItems.IsEmpty())
@@ -175,8 +163,8 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.gameobject_template)
                 return string.Empty;
 
-            if (Settings.TargetedDatabase != TargetedDatabase.Classic &&
-                Settings.TargetedDatabase <= TargetedDatabase.WarlordsOfDraenor)
+            if (Settings.TargetedDbExpansion != TargetedDbExpansion.Classic &&
+                Settings.TargetedDbExpansion <= TargetedDbExpansion.WarlordsOfDraenor)
                 return string.Empty;
 
             if (Storage.GameObjectTemplateQuestItems.IsEmpty())
@@ -193,7 +181,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.item_template)
                 return string.Empty;
 
-            if (Settings.TargetedDatabase == TargetedDatabase.WarlordsOfDraenor)
+            if (Settings.TargetedDbExpansion == TargetedDbExpansion.WarlordsOfDraenor)
                 return string.Empty;
 
             if (Storage.ItemTemplates.IsEmpty())
@@ -309,8 +297,8 @@ namespace WowPacketParser.SQL.Builders
                 return string.Empty;
 
             if (!Storage.NpcTexts.IsEmpty() && ClientVersion.RemovedInVersion(ClientType.MistsOfPandaria) &&
-                (Settings.TargetedDatabase >= TargetedDatabase.Zero ||
-                Settings.TargetedDatabase <= TargetedDatabase.Cataclysm))
+                (Settings.TargetedDbExpansion >= TargetedDbExpansion.Zero ||
+                Settings.TargetedDbExpansion <= TargetedDbExpansion.Cataclysm))
             {
                 foreach (var npcText in Storage.NpcTexts)
                     npcText.Item1.ConvertToDBStruct();
@@ -494,8 +482,8 @@ namespace WowPacketParser.SQL.Builders
             }
 
             if (!Storage.NpcTextsMop.IsEmpty() && ClientVersion.AddedInVersion(ClientType.MistsOfPandaria) &&
-                (Settings.TargetedDatabase >= TargetedDatabase.WarlordsOfDraenor ||
-                Settings.TargetedDatabase == TargetedDatabase.Classic))
+                (Settings.TargetedDbExpansion >= TargetedDbExpansion.WarlordsOfDraenor ||
+                Settings.TargetedDbExpansion == TargetedDbExpansion.Classic))
             {
                 foreach (var npcText in Storage.NpcTextsMop)
                     npcText.Item1.ConvertToDBStruct();

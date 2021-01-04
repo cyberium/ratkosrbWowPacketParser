@@ -77,18 +77,18 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
             if (lenS4 > 1)
                 creature.IconName = packet.ReadCString("Icon Name");
 
-            creature.ModelIDs = new uint?[4];
-            creature.ModelIDs[1] = packet.ReadUInt32("CreatureDisplayID", 1);
-            creature.ModelIDs[0] = packet.ReadUInt32("CreatureDisplayID", 0);
+            creature.DisplayIDs = new uint?[4];
+            creature.DisplayIDs[1] = packet.ReadUInt32("CreatureDisplayID", 1);
+            creature.DisplayIDs[0] = packet.ReadUInt32("CreatureDisplayID", 0);
             creature.MovementID = packet.ReadUInt32("MovementID");
-            creature.ModelIDs[3] = packet.ReadUInt32("CreatureDisplayID", 3);
+            creature.DisplayIDs[3] = packet.ReadUInt32("CreatureDisplayID", 3);
 
             creature.TypeFlags = packet.ReadUInt32E<CreatureTypeFlag>("Type Flags");
             creature.TypeFlags2 = packet.ReadUInt32("Creature Type Flags 2"); // Missing enum
 
             if (lenS5 > 1)
                 packet.ReadCString("string5");
-            creature.ModelIDs[2] = packet.ReadUInt32("CreatureDisplayID", 2);
+            creature.DisplayIDs[2] = packet.ReadUInt32("CreatureDisplayID", 2);
             creature.ManaMultiplier = packet.ReadSingle("ManaMultiplier");
             creature.RequiredExpansion = packet.ReadUInt32E<ClientType>("Expansion");
 

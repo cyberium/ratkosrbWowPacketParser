@@ -13,24 +13,24 @@
 -- Dumping structure for table sniffs_new_test.broadcast_text
 DROP TABLE IF EXISTS `broadcast_text`;
 CREATE TABLE IF NOT EXISTS `broadcast_text` (
-  `ID` int(10) unsigned NOT NULL,
-  `Text` varchar(1024) NOT NULL DEFAULT '',
-  `Text1` varchar(1024) NOT NULL DEFAULT '',
-  `LanguageID` int(11) NOT NULL DEFAULT '0',
-  `ConditionID` int(11) NOT NULL DEFAULT '0',
-  `EmotesID` int(11) NOT NULL DEFAULT '0',
-  `Flags` int(11) NOT NULL DEFAULT '0',
-  `ChatBubbleDurationMs` int(11) NOT NULL DEFAULT '0',
-  `SoundEntriesID1` int(11) NOT NULL DEFAULT '0',
-  `SoundEntriesID2` int(11) NOT NULL DEFAULT '0',
-  `EmoteID1` int(11) NOT NULL DEFAULT '0',
-  `EmoteID2` int(11) NOT NULL DEFAULT '0',
-  `EmoteID3` int(11) NOT NULL DEFAULT '0',
-  `EmoteDelay1` int(11) NOT NULL DEFAULT '0',
-  `EmoteDelay2` int(11) NOT NULL DEFAULT '0',
-  `EmoteDelay3` int(11) NOT NULL DEFAULT '0',
-  `VerifiedBuild` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ID`)
+  `entry` int(10) unsigned NOT NULL,
+  `male_text` varchar(1024) NOT NULL DEFAULT '',
+  `female_text` varchar(1024) NOT NULL DEFAULT '',
+  `language_id` int(11) NOT NULL DEFAULT '0',
+  `condition_id` int(11) NOT NULL DEFAULT '0',
+  `emotes_id` int(11) NOT NULL DEFAULT '0',
+  `flags` int(11) NOT NULL DEFAULT '0',
+  `chat_bubble_duration` int(11) NOT NULL DEFAULT '0',
+  `sound_id1` int(11) NOT NULL DEFAULT '0',
+  `sound_id2` int(11) NOT NULL DEFAULT '0',
+  `emote_id1` int(11) NOT NULL DEFAULT '0',
+  `emote_id2` int(11) NOT NULL DEFAULT '0',
+  `emote_id3` int(11) NOT NULL DEFAULT '0',
+  `emote_delay1` int(11) NOT NULL DEFAULT '0',
+  `emote_delay2` int(11) NOT NULL DEFAULT '0',
+  `emote_delay3` int(11) NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
@@ -39,12 +39,12 @@ CREATE TABLE IF NOT EXISTS `broadcast_text` (
 -- Dumping structure for table sniffs_new_test.broadcast_text_locale
 DROP TABLE IF EXISTS `broadcast_text_locale`;
 CREATE TABLE IF NOT EXISTS `broadcast_text_locale` (
-  `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `locale` varchar(4) NOT NULL,
-  `Text_lang` text,
-  `Text1_lang` text,
-  `VerifiedBuild` smallint(5) DEFAULT '0',
-  PRIMARY KEY (`ID`,`locale`)
+  `male_text` text,
+  `female_text` text,
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`locale`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `ranged_slot_item` int(10) unsigned NOT NULL DEFAULT '0',
   `auras` text,
   `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
-  `sniff_build` smallint(5) unsigned DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`),
   KEY `idx_map` (`map`),
   KEY `idx_id` (`id`)
@@ -316,7 +316,10 @@ CREATE TABLE IF NOT EXISTS `creature_display_info_addon` (
   `display_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `bounding_radius` float NOT NULL DEFAULT '0',
   `combat_reach` float NOT NULL DEFAULT '0',
+  `speed_walk` float NOT NULL DEFAULT '0',
+  `speed_run` float NOT NULL DEFAULT '0',
   `gender` tinyint(3) unsigned NOT NULL DEFAULT '2',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`display_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Creature System (Model related info)';
 
@@ -352,13 +355,13 @@ CREATE TABLE IF NOT EXISTS `creature_equipment_values_update` (
 -- Dumping structure for table sniffs_new_test.creature_equip_template
 DROP TABLE IF EXISTS `creature_equip_template`;
 CREATE TABLE IF NOT EXISTS `creature_equip_template` (
-  `CreatureID` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `ID` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `ItemID1` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `ItemID2` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `ItemID3` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
-  PRIMARY KEY (`CreatureID`,`ID`)
+  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `id` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `item_id1` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `item_id2` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `item_id3` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -367,9 +370,9 @@ CREATE TABLE IF NOT EXISTS `creature_equip_template` (
 -- Dumping structure for table sniffs_new_test.creature_gossip
 DROP TABLE IF EXISTS `creature_gossip`;
 CREATE TABLE IF NOT EXISTS `creature_gossip` (
-  `entry` int(10) unsigned NOT NULL DEFAULT '0',
-  `gossip_menu_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` int(10) unsigned NOT NULL DEFAULT '0',
+  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `gossip_menu_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`gossip_menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -539,11 +542,11 @@ CREATE TABLE IF NOT EXISTS `creature_movement_server_spline` (
 -- Dumping structure for table sniffs_new_test.creature_questitem
 DROP TABLE IF EXISTS `creature_questitem`;
 CREATE TABLE IF NOT EXISTS `creature_questitem` (
-  `CreatureEntry` int(10) unsigned NOT NULL,
-  `Idx` int(10) unsigned NOT NULL,
-  `ItemId` int(10) unsigned NOT NULL DEFAULT '0',
-  `VerifiedBuild` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`CreatureEntry`,`Idx`)
+  `entry` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL,
+  `item_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
@@ -699,7 +702,7 @@ CREATE TABLE IF NOT EXISTS `creature_template_wdb` (
   `civilian` int(11) NOT NULL DEFAULT '0',
   `racial_leader` int(11) NOT NULL DEFAULT '0',
   `movement_id` int(11) NOT NULL DEFAULT '0',
-  `sniff_build` int(11) NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -996,11 +999,11 @@ CREATE TABLE IF NOT EXISTS `gameobject_loot_item` (
 -- Dumping structure for table sniffs_new_test.gameobject_questitem
 DROP TABLE IF EXISTS `gameobject_questitem`;
 CREATE TABLE IF NOT EXISTS `gameobject_questitem` (
-  `GameObjectEntry` int(10) unsigned NOT NULL DEFAULT '0',
-  `Idx` int(10) unsigned NOT NULL DEFAULT '0',
-  `ItemId` int(10) unsigned NOT NULL DEFAULT '0',
-  `VerifiedBuild` smallint(5) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`GameObjectEntry`,`Idx`)
+  `entry` int(10) unsigned NOT NULL DEFAULT '0',
+  `id` int(10) unsigned NOT NULL DEFAULT '0',
+  `item_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` smallint(5) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -1016,7 +1019,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_template` (
   `name` varchar(100) NOT NULL DEFAULT '',
   `icon_name` varchar(100) NOT NULL DEFAULT '',
   `cast_bar_caption` varchar(100) NOT NULL DEFAULT '',
-  `unk_string` varchar(100) NOT NULL DEFAULT '',
+  `unk1` varchar(100) NOT NULL DEFAULT '',
   `data0` int(10) unsigned NOT NULL DEFAULT '0',
   `data1` int(11) NOT NULL DEFAULT '0',
   `data2` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1052,7 +1055,8 @@ CREATE TABLE IF NOT EXISTS `gameobject_template` (
   `data32` int(10) unsigned NOT NULL DEFAULT '0',
   `data33` int(10) unsigned NOT NULL DEFAULT '0',
   `quest_items_count` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` smallint(5) unsigned DEFAULT '0',
+  `required_level` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned DEFAULT '0',
   PRIMARY KEY (`entry`),
   KEY `idx_name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Gameobject System';
@@ -1123,7 +1127,7 @@ DROP TABLE IF EXISTS `gossip_menu`;
 CREATE TABLE IF NOT EXISTS `gossip_menu` (
   `entry` smallint(5) unsigned NOT NULL DEFAULT '0',
   `text_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`text_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1146,7 +1150,7 @@ CREATE TABLE IF NOT EXISTS `gossip_menu_option` (
   `box_money` int(10) unsigned NOT NULL DEFAULT '0',
   `box_text` text,
   `box_broadcast_text` mediumint(6) NOT NULL DEFAULT '0',
-  `sniff_build` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`menu_id`,`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1350,7 +1354,7 @@ CREATE TABLE IF NOT EXISTS `item_template` (
   `FoodType` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `minMoneyLoot` int(10) unsigned NOT NULL DEFAULT '0',
   `maxMoneyLoot` int(10) unsigned NOT NULL DEFAULT '0',
-  `VerifiedBuild` smallint(5) DEFAULT '0',
+  `VerifiedBuild` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`),
   KEY `idx_name` (`name`),
   KEY `items_index` (`class`)
@@ -1362,25 +1366,25 @@ CREATE TABLE IF NOT EXISTS `item_template` (
 -- Dumping structure for table sniffs_new_test.npc_text
 DROP TABLE IF EXISTS `npc_text`;
 CREATE TABLE IF NOT EXISTS `npc_text` (
-  `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `Probability0` float NOT NULL DEFAULT '0',
-  `Probability1` float NOT NULL DEFAULT '0',
-  `Probability2` float NOT NULL DEFAULT '0',
-  `Probability3` float NOT NULL DEFAULT '0',
-  `Probability4` float NOT NULL DEFAULT '0',
-  `Probability5` float NOT NULL DEFAULT '0',
-  `Probability6` float NOT NULL DEFAULT '0',
-  `Probability7` float NOT NULL DEFAULT '0',
-  `BroadcastTextID0` mediumint(6) unsigned NOT NULL DEFAULT '0',
-  `BroadcastTextID1` mediumint(6) unsigned NOT NULL DEFAULT '0',
-  `BroadcastTextID2` mediumint(6) unsigned NOT NULL DEFAULT '0',
-  `BroadcastTextID3` mediumint(6) unsigned NOT NULL DEFAULT '0',
-  `BroadcastTextID4` mediumint(6) unsigned NOT NULL DEFAULT '0',
-  `BroadcastTextID5` mediumint(6) unsigned NOT NULL DEFAULT '0',
-  `BroadcastTextID6` mediumint(6) unsigned NOT NULL DEFAULT '0',
-  `BroadcastTextID7` mediumint(6) unsigned NOT NULL DEFAULT '0',
-  `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
-  PRIMARY KEY (`ID`)
+  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `probability1` float NOT NULL DEFAULT '0',
+  `probability2` float NOT NULL DEFAULT '0',
+  `probability3` float NOT NULL DEFAULT '0',
+  `probability4` float NOT NULL DEFAULT '0',
+  `probability5` float NOT NULL DEFAULT '0',
+  `probability6` float NOT NULL DEFAULT '0',
+  `probability7` float NOT NULL DEFAULT '0',
+  `probability8` float NOT NULL DEFAULT '0',
+  `broadcast_text_id1` mediumint(6) unsigned NOT NULL DEFAULT '0',
+  `broadcast_text_id2` mediumint(6) unsigned NOT NULL DEFAULT '0',
+  `broadcast_text_id3` mediumint(6) unsigned NOT NULL DEFAULT '0',
+  `broadcast_text_id4` mediumint(6) unsigned NOT NULL DEFAULT '0',
+  `broadcast_text_id5` mediumint(6) unsigned NOT NULL DEFAULT '0',
+  `broadcast_text_id6` mediumint(6) unsigned NOT NULL DEFAULT '0',
+  `broadcast_text_id7` mediumint(6) unsigned NOT NULL DEFAULT '0',
+  `broadcast_text_id8` mediumint(6) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -1395,6 +1399,7 @@ CREATE TABLE IF NOT EXISTS `npc_trainer` (
   `reqskill` smallint(5) unsigned NOT NULL DEFAULT '0',
   `reqskillvalue` smallint(5) unsigned NOT NULL DEFAULT '0',
   `reqlevel` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   UNIQUE KEY `entry_spell` (`entry`,`spell`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1409,12 +1414,12 @@ CREATE TABLE IF NOT EXISTS `npc_vendor` (
   `item` mediumint(8) NOT NULL DEFAULT '0',
   `maxcount` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `incrtime` int(10) unsigned NOT NULL DEFAULT '0',
-  `ExtendedCost` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `extended_cost` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `type` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `PlayerConditionID` int(10) unsigned NOT NULL DEFAULT '0',
-  `IgnoreFiltering` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
-  PRIMARY KEY (`entry`,`item`,`ExtendedCost`,`type`),
+  `player_condition_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `ignore_filtering` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`item`,`extended_cost`,`type`),
   KEY `slot` (`slot`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Npc System';
 
@@ -1436,13 +1441,13 @@ CREATE TABLE IF NOT EXISTS `object_names` (
 -- Dumping structure for table sniffs_new_test.page_text
 DROP TABLE IF EXISTS `page_text`;
 CREATE TABLE IF NOT EXISTS `page_text` (
-  `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `Text` longtext,
-  `NextPageID` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `PlayerConditionID` int(11) NOT NULL DEFAULT '0',
-  `Flags` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `VerifiedBuild` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ID`)
+  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `text` longtext,
+  `next_page` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `player_condition_id` int(11) NOT NULL DEFAULT '0',
+  `flags` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Item System';
 
 -- Data exporting was unselected.
@@ -1451,11 +1456,11 @@ CREATE TABLE IF NOT EXISTS `page_text` (
 -- Dumping structure for table sniffs_new_test.page_text_locale
 DROP TABLE IF EXISTS `page_text_locale`;
 CREATE TABLE IF NOT EXISTS `page_text_locale` (
-  `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `locale` varchar(4) NOT NULL,
-  `Text` text,
-  `VerifiedBuild` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ID`,`locale`)
+  `text` text,
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`locale`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -1911,15 +1916,15 @@ CREATE TABLE IF NOT EXISTS `play_spell_visual_kit` (
 -- Dumping structure for table sniffs_new_test.points_of_interest
 DROP TABLE IF EXISTS `points_of_interest`;
 CREATE TABLE IF NOT EXISTS `points_of_interest` (
-  `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `PositionX` float NOT NULL DEFAULT '0',
-  `PositionY` float NOT NULL DEFAULT '0',
-  `Icon` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `Flags` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `Importance` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `Name` text NOT NULL,
-  `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
-  PRIMARY KEY (`ID`)
+  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `x` float NOT NULL DEFAULT '0',
+  `y` float NOT NULL DEFAULT '0',
+  `icon` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `flags` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `data` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `icon_name` text NOT NULL,
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -2286,8 +2291,8 @@ CREATE TABLE IF NOT EXISTS `quest_update_failed` (
 -- Dumping structure for table sniffs_new_test.sniff_file
 DROP TABLE IF EXISTS `sniff_file`;
 CREATE TABLE IF NOT EXISTS `sniff_file` (
-  `id` int(10) unsigned NOT NULL,
-  `build` int(10) unsigned NOT NULL DEFAULT '0',
+  `id` smallint(5) unsigned NOT NULL,
+  `build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `name` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -2459,15 +2464,15 @@ CREATE TABLE IF NOT EXISTS `spell_pet_cooldown` (
 -- Dumping structure for table sniffs_new_test.spell_target_position
 DROP TABLE IF EXISTS `spell_target_position`;
 CREATE TABLE IF NOT EXISTS `spell_target_position` (
-  `ID` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'Identifier',
-  `EffectIndex` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `MapID` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `PositionX` float NOT NULL DEFAULT '0',
-  `PositionY` float NOT NULL DEFAULT '0',
-  `PositionZ` float NOT NULL DEFAULT '0',
-  `Orientation` float NOT NULL DEFAULT '0',
-  `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
-  PRIMARY KEY (`ID`,`EffectIndex`)
+  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'Identifier',
+  `effect_index` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `map` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `position_x` float NOT NULL DEFAULT '0',
+  `position_y` float NOT NULL DEFAULT '0',
+  `position_z` float NOT NULL DEFAULT '0',
+  `orientation` float NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`effect_index`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Spell System';
 
 -- Data exporting was unselected.

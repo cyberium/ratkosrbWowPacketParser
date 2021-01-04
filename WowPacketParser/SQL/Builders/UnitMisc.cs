@@ -53,7 +53,10 @@ namespace WowPacketParser.SQL.Builders
                     MountID = (uint)npc.UnitData.MountDisplayID,
                     Bytes1 = npc.Bytes1,
                     Bytes2 = npc.Bytes2,
+                    SheathState = npc.UnitData.SheatheState,
+                    PvpFlags = npc.UnitData.PvpFlags,
                     Emote = (uint)npc.UnitData.EmoteState,
+                    MoveFlags = (uint)npc.Movement.Flags,
                     AIAnimKit = npc.AIAnimKit.GetValueOrDefault(0),
                     MovementAnimKit = npc.MovementAnimKit.GetValueOrDefault(0),
                     MeleeAnimKit = npc.MeleeAnimKit.GetValueOrDefault(0),
@@ -183,6 +186,11 @@ namespace WowPacketParser.SQL.Builders
                 model.BoundingRadius = npc.UnitData.BoundingRadius / scale;
                 model.CombatReach = npc.UnitData.CombatReach / scale;
                 model.Gender = (Gender)npc.UnitData.Sex;
+                if (npc.Movement != null)
+                {
+                    model.SpeedWalk = npc.Movement.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
+                    model.SpeedRun = npc.Movement.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
+                }
 
                 models.Add(model);
             }
@@ -384,8 +392,8 @@ namespace WowPacketParser.SQL.Builders
 
         public static void AssignNpcFlagsToGossipOption(GossipMenuOption gossipOption)
         {
-            if (Settings.TargetedDatabase == TargetedDatabase.Zero ||
-                Settings.TargetedDatabase == TargetedDatabase.Classic)
+            if (Settings.TargetedDbExpansion == TargetedDbExpansion.Zero ||
+                Settings.TargetedDbExpansion == TargetedDbExpansion.Classic)
             {
                 switch (gossipOption.OptionIcon)
                 {

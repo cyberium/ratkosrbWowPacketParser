@@ -153,14 +153,14 @@ namespace WowPacketParser.Parsing.Parsers
                 creature.PetSpellDataID = packet.ReadUInt32("Pet Spell Data Id");
             }
 
-            creature.ModelIDs = new uint?[4];
+            creature.DisplayIDs = new uint?[4];
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
             {
                 for (int i = 0; i < 4; i++)
-                    creature.ModelIDs[i] = packet.ReadUInt32("Display ID", i);
+                    creature.DisplayIDs[i] = packet.ReadUInt32("Display ID", i);
             }
             else
-                creature.ModelIDs[0] = packet.ReadUInt32("Display ID");
+                creature.DisplayIDs[0] = packet.ReadUInt32("Display ID");
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
             {
@@ -172,14 +172,20 @@ namespace WowPacketParser.Parsing.Parsers
                 creature.RacialLeader = packet.ReadBool("Civillian");
             creature.RacialLeader = packet.ReadBool("Racial Leader");
 
-            int qItemCount = ClientVersion.AddedInVersion(ClientVersionBuild.V3_2_0_10192) ? 6 : 4;
-            //TODO: Move to creature_questitem
-            //creature.QuestItems = new uint[qItemCount];
-
+            int questItems = ClientVersion.AddedInVersion(ClientVersionBuild.V3_2_0_10192) ? 6 : 4;
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_0_9767))
             {
-                for (int i = 0; i < qItemCount; i++)
-                    /*creature.QuestItems[i] = (uint)*/packet.ReadInt32<ItemId>("Quest Item", i);
+                for (uint i = 0; i < questItems; ++i)
+                {
+                    CreatureTemplateQuestItem questItem = new CreatureTemplateQuestItem
+                    {
+                        CreatureEntry = (uint)entry.Key,
+                        Idx = i,
+                        ItemId = (uint)packet.ReadInt32<ItemId>("QuestItem", i)
+                    };
+
+                    Storage.CreatureTemplateQuestItems.Add(questItem, packet.TimeSpan);
+                }
 
                 creature.MovementID = packet.ReadUInt32("Movement ID");
             }

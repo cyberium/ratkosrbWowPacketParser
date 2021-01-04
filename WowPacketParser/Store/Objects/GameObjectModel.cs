@@ -16,25 +16,32 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("map", false, false, true)]
         public uint? Map;
 
-        [DBFieldName("zone_id")]
+        [DBFieldName("zone_id", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("zoneId", DbType = (TargetedDbType.TRINITY))]
         public uint? ZoneID;
 
-        [DBFieldName("area_id")]
+        [DBFieldName("area_id", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("areaId", DbType = (TargetedDbType.TRINITY))]
         public uint? AreaID;
 
-        [DBFieldName("spawn_mask", TargetedDatabase.WrathOfTheLichKing, TargetedDatabase.Legion)]
+        [DBFieldName("spawn_mask", TargetedDbExpansion.WrathOfTheLichKing, TargetedDbExpansion.Legion, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("spawnMask", TargetedDbExpansion.WrathOfTheLichKing, TargetedDbExpansion.Legion, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
         public uint? SpawnMask;
 
-        [DBFieldName("spawn_difficulties", TargetedDatabase.Legion)]
+        [DBFieldName("spawn_difficulties", TargetedDbExpansion.Legion, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("spawnDifficulties", TargetedDbExpansion.Legion, DbType = (TargetedDbType.TRINITY))]
         public string SpawnDifficulties;
 
-        [DBFieldName("phase_mask", TargetedDatabase.WrathOfTheLichKing, TargetedDatabase.Cataclysm)]
+        [DBFieldName("phase_mask", TargetedDbExpansion.WrathOfTheLichKing, TargetedDbExpansion.Cataclysm, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("phaseMask", TargetedDbExpansion.WrathOfTheLichKing, TargetedDbExpansion.Cataclysm, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
         public uint? PhaseMask;
 
-        [DBFieldName("phase_id", TargetedDatabase.Cataclysm)]
+        [DBFieldName("phase_id", TargetedDbExpansion.Cataclysm, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("PhaseId", TargetedDbExpansion.Cataclysm, DbType = (TargetedDbType.TRINITY))]
         public string PhaseID;
 
-        [DBFieldName("phase_group", TargetedDatabase.Cataclysm)]
+        [DBFieldName("phase_group", TargetedDbExpansion.Cataclysm, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("PhaseGroup", TargetedDbExpansion.Cataclysm, DbType = (TargetedDbType.TRINITY))]
         public uint? PhaseGroup;
 
         [DBFieldName("position_x")]
@@ -52,28 +59,28 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("rotation", 4, true)]
         public float?[] Rotation;
 
-        [DBFieldName("temp")]
+        [DBFieldName("temp", DbType = (TargetedDbType.WPP))]
         public byte? TemporarySpawn;
 
-        [DBFieldName("creator_guid", false, true)]
+        [DBFieldName("creator_guid", false, true, DbType = (TargetedDbType.WPP))]
         public string CreatedByGuid;
 
-        [DBFieldName("creator_id")]
+        [DBFieldName("creator_id", DbType = (TargetedDbType.WPP))]
         public uint CreatedById;
 
-        [DBFieldName("creator_type")]
+        [DBFieldName("creator_type", DbType = (TargetedDbType.WPP))]
         public string CreatedByType;
 
-        [DBFieldName("display_id")]
+        [DBFieldName("display_id", DbType = (TargetedDbType.WPP))]
         public uint? DisplayID;
 
-        [DBFieldName("level")]
+        [DBFieldName("level", DbType = (TargetedDbType.WPP))]
         public uint? Level;
 
-        [DBFieldName("faction")]
+        [DBFieldName("faction", DbType = (TargetedDbType.WPP))]
         public uint? Faction;
 
-        [DBFieldName("flags")]
+        [DBFieldName("flags", DbType = (TargetedDbType.WPP))]
         public uint? Flags;
 
         [DBFieldName("state")]
@@ -82,10 +89,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("animprogress")]
         public uint? AnimProgress;
 
-        [DBFieldName("sniff_id", false, false, false, true)]
+        [DBFieldName("sniff_id", false, false, false, true, DbType = (TargetedDbType.WPP))]
         public int? SniffId;
 
-        [DBFieldName("sniff_build")]
+        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
         public int? SniffBuild = ClientVersion.BuildInt;
     }
 

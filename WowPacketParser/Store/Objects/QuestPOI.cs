@@ -10,7 +10,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("QuestID", true)]
         public int? QuestID;
 
-        [DBFieldName("BlobIndex", TargetedDatabase.WarlordsOfDraenor, true)]
+        [DBFieldName("BlobIndex", TargetedDbExpansion.WarlordsOfDraenor, true)]
         public int? BlobIndex;
 
         [DBFieldName("id", true)]
@@ -19,22 +19,22 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ObjectiveIndex")]
         public int? ObjectiveIndex;
 
-        [DBFieldName("QuestObjectiveID", TargetedDatabase.WarlordsOfDraenor)]
+        [DBFieldName("QuestObjectiveID", TargetedDbExpansion.WarlordsOfDraenor)]
         public int? QuestObjectiveID;
 
-        [DBFieldName("QuestObjectID", TargetedDatabase.WarlordsOfDraenor)]
+        [DBFieldName("QuestObjectID", TargetedDbExpansion.WarlordsOfDraenor)]
         public int? QuestObjectID;
 
         [DBFieldName("MapID")]
         public int? MapID;
 
-        [DBFieldName("UiMapID", TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("UiMapID", TargetedDbExpansion.BattleForAzeroth)]
         public int? UiMapID;
 
-        [DBFieldName("WorldMapAreaId", TargetedDatabase.Zero, TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("WorldMapAreaId", TargetedDbExpansion.Zero, TargetedDbExpansion.BattleForAzeroth)]
         public int? WorldMapAreaId;
 
-        [DBFieldName("Floor", TargetedDatabase.Zero, TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("Floor", TargetedDbExpansion.Zero, TargetedDbExpansion.BattleForAzeroth)]
         public int? Floor;
 
         [DBFieldName("Priority")]
@@ -43,19 +43,19 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Flags")]
         public int? Flags;
 
-        [DBFieldName("WorldEffectID", TargetedDatabase.WarlordsOfDraenor)]
+        [DBFieldName("WorldEffectID", TargetedDbExpansion.WarlordsOfDraenor)]
         public int? WorldEffectID;
 
-        [DBFieldName("PlayerConditionID", TargetedDatabase.WarlordsOfDraenor)]
+        [DBFieldName("PlayerConditionID", TargetedDbExpansion.WarlordsOfDraenor)]
         public int? PlayerConditionID;
 
-        [DBFieldName("NavigationPlayerConditionID", TargetedDatabase.Shadowlands)]
+        [DBFieldName("NavigationPlayerConditionID", TargetedDbExpansion.Shadowlands)]
         public int? NavigationPlayerConditionID;
 
-        [DBFieldName("SpawnTrackingID", TargetedDatabase.WarlordsOfDraenor)]
+        [DBFieldName("SpawnTrackingID", TargetedDbExpansion.WarlordsOfDraenor)]
         public int? SpawnTrackingID;
 
-        [DBFieldName("AlwaysAllowMergingBlobs", TargetedDatabase.Legion)]
+        [DBFieldName("AlwaysAllowMergingBlobs", TargetedDbExpansion.Legion)]
         public bool? AlwaysAllowMergingBlobs;
 
         [DBFieldName("VerifiedBuild")]

@@ -44,10 +44,10 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
 
             int bits1C = (int)packet.ReadBits(11);
 
-            creature.ModelIDs = new uint?[4];
+            creature.DisplayIDs = new uint?[4];
             creature.KillCredits = new uint?[2];
 
-            creature.ModelIDs[1] = packet.ReadUInt32("Display ID 1");
+            creature.DisplayIDs[1] = packet.ReadUInt32("Display ID 1");
             creature.KillCredits[1] = packet.ReadUInt32("Kill Credit 2");
             creature.Type = packet.ReadInt32E<CreatureType>("Type");
 
@@ -70,7 +70,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
 
             creature.Family = packet.ReadInt32E<CreatureFamily>("Family");
             creature.KillCredits[0] = packet.ReadUInt32("Kill Credit 1");
-            creature.ModelIDs[3] = packet.ReadUInt32("Display ID 3");
+            creature.DisplayIDs[3] = packet.ReadUInt32("Display ID 3");
 
             //TODO: move to creature_questitems
             //creature.QuestItems = new uint[qItemCount];
@@ -88,8 +88,8 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
             if (bits2C > 1)
                 creature.IconName = packet.ReadCString("Icon Name");
 
-            creature.ModelIDs[2] = packet.ReadUInt32("Display ID 2");
-            creature.ModelIDs[0] = packet.ReadUInt32("Display ID 0");
+            creature.DisplayIDs[2] = packet.ReadUInt32("Display ID 2");
+            creature.DisplayIDs[0] = packet.ReadUInt32("Display ID 0");
             creature.Rank = packet.ReadInt32E<CreatureRank>("Rank");
 
             if (bits1C > 1)

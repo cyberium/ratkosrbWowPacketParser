@@ -64,31 +64,40 @@ namespace WowPacketParser.Store.Objects
         public string Text;
     }
 
-    [DBTableName("creature_text_template")]
+    [DBTableName("creature_text_template", TargetedDbType.WPP)]
+    [DBTableName("creature_text", TargetedDbType.TRINITY)]
     public sealed class CreatureTextTemplate : IDataModel
     {
-        [DBFieldName("entry", true)]
+        [DBFieldName("entry", true, DbType = TargetedDbType.WPP)]
+        [DBFieldName("CreatureID", true, DbType = TargetedDbType.TRINITY)]
         public uint? Entry;
 
-        [DBFieldName("group_id", true)]
+        [DBFieldName("group_id", true, DbType = TargetedDbType.WPP)]
+        [DBFieldName("GroupID", true, DbType = TargetedDbType.TRINITY)]
         public uint GroupId;
 
-        [DBFieldName("text")]
+        [DBFieldName("text", DbType = TargetedDbType.WPP)]
+        [DBFieldName("Text", DbType = TargetedDbType.TRINITY)]
         public string Text;
 
-        [DBFieldName("chat_type")]
+        [DBFieldName("chat_type", DbType = TargetedDbType.WPP)]
+        [DBFieldName("Type", DbType = TargetedDbType.TRINITY)]
         public ChatMessageType? Type;
 
-        [DBFieldName("language")]
+        [DBFieldName("language", DbType = TargetedDbType.WPP)]
+        [DBFieldName("Language", DbType = TargetedDbType.TRINITY)]
         public Language? Language;
 
-        [DBFieldName("emote")]
+        [DBFieldName("emote", DbType = TargetedDbType.WPP)]
+        [DBFieldName("Emote", DbType = TargetedDbType.TRINITY)]
         public EmoteType? Emote;
 
-        [DBFieldName("sound")]
+        [DBFieldName("sound", DbType = TargetedDbType.WPP)]
+        [DBFieldName("Sound", DbType = TargetedDbType.TRINITY)]
         public uint? Sound;
 
-        [DBFieldName("broadcast_text_id", false, true)]
+        [DBFieldName("broadcast_text_id", false, true, DbType = TargetedDbType.WPP)]
+        [DBFieldName("BroadcastTextId", false, true, DbType = TargetedDbType.TRINITY)]
         public object BroadcastTextID = 0;
 
         [DBFieldName("comment")]

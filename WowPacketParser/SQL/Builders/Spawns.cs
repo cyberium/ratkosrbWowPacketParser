@@ -208,22 +208,6 @@ namespace WowPacketParser.SQL.Builders
 
                 row.Data.Auras = creature.GetAurasString(false);
 
-                var addonRow = new Row<CreatureAddon>();
-                if (Settings.SqlTables.creature_addon)
-                {
-                    addonRow.Data.GUID = "@CGUID+" + creature.DbGuid;
-                    addonRow.Data.Mount = (uint)unitData.MountDisplayID;
-                    addonRow.Data.Bytes1 = creature.Bytes1;
-                    addonRow.Data.Bytes2 = creature.Bytes2;
-                    addonRow.Data.Emote = (uint)unitData.EmoteState;
-                    addonRow.Data.Auras = creature.GetAurasString(true);
-                    addonRow.Data.AIAnimKit = creature.AIAnimKit.GetValueOrDefault(0);
-                    addonRow.Data.MovementAnimKit = creature.MovementAnimKit.GetValueOrDefault(0);
-                    addonRow.Data.MeleeAnimKit = creature.MeleeAnimKit.GetValueOrDefault(0);
-                    addonRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
-                    addonRows.Add(addonRow);
-                }
-
                 if (Settings.SqlTables.creature_guid_values)
                 {
                     if (!unitData.Charm.IsEmpty() ||
@@ -416,14 +400,44 @@ namespace WowPacketParser.SQL.Builders
                         float distanceFromSpawn = Utilities.GetDistance3D(creature.OriginalMovement.Position.X, creature.OriginalMovement.Position.Y, creature.OriginalMovement.Position.Z, waypoint.StartPositionX, waypoint.StartPositionY, waypoint.StartPositionZ);
                         if (distanceFromSpawn > maxDistanceFromSpawn)
                             maxDistanceFromSpawn = distanceFromSpawn;
-
-                        var movementRow = new Row<ServerSideMovement>();
-                        movementRow.Data = waypoint;
-                        movementRow.Data.GUID = "@CGUID+" + creature.DbGuid;
-                        movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
-                        movementRows.Add(movementRow);
                     }
                     row.Data.WanderDistance = maxDistanceFromSpawn;
+
+                    // Likely to be waypoints if distance is big
+                    if (row.Data.WanderDistance > 20)
+                        row.Data.MovementType = 2;
+
+                    if (row.Data.MovementType == 2 || Settings.TargetedDbType == TargetedDbType.WPP)
+                    {
+                        foreach (ServerSideMovement waypoint in creature.Waypoints)
+                        {
+                            var movementRow = new Row<ServerSideMovement>();
+                            movementRow.Data = waypoint;
+                            movementRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
+                            movementRows.Add(movementRow);
+                        }
+                    }
+                }
+
+                var addonRow = new Row<CreatureAddon>();
+                if (Settings.SqlTables.creature_addon)
+                {
+                    addonRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                    addonRow.Data.PathID = row.Data.MovementType == 2 ? "@CGUID+" + creature.DbGuid : "0";
+                    addonRow.Data.Mount = (uint)unitData.MountDisplayID;
+                    addonRow.Data.Bytes1 = creature.Bytes1;
+                    addonRow.Data.Bytes2 = creature.Bytes2;
+                    addonRow.Data.SheathState = unitData.SheatheState;
+                    addonRow.Data.PvpFlags = unitData.PvpFlags;
+                    addonRow.Data.Emote = (uint)unitData.EmoteState;
+                    addonRow.Data.MoveFlags = (uint)creature.OriginalMovement.Flags;
+                    addonRow.Data.Auras = creature.GetAurasString(true);
+                    addonRow.Data.AIAnimKit = creature.AIAnimKit.GetValueOrDefault(0);
+                    addonRow.Data.MovementAnimKit = creature.MovementAnimKit.GetValueOrDefault(0);
+                    addonRow.Data.MeleeAnimKit = creature.MeleeAnimKit.GetValueOrDefault(0);
+                    addonRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
+                    addonRows.Add(addonRow);
                 }
 
                 if (Settings.SqlTables.creature_movement_server_combat &&
@@ -546,10 +560,6 @@ namespace WowPacketParser.SQL.Builders
                         }
                     }
                 }
-
-                // Likely to be waypoints if distance is big
-                if (row.Data.WanderDistance > 20)
-                    row.Data.MovementType = 2;
 
                 if (creature.IsOnTransport() && badTransport)
                 {

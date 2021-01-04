@@ -7,22 +7,32 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("page_text")]
     public sealed class PageText : IDataModel
     {
-        [DBFieldName("ID", true)]
+        [DBFieldName("entry", true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("ID", true, DbType = (TargetedDbType.TRINITY))]
         public uint? ID;
 
-        [DBFieldName("Text")]
+        [DBFieldName("text", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("Text", DbType = (TargetedDbType.TRINITY))]
         public string Text;
 
-        [DBFieldName("NextPageID")]
+        [DBFieldName("next_page", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("NextPageID", DbType = (TargetedDbType.TRINITY))]
         public uint? NextPageID;
 
-        [DBFieldName("PlayerConditionID", TargetedDatabase.Legion)]
+        [DBFieldName("player_condition_id", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("PlayerConditionID", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("player_condition_id", TargetedDbExpansion.Legion, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("PlayerConditionID", TargetedDbExpansion.Legion, DbType = (TargetedDbType.TRINITY))]
         public int? PlayerConditionID;
 
-        [DBFieldName("Flags", TargetedDatabase.Legion)]
+        [DBFieldName("flags", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Flags", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("flags", TargetedDbExpansion.Legion, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Flags", TargetedDbExpansion.Legion, DbType = (TargetedDbType.TRINITY))]
         public byte? Flags;
 
-        [DBFieldName("VerifiedBuild")]
+        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 }

@@ -19,11 +19,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("MapID")]
         public int? MapID;
 
-        [DBFieldName("WorldMapAreaId", TargetedDatabase.Zero, TargetedDatabase.BattleForAzeroth)]
-        [DBFieldName("UiMapID", TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("WorldMapAreaId", TargetedDbExpansion.Zero, TargetedDbExpansion.BattleForAzeroth)]
+        [DBFieldName("UiMapID", TargetedDbExpansion.BattleForAzeroth)]
         public int? WorldMapAreaId;
 
-        [DBFieldName("Floor", TargetedDatabase.Zero, TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("Floor", TargetedDbExpansion.Zero, TargetedDbExpansion.BattleForAzeroth)]
         public int? Floor;
 
         [DBFieldName("Priority")]

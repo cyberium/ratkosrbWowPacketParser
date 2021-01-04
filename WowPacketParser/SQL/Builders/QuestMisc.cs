@@ -55,8 +55,8 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.quest_template)
                 return string.Empty;
 
-            if (Settings.TargetedDatabase == TargetedDatabase.WrathOfTheLichKing ||
-                Settings.TargetedDatabase == TargetedDatabase.Cataclysm)
+            if (Settings.TargetedDbExpansion == TargetedDbExpansion.WrathOfTheLichKing ||
+                Settings.TargetedDbExpansion == TargetedDbExpansion.Cataclysm)
                 return string.Empty;
 
             if (Storage.QuestGreetings.IsEmpty())

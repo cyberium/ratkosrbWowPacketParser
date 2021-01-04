@@ -437,7 +437,7 @@ namespace WowPacketParser.Loading
                    "# File name: " + Path.GetFileName(fileName) + Environment.NewLine +
                    "# Detected build: " + ClientVersion.Build + Environment.NewLine +
                    "# Detected locale: " + ClientLocale.ClientLocaleString + Environment.NewLine +
-                   "# Targeted database: " + Settings.TargetedDatabase + Environment.NewLine +
+                   "# Targeted database: " + Settings.TargetedDbExpansion + Environment.NewLine +
                    "# Parsing date: " + DateTime.Now.ToString(CultureInfo.InvariantCulture) + Environment.NewLine + Environment.NewLine +
                    "SET @ACCID = 0; " + Environment.NewLine +
                    "SET @CGUID = 0; " + Environment.NewLine +

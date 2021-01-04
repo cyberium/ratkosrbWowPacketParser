@@ -7,13 +7,16 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("gossip_menu")]
     public class GossipMenu : IDataModel
     {
-        [DBFieldName("entry", true)]
+        [DBFieldName("MenuID", true, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("entry", true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public uint? Entry;
 
-        [DBFieldName("text_id", true)]
+        [DBFieldName("TextID", true, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("text_id", true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public uint? TextID;
 
-        [DBFieldName("sniff_build")]
+        [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
         public int? SniffBuild = ClientVersion.BuildInt;
 
         public ObjectType ObjectType;

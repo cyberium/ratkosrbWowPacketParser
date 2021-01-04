@@ -56,9 +56,9 @@ namespace WowPacketParserModule.V5_4_1_17538.Parsers
             if (lenS5 > 1)
                 creature.SubName = packet.ReadCString("Sub Name");
 
-            creature.ModelIDs = new uint?[4];
-            creature.ModelIDs[0] = packet.ReadUInt32("Display ID 0");
-            creature.ModelIDs[3] = packet.ReadUInt32("Display ID 3");
+            creature.DisplayIDs = new uint?[4];
+            creature.DisplayIDs[0] = packet.ReadUInt32("Display ID 0");
+            creature.DisplayIDs[3] = packet.ReadUInt32("Display ID 3");
 
             //TODO: move to creature_questitems
             //creature.QuestItems = new uint[qItemCount];
@@ -95,8 +95,8 @@ namespace WowPacketParserModule.V5_4_1_17538.Parsers
 
             creature.MovementID = packet.ReadUInt32("Movement ID");
 
-            creature.ModelIDs[1] = packet.ReadUInt32("Display ID 1");
-            creature.ModelIDs[2] = packet.ReadUInt32("Display ID 2");
+            creature.DisplayIDs[1] = packet.ReadUInt32("Display ID 1");
+            creature.DisplayIDs[2] = packet.ReadUInt32("Display ID 2");
 
             packet.AddSniffData(StoreNameType.Unit, entry.Key, "QUERY_RESPONSE");
 

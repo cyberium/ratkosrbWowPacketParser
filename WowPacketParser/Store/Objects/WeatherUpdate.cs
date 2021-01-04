@@ -21,7 +21,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("grade")]
         public float? Grade;
 
-        [DBFieldName("sound", TargetedDatabase.Zero, TargetedDatabase.TheBurningCrusade)]
+        [DBFieldName("sound", TargetedDbExpansion.Zero, TargetedDbExpansion.TheBurningCrusade)]
         public uint? Sound;
 
         [DBFieldName("instant")]

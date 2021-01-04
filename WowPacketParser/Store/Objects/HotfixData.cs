@@ -16,10 +16,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("RecordId", true)]
         public int? RecordID;
 
-        [DBFieldName("Deleted", TargetedDatabase.Zero, TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("Deleted", TargetedDbExpansion.Zero, TargetedDbExpansion.BattleForAzeroth)]
         public bool? Deleted;
 
-        [DBFieldName("Status", TargetedDatabase.Shadowlands)]
+        [DBFieldName("Status", TargetedDbExpansion.Shadowlands)]
         public HotfixStatus? Status;
 
         [DBFieldName("VerifiedBuild")]

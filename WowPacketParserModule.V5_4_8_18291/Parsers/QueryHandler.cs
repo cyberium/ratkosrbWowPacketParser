@@ -33,7 +33,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             if (!hasData)
                 return; // nothing to do
 
-            creature.ModelIDs = new uint?[4];
+            creature.DisplayIDs = new uint?[4];
             creature.KillCredits = new uint?[2];
 
             uint bits24 = packet.ReadBits(11); //+7
@@ -55,8 +55,8 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
                 creature.TitleAlt = packet.ReadCString("TitleAlt");
 
             creature.KillCredits[0] = packet.ReadUInt32(); //+27
-            creature.ModelIDs[3] = packet.ReadUInt32(); //+32
-            creature.ModelIDs[2] = packet.ReadUInt32(); //+31
+            creature.DisplayIDs[3] = packet.ReadUInt32(); //+32
+            creature.DisplayIDs[2] = packet.ReadUInt32(); //+31
             creature.RequiredExpansion = packet.ReadUInt32E<ClientType>("Expansion"); //+24
             creature.Type = packet.ReadInt32E<CreatureType>("Type"); //+12
             creature.HealthMultiplier = packet.ReadSingle("Modifier 1"); //+15
@@ -82,8 +82,8 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             if (bits24 > 1)
                 creature.SubName = packet.ReadCString("Sub Name");
 
-            creature.ModelIDs[0] = packet.ReadUInt32(); //+29
-            creature.ModelIDs[1] = packet.ReadUInt32(); //+30
+            creature.DisplayIDs[0] = packet.ReadUInt32(); //+29
+            creature.DisplayIDs[1] = packet.ReadUInt32(); //+30
 
             if (bits2C > 1)
                 creature.IconName = packet.ReadCString("Icon Name"); //+100
@@ -97,7 +97,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             creature.Family = packet.ReadInt32E<CreatureFamily>("Family"); //+13
 
             for (int i = 0; i < 4; ++i)
-                packet.AddValue("Display ID", creature.ModelIDs[i], i);
+                packet.AddValue("Display ID", creature.DisplayIDs[i], i);
             for (int i = 0; i < 2; ++i)
                 packet.AddValue("Kill Credit", creature.KillCredits[i], i);
 

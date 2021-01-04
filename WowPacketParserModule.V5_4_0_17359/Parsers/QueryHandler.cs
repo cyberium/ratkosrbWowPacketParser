@@ -75,9 +75,9 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
             creature.Type = packet.ReadInt32E<CreatureType>("Type");
             creature.KillCredits = new uint?[2];
             creature.KillCredits[1] = packet.ReadUInt32("Kill Credit 1");
-            creature.ModelIDs = new uint?[4];
-            creature.ModelIDs[3] = packet.ReadUInt32("Display ID 3");
-            creature.ModelIDs[2] = packet.ReadUInt32("Display ID 2");
+            creature.DisplayIDs = new uint?[4];
+            creature.DisplayIDs[3] = packet.ReadUInt32("Display ID 3");
+            creature.DisplayIDs[2] = packet.ReadUInt32("Display ID 2");
 
             //TODO: move to creature_questitems
             //creature.QuestItems = new uint[qItemCount];
@@ -102,13 +102,13 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
                 creature.TitleAlt = packet.ReadCString("TitleAlt");
 
             creature.ManaMultiplier = packet.ReadSingle("Modifier 2");
-            creature.ModelIDs[0] = packet.ReadUInt32("Display ID 0");
+            creature.DisplayIDs[0] = packet.ReadUInt32("Display ID 0");
 
             if (lenS4 > 1)
                 creature.IconName = packet.ReadCString("Icon Name");
 
             creature.KillCredits[0] = packet.ReadUInt32("Kill Credit 0");
-            creature.ModelIDs[1] = packet.ReadUInt32("Display ID 1");
+            creature.DisplayIDs[1] = packet.ReadUInt32("Display ID 1");
 
             if (lenS3 > 1)
                 creature.SubName = packet.ReadCString("Sub Name");

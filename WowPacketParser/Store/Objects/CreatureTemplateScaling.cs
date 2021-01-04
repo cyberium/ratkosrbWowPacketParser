@@ -25,8 +25,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("LevelScalingDeltaMax")]
         public int? LevelScalingDeltaMax;
 
-        [DBFieldName("SandboxScalingID", TargetedDatabase.Legion, TargetedDatabase.BattleForAzeroth)]
-        [DBFieldName("ContentTuningID", TargetedDatabase.BattleForAzeroth)]
+        [DBFieldName("SandboxScalingID", TargetedDbExpansion.Legion, TargetedDbExpansion.BattleForAzeroth)]
+        [DBFieldName("ContentTuningID", TargetedDbExpansion.BattleForAzeroth)]
         public int? ContentTuningID;
 
         [DBFieldName("VerifiedBuild")]

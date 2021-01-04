@@ -1,34 +1,43 @@
 ﻿using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.SQL;
+using WowPacketParser.Enums;
 
 namespace WowPacketParser.Store.Objects
 {
     [DBTableName("points_of_interest")]
     public sealed class PointsOfInterest : IDataModel
     {
-        [DBFieldName("ID", true, true)]
+        [DBFieldName("entry", true, true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("ID", true, true, DbType = (TargetedDbType.TRINITY))]
         public object ID;
 
-        [DBFieldName("PositionX")]
+        [DBFieldName("x", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("PositionX", DbType = (TargetedDbType.TRINITY))]
         public float? PositionX;
 
-        [DBFieldName("PositionY")]
+        [DBFieldName("y", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("PositionY", DbType = (TargetedDbType.TRINITY))]
         public float? PositionY;
 
-        [DBFieldName("Icon")]
+        [DBFieldName("icon", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("Icon", DbType = (TargetedDbType.TRINITY))]
         public GossipPOIIcon? Icon;
 
-        [DBFieldName("Flags")]
+        [DBFieldName("flags", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("Flags", DbType = (TargetedDbType.TRINITY))]
         public uint? Flags;
 
-        [DBFieldName("Importance")]
+        [DBFieldName("data", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("Importance", DbType = (TargetedDbType.TRINITY))]
         public uint? Importance;
 
-        [DBFieldName("Name")]
+        [DBFieldName("icon_name", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("Name", DbType = (TargetedDbType.TRINITY))]
         public string Name;
 
-        [DBFieldName("VerifiedBuild")]
+        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 }

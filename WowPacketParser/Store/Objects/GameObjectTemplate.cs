@@ -13,57 +13,77 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("type")]
         public GameObjectType? Type;
 
-        [DBFieldName("display_id")]
+        [DBFieldName("display_id", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("displayId", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public uint? DisplayID;
 
-        [DBFieldName("scale")]
+        [DBFieldName("scale", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("size", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public float? Size;
 
         [DBFieldName("name", LocaleConstant.enUS)] // ToDo: Add locale support
         public string Name;
 
-        [DBFieldName("icon_name")]
+        [DBFieldName("icon_name", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("IconName", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
         public string IconName;
 
-        [DBFieldName("cast_bar_caption", LocaleConstant.enUS)] // ToDo: Add locale support
+        // ToDo: Add locale support
+        [DBFieldName("cast_bar_caption", TargetedDbExpansion.TheBurningCrusade, LocaleConstant.enUS, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("castBarCaption", TargetedDbExpansion.TheBurningCrusade, LocaleConstant.enUS, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
         public string CastCaption;
 
-        [DBFieldName("unk_string")]
+        [DBFieldName("unk1", DbType = (TargetedDbType.WPP | TargetedDbType.TRINITY))]
         public string UnkString;
 
-        [DBFieldName("data", TargetedDatabase.Zero, TargetedDatabase.Cataclysm, 24, true)]
-        [DBFieldName("data", TargetedDatabase.Cataclysm, TargetedDatabase.WarlordsOfDraenor, 32, true)]
-        [DBFieldName("data", TargetedDatabase.WarlordsOfDraenor, TargetedDatabase.BattleForAzeroth, 33, true)]
-        [DBFieldName("data", TargetedDatabase.BattleForAzeroth, 34, true)]
-        [DBFieldName("data", TargetedDatabase.Classic, 34, true)]
+        [DBFieldName("data", TargetedDbExpansion.Zero, TargetedDbExpansion.Cataclysm, 24, true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("Data", TargetedDbExpansion.Zero, TargetedDbExpansion.Cataclysm, 24, true, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("data", TargetedDbExpansion.Cataclysm, TargetedDbExpansion.WarlordsOfDraenor, 32, true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("Data", TargetedDbExpansion.Cataclysm, TargetedDbExpansion.WarlordsOfDraenor, 32, true, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("data", TargetedDbExpansion.WarlordsOfDraenor, TargetedDbExpansion.BattleForAzeroth, 33, true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("Data", TargetedDbExpansion.WarlordsOfDraenor, TargetedDbExpansion.BattleForAzeroth, 33, true, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("data", TargetedDbExpansion.BattleForAzeroth, 34, true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("Data", TargetedDbExpansion.BattleForAzeroth, 34, true, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("data", TargetedDbExpansion.Classic, 34, true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("Data", TargetedDbExpansion.Classic, 34, true, DbType = (TargetedDbType.TRINITY))]
         public int?[] Data;
 
-        [DBFieldName("quest_items_count")]
+        [DBFieldName("quest_items_count", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("quest_items_count", TargetedDbExpansion.WrathOfTheLichKing, DbType = (TargetedDbType.WPP))]
         public uint QuestItems;
 
-        [DBFieldName("RequiredLevel", TargetedDatabase.Cataclysm, TargetedDatabase.Shadowlands)]
+        [DBFieldName("required_level", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("required_level", TargetedDbExpansion.Cataclysm, TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("RequiredLevel", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("RequiredLevel", TargetedDbExpansion.Cataclysm, TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.TRINITY))]
         public int? RequiredLevel;
 
-        [DBFieldName("ContentTuningId", TargetedDatabase.Shadowlands)]
+        [DBFieldName("content_tuning_id", TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("ContentTuningId", TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.TRINITY))]
         public int? ContentTuningId;
 
-        [DBFieldName("sniff_build")]
+        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.CMANGOS))]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("gameobject_questitem")]
     public sealed class GameObjectTemplateQuestItem : IDataModel
     {
-        [DBFieldName("GameObjectEntry", true)]
+        [DBFieldName("entry", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("GameObjectEntry", true, DbType = (TargetedDbType.TRINITY))]
         public uint? GameObjectEntry;
 
-        [DBFieldName("Idx", true)]
+        [DBFieldName("id", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Idx", true, DbType = (TargetedDbType.TRINITY))]
         public uint? Idx;
 
-        [DBFieldName("ItemId")]
+        [DBFieldName("item_id", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("ItemId", DbType = (TargetedDbType.TRINITY))]
         public uint? ItemId;
 
-        [DBFieldName("VerifiedBuild", TargetedDatabase.WarlordsOfDraenor)]
+        [DBFieldName("sniff_build", TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("VerifiedBuild", TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.TRINITY))]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 }
