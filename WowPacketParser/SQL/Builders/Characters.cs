@@ -34,6 +34,7 @@ namespace WowPacketParser.SQL.Builders
             var characterRows = new RowList<CharacterTemplate>();
             var characterInventoryRows = new RowList<CharacterInventory>();
             var characterItemInstaceRows = new RowList<CharacterItemInstance>();
+            var guildMemberRows = new RowList<GuildMember>();
             var playerRows = new RowList<PlayerTemplate>();
             var playerGuidValuesRows = new RowList<CreatureGuidValues>();
             var playerAttackLogRows = new RowList<UnitMeleeAttackLog>();
@@ -443,6 +444,18 @@ namespace WowPacketParser.SQL.Builders
                         playerServerMovementRows.Add(movementRow);
                     }
                 }
+
+                if (Settings.SqlTables.guild)
+                {
+                    if (player.UnitData.GuildGUID.Low != 0)
+                    {
+                        var guildRow = new Row<GuildMember>();
+                        guildRow.Data.GuildGUID = player.UnitData.GuildGUIDOriginal.Low.ToString();
+                        guildRow.Data.Guid = "@PGUID+" + player.DbGuid;
+                        guildRow.Data.GuildRank = player.PlayerDataOriginal.GuildRank;
+                        guildMemberRows.Add(guildRow);
+                    }
+                }
             }
 
             if (Settings.SqlTables.characters)
@@ -466,6 +479,13 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(itemInstanceDelete.Build());
                 var itemInstanceSql = new SQLInsert<CharacterItemInstance>(characterItemInstaceRows, false);
                 result.Append(itemInstanceSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.guild)
+            {
+                var guildSql = new SQLInsert<GuildMember>(guildMemberRows, false);
+                result.Append(guildSql.Build());
                 result.AppendLine();
             }
 
