@@ -31,7 +31,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public WowGuid WowAccount => GetGuidValue(PlayerField.PLAYER_WOW_ACCOUNT);
 
-        public uint GuildRank => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_GUILDRANK);
+        public uint GuildRankID => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_GUILDRANK);
 
         public uint Experience => (ClientVersion.AddedInVersion(ClientVersionBuild.V8_0_1_27101) ?
             UpdateFields.GetValue<ActivePlayerField, uint>(ActivePlayerField.ACTIVE_PLAYER_FIELD_XP) :
@@ -128,7 +128,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public WowGuid WowAccount => GetGuidValue(PlayerField.PLAYER_WOW_ACCOUNT);
 
-        public uint GuildRank => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_GUILDRANK);
+        public uint GuildRankID => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_GUILDRANK);
 
         public uint Experience => (ClientVersion.AddedInVersion(ClientVersionBuild.V8_0_1_27101) ?
             UpdateFields.GetValue<ActivePlayerField, uint>(ActivePlayerField.ACTIVE_PLAYER_FIELD_XP) :
