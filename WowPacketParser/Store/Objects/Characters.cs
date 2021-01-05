@@ -372,7 +372,7 @@ namespace WowPacketParser.Store.Objects
     public sealed class GuildMember : IDataModel
     {
         [DBFieldName("guildid")]
-        public string GuildGUID = "";
+        public ulong GuildGUID = 0;
 
         [DBFieldName("guid", true, true)]
         public string Guid;
