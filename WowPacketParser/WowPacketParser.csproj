@@ -641,6 +641,7 @@
     <Compile Include="Store\Objects\CreatureTrainer.cs" />
     <Compile Include="Store\Objects\DynamicObject.cs" />
     <Compile Include="Store\Objects\DynamicObjectSpawn.cs" />
+    <Compile Include="Store\Objects\FactionStandingUpdate.cs" />
     <Compile Include="Store\Objects\Guilds.cs" />
     <Compile Include="Store\Objects\ItemInstance.cs" />
     <Compile Include="Store\Objects\LootTemplate.cs" />
@@ -759,6 +760,7 @@
     <Compile Include="Store\Objects\WeatherUpdate.cs" />
     <Compile Include="Store\Objects\WorldState.cs" />
     <Compile Include="Store\Objects\WoWObject.cs" />
+    <Compile Include="Store\Objects\XpGainLog.cs" />
     <Compile Include="Store\Storage.cs" />
     <Compile Include="Store\StoreDictionaries.cs" />
     <Compile Include="Enums\GuildNewsType.cs" />

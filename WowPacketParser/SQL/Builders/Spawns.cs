@@ -45,6 +45,7 @@ namespace WowPacketParser.SQL.Builders
 
             uint count = 0;
             uint maxDbGuid = 0;
+            uint threatTargetsCounter = 1;
             var rows = new RowList<Creature>();
             var guidValuesRows = new RowList<CreatureGuidValues>();
             var addonRows = new RowList<CreatureAddon>();
@@ -58,6 +59,8 @@ namespace WowPacketParser.SQL.Builders
             var movementSplineRows = new RowList<ServerSideMovementSpline>();
             var movementClientRows = new RowList<ClientSideMovement>();
             var updateAurasRows = new RowList<CreatureAurasUpdate>();
+            var updateThreatRows = new RowList<CreatureThreatUpdate>();
+            var updateThreatTargetRows = new RowList<CreatureThreatUpdateTarget>();
             var updateValuesRows = new RowList<CreatureValuesUpdate>();
             var updateSpeedRows = new RowList<CreatureSpeedUpdate>();
             var attackLogRows = new RowList<UnitMeleeAttackLog>();
@@ -177,6 +180,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.NpcFlag = unitData.NpcFlags[0];
                 row.Data.UnitFlag = unitData.Flags;
                 row.Data.UnitFlag2 = unitData.Flags2;
+                row.Data.DynamicFlags = creature.GetDynamicFlagsOriginal();
                 row.Data.CurHealth = (uint)unitData.CurHealth;
                 row.Data.CurMana = (uint)unitData.CurMana;
                 row.Data.MaxHealth = (uint)unitData.MaxHealth;
@@ -193,12 +197,19 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.ShapeshiftForm = unitData.ShapeshiftForm;
                 row.Data.SpeedWalk = creature.OriginalMovement.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
                 row.Data.SpeedRun = creature.OriginalMovement.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
+                row.Data.SpeedRunBack = creature.OriginalMovement.RunBackSpeed / MovementInfo.DEFAULT_RUN_BACK_SPEED;
+                row.Data.SpeedSwim = creature.OriginalMovement.SwimSpeed / MovementInfo.DEFAULT_SWIM_SPEED;
+                row.Data.SpeedSwimBack = creature.OriginalMovement.SwimBackSpeed / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
+                row.Data.SpeedFly = creature.OriginalMovement.FlightSpeed / MovementInfo.DEFAULT_FLY_SPEED;
+                row.Data.SpeedFlyBack = creature.OriginalMovement.FlightBackSpeed / MovementInfo.DEFAULT_FLY_BACK_SPEED;
+                row.Data.TurnRate = creature.OriginalMovement.TurnRate / MovementInfo.DEFAULT_TURN_RATE;
+                row.Data.PitchRate = creature.OriginalMovement.PitchRate / MovementInfo.DEFAULT_PITCH_RATE;
                 row.Data.BoundingRadius = unitData.BoundingRadius;
                 row.Data.CombatReach = unitData.CombatReach;
                 row.Data.ModMeleeHaste = unitData.ModHaste;
                 row.Data.ModRangedHaste = unitData.ModRangedHaste;
-                row.Data.BaseAttackTime = unitData.AttackRoundBaseTime[0];
-                row.Data.RangedAttackTime = unitData.RangedAttackRoundBaseTime;
+                row.Data.MainHandAttackTime = unitData.AttackRoundBaseTime[0];
+                row.Data.OffHandAttackTime = unitData.AttackRoundBaseTime[1];
                 row.Data.MainHandSlotItem = (uint)unitData.VirtualItems[0].ItemID;
                 row.Data.OffHandSlotItem = (uint)unitData.VirtualItems[1].ItemID;
                 row.Data.RangedSlotItem = (uint)unitData.VirtualItems[2].ItemID;
@@ -320,6 +331,34 @@ namespace WowPacketParser.SQL.Builders
                                 updateRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(update.Item2);
                                 updateAurasRows.Add(updateRow);
                             }
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.creature_threat_update)
+                {
+                    if (Storage.CreatureThreatUpdates.ContainsKey(unit.Key))
+                    {
+                        foreach (var update in Storage.CreatureThreatUpdates[unit.Key])
+                        {
+                            var updateRow = new Row<CreatureThreatUpdate>();
+                            updateRow.Data = update;
+                            updateRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            updateRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(updateRow.Data.Time);
+
+                            if (updateRow.Data.TargetsCount > 0)
+                            {
+                                updateRow.Data.TargetListId = threatTargetsCounter++;
+                                foreach (var target in updateRow.Data.TargetsList)
+                                {
+                                    var targetRow = new Row<CreatureThreatUpdateTarget>();
+                                    targetRow.Data.TargetListId = updateRow.Data.TargetListId;
+                                    Storage.GetObjectDbGuidEntryType(target.Item1, out targetRow.Data.TargetGuid, out targetRow.Data.TargetId, out targetRow.Data.TargetType);
+                                    targetRow.Data.Threat = target.Item2;
+                                    updateThreatTargetRows.Add(targetRow);
+                                }
+                            }
+                            updateThreatRows.Add(updateRow);
                         }
                     }
                 }
@@ -646,6 +685,17 @@ namespace WowPacketParser.SQL.Builders
             {
                 var updateSql = new SQLInsert<CreatureAurasUpdate>(updateAurasRows, false);
                 result.Append(updateSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.creature_threat_update)
+            {
+                var updateSql = new SQLInsert<CreatureThreatUpdate>(updateThreatRows, false);
+                result.Append(updateSql.Build());
+                result.AppendLine();
+
+                var targetSql = new SQLInsert<CreatureThreatUpdateTarget>(updateThreatTargetRows, false);
+                result.Append(targetSql.Build());
                 result.AppendLine();
             }
 

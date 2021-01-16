@@ -1,5 +1,7 @@
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParser.Parsing.Parsers
 {
@@ -47,14 +49,19 @@ namespace WowPacketParser.Parsing.Parsers
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_4_0_8089))
                 packet.ReadSingle("Reputation loss");
 
+            bool showVisual = false;
             if (ClientVersion.AddedInVersion(ClientType.WrathOfTheLichKing))
-                packet.ReadBool("Play Visual");
+                showVisual = packet.ReadBool("Show Visual");
 
             var count = packet.ReadInt32("Count");
             for (var i = 0; i < count; i++)
             {
-                packet.ReadInt32("Faction List Id");
-                packet.ReadInt32("Standing");
+                FactionStandingUpdate update = new FactionStandingUpdate();
+                update.ReputationListId = packet.ReadInt32("Reputation List Id");
+                update.Standing = packet.ReadInt32("Standing");
+                update.ShowVisual = showVisual;
+                update.Time = packet.Time;
+                Storage.FactionStandingUpdates.Add(update);
             }
         }
 

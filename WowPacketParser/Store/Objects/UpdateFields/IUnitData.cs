@@ -32,6 +32,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         uint Flags { get; }
         uint Flags2 { get; }
         uint Flags3 { get; }
+        uint DynamicFlags { get; }
         uint[] AttackRoundBaseTime { get; }
         uint RangedAttackRoundBaseTime { get; }
         float BoundingRadius { get; }

@@ -642,29 +642,6 @@ namespace WowPacketParser.SQL.Builders
             return 0;
         }
 
-        class CreatureTemplateNonWdbExport
-        {
-            public uint Entry = 0;
-            // Count how many times each value has been seen
-            public Dictionary<uint, uint> Factions = new Dictionary<uint, uint>();
-            public Dictionary<uint, uint> NpcFlags1 = new Dictionary<uint, uint>();
-            public Dictionary<uint, uint> NpcFlags2 = new Dictionary<uint, uint>();
-            public Dictionary<float, uint> RunSpeeds = new Dictionary<float, uint>();
-            public Dictionary<float, uint> WalkSpeeds = new Dictionary<float, uint>();
-            public Dictionary<float, uint> Sizes = new Dictionary<float, uint>();
-            public Dictionary<uint, uint> BaseAttackTimes = new Dictionary<uint, uint>();
-            public Dictionary<uint, uint> RangedAttackTimes = new Dictionary<uint, uint>();
-            public Dictionary<uint, uint> UnitClasses = new Dictionary<uint, uint>();
-            public Dictionary<UnitFlags, uint> UnitFlags1 = new Dictionary<UnitFlags, uint>();
-            public Dictionary<UnitFlags2, uint> UnitFlags2 = new Dictionary<UnitFlags2, uint>();
-            public Dictionary<UnitFlags3, uint> UnitFlags3 = new Dictionary<UnitFlags3, uint>();
-            public Dictionary<UnitDynamicFlags, uint> DynamicFlags = new Dictionary<UnitDynamicFlags, uint>();
-            public Dictionary<UnitDynamicFlagsWOD, uint> DynamicFlagsWod = new Dictionary<UnitDynamicFlagsWOD, uint>();
-            public Dictionary<uint, uint> VehicleIds = new Dictionary<uint, uint>();
-            public Dictionary<float, uint> HoverHeights = new Dictionary<float, uint>();
-            public Dictionary<string, uint> Auras = new Dictionary<string, uint>();
-        }
-
         [BuilderMethod(false, Units = true)]
         public static string CreatureStats(Dictionary<WowGuid, Unit> units)
         {
@@ -957,6 +934,28 @@ namespace WowPacketParser.SQL.Builders
             return result;
         }
 
+        class CreatureTemplateNonWdbExport
+        {
+            public uint Entry = 0;
+            // Count how many times each value has been seen
+            public Dictionary<uint, uint> Factions = new Dictionary<uint, uint>();
+            public Dictionary<uint, uint> NpcFlags1 = new Dictionary<uint, uint>();
+            public Dictionary<uint, uint> NpcFlags2 = new Dictionary<uint, uint>();
+            public Dictionary<float, uint> RunSpeeds = new Dictionary<float, uint>();
+            public Dictionary<float, uint> WalkSpeeds = new Dictionary<float, uint>();
+            public Dictionary<float, uint> Sizes = new Dictionary<float, uint>();
+            public Dictionary<uint, uint> BaseAttackTimes = new Dictionary<uint, uint>();
+            public Dictionary<uint, uint> UnitClasses = new Dictionary<uint, uint>();
+            public Dictionary<UnitFlags, uint> UnitFlags1 = new Dictionary<UnitFlags, uint>();
+            public Dictionary<UnitFlags2, uint> UnitFlags2 = new Dictionary<UnitFlags2, uint>();
+            public Dictionary<UnitFlags3, uint> UnitFlags3 = new Dictionary<UnitFlags3, uint>();
+            public Dictionary<UnitDynamicFlags, uint> DynamicFlags = new Dictionary<UnitDynamicFlags, uint>();
+            public Dictionary<UnitDynamicFlagsWOD, uint> DynamicFlagsWod = new Dictionary<UnitDynamicFlagsWOD, uint>();
+            public Dictionary<uint, uint> VehicleIds = new Dictionary<uint, uint>();
+            public Dictionary<float, uint> HoverHeights = new Dictionary<float, uint>();
+            public Dictionary<string, uint> Auras = new Dictionary<string, uint>();
+        }
+
         [BuilderMethod(false, Units = true)]
         public static string CreatureTemplateNonWDB(Dictionary<WowGuid, Unit> units)
         {
@@ -1007,7 +1006,6 @@ namespace WowPacketParser.SQL.Builders
                     data.WalkSpeeds.Add(npc.Movement.WalkSpeed, 1);
                     data.Sizes.Add(npc.ObjectData.Scale, 1);
                     data.BaseAttackTimes.Add(npc.UnitData.AttackRoundBaseTime[0], 1);
-                    data.RangedAttackTimes.Add(npc.UnitData.RangedAttackRoundBaseTime, 1);
                     data.UnitClasses.Add(npc.UnitData.ClassId, 1);
                     data.UnitFlags1.Add((UnitFlags)npc.UnitData.Flags, 1);
                     data.UnitFlags2.Add((UnitFlags2)npc.UnitData.Flags2, 1);
@@ -1057,11 +1055,6 @@ namespace WowPacketParser.SQL.Builders
                         data.BaseAttackTimes[npc.UnitData.AttackRoundBaseTime[0]]++;
                     else
                         data.BaseAttackTimes.Add(npc.UnitData.AttackRoundBaseTime[0], 1);
-
-                    if (data.RangedAttackTimes.ContainsKey(npc.UnitData.RangedAttackRoundBaseTime))
-                        data.RangedAttackTimes[npc.UnitData.RangedAttackRoundBaseTime]++;
-                    else
-                        data.RangedAttackTimes.Add(npc.UnitData.RangedAttackRoundBaseTime, 1);
 
                     if (data.UnitClasses.ContainsKey(npc.UnitData.ClassId))
                         data.UnitClasses[npc.UnitData.ClassId]++;
@@ -1189,17 +1182,6 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                uint mostCommonRangedAttackTime = 0;
-                uint mostCommonRangedAttackTimeCount = 0;
-                foreach (var rangedAttackTimePair in npc.Value.RangedAttackTimes)
-                {
-                    if (rangedAttackTimePair.Value > mostCommonRangedAttackTimeCount)
-                    {
-                        mostCommonRangedAttackTime = rangedAttackTimePair.Key;
-                        mostCommonRangedAttackTimeCount = rangedAttackTimePair.Value;
-                    }
-                }
-
                 uint mostCommonClassId = 0;
                 uint mostCommonClassIdCount = 0;
                 foreach (var classIdPair in npc.Value.UnitClasses)
@@ -1311,7 +1293,6 @@ namespace WowPacketParser.SQL.Builders
                     SpeedWalk = mostCommonWalkSpeed / MovementInfo.DEFAULT_WALK_SPEED,
                     Scale = mostCommonScaleSize,
                     BaseAttackTime = mostCommonBaseAttackTime,
-                    RangedAttackTime = mostCommonRangedAttackTime,
                     UnitClass = mostCommonClassId,
                     UnitFlags = mostCommonUnitFlag1,
                     UnitFlags2 = mostCommonUnitFlag2,

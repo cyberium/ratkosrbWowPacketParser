@@ -1,6 +1,8 @@
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParserModule.V5_4_8_18291.Parsers
 {
@@ -76,6 +78,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
         [Parser(Opcode.SMSG_LOG_XP_GAIN)]
         public static void HandleLogXPGain(Packet packet)
         {
+            XpGainLog log = new XpGainLog();
             var guid = new byte[8];
             var hasBaseXP = !packet.ReadBit();
             guid[1] = packet.ReadBit();
@@ -83,7 +86,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             guid[7] = packet.ReadBit();
             guid[4] = packet.ReadBit();
             guid[3] = packet.ReadBit();
-            packet.ReadBit("Unk Bit");
+            log.RAFBonus = packet.ReadBit("Unk Bit");
             guid[0] = packet.ReadBit();
             guid[5] = packet.ReadBit();
             guid[6] = packet.ReadBit();
@@ -91,25 +94,28 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
 
             packet.ReadXORByte(guid, 4);
             packet.ReadXORByte(guid, 2);
-            packet.ReadByte("XP type");
+            log.Reason = packet.ReadByte("XP type");
 
             if (hasGroupRate)
-                packet.ReadSingle("Group rate");
+                log.GroupBonus = packet.ReadSingle("Group rate");
 
             packet.ReadXORByte(guid, 7);
             packet.ReadXORByte(guid, 1);
             packet.ReadXORByte(guid, 3);
             packet.ReadXORByte(guid, 6);
 
-            packet.ReadUInt32("Total XP");
+            log.OriginalAmount = packet.ReadUInt32("Total XP");
 
             if (hasBaseXP)
-                packet.ReadUInt32("Base XP");
+                log.Amount = packet.ReadUInt32("Base XP");
 
             packet.ReadXORByte(guid, 0);
             packet.ReadXORByte(guid, 5);
 
-            packet.WriteGuid("Guid", guid);
+            log.GUID = packet.WriteGuid("Guid", guid);
+
+            log.Time = packet.Time;
+            Storage.XpGainLogs.Add(log);
         }
     }
 }

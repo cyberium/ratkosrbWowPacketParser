@@ -237,6 +237,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
         [Parser(Opcode.SMSG_LOG_XP_GAIN)]
         public static void HandleLogXPGain(Packet packet)
         {
+            XpGainLog log = new XpGainLog();
             var guid = new byte[8];
 
             var hasBaseXP = !packet.ReadBit();
@@ -245,7 +246,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             var hasGroupRate = !packet.ReadBit();
             guid[0] = packet.ReadBit();
             guid[7] = packet.ReadBit();
-            packet.ReadBit("Unk Bit");
+            log.RAFBonus = packet.ReadBit("Unk Bit");
             guid[2] = packet.ReadBit();
             guid[1] = packet.ReadBit();
             guid[5] = packet.ReadBit();
@@ -258,19 +259,22 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             packet.ReadXORByte(guid, 2);
 
             if (hasGroupRate)
-                packet.ReadSingle("Group rate");
+                log.GroupBonus = packet.ReadSingle("Group rate");
 
             packet.ReadXORByte(guid, 4);
             packet.ReadXORByte(guid, 6);
 
             if (hasBaseXP)
-                packet.ReadUInt32("Base XP");
+                log.Amount = packet.ReadUInt32("Base XP");
 
-            packet.ReadUInt32("Total XP");
+            log.OriginalAmount = packet.ReadUInt32("Total XP");
             packet.ReadXORByte(guid, 0);
-            packet.ReadByte("XP type");
+            log.Reason = packet.ReadByte("XP type");
 
-            packet.WriteGuid("Guid", guid);
+            log.GUID = packet.WriteGuid("Guid", guid);
+
+            log.Time = packet.Time;
+            Storage.XpGainLogs.Add(log);
         }
 
         [Parser(Opcode.SMSG_PLAYER_VEHICLE_DATA)]

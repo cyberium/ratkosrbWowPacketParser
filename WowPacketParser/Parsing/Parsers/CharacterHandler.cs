@@ -1055,18 +1055,23 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_LOG_XP_GAIN)]
         public static void HandleLogXPGain(Packet packet)
         {
-            packet.ReadGuid("GUID");
-            packet.ReadUInt32("Total XP");
+            XpGainLog log = new XpGainLog();
+            log.GUID = packet.ReadGuid("GUID");
+            log.OriginalAmount = packet.ReadUInt32("Total XP");
             var type = packet.ReadByte("XP type"); // Need enum
+            log.Reason = type;
 
             if (type == 0) // kill
             {
-                packet.ReadUInt32("Base XP");
-                packet.ReadSingle("Group rate (unk)");
+                log.Amount = packet.ReadUInt32("Base XP");
+                log.GroupBonus = packet.ReadSingle("Group rate (unk)");
             }
 
             if (ClientVersion.AddedInVersion(ClientType.TheBurningCrusade))
-                packet.ReadBool("RAF Bonus");
+                log.RAFBonus = packet.ReadBool("RAF Bonus");
+
+            log.Time = packet.Time;
+            Storage.XpGainLogs.Add(log);
         }
 
         [Parser(Opcode.SMSG_TITLE_EARNED)]

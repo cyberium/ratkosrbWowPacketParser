@@ -188,6 +188,27 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("speed_run")]
         public float? SpeedRun;
 
+        [DBFieldName("speed_run_back", DbType = (TargetedDbType.WPP))]
+        public float? SpeedRunBack;
+
+        [DBFieldName("speed_swim", DbType = (TargetedDbType.WPP))]
+        public float? SpeedSwim;
+
+        [DBFieldName("speed_swim_back", DbType = (TargetedDbType.WPP))]
+        public float? SpeedSwimBack;
+
+        [DBFieldName("speed_fly", DbType = (TargetedDbType.WPP))]
+        public float? SpeedFly;
+
+        [DBFieldName("speed_fly_back", DbType = (TargetedDbType.WPP))]
+        public float? SpeedFlyBack;
+
+        [DBFieldName("turn_rate", DbType = (TargetedDbType.WPP))]
+        public float? TurnRate;
+
+        [DBFieldName("pitch_rate", DbType = (TargetedDbType.WPP))]
+        public float? PitchRate;
+
         [DBFieldName("bounding_radius")]
         public float? BoundingRadius;
 
@@ -200,8 +221,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("mod_ranged_haste")]
         public float? ModRangedHaste;
 
-        [DBFieldName("base_attack_time")]
-        public uint? BaseAttackTime;
+        [DBFieldName("main_hand_attack_time")]
+        public uint? MainHandAttackTime;
+
+        [DBFieldName("off_hand_attack_time")]
+        public uint? OffHandAttackTime;
 
         [DBFieldName("ranged_attack_time")]
         public uint? RangedAttackTime;

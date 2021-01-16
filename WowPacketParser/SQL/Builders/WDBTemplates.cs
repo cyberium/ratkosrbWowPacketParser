@@ -118,7 +118,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(false)]
         public static string CreatureTemplateQuestItem()
         {
-            if (!Settings.SqlTables.creature_template)
+            if (!Settings.SqlTables.creature_template_wdb)
                 return string.Empty;
 
             if (Settings.TargetedDbExpansion <= TargetedDbExpansion.WarlordsOfDraenor &&

@@ -304,12 +304,12 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     if (oldUnitData.AttackRoundBaseTime[0] != unit.UnitData.AttackRoundBaseTime[0])
                     {
                         hasData = true;
-                        creatureUpdate.BaseAttackTime = unit.UnitData.AttackRoundBaseTime[0];
+                        creatureUpdate.MainHandAttackTime = unit.UnitData.AttackRoundBaseTime[0];
                     }
-                    if (oldUnitData.RangedAttackRoundBaseTime != unit.UnitData.RangedAttackRoundBaseTime)
+                    if (oldUnitData.AttackRoundBaseTime[1] != unit.UnitData.AttackRoundBaseTime[1])
                     {
                         hasData = true;
-                        creatureUpdate.RangedAttackTime = unit.UnitData.RangedAttackRoundBaseTime;
+                        creatureUpdate.OffHandAttackTime = unit.UnitData.AttackRoundBaseTime[1];
                     }
                     uint slot = 0;
                     foreach (var item in unit.UnitData.VirtualItems)

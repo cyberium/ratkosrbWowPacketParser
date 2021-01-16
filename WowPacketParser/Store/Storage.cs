@@ -568,6 +568,23 @@ namespace WowPacketParser.Store
                 Storage.Emotes.Add(guid, emotesList);
             }
         }
+        public static readonly Dictionary<WowGuid, List<CreatureThreatUpdate>> CreatureThreatUpdates = new Dictionary<WowGuid, List<CreatureThreatUpdate>>();
+        public static void StoreCreatureThreatUpdate(WowGuid guid, CreatureThreatUpdate update)
+        {
+            if (!Settings.SqlTables.creature_threat_update)
+                return;
+
+            if (Storage.CreatureThreatUpdates.ContainsKey(guid))
+            {
+                Storage.CreatureThreatUpdates[guid].Add(update);
+            }
+            else
+            {
+                List<CreatureThreatUpdate> threatList = new List<CreatureThreatUpdate>();
+                threatList.Add(update);
+                Storage.CreatureThreatUpdates.Add(guid, threatList);
+            }
+        }
         public static readonly Dictionary<WowGuid, List<UnitMeleeAttackLog>> UnitAttackLogs = new Dictionary<WowGuid, List<UnitMeleeAttackLog>>();
         public static void StoreUnitAttackLog(UnitMeleeAttackLog attackData)
         {
@@ -868,6 +885,12 @@ namespace WowPacketParser.Store
         // Weather updates
         public static readonly DataBag<WeatherUpdate> WeatherUpdates = new DataBag<WeatherUpdate>(Settings.SqlTables.weather_updates);
 
+        // XP updates
+        public static readonly DataBag<XpGainLog> XpGainLogs = new DataBag<XpGainLog>(Settings.SqlTables.xp_gain_log);
+
+        // Reputation updates
+        public static readonly DataBag<FactionStandingUpdate> FactionStandingUpdates = new DataBag<FactionStandingUpdate>(Settings.SqlTables.faction_standing_update);
+
         // Npc Spell Click
         public static readonly StoreBag<WowGuid> NpcSpellClicks = new StoreBag<WowGuid>(Settings.SqlTables.npc_spellclick_spells);
         public static readonly DataBag<NpcSpellClick> SpellClicks = new DataBag<NpcSpellClick>(Settings.SqlTables.npc_spellclick_spells);
@@ -1006,6 +1029,7 @@ namespace WowPacketParser.Store
             CreatureTemplateQuestItems.Clear();
             CreatureTemplateScalings.Clear();
             CreatureTemplateModels.Clear();
+            CreatureThreatUpdates.Clear();
             UnitAurasUpdates.Clear();
             UnitEquipmentValuesUpdates.Clear();
             UnitGuidValuesUpdates.Clear();
@@ -1066,6 +1090,9 @@ namespace WowPacketParser.Store
             VehicleTemplateAccessories.Clear();
 
             WeatherUpdates.Clear();
+
+            XpGainLogs.Clear();
+            FactionStandingUpdates.Clear();
 
             NpcSpellClicks.Clear();
             SpellClicks.Clear();

@@ -66,13 +66,13 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("MovementType", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
         public uint? MovementType;
 
-        [DBFieldName("hover", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("is_hovering", DbType = (TargetedDbType.WPP))]
         public byte? Hover;
 
-        [DBFieldName("temp", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("is_temporary", DbType = (TargetedDbType.WPP))]
         public byte? TemporarySpawn;
 
-        [DBFieldName("pet", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("is_pet", DbType = (TargetedDbType.WPP))]
         public byte? IsPet;
 
         [DBFieldName("summon_spell", DbType = (TargetedDbType.WPP))]
@@ -106,6 +106,10 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("unit_flags2", DbType = (TargetedDbType.WPP))]
         public uint? UnitFlag2;
+
+        [DBFieldName("dynamic_flags", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("dynamicflags", DbType = (TargetedDbType.TRINITY))]
+        public uint? DynamicFlags;
 
         [DBFieldName("current_health", DbType = (TargetedDbType.WPP))]
         [DBFieldName("curhealth", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
@@ -157,6 +161,27 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("speed_run", DbType = (TargetedDbType.WPP))]
         public float? SpeedRun;
 
+        [DBFieldName("speed_run_back", DbType = (TargetedDbType.WPP))]
+        public float? SpeedRunBack;
+
+        [DBFieldName("speed_swim", DbType = (TargetedDbType.WPP))]
+        public float? SpeedSwim;
+
+        [DBFieldName("speed_swim_back", DbType = (TargetedDbType.WPP))]
+        public float? SpeedSwimBack;
+
+        [DBFieldName("speed_fly", DbType = (TargetedDbType.WPP))]
+        public float? SpeedFly;
+
+        [DBFieldName("speed_fly_back", DbType = (TargetedDbType.WPP))]
+        public float? SpeedFlyBack;
+
+        [DBFieldName("turn_rate", DbType = (TargetedDbType.WPP))]
+        public float? TurnRate;
+
+        [DBFieldName("pitch_rate", DbType = (TargetedDbType.WPP))]
+        public float? PitchRate;
+
         [DBFieldName("bounding_radius", DbType = (TargetedDbType.WPP))]
         public float? BoundingRadius;
 
@@ -169,11 +194,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("mod_ranged_haste", DbType = (TargetedDbType.WPP))]
         public float? ModRangedHaste;
 
-        [DBFieldName("base_attack_time", DbType = (TargetedDbType.WPP))]
-        public uint? BaseAttackTime;
+        [DBFieldName("main_hand_attack_time", DbType = (TargetedDbType.WPP))]
+        public uint? MainHandAttackTime;
 
-        [DBFieldName("ranged_attack_time", DbType = (TargetedDbType.WPP))]
-        public uint? RangedAttackTime;
+        [DBFieldName("off_hand_attack_time", DbType = (TargetedDbType.WPP))]
+        public uint? OffHandAttackTime;
 
         [DBFieldName("main_hand_slot_item", DbType = (TargetedDbType.WPP))]
         public uint? MainHandSlotItem;
@@ -487,6 +512,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("unit_flags2", true, false, true)]
         public uint? UnitFlag2;
 
+        [DBFieldName("dynamic_flags", true, false, true)]
+        public uint? DynamicFlags;
+
         [DBFieldName("current_health", true, false, true)]
         public uint? CurrentHealth;
 
@@ -541,11 +569,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("mod_ranged_haste", true, false, true)]
         public float? ModRangedHaste;
 
-        [DBFieldName("base_attack_time", true, false, true)]
-        public uint? BaseAttackTime;
+        [DBFieldName("main_hand_attack_time", true, false, true)]
+        public uint? MainHandAttackTime;
 
-        [DBFieldName("ranged_attack_time", true, false, true)]
-        public uint? RangedAttackTime;
+        [DBFieldName("off_hand_attack_time", true, false, true)]
+        public uint? OffHandAttackTime;
     }
 
     [DBTableName("creature_guid_values_update")]
@@ -844,5 +872,43 @@ namespace WowPacketParser.Store.Objects
         }
         public WowGuid victim;
         public DateTime time;
+    }
+
+    [DBTableName("creature_threat_update")]
+    public sealed class CreatureThreatUpdate : IDataModel
+    {
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("target_count")]
+        public uint TargetsCount;
+
+        [DBFieldName("target_list_id", true)]
+        public uint TargetListId;
+
+        public DateTime Time;
+        public List<Tuple<WowGuid, uint>> TargetsList;
+    }
+
+    [DBTableName("creature_threat_update_target")]
+    public sealed class CreatureThreatUpdateTarget : IDataModel
+    {
+        [DBFieldName("id", true)]
+        public uint TargetListId;
+
+        [DBFieldName("target_guid", true, true)]
+        public string TargetGuid;
+
+        [DBFieldName("target_id")]
+        public uint TargetId;
+
+        [DBFieldName("target_type", true)]
+        public string TargetType;
+
+        [DBFieldName("threat", true)]
+        public uint Threat;
     }
 }

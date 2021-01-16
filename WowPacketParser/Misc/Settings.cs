@@ -122,11 +122,13 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_speed_update = Conf.GetBoolean("creature_speed_update", false);
             public static readonly bool creature_text = Conf.GetBoolean("creature_text", false);
             public static readonly bool creature_text_template = Conf.GetBoolean("creature_text_template", false);
+            public static readonly bool creature_threat_update = Conf.GetBoolean("creature_threat_update", false);
             public static readonly bool creature_values_update = Conf.GetBoolean("creature_values_update", false);
             public static readonly bool dynamicobject = Conf.GetBoolean("dynamicobject", false);
             public static readonly bool dynamicobject_create1_time = Conf.GetBoolean("dynamicobject_create1_time", false);
             public static readonly bool dynamicobject_create2_time = Conf.GetBoolean("dynamicobject_create2_time", false);
             public static readonly bool dynamicobject_destroy_time = Conf.GetBoolean("dynamicobject_destroy_time", false);
+            public static readonly bool faction_standing_update = Conf.GetBoolean("faction_standing_update", false);
             public static readonly bool gameobject = Conf.GetBoolean("gameobject", false);
             public static readonly bool gameobject_create1_time = Conf.GetBoolean("gameobject_create1_time", false);
             public static readonly bool gameobject_create2_time = Conf.GetBoolean("gameobject_create2_time", false);
@@ -168,6 +170,7 @@ namespace WowPacketParser.Misc
             public static readonly bool world_state_init = Conf.GetBoolean("world_state_init", false);
             public static readonly bool world_state_update = Conf.GetBoolean("world_state_update", false);
             public static readonly bool world_text = Conf.GetBoolean("world_text", false);
+            public static readonly bool xp_gain_log = Conf.GetBoolean("xp_gain_log", false);
 
             public static readonly bool characters = Conf.GetBoolean("characters", false);
             public static readonly bool character_inventory = Conf.GetBoolean("character_inventory", false);

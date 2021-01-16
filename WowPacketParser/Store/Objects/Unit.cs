@@ -67,6 +67,22 @@ namespace WowPacketParser.Store.Objects
                 DynamicFlags  = UpdateFields.GetEnum<UnitField, UnitDynamicFlags?>(UnitField.UNIT_DYNAMIC_FLAGS);
         }
 
+        public uint GetDynamicFlags()
+        {
+            if (ClientVersion.AddedInVersion(ClientType.WarlordsOfDraenor))
+                return ObjectData.DynamicFlags;
+
+            return UnitData.DynamicFlags;
+        }
+
+        public uint GetDynamicFlagsOriginal()
+        {
+            if (ClientVersion.AddedInVersion(ClientType.WarlordsOfDraenor))
+                return ObjectDataOriginal.DynamicFlags;
+
+            return UnitDataOriginal.DynamicFlags;
+        }
+
         public string GetAurasString(bool noCaster)
         {
             string auras = string.Empty;

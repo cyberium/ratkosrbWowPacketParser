@@ -51,11 +51,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("MeleeBaseAttackTime", DbType = (TargetedDbType.CMANGOS))]
         public uint? BaseAttackTime;
 
-        [DBFieldName("ranged_attack_time", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
-        [DBFieldName("RangeAttackTime", DbType = (TargetedDbType.TRINITY))]
-        [DBFieldName("RangedBaseAttackTime", DbType = (TargetedDbType.CMANGOS))]
-        public uint? RangedAttackTime;
-
         [DBFieldName("unit_class", TargetedDbExpansion.Zero, TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.TRINITY))]
         [DBFieldName("UnitClass", TargetedDbExpansion.Zero, TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.CMANGOS))]
         public uint? UnitClass;
@@ -71,12 +66,15 @@ namespace WowPacketParser.Store.Objects
         public UnitFlags3? UnitFlags3;
 
         [DBFieldName("dynamicflags", TargetedDbExpansion.Zero, TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.TRINITY))]
-        [DBFieldName("dynamic_flags", TargetedDbExpansion.Zero, TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.VMANGOS))]
+        [DBFieldName("dynamic_flags", TargetedDbExpansion.Zero, TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         [DBFieldName("DynamicFlags", TargetedDbExpansion.Zero, TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.CMANGOS))]
         public UnitDynamicFlags? DynamicFlags;
 
+        [DBFieldName("dynamicflags", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("dynamic_flags", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.VMANGOS))]
+        [DBFieldName("DynamicFlags", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.CMANGOS))]
         [DBFieldName("dynamicflags", TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.TRINITY))]
-        [DBFieldName("dynamic_flags", TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.VMANGOS))]
+        [DBFieldName("dynamic_flags", TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         [DBFieldName("DynamicFlags", TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.CMANGOS))]
         public UnitDynamicFlagsWOD? DynamicFlagsWod;
 

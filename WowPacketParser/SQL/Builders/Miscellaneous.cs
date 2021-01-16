@@ -291,5 +291,50 @@ namespace WowPacketParser.SQL.Builders
 
             return SQLUtil.Compare(Storage.WorldStateUpdates, templateDb, StoreNameType.None);
         }
+
+        [BuilderMethod]
+        public static string XpGainLogs()
+        {
+            if (Storage.XpGainLogs.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.xp_gain_log)
+                return string.Empty;
+
+            var rows = new RowList<XpGainLog>();
+            foreach (var log in Storage.XpGainLogs)
+            {
+                Row<XpGainLog> row = new Row<XpGainLog>();
+                row.Data = log.Item1;
+                Storage.GetObjectDbGuidEntryType(row.Data.GUID, out row.Data.VictimGuid, out row.Data.VictimId, out row.Data.VictimType);
+                row.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(row.Data.Time);
+                rows.Add(row);
+            }
+
+            var sql = new SQLInsert<XpGainLog>(rows, false);
+            return sql.Build();
+        }
+
+        [BuilderMethod]
+        public static string FactionStandingUpdates()
+        {
+            if (Storage.FactionStandingUpdates.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.faction_standing_update)
+                return string.Empty;
+
+            var rows = new RowList<FactionStandingUpdate>();
+            foreach (var log in Storage.FactionStandingUpdates)
+            {
+                Row<FactionStandingUpdate> row = new Row<FactionStandingUpdate>();
+                row.Data = log.Item1;
+                row.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(row.Data.Time);
+                rows.Add(row);
+            }
+
+            var sql = new SQLInsert<FactionStandingUpdate>(rows, false);
+            return sql.Build();
+        }
     }
 }

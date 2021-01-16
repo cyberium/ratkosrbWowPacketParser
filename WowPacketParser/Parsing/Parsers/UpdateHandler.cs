@@ -324,6 +324,18 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
+                    else if (update.Key == UpdateFields.GetUpdateField(ObjectField.OBJECT_DYNAMIC_FLAGS))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.ObjectData.DynamicFlags != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.DynamicFlags = update.Value.UInt32Value;
+                            }
+                        }
+                    }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_DISPLAYID))
                     {
                         if (Storage.Objects.ContainsKey(guid))
@@ -486,6 +498,18 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_DYNAMIC_FLAGS))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.DynamicFlags != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.DynamicFlags = update.Value.UInt32Value;
+                            }
+                        }
+                    }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_HEALTH) &&
                              Settings.SaveHealthUpdates)
                     {
@@ -594,19 +618,20 @@ namespace WowPacketParser.Parsing.Parsers
                             if (obj.UnitData.AttackRoundBaseTime[0] != update.Value.UInt32Value)
                             {
                                 hasData = true;
-                                creatureUpdate.BaseAttackTime = update.Value.UInt32Value;
+                                creatureUpdate.MainHandAttackTime = update.Value.UInt32Value;
                             }
                         }
                     }
-                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RANGEDATTACKTIME))
+                    else if (UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BASEATTACKTIME) > 0 &&
+                            update.Key == (UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BASEATTACKTIME)+1))
                     {
                         if (Storage.Objects.ContainsKey(guid))
                         {
                             var obj = Storage.Objects[guid].Item1 as Unit;
-                            if (obj.UnitData.RangedAttackRoundBaseTime != update.Value.UInt32Value)
+                            if (obj.UnitData.AttackRoundBaseTime[1] != update.Value.UInt32Value)
                             {
                                 hasData = true;
-                                creatureUpdate.RangedAttackTime = update.Value.UInt32Value;
+                                creatureUpdate.OffHandAttackTime = update.Value.UInt32Value;
                             }
                         }
                     }

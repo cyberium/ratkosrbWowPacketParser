@@ -172,28 +172,32 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
         [Parser(Opcode.SMSG_LOG_XP_GAIN)]
         public static void HandleLogXPGain(Packet packet)
         {
+            XpGainLog log = new XpGainLog();
             var guid = new byte[8];
             packet.StartBitStream(guid, 1, 0, 3, 7);
             var hasBaseXP = !packet.ReadBit();
             packet.StartBitStream(guid, 4, 2, 6, 5);
             var hasGroupRate = !packet.ReadBit();
-            packet.ReadBit("RAF Bonus");
+            log.RAFBonus = packet.ReadBit("RAF Bonus");
             packet.ResetBitReader();
 
             packet.ReadXORBytes(guid, 5, 2);
 
             if (hasBaseXP)
-                packet.ReadUInt32("Base XP");
+                log.Amount = packet.ReadUInt32("Base XP");
             packet.ReadXORByte(guid, 4);
-            packet.ReadUInt32("Total XP");
+            log.OriginalAmount = packet.ReadUInt32("Total XP");
             packet.ReadXORBytes(guid, 6, 0, 3);
-            packet.ReadByte("XP type");
+            log.Reason = packet.ReadByte("XP type");
 
             if (hasGroupRate)
-                packet.ReadSingle("Group rate");
+                log.GroupBonus = packet.ReadSingle("Group rate");
             packet.ReadXORBytes(guid, 1, 7);
 
-            packet.WriteGuid("Guid", guid);
+            log.GUID = packet.WriteGuid("Guid", guid);
+
+            log.Time = packet.Time;
+            Storage.XpGainLogs.Add(log);
         }
 
         [Parser(Opcode.SMSG_TITLE_EARNED)]

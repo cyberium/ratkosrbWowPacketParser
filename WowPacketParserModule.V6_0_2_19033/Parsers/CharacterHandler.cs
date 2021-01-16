@@ -348,14 +348,18 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_LOG_XP_GAIN)]
         public static void HandleLogXPGain(Packet packet)
         {
-            packet.ReadPackedGuid128("Victim");
-            packet.ReadInt32("Original");
+            XpGainLog log = new XpGainLog();
+            log.GUID = packet.ReadPackedGuid128("Victim");
+            log.OriginalAmount = (uint)packet.ReadInt32("Original");
 
-            packet.ReadByte("Reason");
-            packet.ReadInt32("Amount");
-            packet.ReadSingle("GroupBonus");
+            log.Reason = packet.ReadByte("Reason");
+            log.Amount = (uint)packet.ReadInt32("Amount");
+            log.GroupBonus = packet.ReadSingle("GroupBonus");
 
-            packet.ReadBit("ReferAFriend");
+            log.RAFBonus = packet.ReadBit("ReferAFriend");
+
+            log.Time = packet.Time;
+            Storage.XpGainLogs.Add(log);
         }
 
         [Parser(Opcode.SMSG_XP_GAIN_ABORTED)]

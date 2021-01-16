@@ -615,17 +615,28 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_HIGHEST_THREAT_UPDATE)]
         public static void HandleThreatlistUpdate(Packet packet)
         {
-            packet.ReadPackedGuid("GUID");
+            CreatureThreatUpdate update = new CreatureThreatUpdate();
+            WowGuid guid = packet.ReadPackedGuid("GUID");
 
             if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_HIGHEST_THREAT_UPDATE, Direction.ServerToClient))
                 packet.ReadPackedGuid("New Highest");
 
             var count = packet.ReadUInt32("Size");
-            for (int i = 0; i < count; i++)
+            update.TargetsCount = count;
+
+            if (count > 0)
             {
-                packet.ReadPackedGuid("Hostile", i);
-                packet.ReadUInt32("Threat", i);
+                update.TargetsList = new List<Tuple<WowGuid, uint>>();
+                for (int i = 0; i < count; i++)
+                {
+                    WowGuid target = packet.ReadPackedGuid("Hostile", i);
+                    uint threat = packet.ReadUInt32("Threat", i);
+                    update.TargetsList.Add(new Tuple<WowGuid, uint>(target, threat));
+                }
             }
+
+            update.Time = packet.Time;
+            Storage.StoreCreatureThreatUpdate(guid, update);
         }
 
         [Parser(Opcode.SMSG_THREAT_CLEAR)]

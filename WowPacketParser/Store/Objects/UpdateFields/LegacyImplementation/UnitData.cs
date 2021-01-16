@@ -125,6 +125,8 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public uint Flags3 => UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_FLAGS_3);
 
+        public uint DynamicFlags => UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_DYNAMIC_FLAGS);
+
         public uint[] AttackRoundBaseTime => UpdateFields.GetArray<UnitField, uint?>(UnitField.UNIT_FIELD_BASEATTACKTIME, 2)
             .Select(maybeAttackTime => maybeAttackTime.GetValueOrDefault(2000)).ToArray();
 
@@ -296,6 +298,8 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public uint Flags2 => UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_FLAGS_2);
 
         public uint Flags3 => UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_FLAGS_3);
+
+        public uint DynamicFlags => UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_DYNAMIC_FLAGS);
 
         public uint[] AttackRoundBaseTime => UpdateFields.GetArray<UnitField, uint?>(UnitField.UNIT_FIELD_BASEATTACKTIME, 2)
             .Select(maybeAttackTime => maybeAttackTime.GetValueOrDefault(2000)).ToArray();
