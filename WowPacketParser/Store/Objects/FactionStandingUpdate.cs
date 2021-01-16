@@ -20,8 +20,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("raf_bonus")]
         public float RAFBonus;
 
-        [DBFieldName("achievemnt_bonus")]
-        public float AchievemntBonus;
+        [DBFieldName("achievement_bonus")]
+        public float AchievementBonus;
 
         [DBFieldName("show_visual")]
         public bool ShowVisual;

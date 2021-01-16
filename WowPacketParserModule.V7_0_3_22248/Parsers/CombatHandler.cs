@@ -22,12 +22,12 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
 
             if (count > 0)
             {
-                update.TargetsList = new List<Tuple<WowGuid, uint>>();
+                update.TargetsList = new List<Tuple<WowGuid, long>>();
                 for (int i = 0; i < count; i++)
                 {
                     WowGuid target = packet.ReadPackedGuid128("UnitGUID", i);
-                    uint threat = (uint)packet.ReadInt64("Threat", i);
-                    update.TargetsList.Add(new Tuple<WowGuid, uint>(target, threat));
+                    long threat = (uint)packet.ReadInt64("Threat", i);
+                    update.TargetsList.Add(new Tuple<WowGuid, long>(target, threat));
                 }
             }
 
@@ -45,12 +45,12 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
 
             if (count > 0)
             {
-                update.TargetsList = new List<Tuple<WowGuid, uint>>();
+                update.TargetsList = new List<Tuple<WowGuid, long>>();
                 for (int i = 0; i < count; i++)
                 {
                     WowGuid target = packet.ReadPackedGuid128("TargetGUID", i);
-                    uint threat = (uint)packet.ReadInt64("Threat", i);
-                    update.TargetsList.Add(new Tuple<WowGuid, uint>(target, threat));
+                    long threat = packet.ReadInt64("Threat", i);
+                    update.TargetsList.Add(new Tuple<WowGuid, long>(target, threat));
                 }
             }
 

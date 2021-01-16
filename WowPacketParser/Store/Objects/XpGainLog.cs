@@ -5,18 +5,19 @@ using WowPacketParser.SQL;
 
 namespace WowPacketParser.Store.Objects
 {
+    [DBTableName("xp_gain_log")]
     public sealed class XpGainLog : IDataModel
     {
         [DBFieldName("unixtimems", true)]
         public ulong UnixTimeMs;
 
-        [DBFieldName("victim_guid", false, true)]
+        [DBFieldName("victim_guid", true, true)]
         public string VictimGuid;
 
         [DBFieldName("victim_id")]
         public uint VictimId;
 
-        [DBFieldName("victim_type")]
+        [DBFieldName("victim_type", true)]
         public string VictimType;
 
         [DBFieldName("original_amount")]

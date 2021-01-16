@@ -77,7 +77,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 FactionStandingUpdate update = new FactionStandingUpdate();
                 update.ShowVisual = showVisual;
                 update.RAFBonus = rafBonus;
-                update.AchievemntBonus = achievementBonus;
+                update.AchievementBonus = achievementBonus;
                 update.ReputationListId = faction.Item1;
                 update.Standing = faction.Item2;
                 update.Time = packet.Time;

@@ -145,9 +145,9 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `orientation` float NOT NULL DEFAULT '0',
   `wander_distance` float NOT NULL DEFAULT '0' COMMENT 'maximum distance traveled from initial position',
   `movement_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'guessed movement generator',
-  `hover` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `temp` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'is this a temporary summon',
-  `pet` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'is this a pet',
+  `is_hovering` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `is_temporary` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'is this a temporary summon',
+  `is_pet` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'is this a pet',
   `summon_spell` int(10) unsigned NOT NULL DEFAULT '0',
   `scale` float NOT NULL DEFAULT '0',
   `display_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -158,6 +158,7 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `npc_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `unit_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `unit_flags2` int(10) unsigned NOT NULL DEFAULT '0',
+  `dynamic_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `current_health` int(10) unsigned NOT NULL DEFAULT '0',
   `max_health` int(10) unsigned NOT NULL DEFAULT '0',
   `current_mana` int(10) unsigned NOT NULL DEFAULT '0',
@@ -174,12 +175,19 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `shapeshift_form` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
   `speed_walk` float NOT NULL DEFAULT '0',
   `speed_run` float NOT NULL DEFAULT '0',
+  `speed_run_back` float NOT NULL DEFAULT '0',
+  `speed_swim` float NOT NULL DEFAULT '0',
+  `speed_swim_back` float NOT NULL DEFAULT '0',
+  `speed_fly` float NOT NULL DEFAULT '0',
+  `speed_fly_back` float NOT NULL DEFAULT '0',
+  `turn_rate` float NOT NULL DEFAULT '0',
+  `pitch_rate` float NOT NULL DEFAULT '0',
   `bounding_radius` float NOT NULL DEFAULT '0',
   `combat_reach` float NOT NULL DEFAULT '0',
   `mod_melee_haste` float NOT NULL DEFAULT '0',
   `mod_ranged_haste` float NOT NULL DEFAULT '0',
-  `base_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
-  `ranged_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `main_hand_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `off_hand_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
   `main_hand_slot_item` int(10) unsigned NOT NULL DEFAULT '0',
   `off_hand_slot_item` int(10) unsigned NOT NULL DEFAULT '0',
   `ranged_slot_item` int(10) unsigned NOT NULL DEFAULT '0',
@@ -741,6 +749,32 @@ CREATE TABLE IF NOT EXISTS `creature_text_template` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_threat_update
+DROP TABLE IF EXISTS `creature_threat_update`;
+CREATE TABLE IF NOT EXISTS `creature_threat_update` (
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `guid` int(10) unsigned NOT NULL,
+  `target_count` int(10) unsigned NOT NULL DEFAULT '0',
+  `target_list_id` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`guid`,`unixtimems`,`target_list_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACK_START';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.creature_threat_update_target
+DROP TABLE IF EXISTS `creature_threat_update_target`;
+CREATE TABLE IF NOT EXISTS `creature_threat_update_target` (
+  `id` int(10) unsigned NOT NULL,
+  `target_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `target_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `threat` bigint(20) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACK_START';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_trainer
 DROP TABLE IF EXISTS `creature_trainer`;
 CREATE TABLE IF NOT EXISTS `creature_trainer` (
@@ -768,6 +802,7 @@ CREATE TABLE IF NOT EXISTS `creature_values_update` (
   `npc_flags` int(10) unsigned DEFAULT NULL,
   `unit_flags` int(10) unsigned DEFAULT NULL,
   `unit_flags2` int(10) unsigned DEFAULT NULL,
+  `dynamic_flags` int(10) unsigned DEFAULT NULL,
   `current_health` int(10) unsigned DEFAULT NULL,
   `max_health` int(10) unsigned DEFAULT NULL,
   `current_mana` int(10) unsigned DEFAULT NULL,
@@ -786,8 +821,8 @@ CREATE TABLE IF NOT EXISTS `creature_values_update` (
   `combat_reach` float DEFAULT NULL,
   `mod_melee_haste` float DEFAULT NULL,
   `mod_ranged_haste` float DEFAULT NULL,
-  `base_attack_time` int(10) unsigned DEFAULT NULL,
-  `ranged_attack_time` int(10) unsigned DEFAULT NULL
+  `main_hand_attack_time` int(10) unsigned DEFAULT NULL,
+  `off_hand_attack_time` int(10) unsigned DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='values updates from SMSG_UPDATE_OBJECT';
 
 -- Data exporting was unselected.
@@ -853,6 +888,21 @@ CREATE TABLE IF NOT EXISTS `dynamicobject_destroy_time` (
   `guid` int(10) unsigned NOT NULL COMMENT 'dynamicobject spawn guid',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the object was destroyed from the client''s prespective due to despawning, becoming invisible, or going out of range';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.faction_standing_update
+DROP TABLE IF EXISTS `faction_standing_update`;
+CREATE TABLE IF NOT EXISTS `faction_standing_update` (
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `reputation_list_id` int(10) NOT NULL DEFAULT '0',
+  `standing` int(11) NOT NULL DEFAULT '0',
+  `raf_bonus` float NOT NULL DEFAULT '0',
+  `achievement_bonus` float NOT NULL DEFAULT '0',
+  `show_visual` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`unixtimems`,`reputation_list_id`,`standing`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_LOG_XP_GAIN';
 
 -- Data exporting was unselected.
 
@@ -1508,11 +1558,19 @@ CREATE TABLE IF NOT EXISTS `player` (
   `shapeshift_form` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
   `speed_walk` float NOT NULL DEFAULT '0',
   `speed_run` float NOT NULL DEFAULT '0',
+  `speed_run_back` float NOT NULL DEFAULT '0',
+  `speed_swim` float NOT NULL DEFAULT '0',
+  `speed_swim_back` float NOT NULL DEFAULT '0',
+  `speed_fly` float NOT NULL DEFAULT '0',
+  `speed_fly_back` float NOT NULL DEFAULT '0',
+  `turn_rate` float NOT NULL DEFAULT '0',
+  `pitch_rate` float NOT NULL DEFAULT '0',
   `bounding_radius` float NOT NULL DEFAULT '0',
   `combat_reach` float NOT NULL DEFAULT '0',
   `mod_melee_haste` float NOT NULL DEFAULT '0',
   `mod_ranged_haste` float NOT NULL DEFAULT '0',
-  `base_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `main_hand_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `off_hand_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
   `ranged_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
   `equipment_cache` text,
   `auras` text,
@@ -1847,6 +1905,7 @@ CREATE TABLE IF NOT EXISTS `player_values_update` (
   `npc_flags` int(10) unsigned DEFAULT NULL,
   `unit_flags` int(10) unsigned DEFAULT NULL,
   `unit_flags2` int(10) unsigned DEFAULT NULL,
+  `dynamic_flags` int(10) unsigned DEFAULT NULL,
   `current_health` int(10) unsigned DEFAULT NULL,
   `max_health` int(10) unsigned DEFAULT NULL,
   `current_mana` int(10) unsigned DEFAULT NULL,
@@ -1865,8 +1924,8 @@ CREATE TABLE IF NOT EXISTS `player_values_update` (
   `combat_reach` float DEFAULT NULL,
   `mod_melee_haste` float DEFAULT NULL,
   `mod_ranged_haste` float DEFAULT NULL,
-  `base_attack_time` int(10) unsigned DEFAULT NULL,
-  `ranged_attack_time` int(10) unsigned DEFAULT NULL
+  `main_hand_attack_time` int(10) unsigned DEFAULT NULL,
+  `off_hand_attack_time` int(10) unsigned DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='values updates from SMSG_UPDATE_OBJECT';
 
 -- Data exporting was unselected.
@@ -2563,6 +2622,24 @@ CREATE TABLE IF NOT EXISTS `world_text` (
   `language` tinyint(3) NOT NULL DEFAULT '0' COMMENT 'references Languages.dbc',
   PRIMARY KEY (`unixtimems`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='unique texts per creature id';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.xp_gain_log
+DROP TABLE IF EXISTS `xp_gain_log`;
+CREATE TABLE IF NOT EXISTS `xp_gain_log` (
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `original_amount` int(10) unsigned NOT NULL DEFAULT '0',
+  `reason` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `amount` int(10) unsigned NOT NULL DEFAULT '0',
+  `group_bonus` float unsigned NOT NULL DEFAULT '0',
+  `raf_bonus` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`unixtimems`,`victim_guid`,`victim_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_LOG_XP_GAIN';
 
 -- Data exporting was unselected.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -890,7 +890,7 @@ namespace WowPacketParser.Store.Objects
         public uint TargetListId;
 
         public DateTime Time;
-        public List<Tuple<WowGuid, uint>> TargetsList;
+        public List<Tuple<WowGuid, long>> TargetsList;
     }
 
     [DBTableName("creature_threat_update_target")]
@@ -909,6 +909,6 @@ namespace WowPacketParser.Store.Objects
         public string TargetType;
 
         [DBFieldName("threat", true)]
-        public uint Threat;
+        public long Threat;
     }
 }

@@ -626,12 +626,12 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (count > 0)
             {
-                update.TargetsList = new List<Tuple<WowGuid, uint>>();
+                update.TargetsList = new List<Tuple<WowGuid, long>>();
                 for (int i = 0; i < count; i++)
                 {
                     WowGuid target = packet.ReadPackedGuid("Hostile", i);
-                    uint threat = packet.ReadUInt32("Threat", i);
-                    update.TargetsList.Add(new Tuple<WowGuid, uint>(target, threat));
+                    long threat = packet.ReadUInt32("Threat", i);
+                    update.TargetsList.Add(new Tuple<WowGuid, long>(target, threat));
                 }
             }
 
