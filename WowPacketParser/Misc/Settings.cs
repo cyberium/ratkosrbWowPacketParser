@@ -170,6 +170,7 @@ namespace WowPacketParser.Misc
             public static readonly bool world_state_init = Conf.GetBoolean("world_state_init", false);
             public static readonly bool world_state_update = Conf.GetBoolean("world_state_update", false);
             public static readonly bool world_text = Conf.GetBoolean("world_text", false);
+            public static readonly bool xp_gain_aborted = Conf.GetBoolean("xp_gain_aborted", false);
             public static readonly bool xp_gain_log = Conf.GetBoolean("xp_gain_log", false);
 
             public static readonly bool characters = Conf.GetBoolean("characters", false);

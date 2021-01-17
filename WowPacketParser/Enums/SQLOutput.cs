@@ -80,6 +80,7 @@
         world_state_init,
         world_state_update,
         world_text,
+        xp_gain_aborted,
         xp_gain_log,
 
         characters,

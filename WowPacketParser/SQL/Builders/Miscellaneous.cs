@@ -316,6 +316,29 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod]
+        public static string XpGainAborted()
+        {
+            if (Storage.XpGainAborted.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.xp_gain_aborted)
+                return string.Empty;
+
+            var rows = new RowList<XpGainAborted>();
+            foreach (var log in Storage.XpGainAborted)
+            {
+                Row<XpGainAborted> row = new Row<XpGainAborted>();
+                row.Data = log.Item1;
+                Storage.GetObjectDbGuidEntryType(row.Data.GUID, out row.Data.VictimGuid, out row.Data.VictimId, out row.Data.VictimType);
+                row.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(row.Data.Time);
+                rows.Add(row);
+            }
+
+            var sql = new SQLInsert<XpGainAborted>(rows, false);
+            return sql.Build();
+        }
+
+        [BuilderMethod]
         public static string FactionStandingUpdates()
         {
             if (Storage.FactionStandingUpdates.IsEmpty())

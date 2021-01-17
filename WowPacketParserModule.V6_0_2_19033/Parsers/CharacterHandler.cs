@@ -365,11 +365,15 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_XP_GAIN_ABORTED)]
         public static void HandleXPGainAborted(Packet packet)
         {
-            packet.ReadPackedGuid128("Victim");
+            XpGainAborted log = new XpGainAborted();
+            log.GUID = packet.ReadPackedGuid128("Victim");
 
-            packet.ReadInt32("XpToAdd");
-            packet.ReadInt32("XpGainReason");
-            packet.ReadInt32("XpAbortReason");
+            log.Amount = (uint)packet.ReadInt32("XpToAdd");
+            log.GainReason = (uint)packet.ReadInt32("XpGainReason");
+            log.AbortReason = (uint)packet.ReadInt32("XpAbortReason");
+
+            log.Time = packet.Time;
+            Storage.XpGainAborted.Add(log);
         }
 
         [Parser(Opcode.CMSG_QUERY_PLAYER_NAME)]

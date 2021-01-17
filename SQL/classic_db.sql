@@ -2626,6 +2626,22 @@ CREATE TABLE IF NOT EXISTS `world_text` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.xp_gain_aborted
+DROP TABLE IF EXISTS `xp_gain_aborted`;
+CREATE TABLE IF NOT EXISTS `xp_gain_aborted` (
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `victim_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `victim_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `amount` int(10) unsigned NOT NULL DEFAULT '0',
+  `gain_reason` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `abort_reason` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`unixtimems`,`victim_guid`,`victim_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_XP_GAIN_ABORTED';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.xp_gain_log
 DROP TABLE IF EXISTS `xp_gain_log`;
 CREATE TABLE IF NOT EXISTS `xp_gain_log` (

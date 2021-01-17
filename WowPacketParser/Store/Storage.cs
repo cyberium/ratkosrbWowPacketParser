@@ -886,6 +886,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<WeatherUpdate> WeatherUpdates = new DataBag<WeatherUpdate>(Settings.SqlTables.weather_updates);
 
         // XP updates
+        public static readonly DataBag<XpGainAborted> XpGainAborted = new DataBag<XpGainAborted>(Settings.SqlTables.xp_gain_aborted);
         public static readonly DataBag<XpGainLog> XpGainLogs = new DataBag<XpGainLog>(Settings.SqlTables.xp_gain_log);
 
         // Reputation updates
@@ -1091,6 +1092,7 @@ namespace WowPacketParser.Store
 
             WeatherUpdates.Clear();
 
+            XpGainAborted.Clear();
             XpGainLogs.Clear();
             FactionStandingUpdates.Clear();
 

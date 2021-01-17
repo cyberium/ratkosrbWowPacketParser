@@ -38,4 +38,32 @@ namespace WowPacketParser.Store.Objects
         public WowGuid GUID;
         public DateTime Time;
     }
+
+    [DBTableName("xp_gain_aborted")]
+    public sealed class XpGainAborted : IDataModel
+    {
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
+        [DBFieldName("victim_guid", true, true)]
+        public string VictimGuid;
+
+        [DBFieldName("victim_id")]
+        public uint VictimId;
+
+        [DBFieldName("victim_type", true)]
+        public string VictimType;
+
+        [DBFieldName("amount")]
+        public uint Amount;
+
+        [DBFieldName("gain_reason")]
+        public uint GainReason;
+
+        [DBFieldName("abort_reason")]
+        public uint AbortReason;
+
+        public WowGuid GUID;
+        public DateTime Time;
+    }
 }
