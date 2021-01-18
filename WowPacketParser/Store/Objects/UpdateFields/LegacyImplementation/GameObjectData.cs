@@ -35,7 +35,9 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public uint Flags => UpdateFields.GetValue<GameObjectField, uint>(GameObjectField.GAMEOBJECT_FLAGS);
 
-        public uint DynamicFlags => UpdateFields.GetValue<GameObjectField, uint>(GameObjectField.GAMEOBJECT_DYN_FLAGS);
+        public uint DynamicFlags => (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056)
+                ? (UpdateFields.GetValue<GameObjectField, uint>(GameObjectField.GAMEOBJECT_DYNAMIC) & 0x0000FFFF)
+                : UpdateFields.GetValue<GameObjectField, uint>(GameObjectField.GAMEOBJECT_DYN_FLAGS));
 
         public int Level => UpdateFields.GetValue<GameObjectField, int>(GameObjectField.GAMEOBJECT_LEVEL);
 
