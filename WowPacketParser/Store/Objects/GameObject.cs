@@ -32,6 +32,22 @@ namespace WowPacketParser.Store.Objects
             return !GameObjectData.CreatedBy.IsEmpty();
         }
 
+        public uint GetDynamicFlags()
+        {
+            if (ClientVersion.AddedInVersion(ClientType.WarlordsOfDraenor))
+                return ObjectData.DynamicFlags;
+
+            return GameObjectData.DynamicFlags;
+        }
+
+        public uint GetDynamicFlagsOriginal()
+        {
+            if (ClientVersion.AddedInVersion(ClientType.WarlordsOfDraenor))
+                return ObjectDataOriginal.DynamicFlags;
+
+            return GameObjectDataOriginal.DynamicFlags;
+        }
+
         public Quaternion GetStaticRotation()
         {
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_0_9767))

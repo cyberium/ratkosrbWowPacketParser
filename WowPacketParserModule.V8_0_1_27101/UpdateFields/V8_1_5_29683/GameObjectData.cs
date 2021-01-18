@@ -15,12 +15,13 @@ namespace WowPacketParserModule.V8_0_1_27101.UpdateFields.V8_1_5_29683
         public WowGuid CreatedBy { get; set; }
         public WowGuid GuildGUID { get; set; }
         public uint Flags { get; set; }
+        public uint DynamicFlags { get; set; }
         public Quaternion ParentRotation { get; set; }
         public int FactionTemplate { get; set; }
         public int Level { get; set; }
         public sbyte State { get; set; }
         public sbyte TypeID { get; set; }
-        public byte ArtKit { get; set; }
+        public uint ArtKit { get; set; }
         public byte PercentHealth { get; set; }
         public byte AnimProgress => PercentHealth;
         public uint CustomParam { get; set; }

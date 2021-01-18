@@ -59,7 +59,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("rotation", 4, true)]
         public float?[] Rotation;
 
-        [DBFieldName("temp", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("is_temporary", DbType = (TargetedDbType.WPP))]
         public byte? TemporarySpawn;
 
         [DBFieldName("creator_guid", false, true, DbType = (TargetedDbType.WPP))]
@@ -83,11 +83,24 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("flags", DbType = (TargetedDbType.WPP))]
         public uint? Flags;
 
+        [DBFieldName("dynamic_flags", DbType = (TargetedDbType.WPP))]
+        public uint? DynamicFlags;
+
         [DBFieldName("state")]
         public uint? State;
 
-        [DBFieldName("animprogress")]
+        [DBFieldName("type", DbType = (TargetedDbType.WPP))]
+        public uint? Type;
+
+        [DBFieldName("artkit", DbType = (TargetedDbType.WPP))]
+        public uint? ArtKit;
+
+        [DBFieldName("animprogress", TargetedDbExpansion.Zero)]
         public uint? AnimProgress;
+
+        [DBFieldName("custom_param", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("custom_param", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP))]
+        public uint? CustomParam;
 
         [DBFieldName("sniff_id", false, false, false, true, DbType = (TargetedDbType.WPP))]
         public int? SniffId;
@@ -160,23 +173,23 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string GUID;
 
-        [DBFieldName("display_id", false, false, true)]
-        public uint? DisplayID;
-
-        [DBFieldName("level", false, false, true)]
-        public uint? Level;
-
-        [DBFieldName("faction", false, false, true)]
-        public uint? Faction;
-
-        [DBFieldName("flags", false, false, true)]
+        [DBFieldName("flags", true, false, true)]
         public uint? Flags;
 
-        [DBFieldName("state", false, false, true)]
+        [DBFieldName("dynamic_flags", true, false, true)]
+        public uint? DynamicFlags;
+
+        [DBFieldName("state", true, false, true)]
         public uint? State;
 
-        [DBFieldName("animprogress", false, false, true)]
+        [DBFieldName("artkit", true, false, true)]
+        public uint? ArtKit;
+
+        [DBFieldName("animprogress", TargetedDbExpansion.Zero, true, false, true)]
         public uint? AnimProgress;
+
+        [DBFieldName("custom_param", true, false, true)]
+        public uint? CustomParam;
     }
 
     [DBTableName("gameobject_custom_anim")]

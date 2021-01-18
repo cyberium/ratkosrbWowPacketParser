@@ -206,31 +206,31 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod(false)]
-        public static string SpellPetCooldown()
+        public static string CreaturePetCooldown()
         {
-            if (!Settings.SqlTables.spell_pet_cooldown)
+            if (!Settings.SqlTables.creature_pet_cooldown)
                 return string.Empty;
 
-            if (Storage.SpellPetCooldown.IsEmpty())
+            if (Storage.CreaturePetCooldown.IsEmpty())
                 return string.Empty;
 
-            var templatesDb = SQLDatabase.Get(Storage.SpellPetCooldown);
+            var templatesDb = SQLDatabase.Get(Storage.CreaturePetCooldown);
 
-            return SQLUtil.Compare(Storage.SpellPetCooldown, templatesDb, StoreNameType.None);
+            return SQLUtil.Compare(Storage.CreaturePetCooldown, templatesDb, StoreNameType.None);
         }
 
         [BuilderMethod(false)]
-        public static string SpellPetActions()
+        public static string CreaturePetActions()
         {
-            if (!Settings.SqlTables.spell_pet_action)
+            if (!Settings.SqlTables.creature_pet_actions)
                 return string.Empty;
 
-            if (Storage.SpellPetActions.IsEmpty())
+            if (Storage.CreaturePetActions.IsEmpty())
                 return string.Empty;
 
-            var templatesDb = SQLDatabase.Get(Storage.SpellPetActions);
+            var templatesDb = SQLDatabase.Get(Storage.CreaturePetActions);
 
-            return SQLUtil.Compare(Storage.SpellPetActions, templatesDb, StoreNameType.None);
+            return SQLUtil.Compare(Storage.CreaturePetActions, templatesDb, StoreNameType.None);
         }
 
         [BuilderMethod]

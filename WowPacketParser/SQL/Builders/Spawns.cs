@@ -175,6 +175,8 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.DisplayID = (uint)unitData.DisplayID;
                 row.Data.NativeDisplayID = (uint)unitData.NativeDisplayID;
                 row.Data.MountDisplayID = (uint)unitData.MountDisplayID;
+                row.Data.ClassId = unitData.ClassId;
+                row.Data.Gender = unitData.Sex;
                 row.Data.FactionTemplate = (uint)unitData.FactionTemplate;
                 row.Data.Level = (uint)unitData.Level;
                 row.Data.NpcFlag = unitData.NpcFlags[0];
@@ -202,12 +204,9 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.SpeedSwimBack = creature.OriginalMovement.SwimBackSpeed / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
                 row.Data.SpeedFly = creature.OriginalMovement.FlightSpeed / MovementInfo.DEFAULT_FLY_SPEED;
                 row.Data.SpeedFlyBack = creature.OriginalMovement.FlightBackSpeed / MovementInfo.DEFAULT_FLY_BACK_SPEED;
-                row.Data.TurnRate = creature.OriginalMovement.TurnRate / MovementInfo.DEFAULT_TURN_RATE;
-                row.Data.PitchRate = creature.OriginalMovement.PitchRate / MovementInfo.DEFAULT_PITCH_RATE;
                 row.Data.BoundingRadius = unitData.BoundingRadius;
                 row.Data.CombatReach = unitData.CombatReach;
                 row.Data.ModMeleeHaste = unitData.ModHaste;
-                row.Data.ModRangedHaste = unitData.ModRangedHaste;
                 row.Data.MainHandAttackTime = unitData.AttackRoundBaseTime[0];
                 row.Data.OffHandAttackTime = unitData.AttackRoundBaseTime[1];
                 row.Data.MainHandSlotItem = (uint)unitData.VirtualItems[0].ItemID;
@@ -1028,11 +1027,15 @@ namespace WowPacketParser.SQL.Builders
                 Storage.GetObjectDbGuidEntryType(go.GameObjectDataOriginal.CreatedBy, out row.Data.CreatedByGuid, out row.Data.CreatedById, out row.Data.CreatedByType);
                 //row.Data.SpawnTimeSecs = go.GetDefaultSpawnTime(go.DifficultyID);
                 row.Data.DisplayID = (uint)go.GameObjectDataOriginal.DisplayID;
-                row.Data.AnimProgress = go.GameObjectDataOriginal.AnimProgress;
-                row.Data.State = (uint)go.GameObjectDataOriginal.State;
+                row.Data.Level = (uint)go.GameObjectDataOriginal.Level;
                 row.Data.Faction = (uint)go.GameObjectDataOriginal.FactionTemplate;
                 row.Data.Flags = go.GameObjectDataOriginal.Flags;
-                row.Data.Level = (uint)go.GameObjectDataOriginal.Level;
+                row.Data.DynamicFlags = go.GetDynamicFlagsOriginal();
+                row.Data.State = (uint)go.GameObjectDataOriginal.State;
+                row.Data.Type = (uint)go.GameObjectDataOriginal.TypeID;
+                row.Data.ArtKit = go.GameObjectDataOriginal.ArtKit;
+                row.Data.AnimProgress = go.GameObjectDataOriginal.AnimProgress;
+                row.Data.CustomParam = go.GameObjectDataOriginal.CustomParam;
                 row.Data.SniffId = go.SourceSniffId;
                 row.Data.SniffBuild = go.SourceSniffBuild;
 

@@ -183,13 +183,10 @@ namespace WowPacketParser.SQL.Builders
                     playerRow.Data.SpeedSwimBack = moveData.SwimBackSpeed / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
                     playerRow.Data.SpeedFly = moveData.FlightSpeed / MovementInfo.DEFAULT_FLY_SPEED;
                     playerRow.Data.SpeedFlyBack = moveData.FlightBackSpeed / MovementInfo.DEFAULT_FLY_BACK_SPEED;
-                    playerRow.Data.TurnRate = moveData.TurnRate / MovementInfo.DEFAULT_TURN_RATE;
-                    playerRow.Data.PitchRate = moveData.PitchRate / MovementInfo.DEFAULT_PITCH_RATE;
                     playerRow.Data.Scale = player.ObjectDataOriginal.Scale;
                     playerRow.Data.BoundingRadius = player.UnitDataOriginal.BoundingRadius;
                     playerRow.Data.CombatReach = player.UnitDataOriginal.CombatReach;
                     playerRow.Data.ModMeleeHaste = player.UnitDataOriginal.ModHaste;
-                    playerRow.Data.ModRangedHaste = player.UnitDataOriginal.ModRangedHaste;
                     playerRow.Data.MainHandAttackTime = player.UnitDataOriginal.AttackRoundBaseTime[0];
                     playerRow.Data.OffHandAttackTime = player.UnitDataOriginal.AttackRoundBaseTime[1];
                     playerRow.Data.RangedAttackTime = player.UnitDataOriginal.RangedAttackRoundBaseTime;

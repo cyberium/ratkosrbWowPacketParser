@@ -15,6 +15,7 @@ namespace WowPacketParserModule.V9_0_1_36216.UpdateFields.V9_0_1_36216
         public WowGuid CreatedBy { get; set; }
         public WowGuid GuildGUID { get; set; }
         public uint Flags { get; set; }
+        public uint DynamicFlags { get; set; }
         public Quaternion ParentRotation { get; set; }
         public int FactionTemplate { get; set; }
         public sbyte State { get; set; }

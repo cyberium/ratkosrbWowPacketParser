@@ -23,18 +23,18 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             attackData.Damage = (uint)packet.ReadInt32("Damage");
             attackData.OverkillDamage = packet.ReadInt32("OverDamage");
 
-            var subDmgCount = packet.ReadBool("HasSubDmg");
-            if (subDmgCount)
+            attackData.SubDamageCount = packet.ReadByte("Sub Damage Count");
+            for (int i = 0; i < attackData.SubDamageCount; i++)
             {
-                packet.ReadInt32("SchoolMask");
+                attackData.TotalSchoolMask |= (uint)packet.ReadInt32("SchoolMask");
                 packet.ReadSingle("Float Damage");
                 packet.ReadInt32("Int Damage");
 
                 if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_PARTIAL_ABSORB | SpellHitInfo.HITINFO_FULL_ABSORB))
-                    packet.ReadInt32("Damage Absorbed");
+                    attackData.TotalAbsorbedDamage += (uint)packet.ReadInt32("Damage Absorbed");
 
                 if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_PARTIAL_RESIST | SpellHitInfo.HITINFO_FULL_RESIST))
-                    packet.ReadInt32("Damage Resisted");
+                    attackData.TotalResistedDamage += (uint)packet.ReadInt32("Damage Resisted");
             }
 
             attackData.VictimState = (uint)packet.ReadByteE<VictimStates>("VictimState");

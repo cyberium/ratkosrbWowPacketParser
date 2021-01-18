@@ -91,6 +91,12 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("mount_display_id", DbType = (TargetedDbType.WPP))]
         public uint? MountDisplayID;
 
+        [DBFieldName("class", DbType = (TargetedDbType.WPP))]
+        public uint? ClassId;
+
+        [DBFieldName("gender", DbType = (TargetedDbType.WPP))]
+        public uint? Gender;
+
         [DBFieldName("faction", DbType = (TargetedDbType.WPP))]
         public uint? FactionTemplate;
 
@@ -140,7 +146,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("vis_flags", DbType = (TargetedDbType.WPP))]
         public uint? VisFlags;
 
-        [DBFieldName("anim_tier", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("anim_tier", TargetedDbExpansion.TheBurningCrusade, DbType = (TargetedDbType.WPP))]
         public uint? AnimTier;
 
         [DBFieldName("sheath_state", DbType = (TargetedDbType.WPP))]
@@ -176,12 +182,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("speed_fly_back", DbType = (TargetedDbType.WPP))]
         public float? SpeedFlyBack;
 
-        [DBFieldName("turn_rate", DbType = (TargetedDbType.WPP))]
-        public float? TurnRate;
-
-        [DBFieldName("pitch_rate", DbType = (TargetedDbType.WPP))]
-        public float? PitchRate;
-
         [DBFieldName("bounding_radius", DbType = (TargetedDbType.WPP))]
         public float? BoundingRadius;
 
@@ -190,9 +190,6 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("mod_melee_haste", DbType = (TargetedDbType.WPP))]
         public float? ModMeleeHaste;
-
-        [DBFieldName("mod_ranged_haste", DbType = (TargetedDbType.WPP))]
-        public float? ModRangedHaste;
 
         [DBFieldName("main_hand_attack_time", DbType = (TargetedDbType.WPP))]
         public uint? MainHandAttackTime;
@@ -566,9 +563,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("mod_melee_haste", true, false, true)]
         public float? ModMeleeHaste;
 
-        [DBFieldName("mod_ranged_haste", true, false, true)]
-        public float? ModRangedHaste;
-
         [DBFieldName("main_hand_attack_time", true, false, true)]
         public uint? MainHandAttackTime;
 
@@ -796,6 +790,18 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("overkill_damage")]
         public int OverkillDamage;
+
+        [DBFieldName("sub_damage_count")]
+        public uint SubDamageCount;
+
+        [DBFieldName("total_school_mask")]
+        public uint TotalSchoolMask;
+
+        [DBFieldName("total_absorbed_damage")]
+        public uint TotalAbsorbedDamage;
+
+        [DBFieldName("total_resisted_damage")]
+        public uint TotalResistedDamage;
 
         [DBFieldName("blocked_damage")]
         public int BlockedDamage;

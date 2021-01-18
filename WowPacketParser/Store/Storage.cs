@@ -942,8 +942,8 @@ namespace WowPacketParser.Store
 
             storage.Add(castData, packet.TimeSpan);
         }
-        public static readonly DataBag<SpellPetCooldown> SpellPetCooldown = new DataBag<SpellPetCooldown>(Settings.SqlTables.spell_pet_cooldown);
-        public static readonly DataBag<SpellPetActions> SpellPetActions = new DataBag<SpellPetActions>(Settings.SqlTables.spell_pet_action);
+        public static readonly DataBag<CreaturePetCooldown> CreaturePetCooldown = new DataBag<CreaturePetCooldown>(Settings.SqlTables.creature_pet_cooldown);
+        public static readonly DataBag<CreaturePetActions> CreaturePetActions = new DataBag<CreaturePetActions>(Settings.SqlTables.creature_pet_actions);
         public static readonly DataBag<SpellTargetPosition> SpellTargetPositions = new DataBag<SpellTargetPosition>(Settings.SqlTables.spell_target_position);
 
         // World state
@@ -1103,8 +1103,8 @@ namespace WowPacketParser.Store
             SpellCastFailed.Clear();
             SpellCastStart.Clear();
             SpellCastGo.Clear();
-            SpellPetActions.Clear();
-            SpellPetCooldown.Clear();
+            CreaturePetActions.Clear();
+            CreaturePetCooldown.Clear();
             SpellTargetPositions.Clear();
 
             LocalesCreatures.Clear();

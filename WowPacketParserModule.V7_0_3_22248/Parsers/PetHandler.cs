@@ -47,13 +47,13 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
 
             ReadPetFlags(packet, "PetModeAndOrders");
 
-            SpellPetActions petActions = new SpellPetActions();
+            CreaturePetActions petActions = new CreaturePetActions();
             petActions.CasterID = petGuid.GetEntry();
             const int maxCreatureSpells = 10;
             for (var i = 0; i < maxCreatureSpells; i++) // Read pet / vehicle spell ids
                 petActions.SpellID[i] = V6_0_2_19033.Parsers.PetHandler.ReadPetAction(packet, "ActionButtons", i);
             if (petGuid.GetHighType() == HighGuidType.Creature)
-                Storage.SpellPetActions.Add(petActions);
+                Storage.CreaturePetActions.Add(petActions);
 
             var actionsCount = packet.ReadInt32("ActionsCount");
             var cooldownsCount = packet.ReadUInt32("CooldownsCount");

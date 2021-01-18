@@ -203,12 +203,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("speed_fly_back", DbType = (TargetedDbType.WPP))]
         public float? SpeedFlyBack;
 
-        [DBFieldName("turn_rate", DbType = (TargetedDbType.WPP))]
-        public float? TurnRate;
-
-        [DBFieldName("pitch_rate", DbType = (TargetedDbType.WPP))]
-        public float? PitchRate;
-
         [DBFieldName("bounding_radius")]
         public float? BoundingRadius;
 
@@ -217,9 +211,6 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("mod_melee_haste")]
         public float? ModMeleeHaste;
-
-        [DBFieldName("mod_ranged_haste")]
-        public float? ModRangedHaste;
 
         [DBFieldName("main_hand_attack_time")]
         public uint? MainHandAttackTime;

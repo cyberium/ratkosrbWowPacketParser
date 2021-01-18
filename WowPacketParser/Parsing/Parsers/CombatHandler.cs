@@ -149,21 +149,19 @@ namespace WowPacketParser.Parsing.Parsers
             attackData.Damage = (uint)packet.ReadInt32("Damage");
             attackData.OverkillDamage = packet.ReadInt32("OverDamage");
 
-            var subDmgCount = packet.ReadByte("Count");
-            for (var i = 0; i < subDmgCount; ++i)
+            attackData.SubDamageCount = packet.ReadByte("Sub Damage Count");
+            for (var i = 0; i < attackData.SubDamageCount; ++i)
             {
-                packet.ReadInt32("SchoolMask", i);
+                attackData.TotalSchoolMask |= (uint)packet.ReadInt32("SchoolMask", i);
                 packet.ReadSingle("Float Damage", i);
                 packet.ReadInt32("Int Damage", i);
-            }
 
-            if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_PARTIAL_ABSORB | SpellHitInfo.HITINFO_FULL_ABSORB))
-                for (var i = 0; i < subDmgCount; ++i)
-                    packet.ReadInt32("Damage Absorbed", i);
+                if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_PARTIAL_ABSORB | SpellHitInfo.HITINFO_FULL_ABSORB))
+                    attackData.TotalAbsorbedDamage += (uint)packet.ReadInt32("Damage Absorbed", i);
 
                 if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_PARTIAL_RESIST | SpellHitInfo.HITINFO_FULL_RESIST))
-                    for (var i = 0; i < subDmgCount; ++i)
-                        packet.ReadInt32("Damage Resisted", i);
+                    attackData.TotalResistedDamage += (uint)packet.ReadInt32("Damage Resisted", i);
+            }
 
             attackData.VictimState = (uint)packet.ReadByteE<VictimStates>("VictimState");
             attackData.AttackerState = packet.ReadInt32("AttackerState");
@@ -214,20 +212,20 @@ namespace WowPacketParser.Parsing.Parsers
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_3_9183))
                 attackData.OverkillDamage = packet.ReadInt32("OverDamage");
 
-            var subDmgCount = packet.ReadByte("Sub Damage Count");
-            for (var i = 0; i < subDmgCount; ++i)
+            attackData.SubDamageCount = packet.ReadByte("Sub Damage Count");
+            for (int i = 0; i < attackData.SubDamageCount; i++)
             {
-                packet.ReadInt32("SchoolMask", i);
+                attackData.TotalSchoolMask |= (uint)packet.ReadInt32("SchoolMask", i);
                 packet.ReadSingle("Float Damage", i);
                 packet.ReadInt32("Int Damage", i);
 
                 if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_3_9183) ||
                     hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_PARTIAL_ABSORB | SpellHitInfo.HITINFO_FULL_ABSORB))
-                    packet.ReadInt32("Damage Absorbed", i);
+                    attackData.TotalAbsorbedDamage += (uint)packet.ReadInt32("Damage Absorbed", i);
 
                 if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_3_9183) ||
                     hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_PARTIAL_RESIST | SpellHitInfo.HITINFO_FULL_RESIST))
-                    packet.ReadInt32("Damage Resisted", i);
+                    attackData.TotalResistedDamage += (uint)packet.ReadInt32("Damage Resisted", i);
             }
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_3_9183))

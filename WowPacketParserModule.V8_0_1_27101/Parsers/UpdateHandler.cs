@@ -296,11 +296,6 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                         hasData = true;
                         creatureUpdate.ModMeleeHaste = unit.UnitData.ModHaste;
                     }
-                    if (oldUnitData.ModRangedHaste != unit.UnitData.ModRangedHaste)
-                    {
-                        hasData = true;
-                        creatureUpdate.ModRangedHaste = unit.UnitData.ModRangedHaste;
-                    }
                     if (oldUnitData.AttackRoundBaseTime[0] != unit.UnitData.AttackRoundBaseTime[0])
                     {
                         hasData = true;
@@ -401,20 +396,18 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 GameObject go = obj as GameObject;
                 bool hasData = false;
                 GameObjectUpdate goUpdate = new GameObjectUpdate();
-                if (oldGameObjectData.DisplayID != go.GameObjectData.DisplayID)
+                if (oldObjectData != null)
                 {
-                    hasData = true;
-                    goUpdate.DisplayID = (uint)go.GameObjectData.DisplayID;
+                    if (oldObjectData.DynamicFlags != go.ObjectData.DynamicFlags)
+                    {
+                        hasData = true;
+                        goUpdate.DynamicFlags = go.ObjectData.DynamicFlags;
+                    }
                 }
-                if (oldGameObjectData.Level != go.GameObjectData.Level)
+                if (oldGameObjectData.CustomParam != go.GameObjectData.CustomParam)
                 {
                     hasData = true;
-                    goUpdate.Level = (uint)go.GameObjectData.Level;
-                }
-                if (oldGameObjectData.FactionTemplate != go.GameObjectData.FactionTemplate)
-                {
-                    hasData = true;
-                    goUpdate.Faction = (uint)go.GameObjectData.FactionTemplate;
+                    goUpdate.CustomParam = go.GameObjectData.CustomParam;
                 }
                 if (oldGameObjectData.Flags != go.GameObjectData.Flags)
                 {

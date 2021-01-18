@@ -315,9 +315,10 @@ namespace WowPacketParser.Store.Objects
         public Vector3 DstPosition;
     }
 
-    public sealed class SpellPetCooldown : IDataModel
+    [DBTableName("creature_pet_cooldown")]
+    public sealed class CreaturePetCooldown : IDataModel
     {
-        [DBFieldName("creature_id", true)]
+        [DBFieldName("entry", true)]
         public uint? CasterID;
 
         [DBFieldName("flags")]
@@ -336,9 +337,10 @@ namespace WowPacketParser.Store.Objects
         public float? ModRate;
     }
 
-    public sealed class SpellPetActions : IDataModel
+    [DBTableName("creature_pet_actions")]
+    public sealed class CreaturePetActions : IDataModel
     {
-        [DBFieldName("creature_id", true)]
+        [DBFieldName("entry", true)]
         public uint? CasterID;
 
         [DBFieldName("slot", 10)]
