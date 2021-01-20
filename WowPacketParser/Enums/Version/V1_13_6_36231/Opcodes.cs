@@ -98,9 +98,9 @@ namespace WowPacketParser.Enums.Version.V1_13_6_36231
             {Opcode.CMSG_BATTLE_PET_UPDATE_NOTIFY, 0x31E1},
             {Opcode.CMSG_BEGIN_TRADE, 0x3157},
             {Opcode.CMSG_BINDER_ACTIVATE, 0x34B2},
-            {Opcode.CMSG_BLACK_MARKET_BID_ON_ITEM, 0x352D},
+            {Opcode.CMSG_BLACK_MARKET_BID_ON_ITEM, 0x352E}, // ??
             {Opcode.CMSG_BLACK_MARKET_OPEN, 0x352C},
-            {Opcode.CMSG_BLACK_MARKET_REQUEST_ITEMS, 0x352C},
+            {Opcode.CMSG_BLACK_MARKET_REQUEST_ITEMS, 0x352D}, // ??
             {Opcode.CMSG_BONUS_ROLL, 0x3354},
             {Opcode.CMSG_BUG_REPORT, 0x3684},
             {Opcode.CMSG_BUSY_TRADE, 0x3158},

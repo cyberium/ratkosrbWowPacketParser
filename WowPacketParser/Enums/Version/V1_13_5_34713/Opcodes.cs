@@ -93,9 +93,9 @@ namespace WowPacketParser.Enums.Version.v1_13_5_34713
             {Opcode.CMSG_BATTLE_PET_UPDATE_NOTIFY, 0x31E1},
             {Opcode.CMSG_BEGIN_TRADE, 0x3157},
             {Opcode.CMSG_BINDER_ACTIVATE, 0x34B2},
-            {Opcode.CMSG_BLACK_MARKET_BID_ON_ITEM, 0x352D},
-            {Opcode.CMSG_BLACK_MARKET_OPEN, 0x352B},
-            {Opcode.CMSG_BLACK_MARKET_REQUEST_ITEMS, 0x352C},
+            {Opcode.CMSG_BLACK_MARKET_BID_ON_ITEM, 0x352E}, // ??
+            {Opcode.CMSG_BLACK_MARKET_OPEN, 0x352C},
+            {Opcode.CMSG_BLACK_MARKET_REQUEST_ITEMS, 0x352D}, // ??
             {Opcode.CMSG_BONUS_ROLL, 0x3354},
             {Opcode.CMSG_BUG_REPORT, 0x3684},
             {Opcode.CMSG_BUSY_TRADE, 0x3158},
@@ -565,7 +565,7 @@ namespace WowPacketParser.Enums.Version.v1_13_5_34713
             {Opcode.CMSG_REQUEST_CATEGORY_COOLDOWNS, 0x3180},
             {Opcode.CMSG_REQUEST_CEMETERY_LIST, 0x3178},
             {Opcode.CMSG_REQUEST_CONQUEST_FORMULA_CONSTANTS, 0x32B2},
-            {Opcode.CMSG_REQUEST_CROWD_CONTROL_SPELL, 0x352A},
+            {Opcode.CMSG_REQUEST_CROWD_CONTROL_SPELL, 0x352B},
             {Opcode.CMSG_REQUEST_FORCED_REACTIONS, 0x320A},
             {Opcode.CMSG_REQUEST_GUILD_PARTY_STATE, 0x31AA},
             {Opcode.CMSG_REQUEST_GUILD_REWARDS_LIST, 0x31A9},
