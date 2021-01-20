@@ -498,7 +498,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string Gossip()
         {
-            if (Storage.Gossips.IsEmpty() && Storage.GossipMenuOptions.IsEmpty())
+            if (Storage.Gossips.IsEmpty() && Storage.GossipMenuOptions.IsEmpty() && (Storage.CreatureDefaultGossips.Count() == 0))
                 return string.Empty;
 
             var result = "";

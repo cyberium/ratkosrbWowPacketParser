@@ -508,13 +508,20 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (menuId != 0 && guid.GetObjectType() == ObjectType.Unit)
             {
+                bool isDefault = false;
                 if (!Storage.CreatureDefaultGossips.ContainsKey(guid.GetEntry()))
-                    Storage.CreatureDefaultGossips.Add(guid.GetEntry(), menuId);
+                {
+                    isDefault = true;
+                    Storage.CreatureDefaultGossips.Add(guid.GetEntry(), (uint)menuId);
+                }
+                else if (Storage.CreatureDefaultGossips[guid.GetEntry()] == menuId)
+                    isDefault = true;
 
                 CreatureGossip newGossip = new CreatureGossip
                 {
                     CreatureId = gossip.ObjectEntry,
                     GossipMenuId = menuId,
+                    IsDefault = isDefault,
                 };
                 Storage.CreatureGossips.Add(newGossip, packet.TimeSpan);
             }

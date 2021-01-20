@@ -173,6 +173,11 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                         hasData = true;
                         creatureUpdate.Scale = unit.ObjectData.Scale;
                     }
+                    if (oldObjectData.DynamicFlags != unit.ObjectData.DynamicFlags)
+                    {
+                        hasData = true;
+                        creatureUpdate.DynamicFlags = unit.ObjectData.DynamicFlags;
+                    }
                 }
                 if (oldUnitData != null)
                 {
@@ -211,11 +216,13 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                         hasData = true;
                         creatureUpdate.StandState = unit.UnitData.StandState;
                     }
+                    /*
                     if (oldUnitData.PetTalentPoints != unit.UnitData.PetTalentPoints)
                     {
                         hasData = true;
                         creatureUpdate.PetTalentPoints = unit.UnitData.PetTalentPoints;
                     }
+                    */
                     if (oldUnitData.VisFlags != unit.UnitData.VisFlags)
                     {
                         hasData = true;
@@ -236,11 +243,13 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                         hasData = true;
                         creatureUpdate.PvpFlags = unit.UnitData.PvpFlags;
                     }
+                    /*
                     if (oldUnitData.PetFlags != unit.UnitData.PetFlags)
                     {
                         hasData = true;
                         creatureUpdate.PetFlags = unit.UnitData.PetFlags;
                     }
+                    */
                     if (oldUnitData.ShapeshiftForm != unit.UnitData.ShapeshiftForm)
                     {
                         hasData = true;
@@ -398,10 +407,15 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 GameObjectUpdate goUpdate = new GameObjectUpdate();
                 if (oldObjectData != null)
                 {
-                    if (oldObjectData.DynamicFlags != go.ObjectData.DynamicFlags)
+                    if ((oldObjectData.DynamicFlags & 0x0000FFFF) != (go.ObjectData.DynamicFlags & 0x0000FFFF))
                     {
                         hasData = true;
-                        goUpdate.DynamicFlags = go.ObjectData.DynamicFlags;
+                        goUpdate.DynamicFlags = (go.ObjectData.DynamicFlags & 0x0000FFFF);
+                    }
+                    if (((oldObjectData.DynamicFlags & 0xFFFF0000) >> 16) != ((go.ObjectData.DynamicFlags & 0xFFFF0000) >> 16))
+                    {
+                        hasData = true;
+                        goUpdate.PathProgress = ((go.ObjectData.DynamicFlags & 0xFFFF0000) >> 16);
                     }
                 }
                 if (oldGameObjectData.CustomParam != go.GameObjectData.CustomParam)
@@ -423,6 +437,11 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 {
                     hasData = true;
                     goUpdate.State = (uint)go.GameObjectData.State;
+                }
+                if (oldGameObjectData.ArtKit != go.GameObjectData.ArtKit)
+                {
+                    hasData = true;
+                    goUpdate.ArtKit = (uint)go.GameObjectData.ArtKit;
                 }
                 if (hasData)
                 {

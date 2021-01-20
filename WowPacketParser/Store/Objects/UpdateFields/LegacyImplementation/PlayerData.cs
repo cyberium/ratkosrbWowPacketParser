@@ -44,6 +44,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public uint PlayerBytes1 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES);
         public uint PlayerBytes2 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_2);
         public uint PlayerFlags => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_FLAGS);
+        public uint PvPRank => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_PVP_RANK);
 
         public class VisibleItem : IVisibleItem
         {
@@ -141,6 +142,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public uint PlayerBytes1 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES);
         public uint PlayerBytes2 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_2);
         public uint PlayerFlags => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_FLAGS);
+        public uint PvPRank => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_PVP_RANK);
 
         public class VisibleItem : IVisibleItem
         {

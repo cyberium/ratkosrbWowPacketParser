@@ -140,13 +140,13 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("stand_state", DbType = (TargetedDbType.WPP))]
         public uint? StandState;
 
-        [DBFieldName("pet_talent_points", DbType = (TargetedDbType.WPP))]
-        public uint? PetTalentPoints;
+        //[DBFieldName("pet_talent_points", DbType = (TargetedDbType.WPP))]
+        //public uint? PetTalentPoints;
 
         [DBFieldName("vis_flags", DbType = (TargetedDbType.WPP))]
         public uint? VisFlags;
 
-        [DBFieldName("anim_tier", TargetedDbExpansion.TheBurningCrusade, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("anim_tier", TargetedDbExpansion.WrathOfTheLichKing, DbType = (TargetedDbType.WPP))]
         public uint? AnimTier;
 
         [DBFieldName("sheath_state", DbType = (TargetedDbType.WPP))]
@@ -155,11 +155,14 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("pvp_flags", DbType = (TargetedDbType.WPP))]
         public uint? PvpFlags;
 
-        [DBFieldName("pet_flags", DbType = (TargetedDbType.WPP))]
-        public uint? PetFlags;
+        //[DBFieldName("pet_flags", DbType = (TargetedDbType.WPP))]
+        //public uint? PetFlags;
 
         [DBFieldName("shapeshift_form", DbType = (TargetedDbType.WPP))]
         public uint? ShapeshiftForm;
+
+        [DBFieldName("move_flags", DbType = (TargetedDbType.WPP))]
+        public uint? MovementFlags;
 
         [DBFieldName("speed_walk", DbType = (TargetedDbType.WPP))]
         public float? SpeedWalk;
@@ -438,7 +441,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("charges")]
         public uint Charges;
 
-        [DBFieldName("content_tuning_id", false, false, true)]
+        [DBFieldName("content_tuning_id", TargetedDbExpansion.BattleForAzeroth, false, false, true)]
         public int ContentTuningId;
 
         [DBFieldName("duration")]
@@ -533,13 +536,13 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("stand_state", true, false, true)]
         public uint? StandState;
 
-        [DBFieldName("pet_talent_points", true, false, true)]
-        public uint? PetTalentPoints;
+        //[DBFieldName("pet_talent_points", true, false, true)]
+        //public uint? PetTalentPoints;
 
         [DBFieldName("vis_flags", true, false, true)]
         public uint? VisFlags;
 
-        [DBFieldName("anim_tier", true, false, true)]
+        [DBFieldName("anim_tier", TargetedDbExpansion.WrathOfTheLichKing, true, false, true)]
         public uint? AnimTier;
 
         [DBFieldName("sheath_state", true, false, true)]
@@ -548,8 +551,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("pvp_flags", true, false, true)]
         public uint? PvpFlags;
 
-        [DBFieldName("pet_flags", true, false, true)]
-        public uint? PetFlags;
+        //[DBFieldName("pet_flags", true, false, true)]
+        //public uint? PetFlags;
 
         [DBFieldName("shapeshift_form", true, false, true)]
         public uint? ShapeshiftForm;
@@ -902,7 +905,7 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("creature_threat_update_target")]
     public sealed class CreatureThreatUpdateTarget : IDataModel
     {
-        [DBFieldName("id", true)]
+        [DBFieldName("list_id", true)]
         public uint TargetListId;
 
         [DBFieldName("target_guid", true, true)]

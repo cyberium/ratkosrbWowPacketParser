@@ -190,13 +190,14 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.AuraState = unitData.AuraState;
                 row.Data.EmoteState = (uint)unitData.EmoteState;
                 row.Data.StandState = unitData.StandState;
-                row.Data.PetTalentPoints = unitData.PetTalentPoints;
+                //row.Data.PetTalentPoints = unitData.PetTalentPoints;
                 row.Data.VisFlags = unitData.VisFlags;
                 row.Data.AnimTier = unitData.AnimTier;
                 row.Data.SheatheState = unitData.SheatheState;
                 row.Data.PvpFlags = unitData.PvpFlags;
-                row.Data.PetFlags = unitData.PetFlags;
+                //row.Data.PetFlags = unitData.PetFlags;
                 row.Data.ShapeshiftForm = unitData.ShapeshiftForm;
+                row.Data.MovementFlags = (uint)creature.OriginalMovement.Flags;
                 row.Data.SpeedWalk = creature.OriginalMovement.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
                 row.Data.SpeedRun = creature.OriginalMovement.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
                 row.Data.SpeedRunBack = creature.OriginalMovement.RunBackSpeed / MovementInfo.DEFAULT_RUN_BACK_SPEED;
@@ -1031,6 +1032,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.Faction = (uint)go.GameObjectDataOriginal.FactionTemplate;
                 row.Data.Flags = go.GameObjectDataOriginal.Flags;
                 row.Data.DynamicFlags = go.GetDynamicFlagsOriginal();
+                row.Data.PathProgress = go.GetPathProgressOriginal();
                 row.Data.State = (uint)go.GameObjectDataOriginal.State;
                 row.Data.Type = (uint)go.GameObjectDataOriginal.TypeID;
                 row.Data.ArtKit = go.GameObjectDataOriginal.ArtKit;

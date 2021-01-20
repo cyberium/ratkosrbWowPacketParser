@@ -34,6 +34,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("gossip_menu_id", true)]
         public uint? GossipMenuId;
 
+        [DBFieldName("is_default", true)]
+        public bool? IsDefault;
+
         [DBFieldName("sniff_build")]
         public int? SniffBuild = ClientVersion.BuildInt;
     }

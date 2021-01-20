@@ -35,17 +35,33 @@ namespace WowPacketParser.Store.Objects
         public uint GetDynamicFlags()
         {
             if (ClientVersion.AddedInVersion(ClientType.WarlordsOfDraenor))
-                return ObjectData.DynamicFlags;
+                return ObjectData.DynamicFlags & 0x0000FFFF;
 
-            return GameObjectData.DynamicFlags;
+            return GameObjectData.DynamicFlags & 0x0000FFFF;
         }
 
         public uint GetDynamicFlagsOriginal()
         {
             if (ClientVersion.AddedInVersion(ClientType.WarlordsOfDraenor))
-                return ObjectDataOriginal.DynamicFlags;
+                return ObjectDataOriginal.DynamicFlags & 0x0000FFFF;
 
-            return GameObjectDataOriginal.DynamicFlags;
+            return GameObjectDataOriginal.DynamicFlags & 0x0000FFFF;
+        }
+
+        public uint GetPathProgress()
+        {
+            if (ClientVersion.AddedInVersion(ClientType.WarlordsOfDraenor))
+                return (ObjectData.DynamicFlags & 0xFFFF0000) >> 16;
+
+            return (GameObjectData.DynamicFlags & 0xFFFF0000) >> 16;
+        }
+
+        public uint GetPathProgressOriginal()
+        {
+            if (ClientVersion.AddedInVersion(ClientType.WarlordsOfDraenor))
+                return (ObjectDataOriginal.DynamicFlags & 0xFFFF0000) >> 16;
+
+            return (GameObjectDataOriginal.DynamicFlags & 0xFFFF0000) >> 16;
         }
 
         public Quaternion GetStaticRotation()

@@ -151,6 +151,7 @@ namespace WowPacketParser.SQL.Builders
                     playerRow.Data.PlayerBytes = row.Data.PlayerBytes;
                     playerRow.Data.PlayerBytes2 = row.Data.PlayerBytes2;
                     playerRow.Data.PlayerFlags = row.Data.PlayerFlags;
+                    playerRow.Data.PvPRank = player.PlayerDataOriginal.PvPRank;
                     playerRow.Data.PositionX = row.Data.PositionX;
                     playerRow.Data.PositionY = row.Data.PositionY;
                     playerRow.Data.PositionZ = row.Data.PositionZ;
@@ -169,13 +170,14 @@ namespace WowPacketParser.SQL.Builders
                     playerRow.Data.AuraState = player.UnitDataOriginal.AuraState;
                     playerRow.Data.EmoteState = (uint)player.UnitDataOriginal.EmoteState;
                     playerRow.Data.StandState = player.UnitDataOriginal.StandState;
-                    playerRow.Data.PetTalentPoints = player.UnitDataOriginal.PetTalentPoints;
+                    //playerRow.Data.PetTalentPoints = player.UnitDataOriginal.PetTalentPoints;
                     playerRow.Data.VisFlags = player.UnitDataOriginal.VisFlags;
-                    playerRow.Data.AnimTier = player.UnitDataOriginal.AnimTier;
+                    //playerRow.Data.AnimTier = player.UnitDataOriginal.AnimTier;
                     playerRow.Data.SheatheState = player.UnitDataOriginal.SheatheState;
                     playerRow.Data.PvpFlags = player.UnitDataOriginal.PvpFlags;
-                    playerRow.Data.PetFlags = player.UnitDataOriginal.PetFlags;
+                    //playerRow.Data.PetFlags = player.UnitDataOriginal.PetFlags;
                     playerRow.Data.ShapeshiftForm = player.UnitDataOriginal.ShapeshiftForm;
+                    playerRow.Data.MovementFlags = (uint)moveData.Flags;
                     playerRow.Data.SpeedWalk = moveData.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
                     playerRow.Data.SpeedRun = moveData.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
                     playerRow.Data.SpeedRunBack = moveData.RunBackSpeed / MovementInfo.DEFAULT_RUN_BACK_SPEED;

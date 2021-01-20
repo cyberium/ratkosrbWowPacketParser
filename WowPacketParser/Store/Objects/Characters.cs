@@ -119,6 +119,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("player_flags")]
         public uint PlayerFlags;
 
+        [DBFieldName("pvp_rank")]
+        public uint PvPRank;
+
         [DBFieldName("scale")]
         public float? Scale;
 
@@ -161,14 +164,14 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("stand_state")]
         public uint? StandState;
 
-        [DBFieldName("pet_talent_points")]
-        public uint? PetTalentPoints;
+        //[DBFieldName("pet_talent_points")]
+        //public uint? PetTalentPoints;
 
         [DBFieldName("vis_flags")]
         public uint? VisFlags;
 
-        [DBFieldName("anim_tier")]
-        public uint? AnimTier;
+        //[DBFieldName("anim_tier")]
+        //public uint? AnimTier;
 
         [DBFieldName("sheath_state")]
         public uint? SheatheState;
@@ -176,11 +179,14 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("pvp_flags")]
         public uint? PvpFlags;
 
-        [DBFieldName("pet_flags")]
-        public uint? PetFlags;
+        //[DBFieldName("pet_flags")]
+        //public uint? PetFlags;
 
         [DBFieldName("shapeshift_form")]
         public uint? ShapeshiftForm;
+
+        [DBFieldName("move_flags")]
+        public uint? MovementFlags;
 
         [DBFieldName("speed_walk")]
         public float? SpeedWalk;

@@ -267,6 +267,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("dst_position_id")]
         public uint DstPositionId;
+
+        [DBFieldName("orientation")]
+        public float Orientation;
     }
 
     public sealed class SpellCastData : IDataModel
@@ -313,6 +316,7 @@ namespace WowPacketParser.Store.Objects
         }
         public Vector3 SrcPosition;
         public Vector3 DstPosition;
+        public float Orientation;
     }
 
     [DBTableName("creature_pet_cooldown")]

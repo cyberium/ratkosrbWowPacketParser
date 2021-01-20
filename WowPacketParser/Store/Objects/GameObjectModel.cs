@@ -86,6 +86,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("dynamic_flags", DbType = (TargetedDbType.WPP))]
         public uint? DynamicFlags;
 
+        [DBFieldName("path_progress", DbType = (TargetedDbType.WPP))]
+        public uint? PathProgress;
+
         [DBFieldName("state")]
         public uint? State;
 
@@ -178,6 +181,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("dynamic_flags", true, false, true)]
         public uint? DynamicFlags;
+
+        [DBFieldName("path_progress", true, false, true)]
+        public uint? PathProgress;
 
         [DBFieldName("state", true, false, true)]
         public uint? State;

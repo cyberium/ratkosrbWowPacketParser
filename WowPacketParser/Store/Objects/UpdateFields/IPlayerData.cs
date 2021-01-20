@@ -10,6 +10,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         uint PlayerBytes1 { get; }
         uint PlayerBytes2 { get; }
         uint PlayerFlags { get; }
+        uint PvPRank { get; }
         IVisibleItem[] VisibleItems { get; }
         uint GuildRankID { get; }
         IPlayerData Clone();
