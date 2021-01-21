@@ -14,6 +14,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<SniffData> SniffData = new DataBag<SniffData>(Settings.SqlTables.SniffData || Settings.SqlTables.SniffDataOpcodes);
 
         /* Key: Guid */
+        public static WowGuid CurrentActivePlayer = null;
 
         // Units, GameObjects, Players, Items
         public static readonly StoreDictionary<WowGuid, WoWObject> Objects = new StoreDictionary<WowGuid, WoWObject>(new List<SQLOutput>());
@@ -852,6 +853,7 @@ namespace WowPacketParser.Store
         // Start info (Race, Class)
         public static readonly DataBag<PlayerCreateInfoAction> StartActions = new DataBag<PlayerCreateInfoAction>(Settings.SqlTables.playercreateinfo_action);
         public static readonly DataBag<PlayerCreateInfo> StartPositions = new DataBag<PlayerCreateInfo>(Settings.SqlTables.playercreateinfo);
+        public static readonly DataBag<PlayerLevelupInfo> PlayerLevelupInfos = new DataBag<PlayerLevelupInfo>(Settings.SqlTables.player_levelup_info);
 
         // Gossips (MenuId, TextId)
         public static readonly Dictionary<uint, uint> CreatureDefaultGossips = new Dictionary<uint, uint>();
@@ -1065,6 +1067,7 @@ namespace WowPacketParser.Store
 
             StartActions.Clear();
             StartPositions.Clear();
+            PlayerLevelupInfos.Clear();
 
             CreatureDefaultGossips.Clear();
             CreatureGossips.Clear();

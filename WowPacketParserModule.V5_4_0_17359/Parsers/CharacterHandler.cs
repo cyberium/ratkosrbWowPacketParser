@@ -129,17 +129,22 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
         [Parser(Opcode.SMSG_LEVEL_UP_INFO)]
         public static void HandleLevelUp(Packet packet)
         {
-            packet.ReadInt32("Health");
+            PlayerLevelupInfo info = new PlayerLevelupInfo();
+            info.GUID = Storage.CurrentActivePlayer;
+            info.Health = packet.ReadInt32("Health");
 
+            info.Stat = new int?[5];
             for (var i = 0; i < 5; i++)
-                packet.ReadInt32("Stat", (StatType)i);
+                info.Stat[i] = packet.ReadInt32("Stat", (StatType)i);
 
             packet.ReadInt32("Talent Level"); // 0 - No Talent gain / 1 - Talent Point gain
 
-            packet.ReadInt32("Level");
+            info.Level = packet.ReadInt32("Level");
 
+            info.Power = new int?[5];
             for (var i = 0; i < 5; i++)
-                packet.ReadInt32("Power", (PowerType) i);
+                info.Power[i] = packet.ReadInt32("Power", (PowerType) i);
+            Storage.PlayerLevelupInfos.Add(info);
         }
 
         [Parser(Opcode.SMSG_UPDATE_CURRENCY_WEEK_LIMIT)]

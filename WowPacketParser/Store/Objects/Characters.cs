@@ -288,6 +288,35 @@ namespace WowPacketParser.Store.Objects
         public string GUID;
     }
 
+    [DBTableName("player_levelup_info")]
+    public sealed class PlayerLevelupInfo : IDataModel
+    {
+        [DBFieldName("race", true)]
+        public uint RaceId;
+
+        [DBFieldName("class", true)]
+        public uint ClassId;
+
+        [DBFieldName("level", true)]
+        public int Level;
+
+        [DBFieldName("health")]
+        public int Health;
+
+        [DBFieldName("power", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, 6, true)]
+        [DBFieldName("power", TargetedDbExpansion.Zero, TargetedDbExpansion.WrathOfTheLichKing, 5, true)]
+        [DBFieldName("power", TargetedDbExpansion.WrathOfTheLichKing, TargetedDbExpansion.Cataclysm, 7, true)]
+        [DBFieldName("power", TargetedDbExpansion.Cataclysm, TargetedDbExpansion.WarlordsOfDraenor, 5, true)]
+        [DBFieldName("power", TargetedDbExpansion.WarlordsOfDraenor, 6, true)]
+        public int?[] Power;
+
+        [DBFieldName("stat", TargetedDbExpansion.Classic, TargetedDbExpansion.Legion, 5, true)]
+        [DBFieldName("stat", TargetedDbExpansion.Legion, 4, true)]
+        public int?[] Stat;
+
+        public WowGuid GUID;
+    }
+
     [DBTableName("character_inventory")]
     public sealed class CharacterInventory : IDataModel
     {

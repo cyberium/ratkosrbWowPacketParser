@@ -678,5 +678,37 @@ namespace WowPacketParser.SQL.Builders
 
             return result.ToString();
         }
+
+        [BuilderMethod]
+        public static string PlayerLevelupInfos()
+        {
+            if (Storage.PlayerLevelupInfos.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.player_levelup_info)
+                return string.Empty;
+
+            var rows = new RowList<PlayerLevelupInfo>();
+            foreach (var info in Storage.PlayerLevelupInfos)
+            {
+                if (info.Item1.GUID == null)
+                    continue;
+                if (!Storage.Objects.ContainsKey(info.Item1.GUID))
+                    continue;
+
+                Player player = Storage.Objects[info.Item1.GUID].Item1 as Player;
+                if (player == null)
+                    continue;
+
+                Row<PlayerLevelupInfo> row = new Row<PlayerLevelupInfo>();
+                row.Data = info.Item1;
+                row.Data.RaceId = player.UnitData.RaceId;
+                row.Data.ClassId = player.UnitData.ClassId;
+                rows.Add(row);
+            }
+
+            var sql = new SQLInsert<PlayerLevelupInfo>(rows, false);
+            return sql.Build();
+        }
     }
 }

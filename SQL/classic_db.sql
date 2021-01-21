@@ -146,8 +146,8 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `wander_distance` float NOT NULL DEFAULT '0' COMMENT 'maximum distance traveled from initial position',
   `movement_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'guessed movement generator',
   `is_hovering` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `is_temporary` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'is this a temporary summon',
-  `is_pet` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'is this a pet',
+  `is_temporary` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `is_pet` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `summon_spell` int(10) unsigned NOT NULL DEFAULT '0',
   `scale` float NOT NULL DEFAULT '0',
   `display_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -168,13 +168,11 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `aura_state` int(10) unsigned NOT NULL DEFAULT '0',
   `emote_state` int(10) unsigned NOT NULL DEFAULT '0',
   `stand_state` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1',
-  `pet_talent_points` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1',
   `vis_flags` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1',
-  `anim_tier` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1',
   `sheath_state` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
   `pvp_flags` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
-  `pet_flags` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
   `shapeshift_form` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
+  `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `speed_walk` float NOT NULL DEFAULT '0',
   `speed_run` float NOT NULL DEFAULT '0',
   `speed_run_back` float NOT NULL DEFAULT '0',
@@ -268,7 +266,6 @@ CREATE TABLE IF NOT EXISTS `creature_auras_update` (
   `active_flags` int(10) unsigned NOT NULL,
   `level` int(10) unsigned NOT NULL,
   `charges` int(10) unsigned NOT NULL,
-  `content_tuning_id` int(10) NOT NULL,
   `duration` int(10) NOT NULL,
   `max_duration` int(10) NOT NULL,
   `caster_guid` int(10) unsigned NOT NULL,
@@ -383,8 +380,9 @@ DROP TABLE IF EXISTS `creature_gossip`;
 CREATE TABLE IF NOT EXISTS `creature_gossip` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `gossip_menu_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `is_default` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`entry`,`gossip_menu_id`)
+  PRIMARY KEY (`entry`,`gossip_menu_id`,`is_default`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
@@ -801,7 +799,7 @@ CREATE TABLE IF NOT EXISTS `creature_threat_update` (
 -- Dumping structure for table sniffs_new_test.creature_threat_update_target
 DROP TABLE IF EXISTS `creature_threat_update_target`;
 CREATE TABLE IF NOT EXISTS `creature_threat_update_target` (
-  `id` int(10) unsigned NOT NULL,
+  `list_id` int(10) unsigned NOT NULL,
   `target_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `target_id` int(10) unsigned NOT NULL DEFAULT '0',
   `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
@@ -846,12 +844,9 @@ CREATE TABLE IF NOT EXISTS `creature_values_update` (
   `aura_state` int(10) unsigned DEFAULT NULL,
   `emote_state` int(10) unsigned DEFAULT NULL,
   `stand_state` int(10) unsigned DEFAULT NULL,
-  `pet_talent_points` int(10) unsigned DEFAULT NULL,
   `vis_flags` int(10) unsigned DEFAULT NULL,
-  `anim_tier` int(10) unsigned DEFAULT NULL,
   `sheath_state` int(10) unsigned DEFAULT NULL,
   `pvp_flags` int(10) unsigned DEFAULT NULL,
-  `pet_flags` int(10) unsigned DEFAULT NULL,
   `shapeshift_form` int(10) unsigned DEFAULT NULL,
   `bounding_radius` float DEFAULT NULL,
   `combat_reach` float DEFAULT NULL,
@@ -967,6 +962,7 @@ CREATE TABLE IF NOT EXISTS `gameobject` (
   `faction` int(10) unsigned NOT NULL DEFAULT '0',
   `flags` int(10) unsigned NOT NULL DEFAULT '0',
   `dynamic_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `path_progress` int(10) unsigned NOT NULL DEFAULT '0',
   `state` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `artkit` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -1201,6 +1197,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_values_update` (
   `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
   `flags` int(10) unsigned DEFAULT NULL,
   `dynamic_flags` int(10) unsigned DEFAULT NULL,
+  `path_progress` int(10) unsigned DEFAULT NULL,
   `state` int(10) unsigned DEFAULT NULL,
   `artkit` int(10) unsigned DEFAULT NULL,
   `custom_param` int(10) unsigned DEFAULT NULL
@@ -1572,6 +1569,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   `player_bytes1` int(10) unsigned NOT NULL DEFAULT '0',
   `player_bytes2` int(10) unsigned NOT NULL DEFAULT '0',
   `player_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `pvp_rank` int(10) unsigned NOT NULL DEFAULT '0',
   `scale` float NOT NULL DEFAULT '0',
   `display_id` int(10) unsigned NOT NULL DEFAULT '0',
   `native_display_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1586,13 +1584,11 @@ CREATE TABLE IF NOT EXISTS `player` (
   `aura_state` int(10) unsigned NOT NULL DEFAULT '0',
   `emote_state` int(10) unsigned NOT NULL DEFAULT '0',
   `stand_state` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1',
-  `pet_talent_points` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1',
   `vis_flags` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1',
-  `anim_tier` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1',
   `sheath_state` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
   `pvp_flags` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
-  `pet_flags` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
   `shapeshift_form` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
+  `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `speed_walk` float NOT NULL DEFAULT '0',
   `speed_run` float NOT NULL DEFAULT '0',
   `speed_run_back` float NOT NULL DEFAULT '0',
@@ -1724,7 +1720,6 @@ CREATE TABLE IF NOT EXISTS `player_auras_update` (
   `active_flags` int(10) unsigned NOT NULL,
   `level` int(10) unsigned NOT NULL,
   `charges` int(10) unsigned NOT NULL,
-  `content_tuning_id` int(10) NOT NULL,
   `duration` int(10) NOT NULL,
   `max_duration` int(10) NOT NULL,
   `caster_guid` int(10) unsigned NOT NULL,
@@ -1861,6 +1856,30 @@ CREATE TABLE IF NOT EXISTS `player_guid_values_update` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.player_levelup_info
+DROP TABLE IF EXISTS `player_levelup_info`;
+CREATE TABLE IF NOT EXISTS `player_levelup_info` (
+  `race` tinyint(3) unsigned NOT NULL,
+  `class` tinyint(3) unsigned NOT NULL,
+  `level` tinyint(3) unsigned NOT NULL,
+  `health` int(11) NOT NULL DEFAULT '0',
+  `power0` int(11) NOT NULL DEFAULT '0',
+  `power1` int(11) NOT NULL DEFAULT '0',
+  `power2` int(11) NOT NULL DEFAULT '0',
+  `power3` int(11) NOT NULL DEFAULT '0',
+  `power4` int(11) NOT NULL DEFAULT '0',
+  `power5` int(11) NOT NULL DEFAULT '0',
+  `stat0` int(11) NOT NULL DEFAULT '0',
+  `stat1` int(11) NOT NULL DEFAULT '0',
+  `stat2` int(11) NOT NULL DEFAULT '0',
+  `stat3` int(11) NOT NULL DEFAULT '0',
+  `stat4` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`race`,`class`,`level`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.player_movement_client
 DROP TABLE IF EXISTS `player_movement_client`;
 CREATE TABLE IF NOT EXISTS `player_movement_client` (
@@ -1951,12 +1970,9 @@ CREATE TABLE IF NOT EXISTS `player_values_update` (
   `aura_state` int(10) unsigned DEFAULT NULL,
   `emote_state` int(10) unsigned DEFAULT NULL,
   `stand_state` int(10) unsigned DEFAULT NULL,
-  `pet_talent_points` int(10) unsigned DEFAULT NULL,
   `vis_flags` int(10) unsigned DEFAULT NULL,
-  `anim_tier` int(10) unsigned DEFAULT NULL,
   `sheath_state` int(10) unsigned DEFAULT NULL,
   `pvp_flags` int(10) unsigned DEFAULT NULL,
-  `pet_flags` int(10) unsigned DEFAULT NULL,
   `shapeshift_form` int(10) unsigned DEFAULT NULL,
   `bounding_radius` float DEFAULT NULL,
   `combat_reach` float DEFAULT NULL,
@@ -2437,6 +2453,7 @@ CREATE TABLE IF NOT EXISTS `spell_cast_go` (
   `miss_targets_list_id` int(10) unsigned NOT NULL DEFAULT '0',
   `src_position_id` int(10) unsigned NOT NULL DEFAULT '0',
   `dst_position_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `orientation` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`unixtimems`,`caster_guid`,`caster_id`,`caster_type`,`spell_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_SPELL_GO\r\nsent when a spell is successfully casted';
 
