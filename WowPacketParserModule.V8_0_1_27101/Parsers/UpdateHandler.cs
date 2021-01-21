@@ -198,6 +198,9 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     }
                     if (oldUnitData.Level != unit.UnitData.Level)
                     {
+                        if (guid.GetObjectType() == ObjectType.ActivePlayer)
+                            Storage.SavePlayerStats(obj, false);
+
                         hasData = true;
                         creatureUpdate.Level = (uint)unit.UnitData.Level;
                     }
