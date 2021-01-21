@@ -175,9 +175,11 @@ namespace WowPacketParser.Parsing.Parsers
             if (Storage.Objects.TryGetValue(guid, out obj))
             {
                 var updates = ReadValuesUpdateBlock(packet, obj.Type, index, false, obj.UpdateFields);
-                StoreObjectUpdate(packet.Time, guid, updates);
+                bool savePlayerStats = StoreObjectUpdate(packet.Time, guid, updates);
                 var dynamicUpdates = ReadDynamicValuesUpdateBlock(packet, obj.Type, index, false, obj.DynamicUpdateFields);
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
+                if (savePlayerStats)
+                    Storage.SavePlayerStats(obj, false);
             }
             else
             {
@@ -290,8 +292,10 @@ namespace WowPacketParser.Parsing.Parsers
             }
         }
 
-        public static void StoreObjectUpdate(DateTime time, WowGuid guid, Dictionary<int, UpdateField> updates)
+        // returns true if active player leveled up and we need to save stats
+        public static bool StoreObjectUpdate(DateTime time, WowGuid guid, Dictionary<int, UpdateField> updates)
         {
+            bool hasPlayerLevelup = false;
             if ((guid.GetObjectType() == ObjectType.Unit) ||
                 (guid.GetObjectType() == ObjectType.Player) ||
                 (guid.GetObjectType() == ObjectType.ActivePlayer))
@@ -380,6 +384,7 @@ namespace WowPacketParser.Parsing.Parsers
                             if (obj.UnitData.Level != update.Value.UInt32Value)
                             {
                                 hasData = true;
+                                hasPlayerLevelup = obj.Type == ObjectType.Player || obj.Type == ObjectType.ActivePlayer;
                                 creatureUpdate.Level = update.Value.UInt32Value;
                             }
                         }
@@ -970,6 +975,7 @@ namespace WowPacketParser.Parsing.Parsers
                     Storage.StoreGameObjectUpdate(guid, goUpdate);
                 }
             }
+            return hasPlayerLevelup;
         }
 
         private static Dictionary<int, UpdateField> ReadValuesUpdateBlock(Packet packet, ObjectType type, object index, bool isCreating, Dictionary<int, UpdateField> oldValues)

@@ -288,6 +288,50 @@ namespace WowPacketParser.Store.Objects
         public string GUID;
     }
 
+    [DBTableName("player_classlevelstats")]
+    public sealed class PlayerClassLevelStats : IDataModel
+    {
+        [DBFieldName("class", true)]
+        public uint ClassId;
+
+        [DBFieldName("level", true)]
+        public int Level;
+
+        [DBFieldName("basehp")]
+        public int BaseHP;
+
+        [DBFieldName("basemana")]
+        public int BaseMana;
+    }
+
+    [DBTableName("player_levelstats")]
+    public sealed class PlayerLevelStats : IDataModel
+    {
+        [DBFieldName("race", true)]
+        public uint RaceId;
+
+        [DBFieldName("class", true)]
+        public uint ClassId;
+
+        [DBFieldName("level", true)]
+        public int Level;
+
+        [DBFieldName("str")]
+        public int Strength;
+
+        [DBFieldName("agi")]
+        public int Agility;
+
+        [DBFieldName("sta")]
+        public int Stamina;
+
+        [DBFieldName("inte")]
+        public int Intellect;
+
+        [DBFieldName("spi")]
+        public int Spirit;
+    }
+
     [DBTableName("player_levelup_info")]
     public sealed class PlayerLevelupInfo : IDataModel
     {

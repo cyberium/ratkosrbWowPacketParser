@@ -28,6 +28,11 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         uint HealthPercent { get; }
         int CurMana { get; }
         int MaxMana { get; }
+        int[] Stats { get; }
+        int[] StatPosBuff { get; }
+        int[] StatNegBuff { get; }
+        int BaseMana { get; }
+        int BaseHealth { get; }
         IVisibleItem[] VirtualItems { get; }
         uint Flags { get; }
         uint Flags2 { get; }

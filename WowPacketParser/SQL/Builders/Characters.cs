@@ -680,6 +680,45 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod]
+        public static string PlayerClassLevelStats()
+        {
+            if (!Settings.SqlTables.player_classlevelstats && !Settings.SqlTables.player_levelstats)
+                return string.Empty;
+
+            foreach (var objPair in Storage.Objects)
+            {
+                if (objPair.Key.GetObjectType() != ObjectType.Player)
+                    continue;
+
+                Player player = objPair.Value.Item1 as Player;
+                if (player == null)
+                    continue;
+
+                Storage.SavePlayerStats(player, true);
+            }
+
+            string result = "";
+
+            if (Settings.SqlTables.player_classlevelstats &&
+                !Storage.PlayerClassLevelStats.IsEmpty())
+            {
+                var templateDb = SQLDatabase.Get(Storage.PlayerClassLevelStats, Settings.TDBDatabase);
+
+                result += SQLUtil.Compare(Storage.PlayerClassLevelStats, templateDb, StoreNameType.None);
+            }
+
+            if (Settings.SqlTables.player_levelstats &&
+                !Storage.PlayerLevelStats.IsEmpty())
+            {
+                var templateDb = SQLDatabase.Get(Storage.PlayerLevelStats, Settings.TDBDatabase);
+
+                result += SQLUtil.Compare(Storage.PlayerLevelStats, templateDb, StoreNameType.None);
+            }
+
+            return result;
+        }
+
+        [BuilderMethod]
         public static string PlayerLevelupInfos()
         {
             if (Storage.PlayerLevelupInfos.IsEmpty())

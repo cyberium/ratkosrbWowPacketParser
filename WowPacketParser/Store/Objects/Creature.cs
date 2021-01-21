@@ -656,49 +656,49 @@ namespace WowPacketParser.Store.Objects
         public uint? BaseMana;
 
         [DBFieldName("strength", false, false, true)]
-        public uint? Strength;
+        public int? Strength;
 
         [DBFieldName("agility", false, false, true)]
-        public uint? Agility;
+        public int? Agility;
 
         [DBFieldName("stamina", false, false, true)]
-        public uint? Stamina;
+        public int? Stamina;
 
         [DBFieldName("intellect", false, false, true)]
-        public uint? Intellect;
+        public int? Intellect;
 
         [DBFieldName("spirit", false, false, true)]
-        public uint? Spirit;
+        public int? Spirit;
 
         [DBFieldName("positive_strength", false, false, true)]
-        public uint? PositiveStrength;
+        public int? PositiveStrength;
 
         [DBFieldName("positive_agility", false, false, true)]
-        public uint? PositiveAgility;
+        public int? PositiveAgility;
 
         [DBFieldName("positive_stamina", false, false, true)]
-        public uint? PositiveStamina;
+        public int? PositiveStamina;
 
         [DBFieldName("positive_intellect", false, false, true)]
-        public uint? PositiveIntellect;
+        public int? PositiveIntellect;
 
         [DBFieldName("positive_spirit", false, false, true)]
-        public uint? PositiveSpirit;
+        public int? PositiveSpirit;
 
         [DBFieldName("negative_strength", false, false, true)]
-        public uint? NegativeStrength;
+        public int? NegativeStrength;
 
         [DBFieldName("negative_agility", false, false, true)]
-        public uint? NegativeAgility;
+        public int? NegativeAgility;
 
         [DBFieldName("negative_stamina", false, false, true)]
-        public uint? NegativeStamina;
+        public int? NegativeStamina;
 
         [DBFieldName("negative_intellect", false, false, true)]
-        public uint? NegativeIntellect;
+        public int? NegativeIntellect;
 
         [DBFieldName("negative_spirit", false, false, true)]
-        public uint? NegativeSpirit;
+        public int? NegativeSpirit;
 
         [DBFieldName("armor", false, false, true)]
         public int? Armor;

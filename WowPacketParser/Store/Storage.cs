@@ -853,7 +853,48 @@ namespace WowPacketParser.Store
         // Start info (Race, Class)
         public static readonly DataBag<PlayerCreateInfoAction> StartActions = new DataBag<PlayerCreateInfoAction>(Settings.SqlTables.playercreateinfo_action);
         public static readonly DataBag<PlayerCreateInfo> StartPositions = new DataBag<PlayerCreateInfo>(Settings.SqlTables.playercreateinfo);
+        public static readonly DataBag<PlayerClassLevelStats> PlayerClassLevelStats = new DataBag<PlayerClassLevelStats>(Settings.SqlTables.player_classlevelstats);
+        public static readonly DataBag<PlayerLevelStats> PlayerLevelStats = new DataBag<PlayerLevelStats>(Settings.SqlTables.player_levelstats);
         public static readonly DataBag<PlayerLevelupInfo> PlayerLevelupInfos = new DataBag<PlayerLevelupInfo>(Settings.SqlTables.player_levelup_info);
+        public static void SavePlayerStats(WoWObject obj, bool useInitialData)
+        {
+            if (!Settings.SqlTables.player_levelstats && !Settings.SqlTables.player_classlevelstats)
+                return;
+
+            Player player = obj as Player;
+            if (player == null)
+                return;
+
+           var unitData = useInitialData ? player.UnitDataOriginal : player.UnitData;
+
+
+            PlayerClassLevelStats classLevelStats = new PlayerClassLevelStats();
+            classLevelStats.ClassId = unitData.ClassId;
+            classLevelStats.Level = unitData.Level;
+            classLevelStats.BaseHP = unitData.BaseHealth;
+            classLevelStats.BaseMana = unitData.BaseMana;
+            if (classLevelStats.BaseHP != 0)
+                Storage.PlayerClassLevelStats.Add(classLevelStats);
+
+            var stats = unitData.Stats;
+            var posstats = unitData.StatPosBuff;
+            var negstats = unitData.StatNegBuff;
+
+            PlayerLevelStats levelStats = new PlayerLevelStats();
+            levelStats.RaceId = unitData.RaceId;
+            levelStats.ClassId = unitData.ClassId;
+            levelStats.Level = unitData.Level;
+            levelStats.Strength = stats[(int)StatType.Strength] - posstats[(int)StatType.Strength] - negstats[(int)StatType.Strength];
+            levelStats.Agility = stats[(int)StatType.Agility] - posstats[(int)StatType.Agility] - negstats[(int)StatType.Agility];
+            levelStats.Stamina = stats[(int)StatType.Stamina] - posstats[(int)StatType.Stamina] - negstats[(int)StatType.Stamina];
+            levelStats.Intellect = stats[(int)StatType.Intellect] - posstats[(int)StatType.Intellect] - negstats[(int)StatType.Intellect];
+            if (ClientVersion.RemovedInVersion(ClientType.Legion) || ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+                levelStats.Spirit = stats[(int)StatType.Spirit] - posstats[(int)StatType.Spirit] - negstats[(int)StatType.Spirit];
+            if (levelStats.Strength != 0 || levelStats.Agility != 0 ||
+                levelStats.Stamina != 0 || levelStats.Intellect != 0 ||
+                levelStats.Spirit != 0)
+                Storage.PlayerLevelStats.Add(levelStats);
+        }
 
         // Gossips (MenuId, TextId)
         public static readonly Dictionary<uint, uint> CreatureDefaultGossips = new Dictionary<uint, uint>();
@@ -1067,6 +1108,8 @@ namespace WowPacketParser.Store
 
             StartActions.Clear();
             StartPositions.Clear();
+            PlayerClassLevelStats.Clear();
+            PlayerLevelStats.Clear();
             PlayerLevelupInfos.Clear();
 
             CreatureDefaultGossips.Clear();

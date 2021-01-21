@@ -621,21 +621,21 @@ CREATE TABLE IF NOT EXISTS `creature_stats` (
   `ranged_attack_power` int(10) unsigned DEFAULT NULL,
   `base_health` int(10) unsigned DEFAULT NULL,
   `base_mana` int(10) unsigned DEFAULT NULL,
-  `strength` int(10) unsigned DEFAULT NULL,
-  `agility` int(10) unsigned DEFAULT NULL,
-  `stamina` int(10) unsigned DEFAULT NULL,
-  `intellect` int(10) unsigned DEFAULT NULL,
-  `spirit` int(10) unsigned DEFAULT NULL,
-  `positive_strength` int(10) unsigned DEFAULT NULL,
-  `positive_agility` int(10) unsigned DEFAULT NULL,
-  `positive_stamina` int(10) unsigned DEFAULT NULL,
-  `positive_intellect` int(10) unsigned DEFAULT NULL,
-  `positive_spirit` int(10) unsigned DEFAULT NULL,
-  `negative_strength` int(10) unsigned DEFAULT NULL,
-  `negative_agility` int(10) unsigned DEFAULT NULL,
-  `negative_stamina` int(10) unsigned DEFAULT NULL,
-  `negative_intellect` int(10) unsigned DEFAULT NULL,
-  `negative_spirit` int(10) unsigned DEFAULT NULL,
+  `strength` int(10) DEFAULT NULL,
+  `agility` int(10) DEFAULT NULL,
+  `stamina` int(10) DEFAULT NULL,
+  `intellect` int(10) DEFAULT NULL,
+  `spirit` int(10) DEFAULT NULL,
+  `positive_strength` int(10) DEFAULT NULL,
+  `positive_agility` int(10) DEFAULT NULL,
+  `positive_stamina` int(10) DEFAULT NULL,
+  `positive_intellect` int(10) DEFAULT NULL,
+  `positive_spirit` int(10) DEFAULT NULL,
+  `negative_strength` int(10) DEFAULT NULL,
+  `negative_agility` int(10) DEFAULT NULL,
+  `negative_stamina` int(10) DEFAULT NULL,
+  `negative_intellect` int(10) DEFAULT NULL,
+  `negative_spirit` int(10) DEFAULT NULL,
   `armor` int(11) DEFAULT NULL,
   `holy_res` int(11) DEFAULT NULL,
   `fire_res` int(11) DEFAULT NULL,
@@ -1746,6 +1746,19 @@ CREATE TABLE IF NOT EXISTS `player_chat` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.player_classlevelstats
+DROP TABLE IF EXISTS `player_classlevelstats`;
+CREATE TABLE IF NOT EXISTS `player_classlevelstats` (
+  `class` tinyint(3) unsigned NOT NULL,
+  `level` tinyint(3) unsigned NOT NULL,
+  `basehp` smallint(5) unsigned NOT NULL,
+  `basemana` smallint(5) unsigned NOT NULL,
+  PRIMARY KEY (`class`,`level`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 COMMENT='Stores levels stats.';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.player_create1_time
 DROP TABLE IF EXISTS `player_create1_time`;
 CREATE TABLE IF NOT EXISTS `player_create1_time` (
@@ -1852,6 +1865,23 @@ CREATE TABLE IF NOT EXISTS `player_guid_values_update` (
   `object_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`guid`,`unixtimems`,`field_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to guid type update fields';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_levelstats
+DROP TABLE IF EXISTS `player_levelstats`;
+CREATE TABLE IF NOT EXISTS `player_levelstats` (
+  `race` tinyint(3) unsigned NOT NULL,
+  `class` tinyint(3) unsigned NOT NULL,
+  `level` tinyint(3) unsigned NOT NULL,
+  `str` tinyint(3) unsigned NOT NULL,
+  `agi` tinyint(3) unsigned NOT NULL,
+  `sta` tinyint(3) unsigned NOT NULL,
+  `inte` tinyint(3) unsigned NOT NULL,
+  `spi` tinyint(3) unsigned NOT NULL,
+  PRIMARY KEY (`race`,`class`,`level`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 COMMENT='Stores levels stats.';
 
 -- Data exporting was unselected.
 

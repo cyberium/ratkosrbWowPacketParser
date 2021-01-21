@@ -128,6 +128,8 @@
         playerchoice_locale,
         playercreateinfo,
         playercreateinfo_action,
+        player_classlevelstats,
+        player_levelstats,
         player_levelup_info,
         points_of_interest,
         quest_ender,

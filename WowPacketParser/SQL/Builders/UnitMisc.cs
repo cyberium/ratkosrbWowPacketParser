@@ -719,204 +719,249 @@ namespace WowPacketParser.SQL.Builders
                     //hasData = true; public field
                     creatureStats.BaseMana = value.UInt32Value;
                 }
-                if (UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT) > 0)
+                Func<int, bool> SaveStats = delegate (int field)
                 {
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT), out value))
+                    if (npc.UpdateFields.TryGetValue(field, out value))
                     {
                         hasData = true;
-                        creatureStats.Strength = value.UInt32Value;
+                        creatureStats.Strength = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT) + 1, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 1, out value))
                     {
                         hasData = true;
-                        creatureStats.Agility = value.UInt32Value;
+                        creatureStats.Agility = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT) + 2, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 2, out value))
                     {
                         hasData = true;
-                        creatureStats.Stamina = value.UInt32Value;
+                        creatureStats.Stamina = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT) + 3, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 3, out value))
                     {
                         hasData = true;
-                        creatureStats.Intellect = value.UInt32Value;
+                        creatureStats.Intellect = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT) + 4, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 4, out value))
                     {
                         hasData = true;
-                        creatureStats.Spirit = value.UInt32Value;
+                        creatureStats.Spirit = value.Int32Value;
                     }
-                }
-                if (UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POSSTAT) > 0)
+                    return true;
+                };
+                int statsField = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT);
+                if (statsField <= 0)
+                    statsField = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT0);
+                if (statsField > 0)
+                    SaveStats(statsField);
+
+                Func<int, bool> SavePosStats = delegate (int field)
                 {
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POSSTAT), out value))
+                    if (npc.UpdateFields.TryGetValue(field, out value))
                     {
                         hasData = true;
-                        creatureStats.PositiveStrength = value.UInt32Value;
+                        creatureStats.PositiveStrength = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POSSTAT) + 1, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 1, out value))
                     {
                         hasData = true;
-                        creatureStats.PositiveAgility = value.UInt32Value;
+                        creatureStats.PositiveAgility = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POSSTAT) + 2, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 2, out value))
                     {
                         hasData = true;
-                        creatureStats.PositiveStamina = value.UInt32Value;
+                        creatureStats.PositiveStamina = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POSSTAT) + 3, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 3, out value))
                     {
                         hasData = true;
-                        creatureStats.PositiveIntellect = value.UInt32Value;
+                        creatureStats.PositiveIntellect = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POSSTAT) + 4, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 4, out value))
                     {
                         hasData = true;
-                        creatureStats.PositiveSpirit = value.UInt32Value;
+                        creatureStats.PositiveSpirit = value.Int32Value;
                     }
-                }
-                if (UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_NEGSTAT) > 0)
+                    return true;
+                };
+                int posStatsField = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POSSTAT);
+                if (posStatsField <= 0)
+                    posStatsField = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POSSTAT0);
+                if (posStatsField > 0)
+                    SavePosStats(posStatsField);
+
+                Func<int, bool> SaveNegStats = delegate (int field)
                 {
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_NEGSTAT), out value))
+                    if (npc.UpdateFields.TryGetValue(field, out value))
                     {
                         hasData = true;
-                        creatureStats.NegativeStrength = value.UInt32Value;
+                        creatureStats.NegativeStrength = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_NEGSTAT) + 1, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 1, out value))
                     {
                         hasData = true;
-                        creatureStats.NegativeAgility = value.UInt32Value;
+                        creatureStats.NegativeAgility = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_NEGSTAT) + 2, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 2, out value))
                     {
                         hasData = true;
-                        creatureStats.NegativeStamina = value.UInt32Value;
+                        creatureStats.NegativeStamina = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_NEGSTAT) + 3, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 3, out value))
                     {
                         hasData = true;
-                        creatureStats.NegativeIntellect = value.UInt32Value;
+                        creatureStats.NegativeIntellect = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_NEGSTAT) + 4, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 4, out value))
                     {
                         hasData = true;
-                        creatureStats.NegativeSpirit = value.UInt32Value;
+                        creatureStats.NegativeSpirit = value.Int32Value;
                     }
-                }
-                if (UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES) > 0)
+                    return true;
+                };
+                int negStatsField = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_NEGSTAT);
+                if (negStatsField <= 0)
+                    negStatsField = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_NEGSTAT0);
+                if (negStatsField > 0)
+                    SaveNegStats(negStatsField);
+
+                Func<int, bool> SaveResistances = delegate (int field)
                 {
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES), out value))
+                    if (npc.UpdateFields.TryGetValue(field, out value))
                     {
                         hasData = true;
                         creatureStats.Armor = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES) + 1, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 1, out value))
                     {
                         hasData = true;
                         creatureStats.HolyResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES) + 2, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 2, out value))
                     {
                         hasData = true;
                         creatureStats.FireResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES) + 3, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 3, out value))
                     {
                         hasData = true;
                         creatureStats.NatureResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES) + 4, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 4, out value))
                     {
                         hasData = true;
                         creatureStats.FrostResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES) + 5, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 5, out value))
                     {
                         hasData = true;
                         creatureStats.ShadowResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES) + 6, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 6, out value))
                     {
                         hasData = true;
                         creatureStats.ArcaneResistance = value.Int32Value;
                     }
-                }
-                if (UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE) > 0)
+                    return true;
+                };
+                int resistField = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES);
+                if (resistField <= 0)
+                    resistField = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES_ARMOR);
+                if (resistField > 0)
+                    SaveResistances(resistField);
+
+                Func<int, bool> SavePositiveResistances = delegate (int field)
                 {
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE), out value))
+                    if (npc.UpdateFields.TryGetValue(field, out value))
                     {
                         hasData = true;
                         creatureStats.PositiveArmor = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE) + 1, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 1, out value))
                     {
                         hasData = true;
                         creatureStats.PositiveHolyResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE) + 2, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 2, out value))
                     {
                         hasData = true;
                         creatureStats.PositiveFireResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE) + 3, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 3, out value))
                     {
                         hasData = true;
                         creatureStats.PositiveNatureResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE) + 4, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 4, out value))
                     {
                         hasData = true;
                         creatureStats.PositiveFrostResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE) + 5, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 5, out value))
                     {
                         hasData = true;
                         creatureStats.PositiveShadowResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE) + 6, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 6, out value))
                     {
                         hasData = true;
                         creatureStats.PositiveArcaneResistance = value.Int32Value;
                     }
-                }
-                if (UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE) > 0)
+                    return true;
+                };
+                int posResistField = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE);
+                if (posResistField <= 0)
+                    posResistField = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE_ARMOR);
+                if (posResistField <= 0)
+                    posResistField = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BONUS_RESISTANCE_MODS);
+                if (posResistField > 0)
+                    SavePositiveResistances(posResistField);
+
+                Func<int, bool> SaveNegativeResistances = delegate (int field)
                 {
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE), out value))
+                    if (npc.UpdateFields.TryGetValue(field, out value))
                     {
                         hasData = true;
                         creatureStats.NegativeArmor = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE) + 1, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 1, out value))
                     {
                         hasData = true;
                         creatureStats.NegativeHolyResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE) + 2, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 2, out value))
                     {
                         hasData = true;
                         creatureStats.NegativeFireResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE) + 3, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 3, out value))
                     {
                         hasData = true;
                         creatureStats.NegativeNatureResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE) + 4, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 4, out value))
                     {
                         hasData = true;
                         creatureStats.NegativeFrostResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE) + 5, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 5, out value))
                     {
                         hasData = true;
                         creatureStats.NegativeShadowResistance = value.Int32Value;
                     }
-                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE) + 6, out value))
+                    if (npc.UpdateFields.TryGetValue(field + 6, out value))
                     {
                         hasData = true;
                         creatureStats.NegativeArcaneResistance = value.Int32Value;
                     }
-                }
+                    return true;
+                };
+                int negResistField = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE);
+                if (negResistField <= 0)
+                    negResistField = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE_ARMOR);
+                if (negResistField <= 0)
+                    negResistField = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BONUS_RESISTANCE_MODS);
+                if (negResistField > 0)
+                    SaveNegativeResistances(negResistField);
 
                 if (hasData)
                 {

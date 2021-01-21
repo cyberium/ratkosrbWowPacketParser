@@ -230,6 +230,7 @@ namespace WowPacketParser.Enums
         UNIT_FIELD_MOUNTDISPLAYID,
         UNIT_FIELD_NATIVEDISPLAYID,
         UNIT_FIELD_NATIVE_X_DISPLAY_SCALE,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_NEGSTAT,
         UNIT_FIELD_NEGSTAT0,
         UNIT_FIELD_NEGSTAT1,
@@ -243,6 +244,7 @@ namespace WowPacketParser.Enums
         UNIT_FIELD_PETNEXTLEVELEXP,
         UNIT_FIELD_PETNUMBER,
         UNIT_FIELD_PET_NAME_TIMESTAMP,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_POSSTAT,
         UNIT_FIELD_POSSTAT0,
         UNIT_FIELD_POSSTAT1,
@@ -320,6 +322,7 @@ namespace WowPacketParser.Enums
         UNIT_FIELD_SCALING_LEVEL_MAX,
         [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_SCALING_LEVEL_DELTA,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_STAT,
         UNIT_FIELD_STAT0,
         UNIT_FIELD_STAT1,
