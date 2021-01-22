@@ -171,6 +171,8 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
 
             if (hasAmmoInventoryType)
                 dbdata.AmmoInventoryType = (int)packet.ReadInt32E<InventoryType>("AmmoInventoryType", idx);
+
+            packet.AddSniffData(StoreNameType.Spell, (int)dbdata.SpellID, "CAST");
         }
 
         [Parser(Opcode.SMSG_SPELL_START)]

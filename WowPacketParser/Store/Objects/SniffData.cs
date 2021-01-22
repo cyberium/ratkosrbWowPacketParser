@@ -7,19 +7,19 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("sniff_data")]
     public sealed class SniffData : IDataModel
     {
-        [DBFieldName("Build", true)]
+        [DBFieldName("sniff_build")]
         public int Build = ClientVersion.BuildInt;
 
-        [DBFieldName("SniffName", true)]
-        public string SniffName;
+        [DBFieldName("sniff_id", true, true)]
+        public string SniffId;
 
-        [DBFieldName("ObjectType", true)]
+        [DBFieldName("object_type", true)]
         public StoreNameType ObjectType;
 
-        [DBFieldName("Id", true)]
+        [DBFieldName("id", true)]
         public int Id;
 
-        [DBFieldName("Data")]
+        [DBFieldName("data", true)]
         public string Data;
     }
 }

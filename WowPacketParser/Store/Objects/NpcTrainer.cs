@@ -10,23 +10,28 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ID", true, DbType = (TargetedDbType.TRINITY))]
         public uint? ID;
 
-        [DBFieldName("spell", true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("spell_id", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("spell", true, DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("SpellID", true, DbType = (TargetedDbType.TRINITY))]
         public int? SpellID;
 
-        [DBFieldName("spellcost", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("money_cost", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("spellcost", DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("MoneyCost", DbType = (TargetedDbType.TRINITY))]
         public uint? MoneyCost;
 
-        [DBFieldName("reqskill", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("required_skill_id", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("reqskill", DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("ReqSkillLine", DbType = (TargetedDbType.TRINITY))]
         public uint? ReqSkillLine;
 
-        [DBFieldName("reqskillvalue", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("required_skill_value", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("reqskillvalue", DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("ReqSkillRank", DbType = (TargetedDbType.TRINITY))]
         public uint? ReqSkillRank;
 
-        [DBFieldName("reqlevel", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("required_level", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("reqlevel", DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("ReqLevel", DbType = (TargetedDbType.TRINITY))]
         public uint? ReqLevel;
 

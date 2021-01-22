@@ -6,13 +6,13 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("object_names")]
     public sealed class ObjectName : IDataModel
     {
-        [DBFieldName("ObjectType", true)]
+        [DBFieldName("object_type", true)]
         public StoreNameType? ObjectType;
 
-        [DBFieldName("Id", true)]
+        [DBFieldName("id", true)]
         public int? ID;
 
-        [DBFieldName("Name")]
+        [DBFieldName("name")]
         public string Name;
     }
 }

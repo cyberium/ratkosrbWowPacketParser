@@ -82,6 +82,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.AmmoInventoryType = cast_pair.Item1.AmmoInventoryType;
                 row.Data.HitTargetsCount = cast_pair.Item1.HitTargetsCount;
                 row.Data.MissTargetsCount = cast_pair.Item1.MissTargetsCount;
+                row.Data.Orientation = cast_pair.Item1.Orientation;
 
                 Storage.GetObjectDbGuidEntryType(cast_pair.Item1.CasterGuid, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
                 Storage.GetObjectDbGuidEntryType(cast_pair.Item1.CasterUnitGuid, out row.Data.CasterUnitGuid, out row.Data.CasterUnitId, out row.Data.CasterUnitType);

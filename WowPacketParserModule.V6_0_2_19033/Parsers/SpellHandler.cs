@@ -407,6 +407,8 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
 
             if (hasProjectileVisual)
                 ReadProjectileVisual(packet, idx, "ProjectileVisual");
+
+            packet.AddSniffData(StoreNameType.Spell, (int)dbdata.SpellID, "CAST");
         }
 
         [Parser(Opcode.SMSG_WEEKLY_SPELL_USAGE)]

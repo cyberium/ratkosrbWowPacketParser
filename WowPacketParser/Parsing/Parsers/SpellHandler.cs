@@ -870,11 +870,10 @@ namespace WowPacketParser.Parsing.Parsers
                 Storage.SpellClicks.Add(spellClick, packet.TimeSpan);
             }
 
+            packet.AddSniffData(StoreNameType.Spell, spellId, "CAST");
+
             if (isSpellGo)
-            {
-                packet.AddSniffData(StoreNameType.Spell, spellId, "SPELL_GO");
                 Storage.StoreSpellCastData(dbdata, Storage.SpellCastGo, packet);
-            }
             else
                 Storage.StoreSpellCastData(dbdata, Storage.SpellCastStart, packet);
         }

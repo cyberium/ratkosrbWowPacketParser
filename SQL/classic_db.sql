@@ -812,11 +812,11 @@ CREATE TABLE IF NOT EXISTS `creature_threat_update_target` (
 -- Dumping structure for table sniffs_new_test.creature_trainer
 DROP TABLE IF EXISTS `creature_trainer`;
 CREATE TABLE IF NOT EXISTS `creature_trainer` (
-  `creature_id` int(11) unsigned NOT NULL,
+  `entry` int(11) unsigned NOT NULL,
   `trainer_id` int(11) unsigned NOT NULL DEFAULT '0',
   `menu_id` int(11) unsigned NOT NULL DEFAULT '0',
-  `id` int(11) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`creature_id`,`menu_id`)
+  `option_index` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`menu_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -1226,8 +1226,8 @@ CREATE TABLE IF NOT EXISTS `gossip_menu_option` (
   `option_icon` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `option_text` text,
   `option_broadcast_text` mediumint(6) NOT NULL DEFAULT '0',
-  `option_id` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `npc_option_npcflag` int(10) unsigned NOT NULL DEFAULT '0',
+  `option_id` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'guessed based on icon',
+  `npc_option_npcflag` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'guessed based on icon',
   `action_menu_id` int(10) unsigned NOT NULL DEFAULT '0',
   `action_poi_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `box_coded` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -1478,13 +1478,13 @@ CREATE TABLE IF NOT EXISTS `npc_text` (
 DROP TABLE IF EXISTS `npc_trainer`;
 CREATE TABLE IF NOT EXISTS `npc_trainer` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `spell` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `spellcost` int(10) unsigned NOT NULL DEFAULT '0',
-  `reqskill` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `reqskillvalue` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `reqlevel` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `spell_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `money_cost` int(10) unsigned NOT NULL DEFAULT '0',
+  `required_skill_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `required_skill_value` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `required_level` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  UNIQUE KEY `entry_spell` (`entry`,`spell`)
+  UNIQUE KEY `entry_spell` (`entry`,`spell_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -1497,7 +1497,6 @@ CREATE TABLE IF NOT EXISTS `npc_vendor` (
   `slot` smallint(6) NOT NULL DEFAULT '0',
   `item` mediumint(8) NOT NULL DEFAULT '0',
   `maxcount` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `incrtime` int(10) unsigned NOT NULL DEFAULT '0',
   `extended_cost` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `type` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `player_condition_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1513,10 +1512,10 @@ CREATE TABLE IF NOT EXISTS `npc_vendor` (
 -- Dumping structure for table sniffs_new_test.object_names
 DROP TABLE IF EXISTS `object_names`;
 CREATE TABLE IF NOT EXISTS `object_names` (
-  `ObjectType` enum('None','Spell','Map','LFGDungeon','Battleground','Unit','GameObject','CreatureDifficulty','Item','Quest','Opcode','PageText','NpcText','BroadcastText','Gossip','Zone','Area','AreaTrigger','Phase','Player','Achievement') NOT NULL DEFAULT 'None',
-  `Id` int(10) NOT NULL,
-  `Name` text NOT NULL,
-  PRIMARY KEY (`ObjectType`,`Id`)
+  `object_type` enum('None','Spell','Map','LFGDungeon','Battleground','Unit','GameObject','CreatureDifficulty','Item','Quest','Opcode','PageText','NpcText','BroadcastText','Gossip','Zone','Area','AreaTrigger','Phase','Player','Achievement') NOT NULL DEFAULT 'None',
+  `id` int(10) NOT NULL,
+  `name` text NOT NULL,
+  PRIMARY KEY (`object_type`,`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='WPP''s ObjectTypes Names DataBase';
 
 -- Data exporting was unselected.
@@ -2139,6 +2138,7 @@ CREATE TABLE IF NOT EXISTS `quest_objectives` (
   `QuestID` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `Type` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `StorageIndex` tinyint(3) NOT NULL DEFAULT '0',
+  `Order` int(11) NOT NULL DEFAULT '0',
   `ObjectID` int(10) NOT NULL DEFAULT '0',
   `Amount` int(10) NOT NULL DEFAULT '0',
   `Flags` int(10) unsigned NOT NULL DEFAULT '0',
@@ -2279,6 +2279,9 @@ CREATE TABLE IF NOT EXISTS `quest_template` (
   `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `QuestType` tinyint(3) unsigned NOT NULL DEFAULT '2',
   `QuestLevel` smallint(3) NOT NULL DEFAULT '1',
+  `ScalingFactionGroup` int(11) NOT NULL DEFAULT '1',
+  `MaxScalingLevel` int(11) NOT NULL DEFAULT '1',
+  `QuestPackageID` int(10) unsigned NOT NULL DEFAULT '1',
   `MinLevel` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `QuestSortID` smallint(6) NOT NULL DEFAULT '0',
   `QuestInfoID` smallint(5) unsigned NOT NULL DEFAULT '0',
@@ -2289,15 +2292,30 @@ CREATE TABLE IF NOT EXISTS `quest_template` (
   `RequiredFactionValue2` mediumint(8) NOT NULL DEFAULT '0',
   `RewardNextQuest` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `RewardXPDifficulty` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `RewardXPMultiplier` float NOT NULL DEFAULT '0',
   `RewardMoney` int(11) NOT NULL DEFAULT '0',
+  `RewardMoneyDifficulty` int(11) unsigned NOT NULL DEFAULT '0',
+  `RewardMoneyMultiplier` float NOT NULL DEFAULT '0',
   `RewardBonusMoney` int(10) unsigned NOT NULL DEFAULT '0',
-  `RewardDisplaySpell` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `RewardSpell` int(11) NOT NULL DEFAULT '0',
-  `RewardHonor` int(11) NOT NULL DEFAULT '0',
+  `RewardDisplaySpell1` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `RewardDisplaySpell2` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `RewardDisplaySpell3` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `RewardSpell` int(11) unsigned NOT NULL DEFAULT '0',
+  `RewardHonor` int(11) unsigned NOT NULL DEFAULT '0',
   `RewardKillHonor` float NOT NULL DEFAULT '0',
   `StartItem` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `RewardArtifactXPDifficulty` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `RewardArtifactXPMultiplier` float NOT NULL DEFAULT '0',
+  `RewardArtifactCategoryID` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `Flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `FlagsEx` int(10) unsigned NOT NULL DEFAULT '0',
+  `FlagsEx2` int(10) unsigned NOT NULL DEFAULT '0',
   `RequiredPlayerKills` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `RewardSkillLineID` int(10) unsigned NOT NULL DEFAULT '0',
+  `RewardNumSkillUps` int(10) unsigned NOT NULL DEFAULT '0',
+  `PortraitGiver` int(10) unsigned NOT NULL DEFAULT '0',
+  `PortraitGiverMount` int(10) unsigned NOT NULL DEFAULT '0',
+  `PortraitTurnIn` int(10) unsigned NOT NULL DEFAULT '0',
   `RewardItem1` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `RewardAmount1` smallint(5) unsigned NOT NULL DEFAULT '0',
   `RewardItem2` mediumint(8) unsigned NOT NULL DEFAULT '0',
@@ -2316,40 +2334,55 @@ CREATE TABLE IF NOT EXISTS `quest_template` (
   `ItemDropQuantity4` smallint(5) unsigned NOT NULL DEFAULT '0',
   `RewardChoiceItemID1` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `RewardChoiceItemQuantity1` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `RewardChoiceItemDisplayID1` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `RewardChoiceItemID2` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `RewardChoiceItemQuantity2` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `RewardChoiceItemDisplayID2` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `RewardChoiceItemID3` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `RewardChoiceItemQuantity3` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `RewardChoiceItemDisplayID3` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `RewardChoiceItemID4` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `RewardChoiceItemQuantity4` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `RewardChoiceItemDisplayID4` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `RewardChoiceItemID5` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `RewardChoiceItemQuantity5` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `RewardChoiceItemDisplayID5` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `RewardChoiceItemID6` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `RewardChoiceItemQuantity6` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `RewardChoiceItemDisplayID6` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `POIContinent` smallint(5) unsigned NOT NULL DEFAULT '0',
   `POIx` float NOT NULL DEFAULT '0',
   `POIy` float NOT NULL DEFAULT '0',
-  `POIPriority` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `POIPriority` mediumint(8) NOT NULL DEFAULT '0',
   `RewardTitle` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `RewardTalents` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `RewardArenaPoints` smallint(5) unsigned NOT NULL DEFAULT '0',
   `RewardFactionID1` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'faction id from Faction.dbc in this case',
   `RewardFactionValue1` mediumint(8) NOT NULL DEFAULT '0',
+  `RewardFactionCapIn1` mediumint(8) NOT NULL DEFAULT '0',
   `RewardFactionOverride1` mediumint(8) NOT NULL DEFAULT '0',
   `RewardFactionID2` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'faction id from Faction.dbc in this case',
   `RewardFactionValue2` mediumint(8) NOT NULL DEFAULT '0',
+  `RewardFactionCapIn2` mediumint(8) NOT NULL DEFAULT '0',
   `RewardFactionOverride2` mediumint(8) NOT NULL DEFAULT '0',
   `RewardFactionID3` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'faction id from Faction.dbc in this case',
   `RewardFactionValue3` mediumint(8) NOT NULL DEFAULT '0',
+  `RewardFactionCapIn3` mediumint(8) NOT NULL DEFAULT '0',
   `RewardFactionOverride3` mediumint(8) NOT NULL DEFAULT '0',
   `RewardFactionID4` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'faction id from Faction.dbc in this case',
   `RewardFactionValue4` mediumint(8) NOT NULL DEFAULT '0',
+  `RewardFactionCapIn4` mediumint(8) NOT NULL DEFAULT '0',
   `RewardFactionOverride4` mediumint(8) NOT NULL DEFAULT '0',
   `RewardFactionID5` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'faction id from Faction.dbc in this case',
   `RewardFactionValue5` mediumint(8) NOT NULL DEFAULT '0',
+  `RewardFactionCapIn5` mediumint(8) NOT NULL DEFAULT '0',
   `RewardFactionOverride5` mediumint(8) NOT NULL DEFAULT '0',
+  `RewardFactionFlags` int(10) unsigned NOT NULL DEFAULT '0',
+  `AreaGroupID` int(10) unsigned NOT NULL DEFAULT '0',
   `TimeAllowed` int(10) unsigned NOT NULL DEFAULT '0',
-  `AllowableRaces` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `AllowableRaces` int(10) unsigned NOT NULL DEFAULT '0',
+  `TreasurePickerID` int(10) NOT NULL DEFAULT '0',
+  `Expansion` int(10) NOT NULL DEFAULT '0',
   `LogTitle` text,
   `LogDescription` text,
   `QuestDescription` text,
@@ -2380,6 +2413,20 @@ CREATE TABLE IF NOT EXISTS `quest_template` (
   `ObjectiveText2` text,
   `ObjectiveText3` text,
   `ObjectiveText4` text,
+  `RewardCurrencyID1` int(10) unsigned DEFAULT NULL,
+  `RewardCurrencyID2` int(10) unsigned DEFAULT NULL,
+  `RewardCurrencyID3` int(10) unsigned DEFAULT NULL,
+  `RewardCurrencyID4` int(10) unsigned DEFAULT NULL,
+  `RewardCurrencyQty1` int(10) unsigned DEFAULT NULL,
+  `RewardCurrencyQty2` int(10) unsigned DEFAULT NULL,
+  `RewardCurrencyQty3` int(10) unsigned DEFAULT NULL,
+  `RewardCurrencyQty4` int(10) unsigned DEFAULT NULL,
+  `PortraitGiverText` text,
+  `PortraitGiverName` text,
+  `PortraitTurnInText` text,
+  `PortraitTurnInName` text,
+  `AcceptedSoundKitID` int(10) unsigned DEFAULT NULL,
+  `CompleteSoundKitID` int(10) unsigned DEFAULT NULL,
   `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Quest System';
@@ -2426,6 +2473,20 @@ CREATE TABLE IF NOT EXISTS `quest_update_failed` (
   `quest_id` int(10) unsigned NOT NULL COMMENT 'quest template entry',
   PRIMARY KEY (`quest_id`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_QUEST_UPDATE_FAILED and SMSG_QUEST_UPDATE_FAILED_TIMER';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.sniff_data
+DROP TABLE IF EXISTS `sniff_data`;
+CREATE TABLE IF NOT EXISTS `sniff_data` (
+  `sniff_build` int(10) unsigned NOT NULL DEFAULT '0',
+  `sniff_id` int(11) NOT NULL DEFAULT '0',
+  `object_type` enum('None','Spell','Map','LFGDungeon','Battleground','Unit','GameObject','CreatureDifficulty','Item','Quest','Opcode','PageText','NpcText','BroadcastText','Gossip','Zone','Area','AreaTrigger','Phase','Player','Achievement') NOT NULL DEFAULT 'None',
+  `id` int(10) NOT NULL DEFAULT '0',
+  `data` text NOT NULL,
+  UNIQUE KEY `SniffName` (`object_type`,`id`,`data`(255),`sniff_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 
@@ -2591,12 +2652,11 @@ CREATE TABLE IF NOT EXISTS `spell_target_position` (
 -- Dumping structure for table sniffs_new_test.trainer
 DROP TABLE IF EXISTS `trainer`;
 CREATE TABLE IF NOT EXISTS `trainer` (
-  `Id` int(10) unsigned NOT NULL DEFAULT '0',
-  `Type` tinyint(2) unsigned NOT NULL DEFAULT '2',
-  `Requirement` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `Greeting` text,
-  `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
-  PRIMARY KEY (`Id`)
+  `id` int(10) unsigned NOT NULL DEFAULT '0',
+  `type` tinyint(2) unsigned NOT NULL DEFAULT '2',
+  `greeting` text,
+  `sniff_build` smallint(5) unsigned DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -2605,17 +2665,17 @@ CREATE TABLE IF NOT EXISTS `trainer` (
 -- Dumping structure for table sniffs_new_test.trainer_spell
 DROP TABLE IF EXISTS `trainer_spell`;
 CREATE TABLE IF NOT EXISTS `trainer_spell` (
-  `TrainerId` int(10) unsigned NOT NULL DEFAULT '0',
-  `SpellId` int(10) unsigned NOT NULL DEFAULT '0',
-  `MoneyCost` int(10) unsigned NOT NULL DEFAULT '0',
-  `ReqSkillLine` int(10) unsigned NOT NULL DEFAULT '0',
-  `ReqSkillRank` int(10) unsigned NOT NULL DEFAULT '0',
-  `ReqAbility1` int(10) unsigned NOT NULL DEFAULT '0',
-  `ReqAbility2` int(10) unsigned NOT NULL DEFAULT '0',
-  `ReqAbility3` int(10) unsigned NOT NULL DEFAULT '0',
-  `ReqLevel` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
-  PRIMARY KEY (`TrainerId`,`SpellId`)
+  `trainer_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `money_cost` int(10) unsigned NOT NULL DEFAULT '0',
+  `required_skill_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `required_skill_value` int(10) unsigned NOT NULL DEFAULT '0',
+  `required_ability1` int(10) unsigned NOT NULL DEFAULT '0',
+  `required_ability2` int(10) unsigned NOT NULL DEFAULT '0',
+  `required_ability3` int(10) unsigned NOT NULL DEFAULT '0',
+  `required_level` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` smallint(5) unsigned DEFAULT '0',
+  PRIMARY KEY (`trainer_id`,`spell_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.

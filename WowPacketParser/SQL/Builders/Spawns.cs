@@ -214,7 +214,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.OffHandSlotItem = (uint)unitData.VirtualItems[1].ItemID;
                 row.Data.RangedSlotItem = (uint)unitData.VirtualItems[2].ItemID;
 
-                row.Data.SniffId = creature.SourceSniffId;
+                row.Data.SniffId = "@SNIFFID+" + creature.SourceSniffId;
                 row.Data.SniffBuild = creature.SourceSniffBuild;
 
                 row.Data.Auras = creature.GetAurasString(false);
@@ -1038,7 +1038,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.ArtKit = go.GameObjectDataOriginal.ArtKit;
                 row.Data.AnimProgress = go.GameObjectDataOriginal.AnimProgress;
                 row.Data.CustomParam = go.GameObjectDataOriginal.CustomParam;
-                row.Data.SniffId = go.SourceSniffId;
+                row.Data.SniffId = "@SNIFFID+" + go.SourceSniffId;
                 row.Data.SniffBuild = go.SourceSniffBuild;
 
                 // set some defaults

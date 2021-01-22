@@ -212,8 +212,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("auras", DbType = (TargetedDbType.WPP))]
         public string Auras;
 
-        [DBFieldName("sniff_id", false, false, false, true, DbType = (TargetedDbType.WPP))]
-        public int? SniffId;
+        [DBFieldName("sniff_id", false, true, false, true, DbType = (TargetedDbType.WPP))]
+        public string SniffId;
 
         [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
         [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]

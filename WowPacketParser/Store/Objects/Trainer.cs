@@ -7,16 +7,20 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("trainer")]
     public sealed class Trainer : IDataModel
     {
-        [DBFieldName("Id", true)]
+        [DBFieldName("id", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Id", true, DbType = (TargetedDbType.TRINITY))]
         public uint? Id;
 
-        [DBFieldName("Type")]
+        [DBFieldName("type", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Type", DbType = (TargetedDbType.TRINITY))]
         public TrainerType? Type;
 
-        [DBFieldName("Greeting")]
+        [DBFieldName("greeting", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Greeting", DbType = (TargetedDbType.TRINITY))]
         public string Greeting;
 
-        [DBFieldName("VerifiedBuild")]
+        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 }
