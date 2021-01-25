@@ -13,6 +13,8 @@ namespace WowPacketParser.Store.Objects
 
         public IGameObjectData GameObjectData;
         public IGameObjectData GameObjectDataOriginal;
+        public uint? WorldEffectID;
+        public uint? AIAnimKitID;
 
         public GameObject() : base()
         {
