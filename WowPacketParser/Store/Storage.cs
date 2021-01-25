@@ -309,7 +309,7 @@ namespace WowPacketParser.Store
                 {
                     // If this is the first packet that sends auras
                     // (hopefully at spawn time) add it to the "Auras" field
-                    if (unit.Auras == null && ((time - unit.FirstCreateTime).TotalSeconds < 3))
+                    if (unit.Auras == null && unit.FirstCreateTime != null && ((time - unit.FirstCreateTime).TotalSeconds < 3))
                         unit.Auras = auras;
                 }
             }
