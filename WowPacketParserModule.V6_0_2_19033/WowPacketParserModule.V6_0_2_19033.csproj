@@ -63,6 +63,7 @@
     <Compile Include="Enums\UpdateFields622.cs" />
     <Compile Include="Enums\UpdateFields623.cs" />
     <Compile Include="Enums\UpdateFields624.cs" />
+    <Compile Include="Enums\SplineFacingType.cs" />
     <Compile Include="Hotfix\AreaPOIEntry.cs" />
     <Compile Include="Hotfix\AreaPOIStateEntry.cs" />
     <Compile Include="Hotfix\BattlePetSpeciesEntry.cs" />

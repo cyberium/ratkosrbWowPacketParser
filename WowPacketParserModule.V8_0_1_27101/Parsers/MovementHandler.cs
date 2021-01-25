@@ -6,6 +6,7 @@ using WowPacketParser.Store;
 using WowPacketParser.Store.Objects;
 using WowPacketParser.Parsing;
 using CoreParsers = WowPacketParser.Parsing.Parsers;
+using SplineFacingType = WowPacketParserModule.V6_0_2_19033.Enums.SplineFacingType;
 using SplineFlag = WowPacketParserModule.V7_0_3_22248.Enums.SplineFlag;
 using System.Collections.Generic;
 
@@ -72,7 +73,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
 
             packet.ResetBitReader();
 
-            var type = packet.ReadBits("Face", 2, indexes);
+            var type = packet.ReadBitsE<SplineFacingType>("Face", 2, indexes);
             var pointsCount = packet.ReadBits("PointsCount", 16, indexes);
             if (ClientVersion.AddedInVersion(ClientType.Shadowlands))
             {
@@ -97,15 +98,15 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             float orientation = 100;
             switch (type)
             {
-                case 1:
+                case SplineFacingType.Spot:
                     var faceSpot = packet.ReadVector3("FaceSpot", indexes);
                     orientation = Utilities.GetAngle(pos.X, pos.Y, faceSpot.X, faceSpot.Y);
                     break;
-                case 2:
+                case SplineFacingType.Target:
                     orientation = packet.ReadSingle("FaceDirection", indexes);
                     packet.ReadPackedGuid128("FacingGUID", indexes);
                     break;
-                case 3:
+                case SplineFacingType.Angle:
                     orientation = packet.ReadSingle("FaceDirection", indexes);
                     break;
                 default:
