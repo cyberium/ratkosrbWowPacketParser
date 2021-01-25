@@ -393,7 +393,7 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SqlTables.player_movement_client)
+                if (Settings.SqlTables.creature_movement_client)
                 {
                     foreach (var movement in Storage.PlayerMovements)
                     {
@@ -415,22 +415,8 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (Settings.SqlTables.creature_movement_server &&
-                        creature.Waypoints != null &&
-                        creature.OriginalMovement.Position != null)
+                if (creature.Waypoints != null && creature.OriginalMovement.Position != null)
                 {
-                    if (creature.WaypointSplines != null)
-                    {
-                        foreach (ServerSideMovementSpline waypoint in creature.WaypointSplines)
-                        {
-                            var movementSplineRow = new Row<ServerSideMovementSpline>();
-                            movementSplineRow.Data = waypoint;
-                            movementSplineRow.Data.GUID = "@CGUID+" + creature.DbGuid;
-                            movementSplineRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
-                            movementSplineRows.Add(movementSplineRow);
-                        }
-                    }
-
                     float maxDistanceFromSpawn = 0;
                     foreach (ServerSideMovement waypoint in creature.Waypoints)
                     {
@@ -448,8 +434,21 @@ namespace WowPacketParser.SQL.Builders
                     if (row.Data.WanderDistance > 20)
                         row.Data.MovementType = 2;
 
-                    if (row.Data.MovementType == 2 || Settings.TargetedDbType == TargetedDbType.WPP)
+                    if (Settings.SqlTables.creature_movement_server &&
+                       (row.Data.MovementType == 2 || Settings.TargetedDbType == TargetedDbType.WPP))
                     {
+                        if (creature.WaypointSplines != null)
+                        {
+                            foreach (ServerSideMovementSpline waypoint in creature.WaypointSplines)
+                            {
+                                var movementSplineRow = new Row<ServerSideMovementSpline>();
+                                movementSplineRow.Data = waypoint;
+                                movementSplineRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                                movementSplineRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
+                                movementSplineRows.Add(movementSplineRow);
+                            }
+                        }
+
                         foreach (ServerSideMovement waypoint in creature.Waypoints)
                         {
                             var movementRow = new Row<ServerSideMovement>();

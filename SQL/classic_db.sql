@@ -2622,6 +2622,18 @@ CREATE TABLE IF NOT EXISTS `spell_target_position` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.spell_unique_caster
+DROP TABLE IF EXISTS `spell_unique_caster`;
+CREATE TABLE IF NOT EXISTS `spell_unique_caster` (
+  `caster_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `caster_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`caster_id`,`caster_type`,`spell_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='unique caster and spell combinations';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.trainer
 DROP TABLE IF EXISTS `trainer`;
 CREATE TABLE IF NOT EXISTS `trainer` (
