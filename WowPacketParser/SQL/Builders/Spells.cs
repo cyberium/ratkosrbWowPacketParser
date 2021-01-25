@@ -22,6 +22,20 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod]
+        public static string SpellUniqueCasters()
+        {
+            if (Storage.SpellUniqueCasters.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.spell_unique_caster)
+                return string.Empty;
+
+            var templatesDb = SQLDatabase.Get(Storage.SpellUniqueCasters);
+
+            return SQLUtil.Compare(Storage.SpellUniqueCasters, templatesDb, StoreNameType.None);
+        }
+
+        [BuilderMethod]
         public static string SpellCastStart()
         {
             if (Storage.SpellCastStart.IsEmpty())

@@ -956,8 +956,20 @@ namespace WowPacketParser.Store
         public static readonly DataBag<SpellCastFailed> SpellCastFailed = new DataBag<SpellCastFailed>(Settings.SqlTables.spell_cast_failed);
         public static readonly DataBag<SpellCastData> SpellCastStart = new DataBag<SpellCastData>(Settings.SqlTables.spell_cast_start);
         public static readonly DataBag<SpellCastData> SpellCastGo = new DataBag<SpellCastData>(Settings.SqlTables.spell_cast_go);
+        public static readonly DataBag<SpellUniqueCaster> SpellUniqueCasters = new DataBag<SpellUniqueCaster>(Settings.SqlTables.spell_unique_caster);
         public static void StoreSpellCastData(SpellCastData castData, DataBag<SpellCastData> storage, Packet packet)
         {
+            if (Settings.SqlTables.spell_unique_caster &&
+                (castData.CasterGuid.GetObjectType() == ObjectType.Unit ||
+                castData.CasterGuid.GetObjectType() == ObjectType.GameObject))
+            {
+                SpellUniqueCaster uniqueCast = new SpellUniqueCaster();
+                uniqueCast.SpellId = castData.SpellID;
+                uniqueCast.CasterId = castData.CasterGuid.GetEntry();
+                uniqueCast.CasterType = GetObjectTypeNameForDB(castData.CasterGuid);
+                SpellUniqueCasters.Add(uniqueCast);
+            }
+
             if (!Settings.SqlTables.spell_cast_start &&
                 !Settings.SqlTables.spell_cast_go)
                 return;
@@ -966,24 +978,6 @@ namespace WowPacketParser.Store
                 return;
 
             castData.Time = packet.Time;
-
-            /*
-            uncomment for unique casts only
-            foreach (var cast_pair in storage)
-            {
-                if (cast_pair.Item1.CasterID == castData.CasterID &&
-                    cast_pair.Item1.CasterType == castData.CasterType &&
-                    cast_pair.Item1.CastFlags == castData.CastFlags &&
-                    cast_pair.Item1.CastFlagsEx == castData.CastFlagsEx &&
-                    cast_pair.Item1.SpellID == castData.SpellID &&
-                    cast_pair.Item1.MainTargetID == castData.MainTargetID &&
-                    cast_pair.Item1.MainTargetType == castData.MainTargetType &&
-                    cast_pair.Item1.HitTargetID.SequenceEqual(castData.HitTargetID) &&
-                    cast_pair.Item1.HitTargetType.SequenceEqual(castData.HitTargetType))
-                    return;
-            }
-            */
-
             storage.Add(castData, packet.TimeSpan);
         }
         public static readonly DataBag<CreaturePetCooldown> CreaturePetCooldown = new DataBag<CreaturePetCooldown>(Settings.SqlTables.creature_pet_cooldown);
@@ -1150,6 +1144,7 @@ namespace WowPacketParser.Store
             SpellCastFailed.Clear();
             SpellCastStart.Clear();
             SpellCastGo.Clear();
+            SpellUniqueCasters.Clear();
             CreaturePetActions.Clear();
             CreaturePetCooldown.Clear();
             SpellTargetPositions.Clear();

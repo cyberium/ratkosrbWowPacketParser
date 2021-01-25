@@ -141,6 +141,7 @@
         scene_template,
         spell_areatrigger,
         spell_target_position,
+        spell_unique_caster,
         trainer,
         vehicle_template_accessory,
 

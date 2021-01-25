@@ -231,6 +231,7 @@ namespace WowPacketParser.Misc
             public static readonly bool scene_template = Conf.GetBoolean("scene_template", false);
             public static readonly bool spell_areatrigger = Conf.GetBoolean("spell_areatrigger", false);
             public static readonly bool spell_target_position = Conf.GetBoolean("spell_target_position", false);
+            public static readonly bool spell_unique_caster = Conf.GetBoolean("spell_unique_caster", false);
             public static readonly bool trainer = Conf.GetBoolean("trainer", false);
             public static readonly bool vehicle_template_accessory = Conf.GetBoolean("vehicle_template_accessory", false);
             

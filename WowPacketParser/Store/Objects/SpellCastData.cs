@@ -112,6 +112,19 @@ namespace WowPacketParser.Store.Objects
         public DateTime Time;
     }
 
+    [DBTableName("spell_unique_caster")]
+    public sealed class SpellUniqueCaster : IDataModel
+    {
+        [DBFieldName("caster_id", true)]
+        public uint CasterId;
+
+        [DBFieldName("caster_type", true)]
+        public string CasterType;
+
+        [DBFieldName("spell_id", true)]
+        public uint SpellId;
+    }
+
     [DBTableName("spell_cast_start")]
     public sealed class SpellCastStart : IDataModel
     {
