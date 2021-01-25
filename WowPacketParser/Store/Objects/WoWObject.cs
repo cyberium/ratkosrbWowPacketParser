@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
@@ -9,6 +10,7 @@ namespace WowPacketParser.Store.Objects
     public class WoWObject
     {
         public ObjectType Type;
+        public DateTime FirstCreateTime;
 
         public MovementInfo Movement;
         public MovementInfo OriginalMovement;

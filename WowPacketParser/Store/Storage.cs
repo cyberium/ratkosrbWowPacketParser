@@ -25,6 +25,7 @@ namespace WowPacketParser.Store
             if (!string.IsNullOrWhiteSpace(Settings.SQLFileName) && Settings.DumpFormatWithSQL())
                 obj.SourceSniffId = Program.sniffFileNames.IndexOf(packet.FileName);
             obj.SourceSniffBuild = ClientVersion.BuildInt;
+            obj.FirstCreateTime = packet.Time;
             Storage.Objects.Add(guid, obj, packet.TimeSpan);
         }
         public static string GetObjectDbGuid(WowGuid guid)
@@ -308,7 +309,7 @@ namespace WowPacketParser.Store
                 {
                     // If this is the first packet that sends auras
                     // (hopefully at spawn time) add it to the "Auras" field
-                    if (unit.Auras == null)
+                    if (unit.Auras == null && ((time - unit.FirstCreateTime).TotalSeconds < 3))
                         unit.Auras = auras;
                 }
             }
