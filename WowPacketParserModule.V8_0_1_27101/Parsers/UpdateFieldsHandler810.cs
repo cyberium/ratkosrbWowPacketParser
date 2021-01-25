@@ -527,7 +527,10 @@ namespace WowPacketParserModule.V8_0_1_27101.UpdateFields.V8_1_0_28724
         {
             var data = new UnitChannel();
             data.SpellID = packet.ReadInt32("SpellID", indexes);
-            data.SpellXSpellVisualID = packet.ReadInt32("SpellXSpellVisualID", indexes);
+            data.SpellVisual = new SpellCastVisual
+            {
+                SpellXSpellVisualID = packet.ReadInt32("SpellXSpellVisualID", indexes)
+            };
             return data;
         }
 
@@ -537,7 +540,10 @@ namespace WowPacketParserModule.V8_0_1_27101.UpdateFields.V8_1_0_28724
             if (data == null)
                 data = new UnitChannel();
             data.SpellID = packet.ReadInt32("SpellID", indexes);
-            data.SpellXSpellVisualID = packet.ReadInt32("SpellXSpellVisualID", indexes);
+            data.SpellVisual = new SpellCastVisual
+            {
+                SpellXSpellVisualID = packet.ReadInt32("SpellXSpellVisualID", indexes)
+            };
             return data;
         }
 

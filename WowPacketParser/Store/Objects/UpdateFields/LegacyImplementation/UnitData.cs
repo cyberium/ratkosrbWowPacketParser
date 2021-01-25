@@ -183,6 +183,41 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
             }
         }
 
+        public class UnitChannel : IUnitChannel
+        {
+            public int SpellID { get; set; }
+            public ISpellCastVisual SpellVisual { get; set; }
+        }
+
+        public class SpellCastVisual : ISpellCastVisual
+        {
+            public int SpellXSpellVisualID { get; set; }
+        }
+
+        public IUnitChannel ChannelData
+        {
+            get
+            {
+                if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_CHANNEL_SPELL) > 0)
+                {
+                    int spellId = UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_CHANNEL_SPELL);
+                    int visualId = UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_CHANNEL_SPELL_X_SPELL_VISUAL);
+                    var channelData = new UnitChannel();
+                    channelData.SpellID = spellId;
+                    channelData.SpellVisual = new SpellCastVisual { SpellXSpellVisualID = visualId };
+                    return channelData;
+                }
+                else
+                {
+                    var channelArray = UpdateFields.GetArray<UnitField, int>(UnitField.UNIT_FIELD_CHANNEL_DATA, 2);
+                    var channelData = new UnitChannel();
+                    channelData.SpellID = channelArray[0];
+                    channelData.SpellVisual = new SpellCastVisual { SpellXSpellVisualID = channelArray[1] };
+                    return channelData;
+                }
+            }
+        }
+
         public uint Flags => UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_FLAGS);
 
         public uint Flags2 => UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_FLAGS_2);
@@ -418,6 +453,41 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                 else
                     return UpdateFields.GetArray<UnitField, int>(UnitField.UNIT_VIRTUAL_ITEM_SLOT_ID, 3)
                         .Select(rawId => new VisibleItem { ItemID = rawId }).ToArray();
+            }
+        }
+
+        public class UnitChannel : IUnitChannel
+        {
+            public int SpellID { get; set; }
+            public ISpellCastVisual SpellVisual { get; set; }
+        }
+
+        public class SpellCastVisual : ISpellCastVisual
+        {
+            public int SpellXSpellVisualID { get; set; }
+        }
+
+        public IUnitChannel ChannelData
+        {
+            get
+            {
+                if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_CHANNEL_SPELL) > 0)
+                {
+                    int spellId = UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_CHANNEL_SPELL);
+                    int visualId = UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_CHANNEL_SPELL_X_SPELL_VISUAL);
+                    var channelData = new UnitChannel();
+                    channelData.SpellID = spellId;
+                    channelData.SpellVisual = new SpellCastVisual { SpellXSpellVisualID = visualId };
+                    return channelData;
+                }
+                else
+                {
+                    var channelArray = UpdateFields.GetArray<UnitField, int>(UnitField.UNIT_FIELD_CHANNEL_DATA, 2);
+                    var channelData = new UnitChannel();
+                    channelData.SpellID = channelArray[0];
+                    channelData.SpellVisual = new SpellCastVisual { SpellXSpellVisualID = channelArray[1] };
+                    return channelData;
+                }
             }
         }
 

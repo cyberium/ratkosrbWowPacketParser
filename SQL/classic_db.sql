@@ -188,6 +188,8 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `main_hand_slot_item` int(10) unsigned NOT NULL DEFAULT '0',
   `off_hand_slot_item` int(10) unsigned NOT NULL DEFAULT '0',
   `ranged_slot_item` int(10) unsigned NOT NULL DEFAULT '0',
+  `channel_spell_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `channel_visual_id` int(10) unsigned NOT NULL DEFAULT '0',
   `auras` text,
   `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
@@ -852,7 +854,9 @@ CREATE TABLE IF NOT EXISTS `creature_values_update` (
   `combat_reach` float DEFAULT NULL,
   `mod_melee_haste` float DEFAULT NULL,
   `main_hand_attack_time` int(10) unsigned DEFAULT NULL,
-  `off_hand_attack_time` int(10) unsigned DEFAULT NULL
+  `off_hand_attack_time` int(10) unsigned DEFAULT NULL,
+  `channel_spell_id` int(10) unsigned DEFAULT NULL,
+  `channel_visual_id` int(10) unsigned DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='values updates from SMSG_UPDATE_OBJECT';
 
 -- Data exporting was unselected.
@@ -1479,12 +1483,12 @@ DROP TABLE IF EXISTS `npc_trainer`;
 CREATE TABLE IF NOT EXISTS `npc_trainer` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `spell_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `money_cost` int(10) unsigned NOT NULL DEFAULT '0',
+  `money_cost` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'could have reputation discount factored in',
   `required_skill_id` smallint(5) unsigned NOT NULL DEFAULT '0',
   `required_skill_value` smallint(5) unsigned NOT NULL DEFAULT '0',
   `required_level` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  UNIQUE KEY `entry_spell` (`entry`,`spell_id`)
+  PRIMARY KEY (`entry`,`spell_id`,`money_cost`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -1601,6 +1605,8 @@ CREATE TABLE IF NOT EXISTS `player` (
   `main_hand_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
   `off_hand_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
   `ranged_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `channel_spell_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `channel_visual_id` int(10) unsigned NOT NULL DEFAULT '0',
   `equipment_cache` text,
   `auras` text,
   PRIMARY KEY (`guid`)
@@ -2007,7 +2013,9 @@ CREATE TABLE IF NOT EXISTS `player_values_update` (
   `combat_reach` float DEFAULT NULL,
   `mod_melee_haste` float DEFAULT NULL,
   `main_hand_attack_time` int(10) unsigned DEFAULT NULL,
-  `off_hand_attack_time` int(10) unsigned DEFAULT NULL
+  `off_hand_attack_time` int(10) unsigned DEFAULT NULL,
+  `channel_spell_id` int(10) unsigned DEFAULT NULL,
+  `channel_visual_id` int(10) unsigned DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='values updates from SMSG_UPDATE_OBJECT';
 
 -- Data exporting was unselected.
@@ -2196,41 +2204,6 @@ CREATE TABLE IF NOT EXISTS `quest_offer_reward_locale` (
   `VerifiedBuild` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`,`locale`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.quest_poi
-DROP TABLE IF EXISTS `quest_poi`;
-CREATE TABLE IF NOT EXISTS `quest_poi` (
-  `QuestID` int(10) unsigned NOT NULL DEFAULT '0',
-  `id` int(10) unsigned NOT NULL DEFAULT '0',
-  `ObjectiveIndex` int(11) NOT NULL DEFAULT '0',
-  `MapID` int(10) unsigned NOT NULL DEFAULT '0',
-  `WorldMapAreaId` int(10) unsigned NOT NULL DEFAULT '0',
-  `Floor` int(10) unsigned NOT NULL DEFAULT '0',
-  `Priority` int(10) unsigned NOT NULL DEFAULT '0',
-  `Flags` int(10) unsigned NOT NULL DEFAULT '0',
-  `VerifiedBuild` smallint(5) DEFAULT '0',
-  PRIMARY KEY (`QuestID`,`id`),
-  KEY `idx` (`QuestID`,`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.quest_poi_points
-DROP TABLE IF EXISTS `quest_poi_points`;
-CREATE TABLE IF NOT EXISTS `quest_poi_points` (
-  `QuestID` int(10) unsigned NOT NULL DEFAULT '0',
-  `Idx1` int(10) unsigned NOT NULL DEFAULT '0',
-  `Idx2` int(10) unsigned NOT NULL DEFAULT '0',
-  `X` int(11) NOT NULL DEFAULT '0',
-  `Y` int(11) NOT NULL DEFAULT '0',
-  `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
-  PRIMARY KEY (`QuestID`,`Idx1`,`Idx2`),
-  KEY `questId_id` (`QuestID`,`Idx1`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -2667,7 +2640,7 @@ DROP TABLE IF EXISTS `trainer_spell`;
 CREATE TABLE IF NOT EXISTS `trainer_spell` (
   `trainer_id` int(10) unsigned NOT NULL DEFAULT '0',
   `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `money_cost` int(10) unsigned NOT NULL DEFAULT '0',
+  `money_cost` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'could have reputation discount factored in',
   `required_skill_id` int(10) unsigned NOT NULL DEFAULT '0',
   `required_skill_value` int(10) unsigned NOT NULL DEFAULT '0',
   `required_ability1` int(10) unsigned NOT NULL DEFAULT '0',
@@ -2675,7 +2648,7 @@ CREATE TABLE IF NOT EXISTS `trainer_spell` (
   `required_ability3` int(10) unsigned NOT NULL DEFAULT '0',
   `required_level` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `sniff_build` smallint(5) unsigned DEFAULT '0',
-  PRIMARY KEY (`trainer_id`,`spell_id`)
+  PRIMARY KEY (`trainer_id`,`spell_id`,`money_cost`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.

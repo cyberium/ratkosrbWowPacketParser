@@ -134,6 +134,7 @@ namespace WowPacketParser.Enums
     public enum UnitField
     {
         UNIT_CHANNEL_SPELL,
+        UNIT_CHANNEL_SPELL_X_SPELL_VISUAL,
         UNIT_CREATED_BY_SPELL,
         UNIT_DYNAMIC_FLAGS,
         UNIT_END,

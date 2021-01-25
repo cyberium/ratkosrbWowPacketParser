@@ -735,6 +735,56 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_CHANNEL_SPELL))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.ChannelData.SpellID != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.ChannelSpellId = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_CHANNEL_SPELL_X_SPELL_VISUAL))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.ChannelData.SpellVisual.SpellXSpellVisualID != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.ChannelVisualId = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_CHANNEL_DATA) > 0 &&
+                             update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_CHANNEL_DATA))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.ChannelData.SpellID != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.ChannelSpellId = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_CHANNEL_DATA) > 0 &&
+                             update.Key == (UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_CHANNEL_DATA)+1))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.ChannelData.SpellVisual.SpellXSpellVisualID != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.ChannelVisualId = update.Value.UInt32Value;
+                            }
+                        }
+                    }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_CHARM))
                     {
                         if (Storage.Objects.ContainsKey(guid))

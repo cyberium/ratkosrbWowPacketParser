@@ -227,6 +227,12 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ranged_attack_time")]
         public uint? RangedAttackTime;
 
+        [DBFieldName("channel_spell_id")]
+        public uint? ChannelSpellId;
+
+        [DBFieldName("channel_visual_id")]
+        public uint? ChannelVisualId;
+
         [DBFieldName("equipment_cache")]
         public string EquipmentCache = "";
 

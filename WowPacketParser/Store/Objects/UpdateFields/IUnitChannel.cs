@@ -2,5 +2,7 @@
 {
     public interface IUnitChannel
     {
+        int SpellID { get; }
+        ISpellCastVisual SpellVisual { get; }
     }
 }

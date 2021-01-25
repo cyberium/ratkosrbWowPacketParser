@@ -15,9 +15,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("SpellID", true, DbType = (TargetedDbType.TRINITY))]
         public int? SpellID;
 
-        [DBFieldName("money_cost", DbType = (TargetedDbType.WPP))]
-        [DBFieldName("spellcost", DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
-        [DBFieldName("MoneyCost", DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("money_cost", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("spellcost", true, DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("MoneyCost", true, DbType = (TargetedDbType.TRINITY))]
         public uint? MoneyCost;
 
         [DBFieldName("required_skill_id", DbType = (TargetedDbType.WPP))]

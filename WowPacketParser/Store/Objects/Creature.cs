@@ -209,6 +209,12 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ranged_slot_item", DbType = (TargetedDbType.WPP))]
         public uint? RangedSlotItem;
 
+        [DBFieldName("channel_spell_id", DbType = (TargetedDbType.WPP))]
+        public uint? ChannelSpellId;
+
+        [DBFieldName("channel_visual_id", DbType = (TargetedDbType.WPP))]
+        public uint? ChannelVisualId;
+
         [DBFieldName("auras", DbType = (TargetedDbType.WPP))]
         public string Auras;
 
@@ -571,6 +577,12 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("off_hand_attack_time", true, false, true)]
         public uint? OffHandAttackTime;
+
+        [DBFieldName("channel_spell_id", true, false, true)]
+        public uint? ChannelSpellId;
+
+        [DBFieldName("channel_visual_id", true, false, true)]
+        public uint? ChannelVisualId;
     }
 
     [DBTableName("creature_guid_values_update")]

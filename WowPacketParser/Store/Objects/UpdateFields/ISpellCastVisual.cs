@@ -2,5 +2,6 @@
 {
     public interface ISpellCastVisual
     {
+        int SpellXSpellVisualID { get; }
     }
 }
