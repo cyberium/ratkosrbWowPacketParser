@@ -274,9 +274,10 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                     {
                         packet.ResetBitReader();
 
-                        packet.ReadUInt32E<SplineFlag>("SplineFlags", index);
+                        ServerSideMovement movementData = new ServerSideMovement();
+                        movementData.SplineFlags = (uint)packet.ReadUInt32E<SplineFlag>("SplineFlags", index);
                         packet.ReadUInt32("Elapsed", index);
-                        packet.ReadUInt32("Duration", index);
+                        movementData.MoveTime = packet.ReadUInt32("Duration", index);
                         packet.ReadSingle("DurationModifier", index);
                         packet.ReadSingle("NextDurationModifier", index);
 
@@ -286,6 +287,9 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                         var hasSpecialTime = packet.ReadBit("HasSpecialTime", index);
 
                         var pointsCount = packet.ReadBits("PointsCount", 16, index);
+                        movementData.SplineCount = pointsCount;
+                        if (pointsCount > 0)
+                            movementData.SplinePoints = new List<Vector3>();
 
                         packet.ReadBitsE<SplineMode>("Mode", 2, index);
 
@@ -305,14 +309,23 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                             packet.ReadBits("FilterFlags", 2, index);
                         }
 
-                        if (face == 3)
-                            packet.ReadSingle("FaceDirection", index);
-
-                        if (face == 2)
-                            packet.ReadPackedGuid128("FaceGUID", index);
-
-                        if (face == 1)
-                            packet.ReadVector3("FaceSpot", index);
+                        float orientation = 100;
+                        switch (face)
+                        {
+                            case 1:
+                                var faceSpot = packet.ReadVector3("FaceSpot", index);
+                                orientation = Utilities.GetAngle(moveInfo.Position.X, moveInfo.Position.Y, faceSpot.X, faceSpot.Y);
+                                break;
+                            case 2:
+                                packet.ReadPackedGuid128("FaceGUID", index);
+                                break;
+                            case 3:
+                                orientation = packet.ReadSingle("FaceDirection", index);
+                                break;
+                            default:
+                                break;
+                        }
+                        movementData.Orientation = orientation;
 
                         if (hasJumpGravity)
                             packet.ReadSingle("JumpGravity", index);
@@ -321,7 +334,10 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                             packet.ReadInt32("SpecialTime", index);
 
                         for (var i = 0; i < pointsCount; ++i)
-                            packet.ReadVector3("Points", index, i);
+                        {
+                            var spot = packet.ReadVector3("Points", index, i);
+                            movementData.SplinePoints.Add(spot);
+                        }
 
                         if (hasSpellEffectExtraData)
                         {
@@ -329,6 +345,13 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                             packet.ReadUInt32("SpellVisualID", index);
                             packet.ReadUInt32("ProgressCurveID", index);
                             packet.ReadUInt32("ParabolicCurveID", index);
+                        }
+
+                        if (pointsCount > 0)
+                        {
+                            Unit unit = obj as Unit;
+                            if (unit != null)
+                                unit.AddWaypoint(movementData, moveInfo.Position, packet.Time);
                         }
                     }
                 }

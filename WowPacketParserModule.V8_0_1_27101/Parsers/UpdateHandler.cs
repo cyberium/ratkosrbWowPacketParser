@@ -318,6 +318,16 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                         hasData = true;
                         creatureUpdate.OffHandAttackTime = unit.UnitData.AttackRoundBaseTime[1];
                     }
+                    if (oldUnitData.ChannelData.SpellID != unit.UnitData.ChannelData.SpellID)
+                    {
+                        hasData = true;
+                        creatureUpdate.ChannelSpellId = (uint)unit.UnitData.ChannelData.SpellID;
+                    }
+                    if (oldUnitData.ChannelData.SpellVisual.SpellXSpellVisualID != unit.UnitData.ChannelData.SpellVisual.SpellXSpellVisualID)
+                    {
+                        hasData = true;
+                        creatureUpdate.ChannelVisualId = (uint)unit.UnitData.ChannelData.SpellVisual.SpellXSpellVisualID;
+                    }
                     uint slot = 0;
                     foreach (var item in unit.UnitData.VirtualItems)
                     {
@@ -743,9 +753,10 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     {
                         packet.ResetBitReader();
 
-                        packet.ReadUInt32E<SplineFlag>("SplineFlags", index);
+                        ServerSideMovement movementData = new ServerSideMovement();
+                        movementData.SplineFlags = (uint)packet.ReadUInt32E<SplineFlag>("SplineFlags", index);
                         packet.ReadInt32("Elapsed", index);
-                        packet.ReadUInt32("Duration", index);
+                        movementData.MoveTime = packet.ReadUInt32("Duration", index);
                         packet.ReadSingle("DurationModifier", index);
                         packet.ReadSingle("NextDurationModifier", index);
 
@@ -753,6 +764,9 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                         var hasSpecialTime = packet.ReadBit("HasSpecialTime", index);
 
                         var pointsCount = packet.ReadBits("PointsCount", 16, index);
+                        movementData.SplineCount = pointsCount;
+                        if (pointsCount > 0)
+                            movementData.SplinePoints = new List<Vector3>();
 
                         if (ClientVersion.RemovedInVersion(ClientType.Shadowlands))
                             packet.ReadBitsE<SplineMode>("Mode", 2, index);
@@ -782,26 +796,32 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                             packet.ReadBits("FilterFlags", 2, index);
                         }
 
+                        float orientation = 100;
                         switch (face)
                         {
                             case 1:
-                                packet.ReadVector3("FaceSpot", index);
+                                var faceSpot = packet.ReadVector3("FaceSpot", index);
+                                orientation = Utilities.GetAngle(moveInfo.Position.X, moveInfo.Position.Y, faceSpot.X, faceSpot.Y);
                                 break;
                             case 2:
                                 packet.ReadPackedGuid128("FaceGUID", index);
                                 break;
                             case 3:
-                                packet.ReadSingle("FaceDirection", index);
+                                orientation = packet.ReadSingle("FaceDirection", index);
                                 break;
                             default:
                                 break;
                         }
+                        movementData.Orientation = orientation;
 
                         if (hasSpecialTime)
                             packet.ReadUInt32("SpecialTime", index);
 
                         for (var i = 0; i < pointsCount; ++i)
-                            packet.ReadVector3("Points", index, i);
+                        {
+                            var spot = packet.ReadVector3("Points", index, i);
+                            movementData.SplinePoints.Add(spot);
+                        }
 
                         if (hasSpellEffectExtraData)
                             MovementHandler.ReadMonsterSplineSpellEffectExtraData(packet, index);
@@ -826,6 +846,13 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                                 packet.ReadInt32("Unknown3", index, "Unknown901", i);
                                 packet.ReadInt32("Unknown4", index, "Unknown901", i);
                             }
+                        }
+
+                        if (pointsCount > 0)
+                        {
+                            Unit unit = obj as Unit;
+                            if (unit != null)
+                                unit.AddWaypoint(movementData, moveInfo.Position, packet.Time);
                         }
                     }
                 }
