@@ -188,7 +188,7 @@ namespace WowPacketParser.Enums.Version.V1_13_6_36231
             {Opcode.CMSG_CHOICE_RESPONSE, 0x329F},
             {Opcode.CMSG_CLEAR_RAID_MARKER, 0x31A8},
             {Opcode.CMSG_CLEAR_TRADE_ITEM, 0x315E},
-            //{Opcode.CMSG_CLIENT_PORT_GRAVEYARD, 0x3527},
+            {Opcode.CMSG_CLIENT_PORT_GRAVEYARD, 0x3528},
             {Opcode.CMSG_CLOSE_INTERACTION, 0x3493},
             {Opcode.CMSG_CLOSE_QUEST_CHOICE, 0x32A0},
             {Opcode.CMSG_COLLECTION_ITEM_SET_FAVORITE, 0x3632},

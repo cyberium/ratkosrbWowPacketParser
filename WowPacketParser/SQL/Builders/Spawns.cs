@@ -226,8 +226,9 @@ namespace WowPacketParser.SQL.Builders
                     if (!unitData.Charm.IsEmpty() ||
                         !unitData.Summon.IsEmpty() ||
                         !unitData.CharmedBy.IsEmpty() ||
-                        !unitData.CreatedBy.IsEmpty() ||
                         !unitData.SummonedBy.IsEmpty() ||
+                        !unitData.CreatedBy.IsEmpty() ||
+                        !unitData.DemonCreator.IsEmpty() ||
                         !unitData.Target.IsEmpty())
                     {
                         Row<CreatureGuidValues> guidsRow = new Row<CreatureGuidValues>();

@@ -284,6 +284,10 @@ namespace WowPacketParser.Parsing.Parsers
         {
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
                 packet.ReadBool("Accept");
+            Storage.ClientReleaseSpiritTimes.Add(new WowPacketParser.Store.Objects.ClientReleaseSpirit
+            {
+                UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
+            }, packet.TimeSpan);
         }
 
         [Parser(Opcode.SMSG_FEATURE_SYSTEM_STATUS, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_0_15005)]
@@ -1149,6 +1153,7 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_FISH_ESCAPED)]
         [Parser(Opcode.SMSG_SUMMON_CANCEL)]
         [Parser(Opcode.CMSG_MEETINGSTONE_INFO)]
+        [Parser(Opcode.CMSG_CLIENT_PORT_GRAVEYARD)]
         [Parser(Opcode.CMSG_REQUEST_CEMETERY_LIST)]
         [Parser(Opcode.CMSG_REQUEST_RESEARCH_HISTORY)]
         [Parser(Opcode.CMSG_COMPLETE_MOVIE)]
@@ -1160,15 +1165,6 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.CMSG_UPDATE_VAS_PURCHASE_STATES)]
         public static void HandleZeroLengthPackets(Packet packet)
         {
-        }
-
-        [Parser(Opcode.CMSG_CLIENT_PORT_GRAVEYARD)]
-        public static void HandleClientPortGraveyard(Packet packet)
-        {
-            Storage.ClientReleaseSpiritTimes.Add(new WowPacketParser.Store.Objects.ClientReleaseSpirit
-            {
-                UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
-            }, packet.TimeSpan);
         }
     }
 }
