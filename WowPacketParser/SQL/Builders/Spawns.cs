@@ -235,8 +235,9 @@ namespace WowPacketParser.SQL.Builders
                         Storage.GetObjectDbGuidEntryType(unitData.Charm, out guidsRow.Data.CharmGuid, out guidsRow.Data.CharmId, out guidsRow.Data.CharmType);
                         Storage.GetObjectDbGuidEntryType(unitData.Summon, out guidsRow.Data.SummonGuid, out guidsRow.Data.SummonId, out guidsRow.Data.SummonType);
                         Storage.GetObjectDbGuidEntryType(unitData.CharmedBy, out guidsRow.Data.CharmedByGuid, out guidsRow.Data.CharmedById, out guidsRow.Data.CharmedByType);
-                        Storage.GetObjectDbGuidEntryType(unitData.CreatedBy, out guidsRow.Data.CreatedByGuid, out guidsRow.Data.CreatedById, out guidsRow.Data.CreatedByType);
                         Storage.GetObjectDbGuidEntryType(unitData.SummonedBy, out guidsRow.Data.SummonedByGuid, out guidsRow.Data.SummonedById, out guidsRow.Data.SummonedByType);
+                        Storage.GetObjectDbGuidEntryType(unitData.CreatedBy, out guidsRow.Data.CreatedByGuid, out guidsRow.Data.CreatedById, out guidsRow.Data.CreatedByType);
+                        Storage.GetObjectDbGuidEntryType(unitData.DemonCreator, out guidsRow.Data.DemonCreatorGuid, out guidsRow.Data.DemonCreatorId, out guidsRow.Data.DemonCreatorType);
                         Storage.GetObjectDbGuidEntryType(unitData.Target, out guidsRow.Data.TargetGuid, out guidsRow.Data.TargetId, out guidsRow.Data.TargetType);
                         guidValuesRows.Add(guidsRow);
                     } 

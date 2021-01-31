@@ -381,6 +381,14 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                         guidUpdate.FieldName = "CreatedBy";
                         Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                     }
+                    if (oldUnitData.DemonCreator != unit.UnitData.DemonCreator)
+                    {
+                        CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
+                        guidUpdate.guid = unit.UnitData.DemonCreator;
+                        guidUpdate.time = time;
+                        guidUpdate.FieldName = "DemonCreator";
+                        Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
+                    }
                     if (oldUnitData.Target != unit.UnitData.Target)
                     {
                         CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();

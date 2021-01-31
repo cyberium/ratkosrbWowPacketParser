@@ -860,6 +860,21 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_DEMON_CREATOR))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.DemonCreator != GetGuidValue(updates, UnitField.UNIT_FIELD_DEMON_CREATOR))
+                            {
+                                CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
+                                guidUpdate.guid = GetGuidValue(updates, UnitField.UNIT_FIELD_DEMON_CREATOR);
+                                guidUpdate.time = time;
+                                guidUpdate.FieldName = "DemonCreator";
+                                Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
+                            }
+                        }
+                    }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_TARGET))
                     {
                         if (Storage.Objects.ContainsKey(guid))

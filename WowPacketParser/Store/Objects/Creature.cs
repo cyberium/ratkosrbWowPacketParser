@@ -259,6 +259,15 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("charmer_type")]
         public string CharmedByType;
 
+        [DBFieldName("summoner_guid", false, true)]
+        public string SummonedByGuid;
+
+        [DBFieldName("summoner_id")]
+        public uint SummonedById;
+
+        [DBFieldName("summoner_type")]
+        public string SummonedByType;
+
         [DBFieldName("creator_guid", false, true)]
         public string CreatedByGuid;
 
@@ -268,14 +277,14 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("creator_type")]
         public string CreatedByType;
 
-        [DBFieldName("summoner_guid", false, true)]
-        public string SummonedByGuid;
+        [DBFieldName("demon_creator_guid", false, true)]
+        public string DemonCreatorGuid;
 
-        [DBFieldName("summoner_id")]
-        public uint SummonedById;
+        [DBFieldName("demon_creator_id")]
+        public uint DemonCreatorId;
 
-        [DBFieldName("summoner_type")]
-        public string SummonedByType;
+        [DBFieldName("demon_creator_type")]
+        public string DemonCreatorType;
 
         [DBFieldName("target_guid", false, true)]
         public string TargetGuid;

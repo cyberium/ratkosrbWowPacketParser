@@ -14,6 +14,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         WowGuid SummonedBy { get; }
         WowGuid CreatedBy { get; }
         WowGuid Target { get; }
+        WowGuid DemonCreator { get; }
         byte ClassId { get; }
         byte RaceId { get; }
         byte Sex { get; }
