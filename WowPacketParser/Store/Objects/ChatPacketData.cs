@@ -101,7 +101,7 @@ namespace WowPacketParser.Store.Objects
         public object BroadcastTextID = 0;
 
         [DBFieldName("comment")]
-        public string Comment;
+        public string Comment = String.Empty;
 
         public WowGuid SenderGUID;
         public string SenderName;
@@ -169,7 +169,7 @@ namespace WowPacketParser.Store.Objects
         public object BroadcastTextID = 0;
 
         [DBFieldName("comment")]
-        public string Comment;
+        public string Comment = String.Empty;
 
         public WowGuid SenderGUID;
         public string SenderName;

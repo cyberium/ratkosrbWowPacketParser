@@ -284,6 +284,7 @@ DROP TABLE IF EXISTS `creature_create1_time`;
 CREATE TABLE IF NOT EXISTS `creature_create1_time` (
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `map` smallint(5) unsigned NOT NULL,
   `position_x` float NOT NULL,
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
@@ -298,7 +299,8 @@ CREATE TABLE IF NOT EXISTS `creature_create1_time` (
 DROP TABLE IF EXISTS `creature_create2_time`;
 CREATE TABLE IF NOT EXISTS `creature_create2_time` (
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
-  `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
+  `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
+  `map` smallint(5) unsigned NOT NULL,
   `position_x` float NOT NULL,
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
@@ -893,6 +895,7 @@ DROP TABLE IF EXISTS `dynamicobject_create1_time`;
 CREATE TABLE IF NOT EXISTS `dynamicobject_create1_time` (
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   `guid` int(10) unsigned NOT NULL COMMENT 'dynamicobject spawn guid',
+  `map` smallint(5) unsigned NOT NULL,
   `position_x` float NOT NULL,
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
@@ -908,6 +911,7 @@ DROP TABLE IF EXISTS `dynamicobject_create2_time`;
 CREATE TABLE IF NOT EXISTS `dynamicobject_create2_time` (
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   `guid` int(10) unsigned NOT NULL COMMENT 'dynamicobject spawn guid',
+  `map` smallint(5) unsigned NOT NULL,
   `position_x` float NOT NULL,
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
@@ -1003,6 +1007,7 @@ DROP TABLE IF EXISTS `gameobject_create1_time`;
 CREATE TABLE IF NOT EXISTS `gameobject_create1_time` (
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
+  `map` smallint(5) unsigned NOT NULL,
   `position_x` float NOT NULL,
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
@@ -1018,6 +1023,7 @@ DROP TABLE IF EXISTS `gameobject_create2_time`;
 CREATE TABLE IF NOT EXISTS `gameobject_create2_time` (
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
+  `map` smallint(5) unsigned NOT NULL,
   `position_x` float NOT NULL,
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
@@ -1772,6 +1778,7 @@ DROP TABLE IF EXISTS `player_create1_time`;
 CREATE TABLE IF NOT EXISTS `player_create1_time` (
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   `guid` int(10) unsigned NOT NULL,
+  `map` smallint(5) unsigned NOT NULL,
   `position_x` float NOT NULL,
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
@@ -1787,6 +1794,7 @@ DROP TABLE IF EXISTS `player_create2_time`;
 CREATE TABLE IF NOT EXISTS `player_create2_time` (
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   `guid` int(10) unsigned NOT NULL,
+  `map` smallint(5) unsigned NOT NULL,
   `position_x` float NOT NULL,
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,

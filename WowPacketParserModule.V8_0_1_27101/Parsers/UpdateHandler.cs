@@ -509,7 +509,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             }
 
             var moves = ReadMovementUpdateBlock(packet, guid, obj, index);
-            Storage.StoreObjectCreateTime(guid, moves, packet.Time, type);
+            Storage.StoreObjectCreateTime(guid, map, moves, packet.Time, type);
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_1_0_28724))
             {
                 var updatefieldSize = packet.ReadUInt32();

@@ -8,6 +8,8 @@ namespace WowPacketParser.Store.Objects
 {
     public sealed class ObjectCreate
     {
+        public uint? Map;
+
         public float? PositionX;
 
         public float? PositionY;

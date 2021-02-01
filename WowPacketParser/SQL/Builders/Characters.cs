@@ -276,6 +276,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create1Row = new Row<PlayerCreate1>();
                             create1Row.Data.GUID = row.Data.Guid;
+                            create1Row.Data.Map = createTime.Map;
                             create1Row.Data.PositionX = createTime.PositionX;
                             create1Row.Data.PositionY = createTime.PositionY;
                             create1Row.Data.PositionZ = createTime.PositionZ;
@@ -294,6 +295,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create2Row = new Row<PlayerCreate2>();
                             create2Row.Data.GUID = row.Data.Guid;
+                            create2Row.Data.Map = createTime.Map;
                             create2Row.Data.PositionX = createTime.PositionX;
                             create2Row.Data.PositionY = createTime.PositionY;
                             create2Row.Data.PositionZ = createTime.PositionZ;

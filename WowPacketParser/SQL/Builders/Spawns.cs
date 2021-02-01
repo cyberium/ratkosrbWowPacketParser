@@ -266,6 +266,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create1Row = new Row<CreatureCreate1>();
                             create1Row.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            create1Row.Data.Map = createTime.Map;
                             create1Row.Data.PositionX = createTime.PositionX;
                             create1Row.Data.PositionY = createTime.PositionY;
                             create1Row.Data.PositionZ = createTime.PositionZ;
@@ -284,6 +285,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create2Row = new Row<CreatureCreate2>();
                             create2Row.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            create2Row.Data.Map = createTime.Map;
                             create2Row.Data.PositionX = createTime.PositionX;
                             create2Row.Data.PositionY = createTime.PositionY;
                             create2Row.Data.PositionZ = createTime.PositionZ;
@@ -931,6 +933,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create1Row = new Row<GameObjectCreate1>();
                             create1Row.Data.GUID = "@OGUID+" + go.DbGuid;
+                            create1Row.Data.Map = createTime.Map;
                             create1Row.Data.PositionX = createTime.PositionX;
                             create1Row.Data.PositionY = createTime.PositionY;
                             create1Row.Data.PositionZ = createTime.PositionZ;
@@ -949,6 +952,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create2Row = new Row<GameObjectCreate2>();
                             create2Row.Data.GUID = "@OGUID+" + go.DbGuid;
+                            create2Row.Data.Map = createTime.Map;
                             create2Row.Data.PositionX = createTime.PositionX;
                             create2Row.Data.PositionY = createTime.PositionY;
                             create2Row.Data.PositionZ = createTime.PositionZ;
@@ -1210,6 +1214,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create1Row = new Row<DynamicObjectCreate1>();
                             create1Row.Data.GUID = "@DGUID+" + dynObject.DbGuid;
+                            create1Row.Data.Map = createTime.Map;
                             create1Row.Data.PositionX = createTime.PositionX;
                             create1Row.Data.PositionY = createTime.PositionY;
                             create1Row.Data.PositionZ = createTime.PositionZ;
@@ -1228,6 +1233,7 @@ namespace WowPacketParser.SQL.Builders
                         {
                             var create2Row = new Row<DynamicObjectCreate2>();
                             create2Row.Data.GUID = "@DGUID+" + dynObject.DbGuid;
+                            create2Row.Data.Map = createTime.Map;
                             create2Row.Data.PositionX = createTime.PositionX;
                             create2Row.Data.PositionY = createTime.PositionY;
                             create2Row.Data.PositionZ = createTime.PositionZ;

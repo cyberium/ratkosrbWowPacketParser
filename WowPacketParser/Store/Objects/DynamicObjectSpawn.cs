@@ -59,6 +59,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string GUID;
 
+        [DBFieldName("map")]
+        public uint? Map;
+
         [DBFieldName("position_x")]
         public float? PositionX;
 
@@ -80,6 +83,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("guid", true, true)]
         public string GUID;
+
+        [DBFieldName("map")]
+        public uint? Map;
 
         [DBFieldName("position_x")]
         public float? PositionX;
