@@ -671,10 +671,28 @@ namespace WowPacketParser.Store.Objects
         public float? RangedDmgMax;
 
         [DBFieldName("attack_power", false, false, true)]
-        public uint? AttackPower;
+        public int? AttackPower;
+
+        [DBFieldName("positive_attack_power", false, false, true)]
+        public int? PositiveAttackPower;
+
+        [DBFieldName("negative_attack_power", false, false, true)]
+        public int? NegativeAttackPower;
+
+        [DBFieldName("attack_power_multiplier", false, false, true)]
+        public float? AttackPowerMultiplier;
 
         [DBFieldName("ranged_attack_power", false, false, true)]
-        public uint? RangedAttackPower;
+        public int? RangedAttackPower;
+
+        [DBFieldName("positive_ranged_attack_power", false, false, true)]
+        public int? PositiveRangedAttackPower;
+
+        [DBFieldName("negative_ranged_attack_power", false, false, true)]
+        public int? NegativeRangedAttackPower;
+
+        [DBFieldName("ranged_attack_power_multiplier", false, false, true)]
+        public float? RangedAttackPowerMultiplier;
 
         [DBFieldName("base_health", false, false, true)]
         public uint? BaseHealth;

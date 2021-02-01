@@ -702,12 +702,60 @@ namespace WowPacketParser.SQL.Builders
                 if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_ATTACK_POWER), out value))
                 {
                     hasData = true;
-                    creatureStats.AttackPower = value.UInt32Value;
+                    creatureStats.AttackPower = value.Int32Value;
+                }
+                if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_ATTACK_POWER_MODS), out value))
+                {
+                    hasData = true;
+                    creatureStats.PositiveAttackPower = (int)(value.UInt32Value & 0x0000FFFF);
+                    creatureStats.NegativeAttackPower = (int)((value.UInt32Value & 0xFFFF0000) >> 16);
+                }
+                else
+                {
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_ATTACK_POWER_MOD_POS), out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveAttackPower = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_ATTACK_POWER_MOD_NEG), out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeAttackPower = value.Int32Value;
+                    }
+                }
+                if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_ATTACK_POWER_MULTIPLIER), out value))
+                {
+                    hasData = true;
+                    creatureStats.AttackPowerMultiplier = value.FloatValue;
                 }
                 if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RANGED_ATTACK_POWER), out value))
                 {
                     hasData = true;
-                    creatureStats.RangedAttackPower = value.UInt32Value;
+                    creatureStats.RangedAttackPower = value.Int32Value;
+                }
+                if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RANGED_ATTACK_POWER_MODS), out value))
+                {
+                    hasData = true;
+                    creatureStats.PositiveRangedAttackPower = (int)(value.UInt32Value & 0x0000FFFF);
+                    creatureStats.NegativeRangedAttackPower = (int)((value.UInt32Value & 0xFFFF0000) >> 16);
+                }
+                else
+                {
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RANGED_ATTACK_POWER_MOD_POS), out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveRangedAttackPower = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RANGED_ATTACK_POWER_MOD_NEG), out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeRangedAttackPower = value.Int32Value;
+                    }
+                }
+                if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RANGED_ATTACK_POWER_MULTIPLIER), out value))
+                {
+                    hasData = true;
+                    creatureStats.RangedAttackPowerMultiplier = value.FloatValue;
                 }
                 if (npc.UpdateFields.TryGetValue(UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BASE_HEALTH), out value))
                 {
