@@ -153,7 +153,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.creature_display_info_addon)
                 return string.Empty;
 
-            var models = new DataBag<ModelData>();
+            var rows = new RowList<ModelData>();
             foreach (var unit in units)
             {
                 if (unit.Key.GetHighType() == HighGuidType.Pet)
@@ -169,18 +169,14 @@ namespace WowPacketParser.SQL.Builders
                     if (!(npc.Map.ToString(CultureInfo.InvariantCulture).MatchesFilters(Settings.MapFilters)))
                         continue;
 
-                uint modelId = (uint)npc.UnitData.DisplayID;
-                if (modelId == 0)
+                uint displayId = (uint)npc.UnitData.DisplayID;
+                if (displayId == 0)
                     continue;
 
                 var model = new ModelData
                 {
-                    DisplayID = modelId
+                    DisplayID = displayId
                 };
-
-                //if (models.ContainsKey(model))
-                if (models.Any(modelInfo => modelInfo.Item1.DisplayID == modelId))
-                    continue;
 
                 var scale = npc.ObjectData.Scale;
                 model.BoundingRadius = npc.UnitData.BoundingRadius / scale;
@@ -192,11 +188,13 @@ namespace WowPacketParser.SQL.Builders
                     model.SpeedRun = npc.Movement.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
                 }
 
-                models.Add(model);
+                rows.Add(model);
             }
 
-            var modelsDb = SQLDatabase.Get(models);
-            return SQLUtil.Compare(models, modelsDb, StoreNameType.None);
+            StringBuilder result = new StringBuilder();
+            var sql = new SQLInsert<ModelData>(rows);
+            result.Append(sql.Build());
+            return result.ToString();
         }
 
         [BuilderMethod]
