@@ -159,10 +159,6 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.gameobject_template)
                 return string.Empty;
 
-            if (Settings.TargetedDbExpansion != TargetedDbExpansion.Classic &&
-                Settings.TargetedDbExpansion <= TargetedDbExpansion.WarlordsOfDraenor)
-                return string.Empty;
-
             if (Storage.GameObjectTemplateQuestItems.IsEmpty())
                 return string.Empty;
 
