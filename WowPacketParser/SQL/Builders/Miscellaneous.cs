@@ -184,12 +184,21 @@ namespace WowPacketParser.SQL.Builders
                 }
             }
             StringBuilder result = new StringBuilder();
-            result.AppendLine("DELETE FROM `" + entryTable + "` WHERE `loot_id` BETWEEN @LOOTID+0 AND @LOOTID+" + maxLootId + ";");
-            var templateSql = new SQLInsert<LootEntry>(lootTemplateRows, false, false, entryTable);
-            result.Append(templateSql.Build());
-            result.AppendLine("DELETE FROM `" + itemTable + "` WHERE `loot_id` BETWEEN @LOOTID+0 AND @LOOTID+" + maxLootId + ";");
-            var itemSql = new SQLInsert<LootItem>(lootItemRows, false, false, itemTable);
-            result.Append(itemSql.Build());
+
+            if (lootTemplateRows.Count != 0)
+            {
+                result.AppendLine("DELETE FROM `" + entryTable + "` WHERE `loot_id` BETWEEN @LOOTID+0 AND @LOOTID+" + maxLootId + ";");
+                var templateSql = new SQLInsert<LootEntry>(lootTemplateRows, false, false, entryTable);
+                result.Append(templateSql.Build());
+            }
+            
+            if (lootItemRows.Count != 0)
+            {
+                result.AppendLine("DELETE FROM `" + itemTable + "` WHERE `loot_id` BETWEEN @LOOTID+0 AND @LOOTID+" + maxLootId + ";");
+                var itemSql = new SQLInsert<LootItem>(lootItemRows, false, false, itemTable);
+                result.Append(itemSql.Build());
+            }
+            
             return result.ToString();
         }
 
