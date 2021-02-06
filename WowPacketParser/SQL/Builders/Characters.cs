@@ -752,7 +752,7 @@ namespace WowPacketParser.SQL.Builders
                 rows.Add(row);
             }
 
-            var sql = new SQLInsert<PlayerLevelupInfo>(rows, false);
+            var sql = new SQLInsert<PlayerLevelupInfo>(rows);
             return sql.Build();
         }
     }

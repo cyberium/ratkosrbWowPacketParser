@@ -445,7 +445,8 @@ namespace WowPacketParser.Loading
                    "SET @IGUID = 0; " + Environment.NewLine +
                    "SET @OGUID = 0; " + Environment.NewLine +
                    "SET @PGUID = 0; " + Environment.NewLine +
-                   "SET @PID = 0; " + Environment.NewLine +
+                   "SET @POIID = 0; " + Environment.NewLine +
+                   "SET @LOOTID = 0; " + Environment.NewLine +
                    "SET @SNIFFID = 0; " + Environment.NewLine;
         }
 

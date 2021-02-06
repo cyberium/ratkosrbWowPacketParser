@@ -11,8 +11,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("entry", true)]
         public uint Entry;
 
-        [DBFieldName("loot_id", true)]
         public uint LootId;
+
+        [DBFieldName("loot_id", true, true)]
+        public string LootIdString;
 
         [DBFieldName("money")]
         public uint Money;
@@ -28,8 +30,10 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("loot_item")]
     public sealed class LootItem : IDataModel
     {
-        [DBFieldName("loot_id", true)]
-        public uint? LootId;
+        public uint LootId;
+
+        [DBFieldName("loot_id", true, true)]
+        public string LootIdString;
 
         [DBFieldName("item_id", true)]
         public uint? ItemId;

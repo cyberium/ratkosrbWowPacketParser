@@ -121,10 +121,6 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.creature_template_wdb)
                 return string.Empty;
 
-            if (Settings.TargetedDbExpansion <= TargetedDbExpansion.WarlordsOfDraenor &&
-                Settings.TargetedDbExpansion != TargetedDbExpansion.Classic)
-                return string.Empty;
-
             if (Storage.CreatureTemplateQuestItems.IsEmpty())
                 return string.Empty;
 

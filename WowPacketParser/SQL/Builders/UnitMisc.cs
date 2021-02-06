@@ -361,7 +361,7 @@ namespace WowPacketParser.SQL.Builders
                     if (t.Equals(typeof(int)))
                         row.Data.ID = pointOfInterest.Item1.ID;
                     else
-                        row.Data.ID = "@PID+" + count;
+                        row.Data.ID = "@POIID+" + count;
 
                     row.Data.PositionX = pointOfInterest.Item1.PositionX;
                     row.Data.PositionY = pointOfInterest.Item1.PositionY;
@@ -378,7 +378,7 @@ namespace WowPacketParser.SQL.Builders
 
                 StringBuilder result = new StringBuilder();
                 // delete query for GUIDs
-                var delete = new SQLDelete<PointsOfInterest>(Tuple.Create("@PID+0", "@PID+" + --count));
+                var delete = new SQLDelete<PointsOfInterest>(Tuple.Create("@POIID+0", "@POIID+" + --count));
                 result.Append(delete.Build());
 
                 var sql = new SQLInsert<PointsOfInterest>(rows, false);
@@ -535,19 +535,19 @@ namespace WowPacketParser.SQL.Builders
                         else
                             gossipAction.ActionPoiId = 0;
 
-                        result += "UPDATE `gossip_menu_option` SET `action_menu_id`=" + gossipAction.ActionMenuId.ToString() + ", `action_poi_id`=" + poiId + ", `option_id`=1, `npc_option_npcflag`=1 WHERE `menu_id`=" + gossipAction.MenuId.ToString() + " && `id`=" + gossipAction.OptionIndex.ToString() + ";\r\n";
+                        result += "UPDATE `gossip_menu_option` SET `action_menu_id`=" + gossipAction.ActionMenuId.ToString() + ", `action_poi_id`=" + poiId + ", `option_id`=1, `npc_option_npcflag`=1 WHERE `menu_id`=" + gossipAction.MenuId.ToString() + " && `id`=" + gossipAction.OptionIndex.ToString() + ";" + Environment.NewLine;
 
                     }
 
-                    result += "\r\n";
+                    result += Environment.NewLine;
                     result += SQLUtil.Compare(Storage.GossipMenuOptionActions, SQLDatabase.Get(Storage.GossipMenuOptionActions), StoreNameType.None);
                 }
 
                 if (!Storage.GossipMenuOptionBoxes.IsEmpty())
                 {
                     foreach (var gossip_pair in Storage.GossipMenuOptionBoxes)
-                        result += "UPDATE `gossip_menu_option` SET `box_coded`=" + gossip_pair.Item1.BoxCoded.ToString() + ", `box_money`=" + gossip_pair.Item1.BoxMoney.ToString() + ", `box_text`='" + MySql.Data.MySqlClient.MySqlHelper.EscapeString(gossip_pair.Item1.BoxText) + "' WHERE `menu_id`=" + gossip_pair.Item1.MenuId.ToString() + " && `id`=" + gossip_pair.Item1.OptionIndex.ToString() + ";\r\n";
-                    result += "\r\n";
+                        result += "UPDATE `gossip_menu_option` SET `box_coded`=" + gossip_pair.Item1.BoxCoded.ToString() + ", `box_money`=" + gossip_pair.Item1.BoxMoney.ToString() + ", `box_text`='" + MySql.Data.MySqlClient.MySqlHelper.EscapeString(gossip_pair.Item1.BoxText) + "' WHERE `menu_id`=" + gossip_pair.Item1.MenuId.ToString() + " && `id`=" + gossip_pair.Item1.OptionIndex.ToString() + ";" + Environment.NewLine;
+                    result += Environment.NewLine;
                     result += SQLUtil.Compare(Storage.GossipMenuOptionBoxes, SQLDatabase.Get(Storage.GossipMenuOptionBoxes), t => t.BroadcastTextIdHelper);
                 }
             }

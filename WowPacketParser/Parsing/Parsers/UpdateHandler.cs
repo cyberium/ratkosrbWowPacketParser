@@ -147,8 +147,10 @@ namespace WowPacketParser.Parsing.Parsers
             HandleMovementInfoChange(obj, guid, time, moveInfo);
             if (updates != null)
             {
-                StoreObjectUpdate(time, guid, updates);
+                bool savePlayerStats = StoreObjectUpdate(time, guid, updates);
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
+                if (savePlayerStats)
+                    Storage.SavePlayerStats(obj, false);
             }
         }
 

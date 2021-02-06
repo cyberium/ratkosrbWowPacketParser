@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
@@ -157,37 +159,38 @@ namespace WowPacketParser.SQL.Builders
 
         public static string BuildLootQuery(Dictionary<uint, Dictionary<WowGuid, LootEntry>> storage, string entryTable, string itemTable)
         {
-            uint rowsCount = 0;
-            uint rowsCount2 = 0;
-            string query = "INSERT INTO `" + entryTable + "` (`entry`, `loot_id`, `money`, `items_count`) VALUES\n";
-            string query2 = "";
+            var lootTemplateRows = new RowList<LootEntry>();
+            var lootItemRows = new RowList<LootItem>();
+            uint maxLootId = 0;
             foreach (var pair1 in storage)
             {
                 foreach (var pair2 in pair1.Value)
                 {
-                    if (rowsCount > 0)
-                        query += ",\n";
-                    query += "(" + pair2.Value.Entry + ", " + pair2.Value.LootId + ", " + pair2.Value.Money + ", " + pair2.Value.ItemsCount + ")";
-                    rowsCount++;
+                    Row<LootEntry> row = new Row<LootEntry>();
+                    row.Data = pair2.Value;
+                    row.Data.LootIdString = "@LOOTID+" + row.Data.LootId;
+                    lootTemplateRows.Add(row);
 
                     foreach (var itr in pair2.Value.ItemsList)
                     {
-                        if (rowsCount2 > 0)
-                            query2 += ",\n";
-                        query2 += "(" + itr.LootId + ", " + itr.ItemId + ", " + itr.Count + ")";
-                        rowsCount2++;
+                        Row<LootItem> row2 = new Row<LootItem>();
+                        row2.Data = itr;
+                        row2.Data.LootIdString = "@LOOTID+" + row2.Data.LootId;
+                        lootItemRows.Add(row2);
                     }
+
+                    if (pair2.Value.LootId > maxLootId)
+                        maxLootId = pair2.Value.LootId;
                 }
             }
-            query += ";\n";
-            if (query2 != "")
-            {
-                query += "INSERT INTO `" + itemTable + "` (`loot_id`, `item_id`, `count`) VALUES\n";
-                query += query2;
-                query += ";\n\n";
-            }
-            
-            return query;
+            StringBuilder result = new StringBuilder();
+            result.AppendLine("DELETE FROM `" + entryTable + "` WHERE `loot_id` BETWEEN @LOOTID+0 AND @LOOTID+" + maxLootId + ";");
+            var templateSql = new SQLInsert<LootEntry>(lootTemplateRows, false, false, entryTable);
+            result.Append(templateSql.Build());
+            result.AppendLine("DELETE FROM `" + itemTable + "` WHERE `loot_id` BETWEEN @LOOTID+0 AND @LOOTID+" + maxLootId + ";");
+            var itemSql = new SQLInsert<LootItem>(lootItemRows, false, false, itemTable);
+            result.Append(itemSql.Build());
+            return result.ToString();
         }
 
         [BuilderMethod]
