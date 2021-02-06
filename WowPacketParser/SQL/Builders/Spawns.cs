@@ -633,14 +633,18 @@ namespace WowPacketParser.SQL.Builders
                 return string.Empty;
 
             StringBuilder result = new StringBuilder();
-            // delete query for GUIDs
-            var delete = new SQLDelete<Creature>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
-            result.Append(delete.Build());
-            var sql = new SQLInsert<Creature>(rows, false);
-            result.Append(sql.Build());
-            result.AppendLine();
 
-            if (Settings.SqlTables.creature_addon)
+            if (rows.Count != 0)
+            {
+                // delete query for GUIDs
+                var delete = new SQLDelete<Creature>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                result.Append(delete.Build());
+                var sql = new SQLInsert<Creature>(rows, false);
+                result.Append(sql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.creature_addon && addonRows.Count != 0)
             {
                 var addonDelete = new SQLDelete<CreatureAddon>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(addonDelete.Build());
@@ -649,7 +653,7 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_guid_values)
+            if (Settings.SqlTables.creature_guid_values && guidValuesRows.Count != 0)
             {
                 var guidValuesDelete = new SQLDelete<CreatureGuidValues>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(guidValuesDelete.Build());
@@ -658,42 +662,42 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.client_creature_interact)
+            if (Settings.SqlTables.client_creature_interact && interactRows.Count != 0)
             {
                 var interactSql = new SQLInsert<CreatureClientInteract>(interactRows, false);
                 result.Append(interactSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_create1_time)
+            if (Settings.SqlTables.creature_create1_time && create1Rows.Count != 0)
             {
                 var createSql = new SQLInsert<CreatureCreate1>(create1Rows, false);
                 result.Append(createSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_create2_time)
+            if (Settings.SqlTables.creature_create2_time && create2Rows.Count != 0)
             {
                 var createSql = new SQLInsert<CreatureCreate2>(create2Rows, false);
                 result.Append(createSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_destroy_time)
+            if (Settings.SqlTables.creature_destroy_time && destroyRows.Count != 0)
             {
                 var destroySql = new SQLInsert<CreatureDestroy>(destroyRows, false);
                 result.Append(destroySql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_auras_update)
+            if (Settings.SqlTables.creature_auras_update && updateAurasRows.Count != 0)
             {
                 var updateSql = new SQLInsert<CreatureAurasUpdate>(updateAurasRows, false);
                 result.Append(updateSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_threat_update)
+            if (Settings.SqlTables.creature_threat_update && updateThreatRows.Count != 0)
             {
                 var updateSql = new SQLInsert<CreatureThreatUpdate>(updateThreatRows, false);
                 result.Append(updateSql.Build());
@@ -704,28 +708,28 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_values_update)
+            if (Settings.SqlTables.creature_values_update && updateValuesRows.Count != 0)
             {
                 var updateSql = new SQLInsert<CreatureValuesUpdate>(updateValuesRows, false);
                 result.Append(updateSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_speed_update)
+            if (Settings.SqlTables.creature_speed_update && updateSpeedRows.Count != 0)
             {
                 var updateSql = new SQLInsert<CreatureSpeedUpdate>(updateSpeedRows, false);
                 result.Append(updateSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_movement_client)
+            if (Settings.SqlTables.creature_movement_client && movementClientRows.Count != 0)
             {
                 var clientMovementSql = new SQLInsert<ClientSideMovement>(movementClientRows, false, false, "creature_movement_client");
                 result.Append(clientMovementSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_movement_server)
+            if (Settings.SqlTables.creature_movement_server && movementRows.Count != 0)
             {
                 // creature_movement_server
                 var movementSql = new SQLInsert<ServerSideMovement>(movementRows, false);
@@ -738,7 +742,7 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_movement_server_combat)
+            if (Settings.SqlTables.creature_movement_server_combat && movementCombatRows.Count != 0)
             {
                 // creature_movement_server_combat
                 var movementSql = new SQLInsert<ServerSideMovement>(movementCombatRows, false, false, "creature_movement_server_combat");
@@ -751,42 +755,42 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_emote)
+            if (Settings.SqlTables.creature_emote && emoteRows.Count != 0)
             {
                 var emoteSql = new SQLInsert<CreatureEmote>(emoteRows, false);
                 result.Append(emoteSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_attack_log)
+            if (Settings.SqlTables.creature_attack_log && attackLogRows.Count != 0)
             {
                 var attackSql = new SQLInsert<UnitMeleeAttackLog>(attackLogRows, false, false, "creature_attack_log");
                 result.Append(attackSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_attack_start)
+            if (Settings.SqlTables.creature_attack_start && attackStartRows.Count != 0)
             {
                 var attackSql = new SQLInsert<CreatureAttackToggle>(attackStartRows, false, false, "creature_attack_start");
                 result.Append(attackSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_attack_stop)
+            if (Settings.SqlTables.creature_attack_stop && attackStopRows.Count != 0)
             {
                 var attackSql = new SQLInsert<CreatureAttackToggle>(attackStopRows, false, false, "creature_attack_stop");
                 result.Append(attackSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_equipment_values_update)
+            if (Settings.SqlTables.creature_equipment_values_update && updateEquipmentValuesRows.Count != 0)
             {
                 var updateSql = new SQLInsert<CreatureEquipmentValuesUpdate>(updateEquipmentValuesRows, false, false);
                 result.Append(updateSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_guid_values_update)
+            if (Settings.SqlTables.creature_guid_values_update && updateGuidValuesRows.Count != 0)
             {
                 var updateSql = new SQLInsert<CreatureGuidValuesUpdate>(updateGuidValuesRows, false, false);
                 result.Append(updateSql.Build());
@@ -1087,61 +1091,73 @@ namespace WowPacketParser.SQL.Builders
                 return String.Empty;
 
             StringBuilder result = new StringBuilder();
-            // delete query for GUIDs
-            var delete = new SQLDelete<GameObjectModel>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
-            result.Append(delete.Build());
 
-            var sql = new SQLInsert<GameObjectModel>(rows, false);
-            result.Append(sql.Build());
+            if (rows.Count != 0)
+            {
+                // delete query for GUIDs
+                var delete = new SQLDelete<GameObjectModel>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
+                result.Append(delete.Build());
+                var sql = new SQLInsert<GameObjectModel>(rows, false);
+                result.Append(sql.Build());
+                result.AppendLine();
+            }
 
-            if (Settings.SqlTables.gameobject_addon)
+            if (Settings.SqlTables.gameobject_addon && addonRows.Count != 0)
             {
                 var addonDelete = new SQLDelete<GameObjectAddon>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
                 result.Append(addonDelete.Build());
                 var addonSql = new SQLInsert<GameObjectAddon>(addonRows, false);
                 result.Append(addonSql.Build());
+                result.AppendLine();
             }
 
-            if (Settings.SqlTables.gameobject_create1_time)
+            if (Settings.SqlTables.gameobject_create1_time && create1Rows.Count != 0)
             {
                 var createSql = new SQLInsert<GameObjectCreate1>(create1Rows, false);
                 result.Append(createSql.Build());
+                result.AppendLine();
             }
 
-            if (Settings.SqlTables.gameobject_create2_time)
+            if (Settings.SqlTables.gameobject_create2_time && create2Rows.Count != 0)
             {
                 var createSql = new SQLInsert<GameObjectCreate2>(create2Rows, false);
                 result.Append(createSql.Build());
+                result.AppendLine();
             }
 
-            if (Settings.SqlTables.gameobject_custom_anim)
+            if (Settings.SqlTables.gameobject_custom_anim && customAnimRows.Count != 0)
             {
                 var animSql = new SQLInsert<GameObjectCustomAnim>(customAnimRows, false);
                 result.Append(animSql.Build());
+                result.AppendLine();
             }
 
-            if (Settings.SqlTables.gameobject_despawn_anim)
+            if (Settings.SqlTables.gameobject_despawn_anim && despawnAnimRows.Count != 0)
             {
                 var animSql = new SQLInsert<GameObjectDespawnAnim>(despawnAnimRows, false);
                 result.Append(animSql.Build());
+                result.AppendLine();
             }
 
-            if (Settings.SqlTables.gameobject_destroy_time)
+            if (Settings.SqlTables.gameobject_destroy_time && destroyRows.Count != 0)
             {
                 var destroySql = new SQLInsert<GameObjectDestroy>(destroyRows, false);
                 result.Append(destroySql.Build());
+                result.AppendLine();
             }
 
-            if (Settings.SqlTables.gameobject_values_update)
+            if (Settings.SqlTables.gameobject_values_update && updateRows.Count != 0)
             {
                 var updateSql = new SQLInsert<GameObjectUpdate>(updateRows, false);
                 result.Append(updateSql.Build());
+                result.AppendLine();
             }
 
-            if (Settings.SqlTables.client_gameobject_use)
+            if (Settings.SqlTables.client_gameobject_use && useRows.Count != 0)
             {
                 var useSql = new SQLInsert<GameObjectClientUse>(useRows, false);
                 result.Append(useSql.Build());
+                result.AppendLine();
             }
 
             return result.ToString();
@@ -1261,31 +1277,38 @@ namespace WowPacketParser.SQL.Builders
                 if (maxDbGuid < dynObject.DbGuid)
                     maxDbGuid = dynObject.DbGuid;
             }
+
             StringBuilder result = new StringBuilder();
 
-            // delete query for GUIDs
-            var delete = new SQLDelete<DynamicObjectSpawn>(Tuple.Create("@DGUID+0", "@DGUID+" + maxDbGuid));
-            result.Append(delete.Build());
+            if (rows.Count != 0)
+            {
+                // delete query for GUIDs
+                var delete = new SQLDelete<DynamicObjectSpawn>(Tuple.Create("@DGUID+0", "@DGUID+" + maxDbGuid));
+                result.Append(delete.Build());
+                var sql = new SQLInsert<DynamicObjectSpawn>(rows, false);
+                result.Append(sql.Build());
+                result.AppendLine();
+            }
 
-            var sql = new SQLInsert<DynamicObjectSpawn>(rows, false);
-            result.Append(sql.Build());
-
-            if (Settings.SqlTables.dynamicobject_create1_time)
+            if (Settings.SqlTables.dynamicobject_create1_time && create1Rows.Count != 0)
             {
                 var createSql = new SQLInsert<DynamicObjectCreate1>(create1Rows, false);
                 result.Append(createSql.Build());
+                result.AppendLine();
             }
 
-            if (Settings.SqlTables.dynamicobject_create2_time)
+            if (Settings.SqlTables.dynamicobject_create2_time && create2Rows.Count != 0)
             {
                 var createSql = new SQLInsert<DynamicObjectCreate2>(create2Rows, false);
                 result.Append(createSql.Build());
+                result.AppendLine();
             }
 
-            if (Settings.SqlTables.dynamicobject_destroy_time)
+            if (Settings.SqlTables.dynamicobject_destroy_time && destroyRows.Count != 0)
             {
                 var destroySql = new SQLInsert<DynamicObjectDestroy>(destroyRows, false);
                 result.Append(destroySql.Build());
+                result.AppendLine();
             }
 
             return result.ToString();

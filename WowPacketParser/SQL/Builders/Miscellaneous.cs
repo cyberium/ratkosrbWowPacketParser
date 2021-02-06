@@ -205,6 +205,9 @@ namespace WowPacketParser.SQL.Builders
 
             if (Storage.GameObjectLoot.Count > 0 && Settings.SqlTables.gameobject_loot)
             {
+                if (!String.IsNullOrEmpty(query))
+                    query += Environment.NewLine;
+
                 query += BuildLootQuery(Storage.GameObjectLoot, "gameobject_loot", "gameobject_loot_item");
             }
 

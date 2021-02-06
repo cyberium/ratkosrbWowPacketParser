@@ -160,13 +160,24 @@ namespace WowPacketParser.SQL.Builders
 
                 spellRows.Add(row);
             }
-            var spellsSql = new SQLInsert<SpellCastGo>(spellRows, false);
-            result.Append(spellsSql.Build());
-            result.AppendLine();
-            var targetsSql = new SQLInsert<SpellCastGoTarget>(spellTargetRows, false);
-            result.Append(targetsSql.Build());
-            var positionSql = new SQLInsert<SpellCastGoPosition>(spellPositionRows, false);
-            result.Append(positionSql.Build());
+            if (spellRows.Count != 0)
+            {
+                var spellsSql = new SQLInsert<SpellCastGo>(spellRows, false);
+                result.Append(spellsSql.Build());
+                result.AppendLine();
+            }
+            if (spellTargetRows.Count != 0)
+            {
+                var targetsSql = new SQLInsert<SpellCastGoTarget>(spellTargetRows, false);
+                result.Append(targetsSql.Build());
+                result.AppendLine();
+            }
+            if (spellPositionRows.Count != 0)
+            {
+                var positionSql = new SQLInsert<SpellCastGoPosition>(spellPositionRows, false);
+                result.Append(positionSql.Build());
+            }
+            
             return result.ToString();
         }
 

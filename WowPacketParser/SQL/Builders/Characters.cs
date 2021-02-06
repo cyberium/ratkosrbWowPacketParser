@@ -471,7 +471,7 @@ namespace WowPacketParser.SQL.Builders
                 }
             }
 
-            if (Settings.SqlTables.characters)
+            if (Settings.SqlTables.characters && characterRows.Count != 0)
             {
                 var characterDelete = new SQLDelete<CharacterTemplate>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
                 result.Append(characterDelete.Build());
@@ -480,7 +480,7 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.character_inventory)
+            if (Settings.SqlTables.character_inventory && characterInventoryRows.Count != 0)
             {
                 var inventoryDelete = new SQLDelete<CharacterInventory>(Tuple.Create("@IGUID+0", "@IGUID+" + itemGuidCounter));
                 result.Append(inventoryDelete.Build());
@@ -495,14 +495,14 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.guild)
+            if (Settings.SqlTables.guild && guildMemberRows.Count != 0)
             {
                 var guildSql = new SQLInsert<GuildMember>(guildMemberRows, false);
                 result.Append(guildSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player)
+            if (Settings.SqlTables.player && playerRows.Count != 0)
             {
                 var playerDelete = new SQLDelete<PlayerTemplate>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
                 result.Append(playerDelete.Build());
@@ -511,7 +511,7 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_guid_values)
+            if (Settings.SqlTables.player_guid_values && playerGuidValuesRows.Count != 0)
             {
                 var guidValuesDelete = new SQLDelete<CreatureGuidValues>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
                 guidValuesDelete.tableNameOverride = "player_guid_values";
@@ -521,7 +521,7 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_active_player)
+            if (Settings.SqlTables.player_active_player && Storage.PlayerActiveCreateTime.Count != 0)
             {
                 var activePlayersRows = new RowList<CharacterActivePlayer>();
                 foreach (var itr in Storage.PlayerActiveCreateTime)
@@ -536,28 +536,28 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_create1_time)
+            if (Settings.SqlTables.player_create1_time && playerCreate1Rows.Count != 0)
             {
                 var createSql = new SQLInsert<PlayerCreate1>(playerCreate1Rows, false);
                 result.Append(createSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_create2_time)
+            if (Settings.SqlTables.player_create2_time && playerCreate2Rows.Count != 0)
             {
                 var createSql = new SQLInsert<PlayerCreate2>(playerCreate2Rows, false);
                 result.Append(createSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_destroy_time)
+            if (Settings.SqlTables.player_destroy_time && playerDestroyRows.Count != 0)
             {
                 var destroySql = new SQLInsert<PlayerDestroy>(playerDestroyRows, false);
                 result.Append(destroySql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_movement_client)
+            if (Settings.SqlTables.player_movement_client && Storage.PlayerMovements.Count != 0)
             {
                 var movementRows = new RowList<ClientSideMovement>();
                 foreach (var movement in Storage.PlayerMovements)
@@ -592,7 +592,7 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_movement_server)
+            if (Settings.SqlTables.player_movement_server && playerServerMovementRows.Count != 0)
             {
                 var movementSql = new SQLInsert<ServerSideMovement>(playerServerMovementRows, false, false, "player_movement_server");
                 result.Append(movementSql.Build());
@@ -603,63 +603,63 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_attack_log)
+            if (Settings.SqlTables.player_attack_log && playerAttackLogRows.Count != 0)
             {
                 var attackLogSql = new SQLInsert<UnitMeleeAttackLog>(playerAttackLogRows, false, false, "player_attack_log");
                 result.Append(attackLogSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_attack_start)
+            if (Settings.SqlTables.player_attack_start && playerAttackStartRows.Count != 0)
             {
                 var attackStartSql = new SQLInsert<CreatureAttackToggle>(playerAttackStartRows, false, false, "player_attack_start");
                 result.Append(attackStartSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_attack_stop)
+            if (Settings.SqlTables.player_attack_stop && playerAttackStopRows.Count != 0)
             {
                 var attackStopSql = new SQLInsert<CreatureAttackToggle>(playerAttackStopRows, false, false, "player_attack_stop");
                 result.Append(attackStopSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_emote)
+            if (Settings.SqlTables.player_emote && playerEmoteRows.Count != 0)
             {
                 var emoteSql = new SQLInsert<CreatureEmote>(playerEmoteRows, false, false, "player_emote");
                 result.Append(emoteSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_equipment_values_update)
+            if (Settings.SqlTables.player_equipment_values_update && playerEquipmentValuesUpdateRows.Count != 0)
             {
                 var equipmentUpdateSql = new SQLInsert<CreatureEquipmentValuesUpdate>(playerEquipmentValuesUpdateRows, false, false, "player_equipment_values_update");
                 result.Append(equipmentUpdateSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_guid_values_update)
+            if (Settings.SqlTables.player_guid_values_update && playerGuidValuesUpdateRows.Count != 0)
             {
                 var guidsUpdateSql = new SQLInsert<CreatureGuidValuesUpdate>(playerGuidValuesUpdateRows, false, false, "player_guid_values_update");
                 result.Append(guidsUpdateSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_auras_update)
+            if (Settings.SqlTables.player_auras_update && playerAurasUpdateRows.Count != 0)
             {
                 var aurasUpdateSql = new SQLInsert<CreatureAurasUpdate>(playerAurasUpdateRows, false, false, "player_auras_update");
                 result.Append(aurasUpdateSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_values_update)
+            if (Settings.SqlTables.player_values_update && playerValuesUpdateRows.Count != 0)
             {
                 var valuesUpdateSql = new SQLInsert<CreatureValuesUpdate>(playerValuesUpdateRows, false, false, "player_values_update");
                 result.Append(valuesUpdateSql.Build());
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_speed_update)
+            if (Settings.SqlTables.player_speed_update && playerSpeedUpdateRows.Count != 0)
             {
                 var speedUpdateSql = new SQLInsert<CreatureSpeedUpdate>(playerSpeedUpdateRows, false, false, "player_speed_update");
                 result.Append(speedUpdateSql.Build());
