@@ -100,7 +100,7 @@ namespace WowPacketParser
                         {
                             if (i != 0)
                                 query += "," + System.Environment.NewLine;
-                            query += "(" + i + ", " + sniffFileBuilds[i].ToString() + ", '" + MySql.Data.MySqlClient.MySqlHelper.EscapeString(sniffFileNames[i]) + "')";
+                            query += "(@SNIFFID+" + i + ", " + sniffFileBuilds[i].ToString() + ", '" + MySql.Data.MySqlClient.MySqlHelper.EscapeString(sniffFileNames[i]) + "')";
                         }
                         query += ";" + System.Environment.NewLine;
                         sw.WriteLine(query);
