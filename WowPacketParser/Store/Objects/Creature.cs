@@ -66,6 +66,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("MovementType", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
         public uint? MovementType;
 
+        [DBFieldName("is_spawn", DbType = (TargetedDbType.WPP))]
+        public ObjectCreateType? IsSpawn;
+
         [DBFieldName("is_hovering", DbType = (TargetedDbType.WPP))]
         public byte? Hover;
 

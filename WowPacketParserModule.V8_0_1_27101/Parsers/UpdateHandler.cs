@@ -602,7 +602,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 CoreParsers.UpdateHandler.ProcessExistingObject(ref existObj, guid, packet.Time, obj.UpdateFields, obj.DynamicUpdateFields, moves); // can't do "ref Storage.Objects[guid].Item1 directly
             }
             else
-                Storage.StoreNewObject(guid, obj, packet);
+                Storage.StoreNewObject(guid, obj, type, packet);
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))
                 packet.AddSniffData(Utilities.ObjectTypeToStore(objType), (int)guid.GetEntry(), "SPAWN");

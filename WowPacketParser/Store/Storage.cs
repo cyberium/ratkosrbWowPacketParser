@@ -18,7 +18,7 @@ namespace WowPacketParser.Store
 
         // Units, GameObjects, Players, Items
         public static readonly StoreDictionary<WowGuid, WoWObject> Objects = new StoreDictionary<WowGuid, WoWObject>(new List<SQLOutput>());
-        public static void StoreNewObject(WowGuid guid, WoWObject obj, Packet packet)
+        public static void StoreNewObject(WowGuid guid, WoWObject obj, ObjectCreateType type, Packet packet)
         {
             obj.OriginalMovement = obj.Movement != null ? obj.Movement.CopyFromMe() : null;
             obj.OriginalUpdateFields = obj.UpdateFields != null ? new Dictionary<int, UpdateField>(obj.UpdateFields) : null;
@@ -26,6 +26,7 @@ namespace WowPacketParser.Store
                 obj.SourceSniffId = Program.sniffFileNames.IndexOf(packet.FileName);
             obj.SourceSniffBuild = ClientVersion.BuildInt;
             obj.FirstCreateTime = packet.Time;
+            obj.FirstCreateType = type;
             Storage.Objects.Add(guid, obj, packet.TimeSpan);
         }
         public static string GetObjectDbGuid(WowGuid guid)

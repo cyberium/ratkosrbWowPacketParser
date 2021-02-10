@@ -167,6 +167,7 @@ namespace WowPacketParser.SQL.Builders
                 // set some defaults
                 Store.Objects.UpdateFields.IUnitData unitData = creature.UnitDataOriginal != null ? creature.UnitDataOriginal : creature.UnitData;
                 row.Data.PhaseGroup = 0;
+                row.Data.IsSpawn = creature.FirstCreateType;
                 row.Data.Hover = (byte)(creature.OriginalMovement.Hover ? 1 : 0);
                 row.Data.TemporarySpawn = (byte)(creature.IsTemporarySpawn() ? 1 : 0);
                 row.Data.IsPet = (byte)((unit.Key.GetHighType() == HighGuidType.Pet) ? 1 : 0);

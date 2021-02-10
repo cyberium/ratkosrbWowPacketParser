@@ -113,7 +113,7 @@ namespace WowPacketParser.Parsing.Parsers
                 obj.Area = WorldStateHandler.CurrentAreaId;
                 obj.Zone = WorldStateHandler.CurrentZoneId;
                 obj.PhaseMask = (uint)MovementHandler.CurrentPhaseMask;
-                Storage.StoreNewObject(guid, obj, packet);
+                Storage.StoreNewObject(guid, obj, type, packet);
             }
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))

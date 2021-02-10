@@ -128,7 +128,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
                 obj.Zone = CoreParsers.WorldStateHandler.CurrentZoneId;
                 obj.PhaseMask = (uint)CoreParsers.MovementHandler.CurrentPhaseMask;
                 obj.Phases = new HashSet<ushort>(CoreParsers.MovementHandler.ActivePhases.Keys);
-                Storage.StoreNewObject(guid, obj, packet);
+                Storage.StoreNewObject(guid, obj, type, packet);
             } 
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))
