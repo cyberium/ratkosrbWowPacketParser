@@ -456,6 +456,8 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
                 };
                 Storage.QuestClientCompleteTimes.Add(questComplete, packet.TimeSpan);
             }
+
+            packet.AddSniffData(StoreNameType.Quest, (int)id, "COMPLETE");
         }
 
         [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_DETAILS)]
