@@ -145,6 +145,7 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `orientation` float NOT NULL DEFAULT '0',
   `wander_distance` float NOT NULL DEFAULT '0' COMMENT 'maximum distance traveled from initial position',
   `movement_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'guessed movement generator',
+  `is_spawn` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'create object type 2',
   `is_hovering` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `is_temporary` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `is_pet` tinyint(3) unsigned NOT NULL DEFAULT '0',
