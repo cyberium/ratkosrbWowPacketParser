@@ -264,7 +264,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             }
             else
             {
-                gossipPOI.ID = "@PID+" + LastGossipPOIEntry.ToString();
+                gossipPOI.ID = "@POIID+" + LastGossipPOIEntry.ToString();
                 ++LastGossipPOIEntry;
             }
 

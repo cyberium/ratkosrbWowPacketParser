@@ -377,11 +377,15 @@ namespace WowPacketParser.SQL.Builders
                 }
 
                 StringBuilder result = new StringBuilder();
-                // delete query for GUIDs
-                var delete = new SQLDelete<PointsOfInterest>(Tuple.Create("@POIID+0", "@POIID+" + --count));
-                result.Append(delete.Build());
 
-                var sql = new SQLInsert<PointsOfInterest>(rows, false);
+                bool hasRealID = ClientVersion.AddedInVersion(ClientVersionBuild.V8_0_1_27101);
+                if (!hasRealID)
+                {
+                    var delete = new SQLDelete<PointsOfInterest>(Tuple.Create("@POIID+0", "@POIID+" + --count));
+                    result.Append(delete.Build());
+                }
+
+                var sql = new SQLInsert<PointsOfInterest>(rows, hasRealID);
                 result.Append(sql.Build());
 
                 return result.ToString();

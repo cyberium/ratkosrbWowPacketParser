@@ -216,7 +216,7 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
         {
             ++LastGossipPOIEntry;
             PointsOfInterest gossipPOI = new PointsOfInterest();
-            gossipPOI.ID = "@ID+" + LastGossipPOIEntry.ToString();
+            gossipPOI.ID = "@POIID+" + LastGossipPOIEntry.ToString();
 
             gossipPOI.Flags = (uint) packet.ReadInt32E<UnknownFlags>("Flags");
 

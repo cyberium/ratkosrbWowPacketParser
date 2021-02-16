@@ -65,9 +65,15 @@ namespace WowPacketParser.SQL.Builders
                 if (!Settings.SqlTables.SniffData && !Settings.SqlTables.SniffDataOpcodes)
                     return string.Empty;
 
-            var templateDb = SQLDatabase.Get(Storage.SniffData, Settings.WPPDatabase);
+            var rows = new RowList<SniffData>();
+            foreach (var data in Storage.SniffData)
+            {
+                Row<SniffData> row = new Row<SniffData>();
+                row.Data = data.Item1;
+                rows.Add(row);
+            }
 
-            return SQLUtil.Compare(Storage.SniffData, templateDb, x => string.Empty);
+            return new SQLInsert<SniffData>(rows, false, true).Build();
         }
 
         // Non-WDB data but nevertheless data that should be saved to gameobject_template
