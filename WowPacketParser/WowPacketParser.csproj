@@ -346,6 +346,7 @@
     <Compile Include="Enums\PetTameFailureReason.cs" />
     <Compile Include="Enums\PlayerFieldBytesMiscFlags.cs" />
     <Compile Include="Enums\PlayerFlags.cs" />
+    <Compile Include="Enums\PlayerLogXPReason.cs" />
     <Compile Include="Enums\PowerType.cs" />
     <Compile Include="Enums\QuestFlags.cs" />
     <Compile Include="Enums\QuestGiverStatus.cs" />
@@ -358,6 +359,7 @@
     <Compile Include="Enums\RaceMask.cs" />
     <Compile Include="Enums\RaidInstanceResetWarning.cs" />
     <Compile Include="Enums\RealmSplitState.cs" />
+    <Compile Include="Enums\ReferAFriendBonusType.cs" />
     <Compile Include="Enums\ReputationRank.cs" />
     <Compile Include="Enums\ResponseCode.cs" />
     <Compile Include="Enums\SellResult.cs" />

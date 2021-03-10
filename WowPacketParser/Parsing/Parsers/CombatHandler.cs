@@ -66,7 +66,7 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandlePvPCredit(Packet packet)
         {
             packet.ReadUInt32("Honor");
-            packet.ReadGuid("GUID");
+            packet.ReadGuid("TargetGUID");
             packet.ReadInt32("Rank");
         }
 
@@ -116,26 +116,26 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_ATTACK_START)]
         public static void HandleAttackStartStart(Packet packet)
         {
-            WowGuid attackerGuid = packet.ReadGuid("GUID");
-            WowGuid victimGuid = packet.ReadGuid("Victim GUID");
+            WowGuid attackerGuid = packet.ReadGuid("AttackerGUID");
+            WowGuid victimGuid = packet.ReadGuid("VictimGUID");
             Storage.StoreUnitAttackToggle(attackerGuid, victimGuid, packet.Time, true);
         }
 
         [Parser(Opcode.SMSG_ATTACK_STOP)]
         public static void HandleAttackStartStop(Packet packet)
         {
-            WowGuid attackerGuid = packet.ReadPackedGuid("GUID");
-            WowGuid victimGuid = packet.ReadPackedGuid("Victim GUID");
-            packet.ReadInt32("Unk int"); // Has something to do with facing?
+            WowGuid attackerGuid = packet.ReadPackedGuid("AttackerGUID");
+            WowGuid victimGuid = packet.ReadPackedGuid("VictimGUID");
+            packet.ReadInt32("NowDead"); // Blocks clientside facing when set to 1
             Storage.StoreUnitAttackToggle(attackerGuid, victimGuid, packet.Time, false);
         }
 
         [Parser(Opcode.SMSG_COMBAT_EVENT_FAILED)]
         public static void HandleCombatEventFailed(Packet packet)
         {
-            packet.ReadPackedGuid("GUID");
-            packet.ReadPackedGuid("Victim GUID");
-            packet.ReadInt32("Unk int"); // Has something to do with facing?
+            packet.ReadPackedGuid("AttackerGUID");
+            packet.ReadPackedGuid("VictimGUID");
+            packet.ReadInt32("NowDead"); // Blocks clientside facing when set to 1
         }
 
         [Parser(Opcode.SMSG_ATTACKER_STATE_UPDATE, ClientVersionBuild.V4_0_6_13596)]
@@ -149,30 +149,30 @@ namespace WowPacketParser.Parsing.Parsers
             attackData.Damage = (uint)packet.ReadInt32("Damage");
             attackData.OverkillDamage = packet.ReadInt32("OverDamage");
 
-            attackData.SubDamageCount = packet.ReadByte("Sub Damage Count");
+            attackData.SubDamageCount = packet.ReadByte("SubDamageCount");
             for (var i = 0; i < attackData.SubDamageCount; ++i)
             {
                 attackData.TotalSchoolMask |= (uint)packet.ReadInt32("SchoolMask", i);
-                packet.ReadSingle("Float Damage", i);
-                packet.ReadInt32("Int Damage", i);
+                packet.ReadSingle("FloatDamage", i);
+                packet.ReadInt32("IntDamage", i);
 
                 if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_PARTIAL_ABSORB | SpellHitInfo.HITINFO_FULL_ABSORB))
-                    attackData.TotalAbsorbedDamage += (uint)packet.ReadInt32("Damage Absorbed", i);
+                    attackData.TotalAbsorbedDamage += (uint)packet.ReadInt32("DamageAbsorbed", i);
 
                 if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_PARTIAL_RESIST | SpellHitInfo.HITINFO_FULL_RESIST))
-                    attackData.TotalResistedDamage += (uint)packet.ReadInt32("Damage Resisted", i);
+                    attackData.TotalResistedDamage += (uint)packet.ReadInt32("DamageResisted", i);
             }
 
             attackData.VictimState = (uint)packet.ReadByteE<VictimStates>("VictimState");
             attackData.AttackerState = packet.ReadInt32("AttackerState");
 
-            attackData.SpellId = (uint)packet.ReadInt32<SpellId>("Melee Spell Id");
+            attackData.SpellId = (uint)packet.ReadInt32<SpellId>("MeleeSpellID");
 
             if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_BLOCK))
-                attackData.BlockedDamage = packet.ReadInt32("Block Amount");
+                attackData.BlockedDamage = packet.ReadInt32("BlockAmount");
 
             if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_RAGE_GAIN))
-                packet.ReadInt32("Rage Gained");
+                packet.ReadInt32("RageGained");
 
             if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_UNK0))
             {

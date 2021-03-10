@@ -1056,15 +1056,15 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleLogXPGain(Packet packet)
         {
             XpGainLog log = new XpGainLog();
-            log.GUID = packet.ReadGuid("GUID");
-            log.OriginalAmount = packet.ReadUInt32("Total XP");
-            var type = packet.ReadByte("XP type"); // Need enum
-            log.Reason = type;
+            log.GUID = packet.ReadGuid("VictimGUID");
+            log.OriginalAmount = packet.ReadUInt32("OriginalXP");
+            var type = packet.ReadByteE<PlayerLogXPReason>("Reason");
+            log.Reason = (uint)type;
 
-            if (type == 0) // kill
+            if (type == PlayerLogXPReason.Kill)
             {
-                log.Amount = packet.ReadUInt32("Base XP");
-                log.GroupBonus = packet.ReadSingle("Group rate (unk)");
+                log.Amount = packet.ReadUInt32("Amount");
+                log.GroupBonus = packet.ReadSingle("GroupBonus");
             }
 
             if (ClientVersion.AddedInVersion(ClientType.TheBurningCrusade))
