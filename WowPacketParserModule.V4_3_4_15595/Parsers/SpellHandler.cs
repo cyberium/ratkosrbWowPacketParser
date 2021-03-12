@@ -109,6 +109,70 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             packet.AddSniffData(StoreNameType.Spell, (int)dbdata.SpellID, "CAST");
         }
 
+        [Parser(Opcode.MSG_CHANNEL_START)]
+        public static void HandleSpellChannelStart(Packet packet)
+        {
+            SpellChannelStart channel = new SpellChannelStart();
+            channel.Guid = packet.ReadPackedGuid("CasterGUID");
+            channel.SpellId = packet.ReadUInt32<SpellId>("SpellID");
+            channel.Duration = packet.ReadInt32("ChannelDuration");
+
+            channel.Time = packet.Time;
+            Storage.SpellChannelStart.Add(channel);
+
+            if (packet.ReadBool("HasInterruptImmunities"))
+                ReadChannelStartInterruptImmunities(packet, "InterruptImmunities");
+
+            if (packet.ReadBool("HasHealPrediction"))
+                ReadSpellHealPrediction(packet, "HealPrediction");
+        }
+
+        [Parser(Opcode.SMSG_SPELL_INTERRUPT_LOG)]
+        public static void HandleSpellInterruptLog(Packet packet)
+        {
+            var casterGuid = new byte[8];
+            var victimGuid = new byte[8];
+
+            victimGuid[4] = packet.ReadBit();
+            casterGuid[5] = packet.ReadBit();
+            casterGuid[6] = packet.ReadBit();
+            casterGuid[1] = packet.ReadBit();
+            casterGuid[3] = packet.ReadBit();
+            casterGuid[0] = packet.ReadBit();
+            victimGuid[3] = packet.ReadBit();
+            victimGuid[5] = packet.ReadBit();
+            victimGuid[1] = packet.ReadBit();
+            casterGuid[4] = packet.ReadBit();
+            casterGuid[7] = packet.ReadBit();
+            victimGuid[7] = packet.ReadBit();
+            victimGuid[6] = packet.ReadBit();
+            casterGuid[2] = packet.ReadBit();
+            victimGuid[2] = packet.ReadBit();
+            victimGuid[0] = packet.ReadBit();
+
+            packet.ReadXORByte(casterGuid, 7);
+            packet.ReadXORByte(casterGuid, 6);
+            packet.ReadXORByte(casterGuid, 3);
+            packet.ReadXORByte(casterGuid, 2);
+            packet.ReadXORByte(victimGuid, 3);
+            packet.ReadXORByte(victimGuid, 6);
+            packet.ReadXORByte(victimGuid, 2);
+            packet.ReadXORByte(victimGuid, 4);
+            packet.ReadXORByte(victimGuid, 7);
+            packet.ReadXORByte(victimGuid, 0);
+            packet.ReadXORByte(casterGuid, 4);
+            packet.ReadInt32<SpellId>("SpellID");
+            packet.ReadXORByte(victimGuid, 1);
+            packet.ReadXORByte(casterGuid, 0);
+            packet.ReadXORByte(casterGuid, 5);
+            packet.ReadXORByte(casterGuid, 1);
+            packet.ReadInt32<SpellId>("InterruptedSpellID");
+            packet.ReadXORByte(victimGuid, 5);
+
+            packet.WriteGuid("Victim", victimGuid);
+            packet.WriteGuid("Caster", casterGuid);
+        }
+
         public static void ReadSpellMissStatus(SpellCastData dbdata, Packet packet, params object[] idx)
         {
             WowGuid missTarget = packet.ReadGuid("MissTarget", idx);
@@ -180,7 +244,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
         public static void ReadCreatureImmunities(Packet packet, params object[] idx)
         {
             packet.ReadUInt32("School", idx);
-            packet.ReadUInt32("Value", idx);
+            packet.ReadUInt32E<MechanicImmunityFlag>("Value", idx);
         }
 
         public static void ReadSpellHealPrediction(Packet packet, params object[] idx)
@@ -188,6 +252,12 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             packet.ReadInt32("Points", idx);
             packet.ReadByte("Type", idx);
             packet.ReadPackedGuid("BeaconGUID", idx);
+        }
+
+        public static void ReadChannelStartInterruptImmunities(Packet packet, params object[] idx)
+        {
+            packet.ReadUInt32("SchoolImmunities", idx);
+            packet.ReadUInt32E<MechanicImmunityFlag>("Immunities", idx);
         }
     }
 }

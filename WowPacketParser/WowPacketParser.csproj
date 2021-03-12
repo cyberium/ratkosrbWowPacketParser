@@ -329,6 +329,7 @@
     <Compile Include="Enums\MailType.cs" />
     <Compile Include="Enums\MapDifficulty.cs" />
     <Compile Include="Enums\Material.cs" />
+    <Compile Include="Enums\MechanicImmunityFlag.cs" />
     <Compile Include="Enums\MirrorTimerType.cs" />
     <Compile Include="Enums\MovementAnimationState.cs" />
     <Compile Include="Enums\MovementFlag.cs" />
