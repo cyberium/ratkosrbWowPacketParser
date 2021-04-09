@@ -17,7 +17,15 @@ namespace WowPacketParser.Misc
 
         public static DateTime GetDateTimeFromUnixTime(double unixTime)
         {
-            return Epoch.AddSeconds(unixTime);
+            try
+            {
+                return Epoch.AddSeconds(unixTime);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                // weird values are sent sometimes that make no sense, return 0
+                return Epoch;
+            }
         }
 
         public static double GetUnixTimeFromDateTime(DateTime time)
@@ -316,7 +324,7 @@ namespace WowPacketParser.Misc
             return dict;
         }
 
-        public static List<T> GetAttributes<T>(FieldInfo field) where T : Attribute 
+        public static List<T> GetAttributes<T>(FieldInfo field) where T : Attribute
         {
             var list = new List<T>();
 
