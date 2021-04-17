@@ -149,9 +149,12 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.CMSG_CHAT_JOIN_CHANNEL, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleChannelJoin(Packet packet)
         {
-            packet.ReadInt32("Channel Id");
-            packet.ReadBool("Has Voice");
-            packet.ReadBool("Joined by zone update");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+            {
+                packet.ReadInt32("Channel Id");
+                packet.ReadBool("Has Voice");
+                packet.ReadBool("Joined by zone update");
+            }
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_0_1_13164))
             {
