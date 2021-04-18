@@ -166,6 +166,7 @@
     <Compile Include="DBC\Structures\Legion\SoundKitNameEntry.cs" />
     <Compile Include="DBC\Structures\Legion\SpellEffectEntry.cs" />
     <Compile Include="DBC\Structures\Legion\SpellEntry.cs" />
+    <Compile Include="DBC\Structures\Shadowlands\PhaseEntry.cs" />
     <Compile Include="Enums\AccountDataType.cs" />
     <Compile Include="Enums\ActionButtonType.cs" />
     <Compile Include="Enums\AddressType.cs" />
@@ -348,6 +349,8 @@
     <Compile Include="Enums\PlayerFieldBytesMiscFlags.cs" />
     <Compile Include="Enums\PlayerFlags.cs" />
     <Compile Include="Enums\PlayerLogXPReason.cs" />
+    <Compile Include="Enums\PhaseFlags.cs" />
+    <Compile Include="Enums\PhaseShiftFlags.cs" />
     <Compile Include="Enums\PowerType.cs" />
     <Compile Include="Enums\QuestFlags.cs" />
     <Compile Include="Enums\QuestGiverStatus.cs" />
