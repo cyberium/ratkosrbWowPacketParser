@@ -619,7 +619,8 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadUInt32("Level", i);
                 packet.ReadUInt32E<Class>("Class", i);
                 packet.ReadUInt32E<Race>("Race", i);
-                packet.ReadByteE<Gender>("Gender", i);
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                    packet.ReadByteE<Gender>("Gender", i);
                 packet.ReadUInt32<ZoneId>("Zone Id", i);
             }
         }
