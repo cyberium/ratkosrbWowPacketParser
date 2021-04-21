@@ -22,14 +22,21 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             var count = packet.ReadUInt32("NumObjUpdates");
             uint map = packet.ReadUInt16<MapId>("MapID");
             packet.ResetBitReader();
-            var hasDestroyObject = packet.ReadBit("HasDestroyObjects");
-            if (hasDestroyObject)
+            var hasRemovedObjects = packet.ReadBit("HasRemovedObjects");
+            if (hasRemovedObjects)
             {
-                packet.ReadInt16("Int0");
-                var destroyObjCount = packet.ReadUInt32("DestroyObjectsCount");
-                for (var i = 0; i < destroyObjCount; i++)
+                var destroyedObjCount = packet.ReadInt16("DestroyedObjCount");
+                var removedObjCount = packet.ReadUInt32("RemovedObjCount"); // destroyed + out of range
+                var outOfRangeObjCount = removedObjCount - destroyedObjCount;
+
+                for (var i = 0; i < destroyedObjCount; i++)
                 {
-                    WowGuid guid = packet.ReadPackedGuid128("Object GUID", i);
+                    WowGuid guid = packet.ReadPackedGuid128("ObjectGUID", "Destroyed", i);
+                    Storage.StoreObjectDestroyTime(guid, packet.Time);
+                }
+                for (var i = 0; i < outOfRangeObjCount; i++)
+                {
+                    WowGuid guid = packet.ReadPackedGuid128("ObjectGUID", "OutOfRange", i);
                     Storage.StoreObjectDestroyTime(guid, packet.Time);
                 }
             }
