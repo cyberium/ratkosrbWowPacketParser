@@ -26,7 +26,9 @@ namespace WowPacketParser.Parsing.Parsers
         {
             var entry = packet.ReadUInt32<ItemId>("Entry");
             var name = packet.ReadCString("Name");
-            packet.ReadUInt32E<InventoryType>("Inventory Type");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadUInt32E<InventoryType>("Inventory Type");
 
             var objectName = new ObjectName
             {

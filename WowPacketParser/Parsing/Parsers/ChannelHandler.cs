@@ -87,8 +87,6 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.ReadInt32("Channel Id");
                     if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
                         packet.ReadInt32("Unk");
-                    else
-                        packet.ReadByte("Unk");
                     break;
                 }
                 case ChatNotificationType.YouLeft:

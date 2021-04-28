@@ -157,14 +157,17 @@ namespace WowPacketParser.Parsing.Parsers
             // Math.Abs(this float) > 0.0f returns whether the player has received a new mail since last visiting a mailbox
             packet.ReadSingle("Time since last time visiting a mailbox (can be < 0.0)");
 
-            var count = packet.ReadUInt32("Count");
-            for (var i = 0; i < count; ++i)
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_3_0_7561))
             {
-                packet.ReadUInt64("GUID", i);
-                packet.ReadUInt32("Sender Id", i);
-                packet.ReadUInt32("Message type", i);
-                packet.ReadUInt32("Stationery", i);
-                packet.ReadSingle("Time?", i);
+                var count = packet.ReadUInt32("Count");
+                for (var i = 0; i < count; ++i)
+                {
+                    packet.ReadUInt64("GUID", i);
+                    packet.ReadUInt32("Sender Id", i);
+                    packet.ReadUInt32("Message type", i);
+                    packet.ReadUInt32("Stationery", i);
+                    packet.ReadSingle("Time?", i);
+                }
             }
         }
 
