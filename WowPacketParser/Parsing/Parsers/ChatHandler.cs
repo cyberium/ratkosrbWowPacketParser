@@ -16,6 +16,7 @@ namespace WowPacketParser.Parsing.Parsers
         }
 
         [Parser(Opcode.SMSG_DEFENSE_MESSAGE)]
+        [Parser(Opcode.SMSG_OFFENSE_MESSAGE)]
         public static void HandleDefenseMessage(Packet packet)
         {
             packet.ReadUInt32<ZoneId>("Zone Id");

@@ -601,6 +601,7 @@ namespace WowPacketParser.Enums.Version.V1_12_1_5875
             {Opcode.SMSG_MINIGAME_MOVE_FAILED, 761},
             {Opcode.SMSG_MINIGAME_SETUP, 758},
             {Opcode.SMSG_MINIGAME_STATE, 759},
+            {Opcode.SMSG_OFFENSE_MESSAGE, 827},
             {Opcode.SMSG_ON_MONSTER_MOVE, 221},
             {Opcode.SMSG_MONSTER_MOVE_TRANSPORT, 686},
             {Opcode.SMSG_MOTD, 829},
