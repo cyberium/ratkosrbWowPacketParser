@@ -432,9 +432,9 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
 
                         ulong reputation = 0;
 
-                        if (AchievementHandler.FactionReputationStore.ContainsKey(faction))
+                        if (CoreParsers.AchievementHandler.FactionReputationStore.ContainsKey(faction))
                         {
-                            reputation = AchievementHandler.FactionReputationStore[faction];
+                            reputation = CoreParsers.AchievementHandler.FactionReputationStore[faction];
                             hasFaction = true;
                         }
 
@@ -476,9 +476,9 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 {
                     moneyCostOriginal = (uint)(Math.Round((moneyCost / discount) / 5)) * 5;
                     packet.WriteLine("[{0}] MoneyCostOriginal: {1}", i, moneyCostOriginal);
+                    trainerSpell.FactionHelper = "MoneyCost recalculated";
                 }
-
-                if (Settings.UseDBC && Settings.RecalcDiscount && !hasFaction)
+                else
                 {
                     trainerSpell.FactionHelper = "No Faction found! MoneyCost not recalculated!";
                 }
