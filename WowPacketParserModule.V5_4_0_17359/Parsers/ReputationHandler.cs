@@ -1,6 +1,8 @@
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParserModule.V5_4_0_17359.Parsers
 {
@@ -9,10 +11,15 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
         [Parser(Opcode.SMSG_INITIALIZE_FACTIONS)]
         public static void HandleInitializeFactions(Packet packet)
         {
+            Storage.ClearTemporaryReputationList();
+
             for (var i = 0; i < 256; i++)
             {
-                packet.ReadUInt32E<ReputationRank>("Faction Standing", i);
-                packet.ReadByteE<FactionFlag>("Faction Flags", i);
+                CharacterReputationData repData = new CharacterReputationData();
+                repData.Faction = (uint)i;
+                repData.Standing = (int)packet.ReadUInt32E<ReputationRank>("Faction Standing", i);
+                repData.Flags = (uint)packet.ReadByteE<FactionFlag>("Faction Flags", i);
+                Storage.StoreCharacterReputation(WowGuid.Empty, repData);
             }
 
             for (var i = 0; i < 256; i++)

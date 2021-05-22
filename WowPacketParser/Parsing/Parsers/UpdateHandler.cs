@@ -1508,16 +1508,9 @@ namespace WowPacketParser.Parsing.Parsers
             var bit784 = packet.ReadBit("Has bit784", index);
             var isSelf =  packet.ReadBit("Self", index);
             if (isSelf)
-            {
-                Storage.CurrentActivePlayer = guid;
-                ActivePlayerCreateTime activePlayer = new ActivePlayerCreateTime
-                {
-                    Guid = guid,
-                    Time = packet.Time,
-                };
-                Storage.PlayerActiveCreateTime.Add(activePlayer);
-            }
-            /*var bit1 = */ packet.ReadBit();
+                Storage.SetCurrentActivePlayer(guid, packet.Time);
+            /*var bit1 = */
+            packet.ReadBit();
             var living = packet.ReadBit("Living", index);
             /*var bit3 = */ packet.ReadBit();
             var bit644 = packet.ReadBit("Has bit644", index);
@@ -3730,15 +3723,7 @@ namespace WowPacketParser.Parsing.Parsers
             else
                 flags = packet.ReadByteE<UpdateFlag>("Update Flags", index);
             if (flags.HasAnyFlag(UpdateFlag.Self))
-            {
-                Storage.CurrentActivePlayer = guid;
-                ActivePlayerCreateTime activePlayer = new ActivePlayerCreateTime
-                {
-                    Guid = guid,
-                    Time = packet.Time,
-                };
-                Storage.PlayerActiveCreateTime.Add(activePlayer);
-            }
+                Storage.SetCurrentActivePlayer(guid, packet.Time);
 
             if (flags.HasAnyFlag(UpdateFlag.Living))
             {
@@ -3860,7 +3845,7 @@ namespace WowPacketParser.Parsing.Parsers
                         packet.ReadInt32("Spline Start Time", index);
                     }
 
-                    var splineCount = packet.ReadInt32();
+                    var splineCount = packet.ReadInt32("Waypoints Count", index);
                     for (var i = 0; i < splineCount; i++)
                         packet.ReadVector3("Spline Waypoint", index, i);
 

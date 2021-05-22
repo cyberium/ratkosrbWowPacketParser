@@ -391,6 +391,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("item_template")]
         public uint ItemTemplate;
     }
+
     [DBTableName("item_instance")]
     public sealed class CharacterItemInstance : IDataModel
     {
@@ -415,6 +416,61 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("durability")]
         public uint Durability = 1;
     }
+
+    [DBTableName("character_reputation")]
+    public sealed class CharacterReputation : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string Guid;
+
+        [DBFieldName("faction", true)]
+        public uint Faction;
+
+        [DBFieldName("standing")]
+        public int Standing;
+
+        [DBFieldName("flags")]
+        public uint Flags;
+    }
+    public class CharacterReputationData
+    {
+        public uint Faction;
+        public int Standing;
+        public uint Flags;
+    }
+
+    [DBTableName("character_skills")]
+    public sealed class CharacterSkill : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string Guid;
+
+        [DBFieldName("skill", true)]
+        public uint Skill;
+
+        [DBFieldName("value")]
+        public uint Value;
+
+        [DBFieldName("max")]
+        public uint Max;
+    }
+
+    [DBTableName("character_spell")]
+    public sealed class CharacterSpell : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string Guid;
+
+        [DBFieldName("spell", true)]
+        public uint Spell;
+
+        [DBFieldName("active")]
+        public uint Active = 1;
+
+        [DBFieldName("disabled")]
+        public uint Disabled = 0;
+    }
+
     [DBTableName("player_movement_client")]
     public sealed class ClientSideMovement : IDataModel
     {
@@ -424,13 +480,13 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string Guid;
 
-        [DBFieldName("opcode")]
+        [DBFieldName("opcode", true)]
         public string Opcode;
 
-        [DBFieldName("move_time")]
+        [DBFieldName("move_time", true)]
         public uint MoveTime;
 
-        [DBFieldName("move_flags")]
+        [DBFieldName("move_flags", true)]
         public uint MoveFlags;
 
         [DBFieldName("map")]
@@ -459,6 +515,7 @@ namespace WowPacketParser.Store.Objects
         public Direction OpcodeDirection;
         public DateTime Time;
     }
+
     [DBTableName("player_active_player")]
     public sealed class CharacterActivePlayer : IDataModel
     {

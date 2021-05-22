@@ -131,11 +131,16 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_SEND_KNOWN_SPELLS)]
         public static void HandleSendKnownSpells(Packet packet)
         {
+            Storage.ClearTemporarySpellList();
+
             packet.ReadBit("InitialLogin");
             var knownSpellsCount = packet.ReadUInt32("KnownSpellsCount");
 
             for (var i = 0; i < knownSpellsCount; i++)
-                packet.ReadUInt32<SpellId>("KnownSpellId", i);
+            {
+                uint spellId = packet.ReadUInt32<SpellId>("KnownSpellId", i);
+                Storage.StoreCharacterSpell(WowGuid.Empty, spellId);
+            }
         }
 
         [Parser(Opcode.SMSG_PET_CLEAR_SPELLS)]

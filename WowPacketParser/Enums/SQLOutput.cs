@@ -85,6 +85,9 @@
 
         characters,
         character_inventory,
+        character_reputation,
+        character_skills,
+        character_spell,
         guild,
         guild_rank,
 

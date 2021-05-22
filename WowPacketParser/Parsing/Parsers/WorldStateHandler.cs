@@ -15,7 +15,7 @@ namespace WowPacketParser.Parsing.Parsers
         {
             uint map = packet.ReadUInt32<MapId>("Map ID");
             int zoneId = CurrentZoneId = packet.ReadInt32<ZoneId>("Zone Id");
-            int areaId = ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180) ? CurrentAreaId = packet.ReadInt32<AreaId>("Area Id") : 0;
+            int areaId = ClientVersion.AddedInVersion(ClientVersionBuild.V2_1_0_6692) ? CurrentAreaId = packet.ReadInt32<AreaId>("Area Id") : 0;
 
             var numFields = packet.ReadInt16("Field Count");
             for (var i = 0; i < numFields; i++)

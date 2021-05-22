@@ -15,6 +15,43 @@ namespace WowPacketParser.Store
 
         /* Key: Guid */
         public static WowGuid CurrentActivePlayer = null;
+        public static void SetCurrentActivePlayer(WowGuid guid, DateTime time)
+        {
+            Storage.CurrentActivePlayer = guid;
+            ActivePlayerCreateTime activePlayer = new ActivePlayerCreateTime
+            {
+                Guid = guid,
+                Time = time,
+            };
+            Storage.PlayerActiveCreateTime.Add(activePlayer);
+
+            // initial spells packet is sent before create object for own player
+            if (CharacterSpells.ContainsKey(WowGuid.Empty))
+            {
+                if (CharacterSpells.ContainsKey(guid))
+                {
+                    CharacterSpells[guid] = CharacterSpells[WowGuid.Empty];
+                }
+                else
+                {
+                    Storage.CharacterSpells.Add(guid, CharacterSpells[WowGuid.Empty]);
+                }
+                CharacterSpells.Remove(WowGuid.Empty);
+            }
+            // initial factions packet is sent before create object for own player
+            if (CharacterReputations.ContainsKey(WowGuid.Empty))
+            {
+                if (CharacterReputations.ContainsKey(guid))
+                {
+                    CharacterReputations[guid] = CharacterReputations[WowGuid.Empty];
+                }
+                else
+                {
+                    Storage.CharacterReputations.Add(guid, CharacterReputations[WowGuid.Empty]);
+                }
+                CharacterReputations.Remove(WowGuid.Empty);
+            }
+        }
 
         // Units, GameObjects, Players, Items
         public static readonly StoreDictionary<WowGuid, WoWObject> Objects = new StoreDictionary<WowGuid, WoWObject>(new List<SQLOutput>());
@@ -661,6 +698,53 @@ namespace WowPacketParser.Store
                 store.Add(attackerGuid, attackList);
             }
         }
+
+        public static readonly Dictionary<WowGuid, List<uint>> CharacterSpells = new Dictionary<WowGuid, List<uint>>();
+        public static void StoreCharacterSpell(WowGuid guid, uint spellId)
+        {
+            if (!Settings.SqlTables.character_spell)
+                return;
+
+            if (Storage.CharacterSpells.ContainsKey(guid))
+            {
+                Storage.CharacterSpells[guid].Add(spellId);
+            }
+            else
+            {
+                List<uint> spellList = new List<uint>();
+                spellList.Add(spellId);
+                Storage.CharacterSpells.Add(guid, spellList);
+            }
+        }
+        public static void ClearTemporarySpellList()
+        {
+            if (Storage.CharacterSpells.ContainsKey(WowGuid.Empty))
+                Storage.CharacterSpells[WowGuid.Empty].Clear();
+        }
+
+        public static readonly Dictionary<WowGuid, List<CharacterReputationData>> CharacterReputations = new Dictionary<WowGuid, List<CharacterReputationData>>();
+        public static void StoreCharacterReputation(WowGuid guid, CharacterReputationData repData)
+        {
+            if (!Settings.SqlTables.character_reputation)
+                return;
+
+            if (Storage.CharacterReputations.ContainsKey(guid))
+            {
+                Storage.CharacterReputations[guid].Add(repData);
+            }
+            else
+            {
+                List<CharacterReputationData> repList = new List<CharacterReputationData>();
+                repList.Add(repData);
+                Storage.CharacterReputations.Add(guid, repList);
+            }
+        }
+        public static void ClearTemporaryReputationList()
+        {
+            if (Storage.CharacterReputations.ContainsKey(WowGuid.Empty))
+                Storage.CharacterReputations[WowGuid.Empty].Clear();
+        }
+
         public static readonly List<PlayerMovement> PlayerMovements = new List<PlayerMovement>();
         public static readonly List<ActivePlayerCreateTime> PlayerActiveCreateTime = new List<ActivePlayerCreateTime>();
 

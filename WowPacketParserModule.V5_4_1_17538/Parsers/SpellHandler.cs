@@ -1,6 +1,7 @@
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
 
 namespace WowPacketParserModule.V5_4_1_17538.Parsers
 {
@@ -428,12 +429,15 @@ namespace WowPacketParserModule.V5_4_1_17538.Parsers
         [Parser(Opcode.SMSG_SEND_KNOWN_SPELLS)]
         public static void HandleInitialSpells(Packet packet)
         {
+            Storage.ClearTemporarySpellList();
+
             packet.ReadBit("InitialLogin");
             var count = packet.ReadBits("Spell Count", 22);
 
             for (var i = 0; i < count; i++)
             {
-                packet.ReadUInt32<SpellId>("Spell ID", i);;
+                uint spellId = packet.ReadUInt32<SpellId>("Spell ID", i);
+                Storage.StoreCharacterSpell(WowGuid.Empty, spellId);
             }
         }
 

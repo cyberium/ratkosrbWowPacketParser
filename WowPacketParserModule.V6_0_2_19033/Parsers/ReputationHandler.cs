@@ -32,10 +32,15 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_INITIALIZE_FACTIONS)]
         public static void HandleInitializeFactions(Packet packet)
         {
+            Storage.ClearTemporaryReputationList();
+
             for (var i = 0; i < 0x100; i++)
             {
-                packet.ReadByteE<FactionFlag>("FactionFlags", i);
-                packet.ReadUInt32E<ReputationRank>("FactionStandings", i);
+                CharacterReputationData repData = new CharacterReputationData();
+                repData.Faction = (uint)i;
+                repData.Flags = (uint)packet.ReadByteE<FactionFlag>("FactionFlags", i);
+                repData.Standing = (int)packet.ReadUInt32E<ReputationRank>("FactionStandings", i);
+                Storage.StoreCharacterReputation(WowGuid.Empty, repData);
             }
 
             for (var i = 0; i < 0x100; i++)

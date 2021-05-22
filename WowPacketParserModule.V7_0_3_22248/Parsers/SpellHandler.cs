@@ -433,12 +433,17 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
         [Parser(Opcode.SMSG_SEND_KNOWN_SPELLS)]
         public static void HandleSendKnownSpells(Packet packet)
         {
+            Storage.ClearTemporarySpellList();
+
             packet.ReadBit("InitialLogin");
             var knownSpells = packet.ReadUInt32("KnownSpellsCount");
             var favoriteSpells = packet.ReadUInt32("FavoriteSpellsCount");
 
             for (var i = 0; i < knownSpells; i++)
-                packet.ReadUInt32<SpellId>("KnownSpellId", i);
+            {
+                uint spellId = packet.ReadUInt32<SpellId>("KnownSpellId", i);
+                Storage.StoreCharacterSpell(WowGuid.Empty, spellId);
+            }
 
             for (var i = 0; i < favoriteSpells; i++)
                 packet.ReadUInt32<SpellId>("FavoriteSpellId", i);

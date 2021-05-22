@@ -169,15 +169,20 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_SEND_KNOWN_SPELLS, ClientVersionBuild.Zero, ClientVersionBuild.V5_1_0_16309)]
         public static void HandleInitialSpells(Packet packet)
         {
+            Storage.ClearTemporarySpellList();
+
             packet.ReadByte("Talent Spec");
 
             var count = packet.ReadUInt16("Spell Count");
             for (var i = 0; i < count; i++)
             {
+                int spellId;
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_0_9767))
-                     packet.ReadInt32<SpellId>("Spell ID", i);
+                    spellId = packet.ReadInt32<SpellId>("Spell ID", i);
                 else
-                    packet.ReadUInt16<SpellId>("Spell ID", i);
+                    spellId = packet.ReadUInt16<SpellId>("Spell ID", i);
+
+                Storage.StoreCharacterSpell(WowGuid.Empty, (uint)spellId);
 
                 packet.ReadInt16("Unk Int16", i);
             }
@@ -205,13 +210,16 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_SEND_KNOWN_SPELLS, ClientVersionBuild.V5_1_0_16309)]
         public static void HandleInitialSpells510(Packet packet)
         {
+            Storage.ClearTemporarySpellList();
+
             var count = packet.ReadBits("Spell Count", 24);
             packet.ReadBit("InitialLogin");
             packet.ResetBitReader();
 
             for (var i = 0; i < count; i++)
             {
-                packet.ReadUInt32<SpellId>("Spell ID", i);
+                uint spellId = packet.ReadUInt32<SpellId>("Spell ID", i);
+                Storage.StoreCharacterSpell(WowGuid.Empty, spellId);
             }
         }
 

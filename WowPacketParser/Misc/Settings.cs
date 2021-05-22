@@ -175,6 +175,9 @@ namespace WowPacketParser.Misc
 
             public static readonly bool characters = Conf.GetBoolean("characters", false);
             public static readonly bool character_inventory = Conf.GetBoolean("character_inventory", false);
+            public static readonly bool character_reputation = Conf.GetBoolean("character_reputation", false);
+            public static readonly bool character_skills = Conf.GetBoolean("character_skills", false);
+            public static readonly bool character_spell = Conf.GetBoolean("character_spell", false);
             public static readonly bool guild = Conf.GetBoolean("guild", false);
             public static readonly bool guild_rank = Conf.GetBoolean("guild_rank", false);
 

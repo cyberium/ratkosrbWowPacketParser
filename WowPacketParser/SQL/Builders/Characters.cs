@@ -34,6 +34,9 @@ namespace WowPacketParser.SQL.Builders
             var characterRows = new RowList<CharacterTemplate>();
             var characterInventoryRows = new RowList<CharacterInventory>();
             var characterItemInstaceRows = new RowList<CharacterItemInstance>();
+            var characterReputationRows = new RowList<CharacterReputation>();
+            var characterSkillRows = new RowList<CharacterSkill>();
+            var characterSpellRows = new RowList<CharacterSpell>();
             var guildMemberRows = new RowList<GuildMember>();
             var playerRows = new RowList<PlayerTemplate>();
             var playerGuidValuesRows = new RowList<CreatureGuidValues>();
@@ -108,7 +111,7 @@ namespace WowPacketParser.SQL.Builders
                     Row<CharacterInventory> inventoryRow = new Row<CharacterInventory>();
                     inventoryRow.Data.Guid = row.Data.Guid;
                     inventoryRow.Data.Bag = 0;
-                    inventoryRow.Data.Slot = (uint)i / 2;
+                    inventoryRow.Data.Slot = (uint)i;
                     inventoryRow.Data.ItemGuid = "@IGUID+" + itemGuidCounter;
                     inventoryRow.Data.ItemTemplate = (uint)itemId;
                     characterInventoryRows.Add(inventoryRow);
@@ -458,6 +461,93 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
+                if (Settings.SqlTables.character_reputation)
+                {
+                    if (Storage.CharacterReputations.ContainsKey(objPair.Key))
+                    {
+                        foreach (var repData in Storage.CharacterReputations[objPair.Key])
+                        {
+                            if (repData.Standing != 0 || repData.Flags != 0)
+                            {
+                                var repRow = new Row<CharacterReputation>();
+                                repRow.Data.Guid = "@PGUID+" + player.DbGuid;
+                                repRow.Data.Faction = repData.Faction;
+                                repRow.Data.Standing = repData.Standing;
+                                repRow.Data.Flags = repData.Flags;
+                                characterReputationRows.Add(repRow);
+                            }
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.character_skills)
+                {
+                    if (ClientVersion.Expansion == ClientType.Classic)
+                    {
+                        int skillsField = UpdateFields.GetUpdateField(ActivePlayerField.ACTIVE_PLAYER_FIELD_SKILL_LINEID);
+                        if (skillsField > 0)
+                        {
+                            const uint PLAYER_MAX_SKILLS = 256;
+                            const uint SKILL_FIELD_ARRAY_SIZE = 256 / 4 * 2;
+                            const uint SKILL_ID_OFFSET = 0;
+                            const uint SKILL_STEP_OFFSET = SKILL_ID_OFFSET + SKILL_FIELD_ARRAY_SIZE;
+                            const uint SKILL_RANK_OFFSET = SKILL_STEP_OFFSET + SKILL_FIELD_ARRAY_SIZE;
+                            const uint SUBSKILL_START_RANK_OFFSET = SKILL_RANK_OFFSET + SKILL_FIELD_ARRAY_SIZE;
+                            const uint SKILL_MAX_RANK_OFFSET = SUBSKILL_START_RANK_OFFSET + SKILL_FIELD_ARRAY_SIZE;
+
+                            for (uint i = 0; i < PLAYER_MAX_SKILLS; ++i)
+                            {
+                                uint field = i / 2;
+                                uint offset = i & 1; // i % 2
+
+                                uint skillId = 0;
+                                uint skillStep = 0;
+                                uint skillRank = 0;
+                                uint skillMaxRank = 0;
+
+                                UpdateField value;
+                                if (player.UpdateFields.TryGetValue((int)(skillsField + SKILL_ID_OFFSET + field), out value))
+                                    skillId = (value.UInt32Value >> (offset == 1 ? 16 : 0)) & 0xFFFF;
+
+                                if (player.UpdateFields.TryGetValue((int)(skillsField + SKILL_STEP_OFFSET + field), out value))
+                                    skillStep = (value.UInt32Value >> (offset == 1 ? 16 : 0)) & 0xFFFF;
+
+                                if (player.UpdateFields.TryGetValue((int)(skillsField + SKILL_RANK_OFFSET + field), out value))
+                                    skillRank = (value.UInt32Value >> (offset == 1 ? 16 : 0)) & 0xFFFF;
+
+                                if (player.UpdateFields.TryGetValue((int)(skillsField + SKILL_MAX_RANK_OFFSET + field), out value))
+                                    skillMaxRank = (value.UInt32Value >> (offset == 1 ? 16 : 0)) & 0xFFFF;
+
+                                if (skillId != 0 && skillMaxRank != 0)
+                                {
+                                    var skillRow = new Row<CharacterSkill>();
+                                    skillRow.Data.Guid = "@PGUID+" + player.DbGuid;
+                                    skillRow.Data.Skill = skillId;
+                                    skillRow.Data.Value = skillRank;
+                                    skillRow.Data.Max = skillMaxRank;
+                                    characterSkillRows.Add(skillRow);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.character_spell)
+                {
+                    if (Storage.CharacterSpells.ContainsKey(objPair.Key))
+                    {
+                        foreach (var spellId in Storage.CharacterSpells[objPair.Key])
+                        {
+                            var spellRow = new Row<CharacterSpell>();
+                            spellRow.Data.Guid = "@PGUID+" + player.DbGuid;
+                            spellRow.Data.Spell = spellId;
+                            spellRow.Data.Active = 1;
+                            spellRow.Data.Disabled = 0;
+                            characterSpellRows.Add(spellRow);
+                        }
+                    }
+                }
+
                 if (Settings.SqlTables.guild)
                 {
                     if (player.UnitData.GuildGUID.Low != 0)
@@ -492,6 +582,27 @@ namespace WowPacketParser.SQL.Builders
                 result.Append(itemInstanceDelete.Build());
                 var itemInstanceSql = new SQLInsert<CharacterItemInstance>(characterItemInstaceRows, false);
                 result.Append(itemInstanceSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.character_reputation && characterReputationRows.Count != 0)
+            {
+                var repSql = new SQLInsert<CharacterReputation>(characterReputationRows, false);
+                result.Append(repSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.character_skills && characterSkillRows.Count != 0)
+            {
+                var skillsSql = new SQLInsert<CharacterSkill>(characterSkillRows, false);
+                result.Append(skillsSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.character_spell && characterSpellRows.Count != 0)
+            {
+                var spellsSql = new SQLInsert<CharacterSpell>(characterSpellRows, false);
+                result.Append(spellsSql.Build());
                 result.AppendLine();
             }
 

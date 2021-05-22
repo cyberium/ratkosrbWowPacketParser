@@ -119,15 +119,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             var hasAttackingTarget = packet.ReadBit("Has Attacking Target", index);
             var isSelf = packet.ReadBit("Self", index);
             if (isSelf)
-            {
-                Storage.CurrentActivePlayer = guid;
-                ActivePlayerCreateTime activePlayer = new ActivePlayerCreateTime
-                {
-                    Guid = guid,
-                    Time = packet.Time,
-                };
-                Storage.PlayerActiveCreateTime.Add(activePlayer);
-            }
+                Storage.SetCurrentActivePlayer(guid, packet.Time);
             var hasVehicleData = packet.ReadBit("Has Vehicle Data", index);
             var living = packet.ReadBit("Living", index);
             var unkLoopCounter = packet.ReadBits("Unknown array size", 24, index);
