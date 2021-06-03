@@ -49,5 +49,22 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
 
             Storage.StoreText(text, packet);
         }
+
+        [Parser(Opcode.SMSG_EMOTE)]
+        public static void HandleEmote(Packet packet)
+        {
+            var guid = packet.ReadPackedGuid128("GUID");
+            var emote = packet.ReadInt32E<EmoteType>("Emote ID");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503))
+            {
+                var count = packet.ReadUInt32("SpellVisualKitCount");
+                for (var i = 0; i < count; ++i)
+                    packet.ReadUInt32("SpellVisualKitID", i);
+            }
+
+            if (guid.GetObjectType() == ObjectType.Unit)
+                Storage.Emotes.Add(guid, emote, packet.TimeSpan);
+        }
     }
 }
