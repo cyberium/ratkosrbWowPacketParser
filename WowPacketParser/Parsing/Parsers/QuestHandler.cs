@@ -867,17 +867,18 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadGuid("InformUnit");
 
             uint id = packet.ReadUInt32<QuestId>("Quest ID");
-            string objectType = guid.GetObjectType().ToString();
-            if (objectType == "Unit")
-                objectType = "Creature";
             QuestStarter questStarter = new QuestStarter
             {
                 ObjectId = Storage.GetObjectEntry(guid),
-                ObjectType = objectType,
+                ObjectType = Storage.GetObjectTypeNameForDB(guid),
                 QuestId = (uint)id
             };
             Storage.QuestStarters.Add(questStarter, packet.TimeSpan);
 
+            QuestDetails questDetails = new QuestDetails
+            {
+                ID = id
+            };
             packet.ReadCString("Title");
             packet.ReadCString("Details");
             packet.ReadCString("Objectives");
@@ -935,12 +936,17 @@ namespace WowPacketParser.Parsing.Parsers
 
             ReadExtraQuestInfo(packet, false);
 
+            questDetails.Emote = new uint?[] { 0, 0, 0, 0 };
+            questDetails.EmoteDelay = new uint?[] { 0, 0, 0, 0 };
+
             var emoteCount = packet.ReadUInt32("Quest Emote Count");
             for (var i = 0; i < emoteCount; i++)
             {
-                packet.ReadUInt32("Emote Id", i);
-                packet.ReadUInt32("Emote Delay (ms)", i);
+                questDetails.Emote[i] = packet.ReadUInt32("Emote Id", i);
+                questDetails.EmoteDelay[i] = packet.ReadUInt32("Emote Delay (ms)", i);
             }
+
+            Storage.QuestDetails.Add(questDetails, packet.TimeSpan);
         }
 
         [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_DETAILS, ClientVersionBuild.V5_1_0_16309, ClientVersionBuild.V5_1_0a_16357)]
@@ -949,14 +955,11 @@ namespace WowPacketParser.Parsing.Parsers
             WowGuid guid = packet.ReadGuid("QuestGiverGUID");
             packet.ReadGuid("InformUnit");
             uint id = packet.ReadUInt32<QuestId>("Quest ID");
-            string objectType = guid.GetObjectType().ToString();
-            if (objectType == "Unit")
-                objectType = "Creature";
 
             QuestStarter questStarter = new QuestStarter
             {
                 ObjectId = Storage.GetObjectEntry(guid),
-                ObjectType = objectType,
+                ObjectType = Storage.GetObjectTypeNameForDB(guid),
                 QuestId = (uint)id
             };
             Storage.QuestStarters.Add(questStarter, packet.TimeSpan);
@@ -1055,13 +1058,10 @@ namespace WowPacketParser.Parsing.Parsers
             }
             requestItems.EmoteOnCompleteDelay = 0;
 
-            string objectType = guid.GetObjectType().ToString();
-            if (objectType == "Unit")
-                objectType = "Creature";
             QuestEnder questEnder = new QuestEnder
             {
                 ObjectId = guid.GetEntry(),
-                ObjectType = objectType,
+                ObjectType = Storage.GetObjectTypeNameForDB(guid),
                 QuestId = entry
             };
             Storage.QuestEnders.Add(questEnder, packet.TimeSpan);
@@ -1113,13 +1113,10 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadUInt32("Unk flags 4"); // 16
             packet.ReadUInt32("Unk flags 5"); // 64
 
-            string objectType = guid.GetObjectType().ToString();
-            if (objectType == "Unit")
-                objectType = "Creature";
             QuestEnder questEnder = new QuestEnder
             {
                 ObjectId = guid.GetEntry(),
-                ObjectType = objectType,
+                ObjectType = Storage.GetObjectTypeNameForDB(guid),
                 QuestId = entry
             };
             Storage.QuestEnders.Add(questEnder, packet.TimeSpan);
@@ -1170,13 +1167,10 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadUInt32("Unk flags 4"); // 16
             packet.ReadUInt32("Unk flags 5"); // 64
 
-            string objectType = guid.GetObjectType().ToString();
-            if (objectType == "Unit")
-                objectType = "Creature";
             QuestEnder questEnder = new QuestEnder
             {
                 ObjectId = guid.GetEntry(),
-                ObjectType = objectType,
+                ObjectType = Storage.GetObjectTypeNameForDB(guid),
                 QuestId = entry
             };
             Storage.QuestEnders.Add(questEnder, packet.TimeSpan);
@@ -1230,13 +1224,10 @@ namespace WowPacketParser.Parsing.Parsers
 
             ReadExtraQuestInfo(packet);
 
-            string objectType = guid.GetObjectType().ToString();
-            if (objectType == "Unit")
-                objectType = "Creature";
             QuestEnder questEnder = new QuestEnder
             {
                 ObjectId = guid.GetEntry(),
-                ObjectType = objectType,
+                ObjectType = Storage.GetObjectTypeNameForDB(guid),
                 QuestId = entry
             };
             Storage.QuestEnders.Add(questEnder, packet.TimeSpan);
