@@ -180,7 +180,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
 
             packet.ReadInt32("MinLevel");
             packet.ReadInt32("MaxLevel");
-            packet.ReadUInt64("RaceFilter");
+            packet.ReadInt64("RaceFilter");
             packet.ReadInt32("ClassFilter");
 
             packet.ResetBitReader();
