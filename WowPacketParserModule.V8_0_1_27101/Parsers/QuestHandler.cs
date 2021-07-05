@@ -445,7 +445,8 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             packet.ReadUInt64("MoneyReward");
             var bonusCount = packet.ReadUInt32("BonusCount");
 
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_2_0_30898))
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_2_0_30898) &&
+                ClientVersion.Expansion != ClientType.Classic)
                 packet.ReadInt32("Flags");
 
             for (int i = 0; i < currencyCount; i++)

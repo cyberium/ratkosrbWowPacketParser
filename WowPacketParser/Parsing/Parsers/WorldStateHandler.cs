@@ -53,7 +53,8 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_SERVER_TIME_OFFSET)]
         public static void HandleUITimer(Packet packet)
         {
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503))
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503) &&
+                ClientVersion.Expansion != ClientType.Classic)
                 packet.ReadTime64("Time");
             else
                 packet.ReadTime("Time");
