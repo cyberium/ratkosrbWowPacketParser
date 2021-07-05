@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hotfix\AchievementEntry.cs" />
+    <Compile Include="Hotfix\AdventureJournalEntry.cs" />
+    <Compile Include="Hotfix\AdventureMapPoiEntry.cs" />
     <Compile Include="Hotfix\AnimationDataEntry.cs" />
     <Compile Include="Hotfix\AnimKitEntry.cs" />
     <Compile Include="Hotfix\AreaGroupMemberEntry.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Hotfix\ChatChannelsEntry.cs" />
     <Compile Include="Hotfix\ChrClassesEntry.cs" />
     <Compile Include="Hotfix\ChrClassesXPowerTypesEntry.cs" />
+    <Compile Include="Hotfix\ChrClassUIDisplayEntry.cs" />
     <Compile Include="Hotfix\ChrCustomizationChoiceEntry.cs" />
     <Compile Include="Hotfix\ChrCustomizationDisplayInfoEntry.cs" />
     <Compile Include="Hotfix\ChrCustomizationElementEntry.cs" />
@@ -141,6 +144,7 @@
     <Compile Include="Hotfix\GarrSiteLevelEntry.cs" />
     <Compile Include="Hotfix\GarrSiteLevelPlotInstEntry.cs" />
     <Compile Include="Hotfix\GemPropertiesEntry.cs" />
+    <Compile Include="Hotfix\GlobalCurveEntry.cs" />
     <Compile Include="Hotfix\GlyphBindableSpellEntry.cs" />
     <Compile Include="Hotfix\GlyphPropertiesEntry.cs" />
     <Compile Include="Hotfix\GlyphRequiredSpecEntry.cs" />
@@ -191,6 +195,8 @@
     <Compile Include="Hotfix\ItemSpecOverrideEntry.cs" />
     <Compile Include="Hotfix\ItemXBonusTreeEntry.cs" />
     <Compile Include="Hotfix\KeyChainEntry.cs" />
+    <Compile Include="Hotfix\LanguageWordsEntry.cs" />
+    <Compile Include="Hotfix\LanguagesEntry.cs" />
     <Compile Include="Hotfix\LfgDungeonsEntry.cs" />
     <Compile Include="Hotfix\LightEntry.cs" />
     <Compile Include="Hotfix\LiquidTypeEntry.cs" />
