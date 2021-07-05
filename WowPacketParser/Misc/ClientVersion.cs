@@ -15,6 +15,7 @@ namespace WowPacketParser.Misc
     {
         // Kept in sync with http://www.wowwiki.com/Public_client_builds
         private static readonly KeyValuePair<ClientVersionBuild, DateTime>[] ClientBuilds = {
+            new KeyValuePair<ClientVersionBuild, DateTime>(ClientVersionBuild.V1_9_4_5086, new DateTime(2006, 2, 9)),
             new KeyValuePair<ClientVersionBuild, DateTime>(ClientVersionBuild.V1_12_1_5875, new DateTime(2006, 9, 26)),
 
             new KeyValuePair<ClientVersionBuild, DateTime>(ClientVersionBuild.V2_0_1_6180, new DateTime(2006, 12, 5)),
@@ -354,6 +355,7 @@ namespace WowPacketParser.Misc
         {
             switch (build)
             {
+                case ClientVersionBuild.V1_9_4_5086:
                 case ClientVersionBuild.V1_12_1_5875:
                     return ClientVersionBuild.V1_12_1_5875;
                 case ClientVersionBuild.V2_0_1_6180:

@@ -5,6 +5,7 @@ namespace WowPacketParser.Enums
         // ReSharper disable InconsistentNaming
         Zero = 0,
 
+        V1_9_4_5086 = 5086,
         V1_12_1_5875 = 5875,
 
         V2_0_1_6180 = 6180,
