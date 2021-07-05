@@ -146,15 +146,15 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public int BaseHealth => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_BASE_HEALTH);
 
-        public long CurHealth => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_HEALTH);
+        public long Health => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_HEALTH);
 
         public long MaxHealth => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MAXHEALTH);
 
-        public uint HealthPercent => (uint)(((float)CurHealth / (float)MaxHealth) * 100);
+        public uint HealthPercent => (uint)(((float)Health / (float)MaxHealth) * 100);
 
         public int BaseMana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_BASE_MANA);
 
-        public int CurMana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_POWER);
+        public int Mana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_POWER);
 
         public int MaxMana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MAXPOWER);
 
@@ -424,15 +424,15 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public int BaseHealth => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_BASE_HEALTH);
 
-        public long CurHealth => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_HEALTH);
+        public long Health => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_HEALTH);
 
         public long MaxHealth => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MAXHEALTH);
 
-        public uint HealthPercent => (uint)(((float)CurHealth / (float)MaxHealth) * 100);
+        public uint HealthPercent => (uint)(((float)Health / (float)MaxHealth) * 100);
 
         public int BaseMana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_BASE_MANA);
 
-        public int CurMana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_POWER);
+        public int Mana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_POWER);
 
         public int MaxMana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MAXPOWER);
 

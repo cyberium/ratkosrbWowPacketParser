@@ -166,9 +166,9 @@ namespace WowPacketParser.SQL.Builders
                     playerRow.Data.FactionTemplate = (uint)player.UnitDataOriginal.FactionTemplate;
                     playerRow.Data.UnitFlags = player.UnitDataOriginal.Flags;
                     playerRow.Data.UnitFlags2 = player.UnitDataOriginal.Flags2;
-                    playerRow.Data.CurHealth = (uint)player.UnitDataOriginal.CurHealth;
+                    playerRow.Data.CurHealth = (uint)player.UnitDataOriginal.Health;
                     playerRow.Data.MaxHealth = (uint)player.UnitDataOriginal.MaxHealth;
-                    playerRow.Data.CurMana = (uint)player.UnitDataOriginal.CurMana;
+                    playerRow.Data.CurMana = (uint)player.UnitDataOriginal.Mana;
                     playerRow.Data.MaxMana = (uint)player.UnitDataOriginal.MaxMana;
                     playerRow.Data.AuraState = player.UnitDataOriginal.AuraState;
                     playerRow.Data.EmoteState = (uint)player.UnitDataOriginal.EmoteState;

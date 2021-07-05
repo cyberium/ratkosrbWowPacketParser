@@ -527,7 +527,7 @@ namespace WowPacketParser.Parsing.Parsers
                         if (Storage.Objects.ContainsKey(guid))
                         {
                             var obj = Storage.Objects[guid].Item1 as Unit;
-                            if (obj.UnitData.CurHealth != update.Value.UInt32Value)
+                            if (obj.UnitData.Health != update.Value.UInt32Value)
                             {
                                 hasData = true;
                                 creatureUpdate.CurrentHealth = update.Value.UInt32Value;
@@ -553,7 +553,7 @@ namespace WowPacketParser.Parsing.Parsers
                         if (Storage.Objects.ContainsKey(guid))
                         {
                             var obj = Storage.Objects[guid].Item1 as Unit;
-                            if (obj.UnitData.CurMana != update.Value.UInt32Value)
+                            if (obj.UnitData.Mana != update.Value.UInt32Value)
                             {
                                 hasData = true;
                                 creatureUpdate.CurrentMana = update.Value.UInt32Value;

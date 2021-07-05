@@ -184,8 +184,8 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.UnitFlag = unitData.Flags;
                 row.Data.UnitFlag2 = unitData.Flags2;
                 row.Data.DynamicFlags = creature.GetDynamicFlagsOriginal();
-                row.Data.CurHealth = (uint)unitData.CurHealth;
-                row.Data.CurMana = (uint)unitData.CurMana;
+                row.Data.CurHealth = (uint)unitData.Health;
+                row.Data.CurMana = (uint)unitData.Mana;
                 row.Data.MaxHealth = (uint)unitData.MaxHealth;
                 row.Data.MaxMana = (uint)unitData.MaxMana;
                 row.Data.AuraState = unitData.AuraState;

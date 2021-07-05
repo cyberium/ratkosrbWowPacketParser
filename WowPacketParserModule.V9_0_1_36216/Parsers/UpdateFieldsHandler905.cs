@@ -835,7 +835,7 @@ namespace WowPacketParserModule.V9_0_1_36216.UpdateFields.V9_0_5_37862
             data.BattlePetDBID = packet.ReadUInt64("BattlePetDBID", indexes);
             data.ChannelData = ReadCreateUnitChannel(packet, indexes, "ChannelData");
             data.SummonedByHomeRealm = packet.ReadUInt32("SummonedByHomeRealm", indexes);
-            data.Race = packet.ReadByte("Race", indexes);
+            data.RaceId = packet.ReadByte("Race", indexes);
             data.ClassId = packet.ReadByte("ClassId", indexes);
             data.PlayerClassId = packet.ReadByte("PlayerClassId", indexes);
             data.Sex = packet.ReadByte("Sex", indexes);
@@ -1154,7 +1154,7 @@ namespace WowPacketParserModule.V9_0_1_36216.UpdateFields.V9_0_5_37862
                 }
                 if (changesMask[24])
                 {
-                    data.Race = packet.ReadByte("Race", indexes);
+                    data.RaceId = packet.ReadByte("Race", indexes);
                 }
                 if (changesMask[25])
                 {
