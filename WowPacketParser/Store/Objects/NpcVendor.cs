@@ -30,8 +30,8 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("player_condition_id", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
         [DBFieldName("PlayerConditionID", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.TRINITY))]
-        [DBFieldName("player_condition_id", TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.WPP))]
-        [DBFieldName("PlayerConditionID", TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("player_condition_id", TargetedDbExpansion.Cataclysm, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("PlayerConditionID", TargetedDbExpansion.Cataclysm, DbType = (TargetedDbType.TRINITY))]
         public uint? PlayerConditionID;
 
         [DBFieldName("ignore_filtering", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
