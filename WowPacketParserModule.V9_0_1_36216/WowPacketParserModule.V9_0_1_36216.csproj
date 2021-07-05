@@ -304,6 +304,7 @@
     <Compile Include="Hotfix\WorldEffectEntry.cs" />
     <Compile Include="Hotfix\WorldMapOverlayEntry.cs" />
     <Compile Include="Hotfix\WorldStateExpressionEntry.cs" />
+    <Compile Include="Parsers\AchievementHandler.cs" />
     <Compile Include="Parsers\AdventureJournalHandler.cs" />
     <Compile Include="Parsers\AreaTriggerHandler.cs" />
     <Compile Include="Parsers\BattlegroundHandler.cs" />
@@ -317,6 +318,7 @@
     <Compile Include="Parsers\MovementHandler.cs" />
     <Compile Include="Parsers\MiscellaneousHandler.cs" />
     <Compile Include="Parsers\ReputationHandler.cs" />
+    <Compile Include="Parsers\ScenarioHandler.cs" />
     <Compile Include="Parsers\SceneHandler.cs" />
     <Compile Include="Parsers\SpellHandler.cs" />
     <Compile Include="Parsers\HotfixHandler.cs" />
@@ -439,6 +441,16 @@
       <Name>WowPacketParser</Name>
       <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="DB2FileReaderLib">
+      <HintPath>..\packages\DB2FileReaderLib.1.0.0.0\lib\DB2FileReaderLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Sigil, Version=4.7.0.0, Culture=neutral, PublicKeyToken=2d06c3494341c8ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sigil.4.7.0\lib\net45\Sigil.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
