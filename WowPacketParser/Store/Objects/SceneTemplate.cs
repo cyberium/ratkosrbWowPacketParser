@@ -15,7 +15,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ScriptPackageID", true)]
         public uint? ScriptPackageID;
 
-        [DBFieldName("Encrypted", TargetedDatabase.Shadowlands)]
+        [DBFieldName("Encrypted", TargetedDbExpansion.Shadowlands)]
         public bool? Encrypted;
     }
 }
