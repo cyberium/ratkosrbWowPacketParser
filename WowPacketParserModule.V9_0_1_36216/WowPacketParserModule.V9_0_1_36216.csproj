@@ -313,6 +313,7 @@
     <Compile Include="Parsers\AchievementHandler.cs" />
     <Compile Include="Parsers\AdventureJournalHandler.cs" />
     <Compile Include="Parsers\AreaTriggerHandler.cs" />
+    <Compile Include="Parsers\AuctionHouseHandler.cs" />
     <Compile Include="Parsers\BattlegroundHandler.cs" />
     <Compile Include="Parsers\CharacterHandler.cs" />
     <Compile Include="Parsers\ChatHandler.cs" />
