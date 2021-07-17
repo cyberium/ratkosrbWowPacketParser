@@ -718,13 +718,13 @@ namespace WowPacketParserModule.V5_4_1_17538.Parsers
                 {
                     if (hasFallDirection)
                     {
-                        packet.ReadSingle("Jump Velocity", index);
-                        packet.ReadSingle("Jump Sin", index);
-                        packet.ReadSingle("Jump Cos", index);
+                        moveInfo.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed", index);
+                        moveInfo.JumpSinAngle = packet.ReadSingle("Jump Sin Angle", index);
+                        moveInfo.JumpCosAngle = packet.ReadSingle("Jump Cos Angle", index);
                     }
 
-                    packet.ReadUInt32("Time Fallen", index);
-                    packet.ReadSingle("Fall Start Velocity", index);
+                    moveInfo.FallTime = packet.ReadUInt32("Jump Fall Time", index);
+                    moveInfo.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed", index);
                 }
 
                 if (hasTransportData)
@@ -767,7 +767,7 @@ namespace WowPacketParserModule.V5_4_1_17538.Parsers
                 packet.ReadXORByte(guid1, 5);
 
                 if (hasTimestamp)
-                    packet.ReadUInt32("Time", index);
+                    moveInfo.MoveTime = packet.ReadUInt32("Time", index);
 
                 for (var i = 0; i < bits90; ++i)
                     packet.ReadInt32("Int8C", index, i);
@@ -802,7 +802,7 @@ namespace WowPacketParserModule.V5_4_1_17538.Parsers
 
                 packet.ReadXORByte(guid1, 3);
                 if (hasPitch)
-                    packet.ReadSingle("Pitch", index);
+                    moveInfo.SwimPitch = packet.ReadSingle("Pitch", index);
 
                 packet.ReadSingle("FloatB8", index);
                 packet.ReadXORBytes(guid1, 7, 2);

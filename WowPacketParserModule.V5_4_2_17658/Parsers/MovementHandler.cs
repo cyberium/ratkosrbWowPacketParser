@@ -75,13 +75,13 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
             {
                 if (hasFallDirection)
                 {
-                    packet.ReadSingle("Horizontal Speed");
-                    packet.ReadSingle("Fall Sin");
-                    packet.ReadSingle("Fall Cos");
+                    packet.ReadSingle("Jump Horizontal Speed");
+                    packet.ReadSingle("Jump Sin Angle");
+                    packet.ReadSingle("Jump Cos Angle");
                 }
 
-                packet.ReadInt32("Fall Time");
-                packet.ReadSingle("Velocity Speed");
+                packet.ReadInt32("Jump Fall Time");
+                packet.ReadSingle("Jump Vertical Speed");
             }
 
             if (hasTransportData)

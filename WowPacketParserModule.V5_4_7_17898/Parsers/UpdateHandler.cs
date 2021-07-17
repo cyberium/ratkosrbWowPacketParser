@@ -408,13 +408,13 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
                 {
                     if (hasFallDirection)
                     {
-                        packet.ReadSingle("Jump Sin Angle", index);
-                        packet.ReadSingle("Jump Cos Angle", index);
-                        packet.ReadSingle("Jump XY Speed", index);
+                        moveInfo.JumpSinAngle = packet.ReadSingle("Jump Sin Angle", index);
+                        moveInfo.JumpCosAngle = packet.ReadSingle("Jump Cos Angle", index);
+                        moveInfo.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed", index);
                     }
 
-                    packet.ReadSingle("Jump Z Speed", index);
-                    packet.ReadUInt32("Jump Fall Time", index);
+                    moveInfo.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed", index);
+                    moveInfo.FallTime = packet.ReadUInt32("Jump Fall Time", index);
                 }
 
                 if (moveInfo.HasSplineData)
@@ -535,7 +535,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
                 packet.ReadXORByte(guid1, 2);
 
                 if (hasPitch)
-                    packet.ReadSingle("Pitch", index);
+                    moveInfo.SwimPitch = packet.ReadSingle("Pitch", index);
 
                 moveInfo.SwimSpeed = packet.ReadSingle("Swim Speed", index);
                 packet.ReadXORByte(guid1, 1);
@@ -557,7 +557,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
                 moveInfo.PitchRate = packet.ReadSingle("Pitch Speed", index);
 
                 if (hasTimestamp)
-                    packet.ReadUInt32("Time?", index);
+                    moveInfo.MoveTime = packet.ReadUInt32("Time?", index);
 
                 packet.ReadXORByte(guid1, 4);
                 packet.ReadXORByte(guid1, 0);

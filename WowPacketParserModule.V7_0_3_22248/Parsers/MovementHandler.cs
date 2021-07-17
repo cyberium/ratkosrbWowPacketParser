@@ -24,7 +24,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             moveData.MoveTime = packet.ReadUInt32("MoveTime", idx);
             moveData.Position = packet.ReadVector4("Position", idx);
 
-            packet.ReadSingle("Pitch", idx);
+            moveData.SwimPitch = packet.ReadSingle("Pitch", idx);
             packet.ReadSingle("SplineElevation", idx);
 
             var int152 = packet.ReadInt32("RemoveForcesCount", idx);
@@ -48,7 +48,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 V6_0_2_19033.Parsers.MovementHandler.ReadTransportData(packet, idx, "TransportData");
 
             if (hasFall)
-                V6_0_2_19033.Parsers.MovementHandler.ReadFallData(packet, idx, "FallData");
+                V6_0_2_19033.Parsers.MovementHandler.ReadFallData(moveData, packet, idx, "FallData");
 
             if (Settings.SqlTables.player_movement_client || Settings.SqlTables.creature_movement_client)
             {

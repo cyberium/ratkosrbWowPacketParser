@@ -22,6 +22,18 @@ namespace WowPacketParser.Misc
 
         public uint MoveTime;
 
+        public float SwimPitch;
+
+        public uint FallTime;
+
+        public float JumpHorizontalSpeed;
+
+        public float JumpVerticalSpeed;
+
+        public float JumpCosAngle;
+
+        public float JumpSinAngle;
+
         public bool HasSplineData;
 
         public Vector3 Position;
@@ -63,6 +75,12 @@ namespace WowPacketParser.Misc
             MovementInfo copy = new MovementInfo();
             copy.Flags = this.Flags;
             copy.FlagsExtra = this.FlagsExtra;
+            copy.SwimPitch = this.SwimPitch;
+            copy.FallTime = this.FallTime;
+            copy.JumpHorizontalSpeed = this.JumpHorizontalSpeed;
+            copy.JumpVerticalSpeed = this.JumpVerticalSpeed;
+            copy.JumpCosAngle = this.JumpCosAngle;
+            copy.JumpSinAngle = this.JumpSinAngle;
             copy.HasSplineData = this.HasSplineData;
             copy.Position = this.Position;
             copy.Orientation = this.Orientation;

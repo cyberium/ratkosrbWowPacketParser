@@ -571,12 +571,12 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
                 {
                     if (hasFallDirection)
                     {
-                        packet.ReadSingle("Jump Sin", index);
-                        packet.ReadSingle("Jump Velocity", index);
-                        packet.ReadSingle("Jump Cos", index);
+                        moveInfo.JumpSinAngle = packet.ReadSingle("Jump Sin Angle", index);
+                        moveInfo.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed", index);
+                        moveInfo.JumpCosAngle = packet.ReadSingle("Jump Cos Angle", index);
                     }
-                    packet.ReadSingle("Fall Start Velocity", index);
-                    packet.ReadUInt32("Time Fallen", index);
+                    moveInfo.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed", index);
+                    moveInfo.FallTime = packet.ReadUInt32("Jump Fall Time", index);
                 }
 
                 moveInfo.TurnRate = packet.ReadSingle("Turn Speed", index);
@@ -591,7 +591,7 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
 
                 moveInfo.PitchRate = packet.ReadSingle("Pitch Speed", index);
                 if (hasPitch)
-                    packet.ReadSingle("Pitch", index);
+                    moveInfo.SwimPitch = packet.ReadSingle("Pitch", index);
 
                 for (var i = 0; i < bits98; ++i)
                     packet.ReadInt32("Int9C", index, i);

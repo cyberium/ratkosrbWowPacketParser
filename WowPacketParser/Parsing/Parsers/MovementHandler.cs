@@ -123,32 +123,32 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (info.Flags.HasAnyFlag(MovementFlag.Swimming | MovementFlag.Flying) ||
                 info.FlagsExtra.HasAnyFlag(MovementFlagExtra.AlwaysAllowPitching))
-                packet.ReadSingle("Swim Pitch", index);
+                info.SwimPitch = packet.ReadSingle("Swim Pitch", index);
 
             if (ClientVersion.AddedInVersion(ClientType.Cataclysm))
             {
                 if (info.FlagsExtra.HasAnyFlag(MovementFlagExtra.InterpolateTurning))
                 {
-                    packet.ReadInt32("Fall Time", index);
-                    packet.ReadSingle("Fall Velocity", index);
+                    info.FallTime = packet.ReadUInt32("Jump Fall Time", index);
+                    info.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed", index);
 
                     if (info.Flags.HasAnyFlag(MovementFlag.Falling))
                     {
-                        packet.ReadSingle("Fall Sin Angle", index);
-                        packet.ReadSingle("Fall Cos Angle", index);
-                        packet.ReadSingle("Fall Speed", index);
+                        info.JumpSinAngle = packet.ReadSingle("Jump Sin Angle", index);
+                        info.JumpCosAngle = packet.ReadSingle("Jump Cos Angle", index);
+                        info.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed", index);
                     }
                 }
             }
             else
             {
-                packet.ReadInt32("Fall Time", index);
+                info.FallTime = packet.ReadUInt32("Jump Fall Time", index);
                 if (info.Flags.HasAnyFlag(MovementFlag.Falling))
                 {
-                    packet.ReadSingle("Fall Velocity", index);
-                    packet.ReadSingle("Fall Sin Angle", index);
-                    packet.ReadSingle("Fall Cos Angle", index);
-                    packet.ReadSingle("Fall Speed", index);
+                    info.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed", index);
+                    info.JumpSinAngle = packet.ReadSingle("Jump Sin Angle", index);
+                    info.JumpCosAngle = packet.ReadSingle("Jump Cos Angle", index);
+                    info.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed", index);
                 }
             }
 
@@ -209,17 +209,17 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.ReadInt32("Transport Time 3", index);
             }
             if (swimming)
-                packet.ReadSingle("Swim Pitch", index);
+                info.SwimPitch = packet.ReadSingle("Swim Pitch", index);
 
             if (interPolatedTurning)
             {
-                packet.ReadInt32("Time Fallen", index);
-                packet.ReadSingle("Fall Start Velocity", index);
+                info.FallTime = packet.ReadUInt32("Jump Fall Time", index);
+                info.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed", index);
                 if (jumping)
                 {
-                    packet.ReadSingle("Jump Sin", index);
-                    packet.ReadSingle("Jump Cos", index);
-                    packet.ReadSingle("Jump Velocity", index);
+                    info.JumpSinAngle = packet.ReadSingle("Jump Sin Angle", index);
+                    info.JumpCosAngle = packet.ReadSingle("Jump Cos Angle", index);
+                    info.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed", index);
 
                 }
             }
@@ -691,13 +691,13 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (interPolatedTurning)
             {
-                packet.ReadInt32("Time Fallen");
-                packet.ReadSingle("Fall Start Velocity");
+                packet.ReadInt32("Jump Fall Time");
+                packet.ReadSingle("Fall Vertical Speed");
                 if (jumping)
                 {
-                    packet.ReadSingle("Jump Velocity");
-                    packet.ReadSingle("Jump Cos");
-                    packet.ReadSingle("Jump Sin");
+                    packet.ReadSingle("Jump Horizontal Speed");
+                    packet.ReadSingle("Jump Cos Angle");
+                    packet.ReadSingle("Jump Sin Angle");
 
                 }
             }
@@ -790,13 +790,13 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (interPolatedTurning)
             {
-                packet.ReadInt32("Time Fallen");
-                packet.ReadSingle("Fall Start Velocity");
+                packet.ReadInt32("Jump Fall Time");
+                packet.ReadSingle("Jump Vertical SPeed");
                 if (jumping)
                 {
-                    packet.ReadSingle("Jump Velocity");
-                    packet.ReadSingle("Jump Cos");
-                    packet.ReadSingle("Jump Sin");
+                    packet.ReadSingle("Jump Horizontal Speed");
+                    packet.ReadSingle("Jump Cos Angle");
+                    packet.ReadSingle("Jump Sin Angle");
 
                 }
             }
@@ -890,13 +890,13 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (interPolatedTurning)
             {
-                packet.ReadInt32("Time Fallen");
-                packet.ReadSingle("Fall Start Velocity");
+                packet.ReadInt32("Jump Fall Time");
+                packet.ReadSingle("Jump Vertical Speed");
                 if (jumping)
                 {
-                    packet.ReadSingle("Jump Velocity");
-                    packet.ReadSingle("Jump Sin");
-                    packet.ReadSingle("Jump Cos");
+                    packet.ReadSingle("Jump Horizontal Speed");
+                    packet.ReadSingle("Jump Sin Angle");
+                    packet.ReadSingle("Jump Cos Angle");
 
                 }
             }
@@ -957,7 +957,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             info.Orientation = packet.ReadSingle("Orientation");
 
-            packet.ReadUInt32("Timestamp");
+            info.MoveTime = packet.ReadUInt32("Timestamp");
 
             info.Position = packet.ReadVector3("Position");
 
@@ -969,18 +969,18 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ParseBitStream(guidBytes, 4, 1, 2);
 
             if (havePitch)
-                packet.ReadSingle("Pitch");
+                info.SwimPitch = packet.ReadSingle("Pitch");
 
             if (haveFallData)
             {
-                packet.ReadUInt32("Fall Time");
-                packet.ReadSingle("Fall Vertical Speed");
-                packet.ReadSingle("Fall Horizontal Speed");
+                info.FallTime = packet.ReadUInt32("Jump Fall Time");
+                info.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed");
+                info.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed");
 
                 if (haveFallDirection)
                 {
-                    packet.ReadSingle("Fall Cos Angle");
-                    packet.ReadSingle("Fall Sin Angle");
+                    info.JumpCosAngle = packet.ReadSingle("Jump Cos Angle");
+                    info.JumpSinAngle = packet.ReadSingle("Jump Sin Angle");
                 }
             }
 
@@ -1154,7 +1154,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             info.Orientation = packet.ReadSingle("Orientation");
 
-            packet.ReadUInt32("Timestamp");
+            info.MoveTime = packet.ReadUInt32("Timestamp");
 
             info.Position = packet.ReadVector3("Position");
 
@@ -1162,18 +1162,18 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadXORByte(guidBytes, 3);
 
             if (havePitch)
-                packet.ReadSingle("Pitch");
+                info.SwimPitch = packet.ReadSingle("Pitch");
 
             if (haveFallData)
             {
-                packet.ReadUInt32("Fall Time");
-                packet.ReadSingle("Fall Vertical Speed");
-                packet.ReadSingle("Fall Horizontal Speed");
+                info.FallTime = packet.ReadUInt32("Jump Fall Time");
+                info.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed");
+                info.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed");
 
                 if (haveFallDirection)
                 {
-                    packet.ReadSingle("Fall Cos Angle");
-                    packet.ReadSingle("Fall Sin Angle");
+                    info.JumpCosAngle = packet.ReadSingle("Jump Cos Angle");
+                    info.JumpSinAngle = packet.ReadSingle("Jump Sin Angle");
                 }
             }
 
@@ -1292,11 +1292,11 @@ namespace WowPacketParser.Parsing.Parsers
             }
 
             packet.ReadXORByte(guidBytes, 2);
-            packet.ReadUInt32("Timestamp");
+            info.MoveTime = packet.ReadUInt32("Timestamp");
             packet.ReadXORByte(guidBytes, 1);
 
             if (havePitch)
-                packet.ReadSingle("Pitch");
+                info.SwimPitch = packet.ReadSingle("Pitch");
 
             info.Position = packet.ReadVector3("Position");
             packet.ReadXORByte(guidBytes, 5);
@@ -1304,16 +1304,16 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (haveFallData)
             {
-                packet.ReadSingle("Fall Horizontal Speed");
+                info.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed");
 
                 if (haveFallDirection)
                 {
-                    packet.ReadSingle("Fall Cos Angle");
-                    packet.ReadSingle("Fall Sin Angle");
+                    info.JumpCosAngle = packet.ReadSingle("Jump Cos Angle");
+                    info.JumpSinAngle = packet.ReadSingle("Jump Sin Angle");
                 }
 
-                packet.ReadSingle("Fall Vertical Speed");
-                packet.ReadUInt32("Fall Time");
+                info.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed");
+                info.FallTime = packet.ReadUInt32("Jump Fall Time");
             }
 
             packet.WriteGuid("Guid", guidBytes);
@@ -1374,7 +1374,7 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.Direction == Direction.ServerToClient) && ClientVersion.Build != ClientVersionBuild.V4_2_2_14545)
                 guid = packet.ReadPackedGuid("Guid");
             else
-                guid = new WowGuid64();
+                guid = Storage.CurrentActivePlayer != null ? Storage.CurrentActivePlayer : new WowGuid64();
 
             MovementInfo movementInfo = ReadMovementInfo(packet, guid);
 
@@ -1389,6 +1389,12 @@ namespace WowPacketParser.Parsing.Parsers
                 moveData.Position.Z = movementInfo.Position.Z;
                 moveData.Position.O = movementInfo.Orientation;
                 moveData.MoveFlags = (uint)movementInfo.Flags;
+                moveData.SwimPitch = movementInfo.SwimPitch;
+                moveData.FallTime = movementInfo.FallTime;
+                moveData.JumpHorizontalSpeed = movementInfo.JumpHorizontalSpeed;
+                moveData.JumpVerticalSpeed = movementInfo.JumpVerticalSpeed;
+                moveData.JumpCosAngle = movementInfo.JumpCosAngle;
+                moveData.JumpSinAngle = movementInfo.JumpSinAngle;
                 moveData.Opcode = packet.Opcode;
                 moveData.OpcodeDirection = packet.Direction;
                 moveData.Time = packet.Time;
@@ -1400,8 +1406,8 @@ namespace WowPacketParser.Parsing.Parsers
 
             packet.ReadSingle("Sin Angle");
             packet.ReadSingle("Cos Angle");
-            packet.ReadSingle("Speed");
-            packet.ReadSingle("Velocity");
+            packet.ReadSingle("Horizontal Speed");
+            packet.ReadSingle("Vertical Speed");
         }
 
         [Parser(Opcode.CMSG_MOVE_SPLINE_DONE, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]
@@ -2185,9 +2191,9 @@ namespace WowPacketParser.Parsing.Parsers
 
             packet.ReadXORByte(guid, 0);
 
-            packet.ReadSingle("Jump Velocity");
-            packet.ReadUInt32("Fall time");
-            packet.ReadSingle("Fall Start Velocity");
+            packet.ReadSingle("Jump Horizontal Speed");
+            packet.ReadUInt32("Jump Fall Time");
+            packet.ReadSingle("Jump Vertical Speed");
 
             packet.ReadXORByte(guid, 6);
 

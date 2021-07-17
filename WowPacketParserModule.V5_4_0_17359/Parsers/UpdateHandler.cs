@@ -623,21 +623,21 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
                 {
                     if (hasFallDirection)
                     {
-                        packet.ReadSingle("Jump Sin", index);
-                        packet.ReadSingle("Jump Cos", index);
-                        packet.ReadSingle("Jump Velocity", index);
+                        moveInfo.JumpSinAngle = packet.ReadSingle("Jump Sin Angle", index);
+                        moveInfo.JumpCosAngle = packet.ReadSingle("Jump Cos Angle", index);
+                        moveInfo.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed", index);
                     }
-                    packet.ReadSingle("Fall Start Velocity", index);
-                    packet.ReadUInt32("Time Fallen", index);
+                    moveInfo.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed", index);
+                    moveInfo.FallTime = packet.ReadUInt32("Jump Fall Time", index);
                 }
 
                 if (hasPitch)
-                    packet.ReadSingle("Pitch", index);
+                    moveInfo.SwimPitch = packet.ReadSingle("Pitch", index);
 
                 moveInfo.Position.Y = packet.ReadSingle();
 
                 if (hasTimestamp)
-                    packet.ReadUInt32("Time", index);
+                    moveInfo.MoveTime = packet.ReadUInt32("Time", index);
 
                 packet.ReadSingle("FloatC8", index);
                 packet.ReadXORByte(guid1, 7);

@@ -117,14 +117,14 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
 
             if (hasFallData)
             {
-                packet.ReadSingle("Velocity Speed");
+                packet.ReadSingle("Jump Vertical Speed");
                 if (hasFallDirection)
                 {
-                    packet.ReadSingle("Horizontal Speed");
-                    packet.ReadSingle("Fall Sin");
-                    packet.ReadSingle("Fall Cos");
+                    packet.ReadSingle("Jump Horizontal Speed");
+                    packet.ReadSingle("Jump Sin Angle");
+                    packet.ReadSingle("Jump Cos Angle");
                 }
-                packet.ReadInt32("Fall Time");
+                packet.ReadInt32("Jump Fall Time");
             }
 
             if (hastimestamp)
@@ -394,14 +394,14 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
 
             if (hasFallData)
             {
-                packet.ReadSingle("Velocity Speed");
+                packet.ReadSingle("Jump Vertical Speed");
                 if (hasFallDirection)
                 {
-                    packet.ReadSingle("Horizontal Speed");
-                    packet.ReadSingle("Fall Cos");
-                    packet.ReadSingle("Fall Sin");
+                    packet.ReadSingle("Jump Horizontal Speed");
+                    packet.ReadSingle("Jump Cos Angle");
+                    packet.ReadSingle("Jump Sin Angle");
                 }
-                packet.ReadInt32("Fall Time");
+                packet.ReadInt32("Jump Fall Time");
             }
 
             pos.X = packet.ReadSingle();

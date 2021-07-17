@@ -414,6 +414,12 @@ namespace WowPacketParser.SQL.Builders
                         clientMovementRow.Data.PositionY = movement.Position.Y;
                         clientMovementRow.Data.PositionZ = movement.Position.Z;
                         clientMovementRow.Data.Orientation = movement.Position.O;
+                        clientMovementRow.Data.SwimPitch = movement.SwimPitch;
+                        clientMovementRow.Data.FallTime = movement.FallTime;
+                        clientMovementRow.Data.JumpHorizontalSpeed = movement.JumpHorizontalSpeed;
+                        clientMovementRow.Data.JumpVerticalSpeed = movement.JumpVerticalSpeed;
+                        clientMovementRow.Data.JumpCosAngle = movement.JumpCosAngle;
+                        clientMovementRow.Data.JumpSinAngle = movement.JumpSinAngle;
                         clientMovementRow.Data.Opcode = Opcodes.GetOpcodeName(movement.Opcode, movement.OpcodeDirection);
                         clientMovementRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(movement.Time);
                         movementClientRows.Add(clientMovementRow);

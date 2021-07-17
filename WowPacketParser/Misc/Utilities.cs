@@ -28,12 +28,12 @@ namespace WowPacketParser.Misc
 
         public static long GetUnixTimeFromDateTime(DateTime time)
         {
-            return ((DateTimeOffset)DateTime.SpecifyKind(time, DateTimeKind.Utc)).ToUnixTimeSeconds();
+            return ((DateTimeOffset)DateTime.SpecifyKind(time, DateTimeKind.Local)).ToUnixTimeSeconds();
         }
 
         public static long GetUnixTimeMsFromDateTime(DateTime time)
         {
-            return ((DateTimeOffset)DateTime.SpecifyKind(time, DateTimeKind.Utc)).ToUnixTimeMilliseconds();
+            return ((DateTimeOffset)DateTime.SpecifyKind(time, DateTimeKind.Local)).ToUnixTimeMilliseconds();
         }
 
         public static float GetAngle(float x1, float y1, float x2, float y2)

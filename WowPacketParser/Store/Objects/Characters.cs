@@ -503,6 +503,24 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("orientation")]
         public float Orientation;
+
+        [DBFieldName("swim_pitch")]
+        public float SwimPitch;
+
+        [DBFieldName("fall_time")]
+        public uint FallTime;
+
+        [DBFieldName("jump_horizontal_speed")]
+        public float JumpHorizontalSpeed;
+
+        [DBFieldName("jump_vertical_speed")]
+        public float JumpVerticalSpeed;
+
+        [DBFieldName("jump_cos_angle")]
+        public float JumpCosAngle;
+
+        [DBFieldName("jump_sin_angle")]
+        public float JumpSinAngle;
     }
     public sealed class PlayerMovement
     {
@@ -511,6 +529,12 @@ namespace WowPacketParser.Store.Objects
         public uint Map;
         public uint MoveTime;
         public uint MoveFlags;
+        public float SwimPitch;
+        public uint FallTime;
+        public float JumpHorizontalSpeed;
+        public float JumpVerticalSpeed;
+        public float JumpCosAngle;
+        public float JumpSinAngle;
         public int Opcode;
         public Direction OpcodeDirection;
         public DateTime Time;

@@ -310,13 +310,13 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
             {
                 if (hasFallDirection)
                 {
-                    packet.ReadSingle("Fall Sin");
-                    packet.ReadSingle("Horizontal Speed");
-                    packet.ReadSingle("Fall Cos");
+                    packet.ReadSingle("Jump Sin Angle");
+                    packet.ReadSingle("Jump Horizontal Speed");
+                    packet.ReadSingle("Jump Cos Angle");
                 }
 
-                packet.ReadInt32("Fall Time");
-                packet.ReadSingle("Velocity Speed");
+                packet.ReadInt32("Jump Fall Time");
+                packet.ReadSingle("Jump Vertical Speed");
             }
 
             packet.ReadXORByte(guid, 3);

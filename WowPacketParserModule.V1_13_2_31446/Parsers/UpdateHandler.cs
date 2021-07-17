@@ -174,11 +174,11 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 packet.ResetBitReader();
                 packet.ReadPackedGuid128("MoverGUID", index);
 
-                packet.ReadUInt32("MoveTime", index);
+                moveInfo.MoveTime = packet.ReadUInt32("MoveTime", index);
                 moveInfo.Position = packet.ReadVector3("Position", index);
                 moveInfo.Orientation = packet.ReadSingle("Orientation", index);
 
-                packet.ReadSingle("Pitch", index);
+                moveInfo.SwimPitch = packet.ReadSingle("Pitch", index);
                 packet.ReadSingle("StepUpStartElevation", index);
 
                 var removeForcesIDsCount = packet.ReadInt32();
@@ -202,14 +202,15 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 if (hasFall)
                 {
                     packet.ResetBitReader();
-                    packet.ReadUInt32("Fall Time", index);
-                    packet.ReadSingle("JumpVelocity", index);
+                    moveInfo.FallTime = packet.ReadUInt32("Jump Fall Time", index);
+                    moveInfo.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed", index);
 
                     var hasFallDirection = packet.ReadBit("Has Fall Direction", index);
                     if (hasFallDirection)
                     {
-                        packet.ReadVector2("Fall", index);
-                        packet.ReadSingle("Horizontal Speed", index);
+                        moveInfo.JumpSinAngle = packet.ReadSingle("Jump Sin Angle", index);
+                        moveInfo.JumpCosAngle = packet.ReadSingle("Jump Cos Angle", index);
+                        moveInfo.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed", index);
                     }
                 }
 

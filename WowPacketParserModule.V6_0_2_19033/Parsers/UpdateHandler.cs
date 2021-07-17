@@ -156,7 +156,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
 
             if (hasMovementUpdate) // 392
             {
-                moveInfo = ReadMovementStatusData(packet, index);
+                ReadMovementStatusData(moveInfo, packet, index);
 
                 moveInfo.WalkSpeed = packet.ReadSingle("WalkSpeed", index);
                 moveInfo.RunSpeed = packet.ReadSingle("RunSpeed", index);
@@ -440,23 +440,21 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             return moveInfo;
         }
 
-        private static MovementInfo ReadMovementStatusData(Packet packet, object index)
+        private static void ReadMovementStatusData(MovementInfo moveInfo, Packet packet, object index)
         {
-            var moveInfo = new MovementInfo();
-
             packet.ReadPackedGuid128("MoverGUID", index);
 
-            packet.ReadUInt32("MoveIndex", index);
+            moveInfo.MoveTime = packet.ReadUInt32("MoveTime", index);
             moveInfo.Position = packet.ReadVector3("Position", index);
             moveInfo.Orientation = packet.ReadSingle("Orientation", index);
 
-            packet.ReadSingle("Pitch", index);
+            moveInfo.SwimPitch = packet.ReadSingle("Pitch", index);
             packet.ReadSingle("StepUpStartElevation", index);
 
-            var int152 = packet.ReadInt32("Int152", index);
-            packet.ReadInt32("Int168", index);
+            var removeForcesIDsCount = packet.ReadInt32();
+            packet.ReadInt32("MoveIndex", index);
 
-            for (var i = 0; i < int152; i++)
+            for (var i = 0; i < removeForcesIDsCount; i++)
                 packet.ReadPackedGuid128("RemoveForcesIDs", index, i);
 
             packet.ResetBitReader();
@@ -491,19 +489,18 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
 
             if (hasFall)
             {
-                packet.ReadUInt32("Fall Time", index);
-                packet.ReadSingle("JumpVelocity", index);
+                moveInfo.FallTime = packet.ReadUInt32("Jump Fall Time", index);
+                moveInfo.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed", index);
 
                 packet.ResetBitReader();
                 var bit20 = packet.ReadBit("Has Fall Direction", index);
                 if (bit20)
                 {
-                    packet.ReadVector2("Fall", index);
-                    packet.ReadSingle("Horizontal Speed", index);
+                    moveInfo.JumpSinAngle = packet.ReadSingle("Jump Sin Angle", index);
+                    moveInfo.JumpCosAngle = packet.ReadSingle("Jump Cos Angle", index);
+                    moveInfo.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed", index);
                 }
             }
-
-            return moveInfo;
         }
 
         [Parser(Opcode.SMSG_DESTROY_ARENA_UNIT)]

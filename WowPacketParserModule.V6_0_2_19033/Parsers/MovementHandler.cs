@@ -24,7 +24,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadUInt32("MoveIndex", idx);
             moveData.Position = packet.ReadVector4("Position", idx);
 
-            packet.ReadSingle("Pitch", idx);
+            moveData.SwimPitch = packet.ReadSingle("Pitch", idx);
             packet.ReadSingle("StepUpStartElevation", idx);
 
             var int152 = packet.ReadInt32("RemoveForcesCount", idx);
@@ -48,7 +48,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 ReadTransportData(packet, idx, "TransportData");
 
             if (hasFall)
-                ReadFallData(packet, idx, "FallData");
+                ReadFallData(moveData, packet, idx, "FallData");
 
             if (Settings.SqlTables.player_movement_client || Settings.SqlTables.creature_movement_client)
             {
@@ -80,18 +80,19 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 packet.ReadUInt32("VehicleRecID", idx);
         }
 
-        public static void ReadFallData(Packet packet, params object[] idx)
+        public static void ReadFallData(PlayerMovement moveData, Packet packet, params object[] idx)
         {
-            packet.ReadUInt32("FallTime", idx);
-            packet.ReadSingle("JumpVelocity", idx);
+            moveData.FallTime = packet.ReadUInt32("Jump Fall Time", idx);
+            moveData.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed", idx);
 
             packet.ResetBitReader();
 
             var bit20 = packet.ReadBit("HasFallDirection", idx);
             if (bit20)
             {
-                packet.ReadVector2("Direction", idx);
-                packet.ReadSingle("HorizontalSpeed", idx);
+                moveData.JumpSinAngle = packet.ReadSingle("Jump Sin Angle", idx);
+                moveData.JumpCosAngle = packet.ReadSingle("Jump Cos Angle", idx);
+                moveData.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed", idx);
             }
         }
 
