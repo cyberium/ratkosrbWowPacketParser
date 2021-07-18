@@ -848,6 +848,9 @@ namespace WowPacketParser.SQL.Builders
                 if (go.IsTemporarySpawn() && !Settings.SaveTempSpawns)
                     continue;
 
+                if (go.IsTransport() && !Settings.SaveTransports)
+                    continue;
+
                 bool badTransport = false;
 
                 row.Data.GUID = "@OGUID+" + go.DbGuid;
@@ -1067,17 +1070,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.PhaseGroup = 0;
                 row.Data.TemporarySpawn = (byte)(go.IsTemporarySpawn() ? 1 : 0);
 
-                if (go.IsTransport())
-                {
-                    row.CommentOut = true;
-                    row.Comment += " - !!! transport !!!";
-                    if (Settings.SqlTables.gameobject_addon)
-                    {
-                        addonRow.CommentOut = true;
-                        addonRow.Comment += " - !!! transport !!!";
-                    }
-                }
-                else if (go.IsOnTransport() && badTransport)
+                if (go.IsOnTransport() && badTransport)
                 {
                     row.CommentOut = true;
                     row.Comment += " - !!! on transport - transport template not found !!!";

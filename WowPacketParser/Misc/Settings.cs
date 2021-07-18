@@ -26,6 +26,7 @@ namespace WowPacketParser.Misc
         public static readonly bool SaveManaUpdates = Conf.GetBoolean("SaveManaUpdates", false);
         public static readonly bool SaveTempSpawns = Conf.GetBoolean("SaveTempSpawns", false);
         public static readonly bool SavePets = Conf.GetBoolean("SavePets", false);
+        public static readonly bool SaveTransports = Conf.GetBoolean("SaveTransports", false);
         public static readonly bool SkipOnlyVerifiedBuildUpdateRows = Conf.GetBoolean("SkipOnlyVerifiedBuildUpdateRows", false);
         public static readonly bool IgnoreZeroValues = Conf.GetBoolean("IgnoreZeroValues", false);
         public static readonly bool ForceInsertQueries = Conf.GetBoolean("ForceInsertQueries", false);
