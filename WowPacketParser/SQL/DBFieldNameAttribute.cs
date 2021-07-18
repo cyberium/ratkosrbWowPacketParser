@@ -40,6 +40,11 @@ namespace WowPacketParser.SQL
         public bool MultipleSniffsOnly { get; set; }
 
         /// <summary>
+        /// True if the field is only used when exporting transports to database.
+        /// </summary>
+        public bool OnlyWhenSavingTransports { get; set; }
+
+        /// <summary>
         /// Number of fields
         /// </summary>
         public int Count { get; set; }
@@ -244,6 +249,9 @@ namespace WowPacketParser.SQL
                 return false;
 
             if ((Settings.TargetedDbType & DbType) == 0)
+                return false;
+
+            if (OnlyWhenSavingTransports && !Settings.SaveTransports)
                 return false;
 
             TargetedDbExpansion target = Settings.TargetedDbExpansion;

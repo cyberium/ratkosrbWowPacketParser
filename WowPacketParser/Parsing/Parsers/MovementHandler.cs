@@ -1381,13 +1381,18 @@ namespace WowPacketParser.Parsing.Parsers
             if (Settings.SqlTables.player_movement_client || Settings.SqlTables.creature_movement_client)
             {
                 PlayerMovement moveData = new PlayerMovement();
-                moveData.guid = guid;
+                moveData.Guid = guid;
                 moveData.MoveTime = movementInfo.MoveTime;
                 moveData.Map = WowPacketParser.Parsing.Parsers.MovementHandler.CurrentMapId;
                 moveData.Position.X = movementInfo.Position.X;
                 moveData.Position.Y = movementInfo.Position.Y;
                 moveData.Position.Z = movementInfo.Position.Z;
                 moveData.Position.O = movementInfo.Orientation;
+                if (movementInfo.TransportGuid != null && movementInfo.TransportOffset != null)
+                {
+                    moveData.TransportGuid = movementInfo.TransportGuid;
+                    moveData.TransportPosition = movementInfo.TransportOffset;
+                }
                 moveData.MoveFlags = (uint)movementInfo.Flags;
                 moveData.SwimPitch = movementInfo.SwimPitch;
                 moveData.FallTime = movementInfo.FallTime;

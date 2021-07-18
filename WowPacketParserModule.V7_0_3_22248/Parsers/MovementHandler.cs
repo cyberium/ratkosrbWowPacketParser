@@ -19,7 +19,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
         public static WowGuid ReadMovementStats(Packet packet, params object[] idx)
         {
             PlayerMovement moveData = new PlayerMovement();
-            moveData.guid = packet.ReadPackedGuid128("MoverGUID", idx);
+            moveData.Guid = packet.ReadPackedGuid128("MoverGUID", idx);
 
             moveData.MoveTime = packet.ReadUInt32("MoveTime", idx);
             moveData.Position = packet.ReadVector4("Position", idx);
@@ -45,7 +45,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadBit("RemoteTimeValid", idx);
 
             if (hasTransport)
-                V6_0_2_19033.Parsers.MovementHandler.ReadTransportData(packet, idx, "TransportData");
+                V6_0_2_19033.Parsers.MovementHandler.ReadTransportData(moveData, packet, idx, "TransportData");
 
             if (hasFall)
                 V6_0_2_19033.Parsers.MovementHandler.ReadFallData(moveData, packet, idx, "FallData");
@@ -58,7 +58,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 moveData.Time = packet.Time;
                 Storage.PlayerMovements.Add(moveData);
             }
-            return moveData.guid;
+            return moveData.Guid;
         }
 
         public static void ReadMovementAck(Packet packet, params object[] idx)

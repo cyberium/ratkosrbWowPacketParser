@@ -105,7 +105,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.ID = entry;
 
                 bool badTransport = false;
-                if (!creature.IsOnTransport())
+                if (!creature.WasOriginallyOnTransport() || Settings.SaveTransports)
                     row.Data.Map = creature.Map;
                 else
                 {
@@ -145,12 +145,21 @@ namespace WowPacketParser.SQL.Builders
                     row.Data.PhaseID = data;
                 }
 
-                if (!creature.WasOriginallyOnTransport())
+                if (!creature.WasOriginallyOnTransport() || Settings.SaveTransports)
                 {
                     row.Data.PositionX = creature.OriginalMovement.Position.X;
                     row.Data.PositionY = creature.OriginalMovement.Position.Y;
                     row.Data.PositionZ = creature.OriginalMovement.Position.Z;
                     row.Data.Orientation = creature.OriginalMovement.Orientation;
+
+                    if (creature.WasOriginallyOnTransport())
+                    {
+                        row.Data.TransportGuid = Storage.GetObjectDbGuid(creature.OriginalMovement.TransportGuid);
+                        row.Data.TransportPositionX = creature.OriginalMovement.TransportOffset.X;
+                        row.Data.TransportPositionY = creature.OriginalMovement.TransportOffset.Y;
+                        row.Data.TransportPositionZ = creature.OriginalMovement.TransportOffset.Z;
+                        row.Data.TransportOrientation = creature.OriginalMovement.TransportOffset.O;
+                    } 
                 }
                 else
                 {
@@ -402,7 +411,7 @@ namespace WowPacketParser.SQL.Builders
                 {
                     foreach (var movement in Storage.PlayerMovements)
                     {
-                        if (movement.guid != unit.Key)
+                        if (movement.Guid != unit.Key)
                             continue;
 
                         Row<ClientSideMovement> clientMovementRow = new Row<ClientSideMovement>();
@@ -413,6 +422,11 @@ namespace WowPacketParser.SQL.Builders
                         clientMovementRow.Data.PositionX = movement.Position.X;
                         clientMovementRow.Data.PositionY = movement.Position.Y;
                         clientMovementRow.Data.PositionZ = movement.Position.Z;
+                        clientMovementRow.Data.TransportGuid = Storage.GetObjectDbGuid(movement.TransportGuid);
+                        clientMovementRow.Data.TransportPositionX = movement.TransportPosition.X;
+                        clientMovementRow.Data.TransportPositionY = movement.TransportPosition.Y;
+                        clientMovementRow.Data.TransportPositionZ = movement.TransportPosition.Z;
+                        clientMovementRow.Data.TransportOrientation = movement.TransportPosition.O;
                         clientMovementRow.Data.Orientation = movement.Position.O;
                         clientMovementRow.Data.SwimPitch = movement.SwimPitch;
                         clientMovementRow.Data.FallTime = movement.FallTime;
@@ -612,7 +626,7 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                if (creature.IsOnTransport() && badTransport)
+                if (creature.WasOriginallyOnTransport() && badTransport)
                 {
                     row.CommentOut = true;
                     row.Comment += " - !!! on transport - transport template not found !!!";
@@ -856,7 +870,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.GUID = "@OGUID+" + go.DbGuid;
 
                 row.Data.ID = entry;
-                if (!go.IsOnTransport())
+                if (!go.WasOriginallyOnTransport() || Settings.SaveTransports)
                     row.Data.Map = go.Map;
                 else
                 {
@@ -891,19 +905,28 @@ namespace WowPacketParser.SQL.Builders
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_3_4_15595) && go.Phases != null)
                     row.Data.PhaseID = string.Join(" - ", go.Phases);
 
-                if (!go.IsOnTransport())
+                if (!go.WasOriginallyOnTransport() || Settings.SaveTransports)
                 {
-                    row.Data.PositionX = go.Movement.Position.X;
-                    row.Data.PositionY = go.Movement.Position.Y;
-                    row.Data.PositionZ = go.Movement.Position.Z;
-                    row.Data.Orientation = go.Movement.Orientation;
+                    row.Data.PositionX = go.OriginalMovement.Position.X;
+                    row.Data.PositionY = go.OriginalMovement.Position.Y;
+                    row.Data.PositionZ = go.OriginalMovement.Position.Z;
+                    row.Data.Orientation = go.OriginalMovement.Orientation;
+
+                    if (go.WasOriginallyOnTransport())
+                    {
+                        row.Data.TransportGuid = Storage.GetObjectDbGuid(go.OriginalMovement.TransportGuid);
+                        row.Data.TransportPositionX = go.OriginalMovement.TransportOffset.X;
+                        row.Data.TransportPositionY = go.OriginalMovement.TransportOffset.Y;
+                        row.Data.TransportPositionZ = go.OriginalMovement.TransportOffset.Z;
+                        row.Data.TransportOrientation = go.OriginalMovement.TransportOffset.O;
+                    }
                 }
                 else
                 {
-                    row.Data.PositionX = go.Movement.TransportOffset.X;
-                    row.Data.PositionY = go.Movement.TransportOffset.Y;
-                    row.Data.PositionZ = go.Movement.TransportOffset.Z;
-                    row.Data.Orientation = go.Movement.TransportOffset.O;
+                    row.Data.PositionX = go.OriginalMovement.TransportOffset.X;
+                    row.Data.PositionY = go.OriginalMovement.TransportOffset.Y;
+                    row.Data.PositionZ = go.OriginalMovement.TransportOffset.Z;
+                    row.Data.Orientation = go.OriginalMovement.TransportOffset.O;
                 }
 
                 var rotation = go.GetStaticRotation();
@@ -1070,7 +1093,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.PhaseGroup = 0;
                 row.Data.TemporarySpawn = (byte)(go.IsTemporarySpawn() ? 1 : 0);
 
-                if (go.IsOnTransport() && badTransport)
+                if (go.WasOriginallyOnTransport() && badTransport)
                 {
                     row.CommentOut = true;
                     row.Comment += " - !!! on transport - transport template not found !!!";
@@ -1191,30 +1214,19 @@ namespace WowPacketParser.SQL.Builders
                 Row<DynamicObjectSpawn> row = new Row<DynamicObjectSpawn>();
                 row.Data.GUID = "@DGUID+" + dynObject.DbGuid;
 
-                bool badTransport = false;
-                if (!dynObject.IsOnTransport())
-                    row.Data.Map = dynObject.Map;
-                else
-                {
-                    int mapId;
-                    badTransport = !GetTransportMap(dynObject, out mapId);
-                    if (mapId != -1)
-                        row.Data.Map = (uint)mapId;
-                }
+                row.Data.Map = dynObject.Map;
+                row.Data.PositionX = dynObject.OriginalMovement.Position.X;
+                row.Data.PositionY = dynObject.OriginalMovement.Position.Y;
+                row.Data.PositionZ = dynObject.OriginalMovement.Position.Z;
+                row.Data.Orientation = dynObject.OriginalMovement.Orientation;
 
-                if (!dynObject.IsOnTransport())
+                if (dynObject.WasOriginallyOnTransport())
                 {
-                    row.Data.PositionX = dynObject.OriginalMovement.Position.X;
-                    row.Data.PositionY = dynObject.OriginalMovement.Position.Y;
-                    row.Data.PositionZ = dynObject.OriginalMovement.Position.Z;
-                    row.Data.Orientation = dynObject.OriginalMovement.Orientation;
-                }
-                else
-                {
-                    row.Data.PositionX = dynObject.OriginalMovement.TransportOffset.X;
-                    row.Data.PositionY = dynObject.OriginalMovement.TransportOffset.Y;
-                    row.Data.PositionZ = dynObject.OriginalMovement.TransportOffset.Z;
-                    row.Data.Orientation = dynObject.OriginalMovement.TransportOffset.O;
+                    row.Data.TransportGuid = Storage.GetObjectDbGuid(dynObject.OriginalMovement.TransportGuid);
+                    row.Data.TransportPositionX = dynObject.OriginalMovement.TransportOffset.X;
+                    row.Data.TransportPositionY = dynObject.OriginalMovement.TransportOffset.Y;
+                    row.Data.TransportPositionZ = dynObject.OriginalMovement.TransportOffset.Z;
+                    row.Data.TransportOrientation = dynObject.OriginalMovement.TransportOffset.O;
                 }
 
                 Storage.GetObjectDbGuidEntryType(dynObject.DynamicObjectDataOriginal.Caster, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);

@@ -89,6 +89,21 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("orientation")]
         public float Orientation;
 
+        [DBFieldName("transport_guid", false, true, OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
+        public string TransportGuid = "0";
+
+        [DBFieldName("transport_x", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
+        public float TransportPositionX;
+
+        [DBFieldName("transport_y", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
+        public float TransportPositionY;
+
+        [DBFieldName("transport_z", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
+        public float TransportPositionZ;
+
+        [DBFieldName("transport_o", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
+        public float TransportOrientation;
+
         [DBFieldName("name")]
         public string Name;
 
@@ -504,6 +519,21 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("orientation")]
         public float Orientation;
 
+        [DBFieldName("transport_guid", false, true, OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
+        public string TransportGuid = "0";
+
+        [DBFieldName("transport_x", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
+        public float TransportPositionX;
+
+        [DBFieldName("transport_y", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
+        public float TransportPositionY;
+
+        [DBFieldName("transport_z", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
+        public float TransportPositionZ;
+
+        [DBFieldName("transport_o", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
+        public float TransportOrientation;
+
         [DBFieldName("swim_pitch")]
         public float SwimPitch;
 
@@ -524,8 +554,10 @@ namespace WowPacketParser.Store.Objects
     }
     public sealed class PlayerMovement
     {
-        public WowGuid guid;
+        public WowGuid Guid;
         public Vector4 Position;
+        public WowGuid TransportGuid = WowGuid.Empty;
+        public Vector4 TransportPosition;
         public uint Map;
         public uint MoveTime;
         public uint MoveFlags;

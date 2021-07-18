@@ -159,6 +159,16 @@ namespace WowPacketParser.SQL.Builders
                     playerRow.Data.PositionY = row.Data.PositionY;
                     playerRow.Data.PositionZ = row.Data.PositionZ;
                     playerRow.Data.Orientation = row.Data.Orientation;
+
+                    if (player.OriginalMovement != null && player.WasOriginallyOnTransport())
+                    {
+                        playerRow.Data.TransportGuid = Storage.GetObjectDbGuid(player.OriginalMovement.TransportGuid);
+                        playerRow.Data.TransportPositionX = player.OriginalMovement.TransportOffset.X;
+                        playerRow.Data.TransportPositionY = player.OriginalMovement.TransportOffset.Y;
+                        playerRow.Data.TransportPositionZ = player.OriginalMovement.TransportOffset.Z;
+                        playerRow.Data.TransportOrientation = player.OriginalMovement.TransportOffset.O;
+                    }
+                    
                     playerRow.Data.Map = row.Data.Map;
                     playerRow.Data.DisplayID = (uint)player.UnitDataOriginal.DisplayID;
                     playerRow.Data.NativeDisplayID = (uint)player.UnitDataOriginal.NativeDisplayID;
@@ -673,9 +683,9 @@ namespace WowPacketParser.SQL.Builders
                 var movementRows = new RowList<ClientSideMovement>();
                 foreach (var movement in Storage.PlayerMovements)
                 {
-                    if (Storage.Objects.ContainsKey(movement.guid))
+                    if (Storage.Objects.ContainsKey(movement.Guid))
                     {
-                        Player player = Storage.Objects[movement.guid].Item1 as Player;
+                        Player player = Storage.Objects[movement.Guid].Item1 as Player;
                         if (player == null)
                             continue;
 
@@ -692,6 +702,11 @@ namespace WowPacketParser.SQL.Builders
                         row.Data.PositionY = movement.Position.Y;
                         row.Data.PositionZ = movement.Position.Z;
                         row.Data.Orientation = movement.Position.O;
+                        row.Data.TransportGuid = Storage.GetObjectDbGuid(movement.TransportGuid);
+                        row.Data.TransportPositionX = movement.TransportPosition.X;
+                        row.Data.TransportPositionY = movement.TransportPosition.Y;
+                        row.Data.TransportPositionZ = movement.TransportPosition.Z;
+                        row.Data.TransportOrientation = movement.TransportPosition.O;
                         row.Data.SwimPitch = movement.SwimPitch;
                         row.Data.FallTime = movement.FallTime;
                         row.Data.JumpHorizontalSpeed = movement.JumpHorizontalSpeed;

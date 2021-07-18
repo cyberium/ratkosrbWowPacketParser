@@ -19,7 +19,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         public static WowGuid ReadMovementStats(Packet packet, params object[] idx)
         {
             PlayerMovement moveData = new PlayerMovement();
-            moveData.guid = packet.ReadPackedGuid128("MoverGUID", idx);
+            moveData.Guid = packet.ReadPackedGuid128("MoverGUID", idx);
 
             packet.ReadUInt32("MoveIndex", idx);
             moveData.Position = packet.ReadVector4("Position", idx);
@@ -45,7 +45,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadBit("RemoteTimeValid", idx);
 
             if (hasTransport)
-                ReadTransportData(packet, idx, "TransportData");
+                ReadTransportData(moveData, packet, idx, "TransportData");
 
             if (hasFall)
                 ReadFallData(moveData, packet, idx, "FallData");
@@ -58,13 +58,13 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 moveData.Time = packet.Time;
                 Storage.PlayerMovements.Add(moveData);
             }
-            return moveData.guid;
+            return moveData.Guid;
         }
 
-        public static void ReadTransportData(Packet packet, params object[] idx)
+        public static void ReadTransportData(PlayerMovement moveData, Packet packet, params object[] idx)
         {
-            packet.ReadPackedGuid128("TransportGuid", idx);
-            packet.ReadVector4("TransportPosition", idx);
+            moveData.TransportGuid = packet.ReadPackedGuid128("TransportGuid", idx);
+            moveData.TransportPosition = packet.ReadVector4("TransportPosition", idx);
             packet.ReadByte("TransportSeat", idx);
             packet.ReadInt32("TransportMoveTime", idx);
 
