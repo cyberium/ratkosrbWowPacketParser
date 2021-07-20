@@ -164,7 +164,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
                 guid2[3] = packet.ReadBit();
                 guid2[2] = packet.ReadBit();
                 if (hasMovementFlags)
-                    moveInfo.Flags = (MovementFlag)packet.ReadBitsE<Enums.MovementFlag>("Movement Flags", 30, index);
+                    moveInfo.Flags = (uint)(MovementFlag)packet.ReadBitsE<Enums.MovementFlag>("Movement Flags", 30, index);
 
                 packet.ReadBit("Has MovementInfo spline", index);
                 hasPitch = !packet.ReadBit("Lacks pitch", index);
@@ -233,7 +233,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
                 guid2[1] = packet.ReadBit();
                 packet.ReadBit();
                 if (!packet.ReadBit())
-                    moveInfo.FlagsExtra = packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12, index);
+                    moveInfo.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12, index);
             }
 
             if (hasGameObjectPosition)
@@ -286,7 +286,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
 
                 moveInfo.SwimBackSpeed = packet.ReadSingle("SwimBack Speed", index);
                 if (hasSplineElevation)
-                    packet.ReadSingle("Spline Elevation", index);
+                    moveInfo.SplineElevation = packet.ReadSingle("Spline Elevation", index);
 
                 if (moveInfo.HasSplineData)
                 {
@@ -500,7 +500,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             }
 
             if (transport)
-                packet.ReadUInt32("Transport path timer", index);
+                moveInfo.TransportPathTimer = packet.ReadUInt32("Transport path timer", index);
 
             return moveInfo;
         }

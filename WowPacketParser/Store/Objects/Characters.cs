@@ -89,21 +89,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("orientation")]
         public float Orientation;
 
-        [DBFieldName("transport_guid", false, true, OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
-        public string TransportGuid = "0";
-
-        [DBFieldName("transport_x", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
-        public float TransportPositionX;
-
-        [DBFieldName("transport_y", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
-        public float TransportPositionY;
-
-        [DBFieldName("transport_z", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
-        public float TransportPositionZ;
-
-        [DBFieldName("transport_o", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
-        public float TransportOrientation;
-
         [DBFieldName("name")]
         public string Name;
 
@@ -200,9 +185,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("shapeshift_form")]
         public uint? ShapeshiftForm;
 
-        [DBFieldName("move_flags")]
-        public uint? MovementFlags;
-
         [DBFieldName("speed_walk")]
         public float? SpeedWalk;
 
@@ -278,6 +260,51 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("orientation")]
         public float? Orientation;
+
+        [DBFieldName("transport_guid", false, true, OnlyWhenSavingTransports = true)]
+        public string TransportGuid = "0";
+
+        [DBFieldName("transport_x", OnlyWhenSavingTransports = true)]
+        public float TransportPositionX;
+
+        [DBFieldName("transport_y", OnlyWhenSavingTransports = true)]
+        public float TransportPositionY;
+
+        [DBFieldName("transport_z", OnlyWhenSavingTransports = true)]
+        public float TransportPositionZ;
+
+        [DBFieldName("transport_o", OnlyWhenSavingTransports = true)]
+        public float TransportOrientation;
+
+        [DBFieldName("move_time")]
+        public uint MoveTime;
+
+        [DBFieldName("move_flags")]
+        public uint MoveFlags;
+
+        [DBFieldName("move_flags2")]
+        public uint MoveFlags2;
+
+        [DBFieldName("swim_pitch")]
+        public float SwimPitch;
+
+        [DBFieldName("fall_time")]
+        public uint FallTime;
+
+        [DBFieldName("jump_horizontal_speed")]
+        public float JumpHorizontalSpeed;
+
+        [DBFieldName("jump_vertical_speed")]
+        public float JumpVerticalSpeed;
+
+        [DBFieldName("jump_cos_angle")]
+        public float JumpCosAngle;
+
+        [DBFieldName("jump_sin_angle")]
+        public float JumpSinAngle;
+
+        [DBFieldName("spline_elevation")]
+        public float SplineElevation;
     }
 
     [DBTableName("player_create2_time")]
@@ -303,6 +330,51 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("orientation")]
         public float? Orientation;
+
+        [DBFieldName("transport_guid", false, true, OnlyWhenSavingTransports = true)]
+        public string TransportGuid = "0";
+
+        [DBFieldName("transport_x", OnlyWhenSavingTransports = true)]
+        public float TransportPositionX;
+
+        [DBFieldName("transport_y", OnlyWhenSavingTransports = true)]
+        public float TransportPositionY;
+
+        [DBFieldName("transport_z", OnlyWhenSavingTransports = true)]
+        public float TransportPositionZ;
+
+        [DBFieldName("transport_o", OnlyWhenSavingTransports = true)]
+        public float TransportOrientation;
+
+        [DBFieldName("move_time")]
+        public uint MoveTime;
+
+        [DBFieldName("move_flags")]
+        public uint MoveFlags;
+
+        [DBFieldName("move_flags2")]
+        public uint MoveFlags2;
+
+        [DBFieldName("swim_pitch")]
+        public float SwimPitch;
+
+        [DBFieldName("fall_time")]
+        public uint FallTime;
+
+        [DBFieldName("jump_horizontal_speed")]
+        public float JumpHorizontalSpeed;
+
+        [DBFieldName("jump_vertical_speed")]
+        public float JumpVerticalSpeed;
+
+        [DBFieldName("jump_cos_angle")]
+        public float JumpCosAngle;
+
+        [DBFieldName("jump_sin_angle")]
+        public float JumpSinAngle;
+
+        [DBFieldName("spline_elevation")]
+        public float SplineElevation;
     }
 
     [DBTableName("player_destroy_time")]
@@ -551,22 +623,15 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("jump_sin_angle")]
         public float JumpSinAngle;
+
+        [DBFieldName("spline_elevation")]
+        public float SplineElevation;
     }
     public sealed class PlayerMovement
     {
         public WowGuid Guid;
-        public Vector4 Position;
-        public WowGuid TransportGuid = WowGuid.Empty;
-        public Vector4 TransportPosition;
         public uint Map;
-        public uint MoveTime;
-        public uint MoveFlags;
-        public float SwimPitch;
-        public uint FallTime;
-        public float JumpHorizontalSpeed;
-        public float JumpVerticalSpeed;
-        public float JumpCosAngle;
-        public float JumpSinAngle;
+        public MovementInfo MoveInfo;
         public int Opcode;
         public Direction OpcodeDirection;
         public DateTime Time;

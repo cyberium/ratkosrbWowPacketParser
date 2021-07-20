@@ -16,9 +16,9 @@ namespace WowPacketParser.Misc
         public const float DEFAULT_PITCH_RATE = 3.141593f;
 
         // NOTE: Do not use flag fields in a generic way to handle anything for producing spawns - different versions have different flags
-        public MovementFlag Flags;
+        public uint Flags;
 
-        public MovementFlagExtra FlagsExtra;
+        public uint FlagsExtra;
 
         public uint MoveTime;
 
@@ -33,6 +33,8 @@ namespace WowPacketParser.Misc
         public float JumpCosAngle;
 
         public float JumpSinAngle;
+
+        public float SplineElevation;
 
         public bool HasSplineData;
 
@@ -68,6 +70,8 @@ namespace WowPacketParser.Misc
 
         public uint VehicleId; // Not exactly related to movement but it is read in ReadMovementUpdateBlock
 
+        public uint TransportPathTimer; // only set for transports
+
         public bool HasWpsOrRandMov; // waypoints or random movement
 
         public MovementInfo CopyFromMe()
@@ -81,6 +85,7 @@ namespace WowPacketParser.Misc
             copy.JumpVerticalSpeed = this.JumpVerticalSpeed;
             copy.JumpCosAngle = this.JumpCosAngle;
             copy.JumpSinAngle = this.JumpSinAngle;
+            copy.SplineElevation = this.SplineElevation;
             copy.HasSplineData = this.HasSplineData;
             copy.Position = this.Position;
             copy.Orientation = this.Orientation;
@@ -98,6 +103,7 @@ namespace WowPacketParser.Misc
             copy.PitchRate = this.PitchRate;
             copy.Hover = this.Hover;
             copy.VehicleId = this.VehicleId;
+            copy.TransportPathTimer = this.TransportPathTimer;
             copy.HasWpsOrRandMov = this.HasWpsOrRandMov;
             return copy;
         }

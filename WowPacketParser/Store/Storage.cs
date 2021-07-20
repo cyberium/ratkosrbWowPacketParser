@@ -246,33 +246,21 @@ namespace WowPacketParser.Store
             if (guid.GetObjectType() == ObjectType.ActivePlayer && !Settings.SqlTables.player_create1_time)
                 return;
 
+            ObjectCreate createData = new ObjectCreate();
+            createData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
+            if (movement != null)
+            {
+                createData.Map = map;
+                createData.MoveInfo = movement.CopyFromMe();
+            }
+
             if (Storage.ObjectCreate1Times.ContainsKey(guid))
             {
-                ObjectCreate createData = new ObjectCreate();
-                createData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
-                if (movement != null)
-                {
-                    createData.Map = map;
-                    createData.PositionX = movement.Position.X;
-                    createData.PositionY = movement.Position.Y;
-                    createData.PositionZ = movement.Position.Z;
-                    createData.Orientation = movement.Orientation;
-                }
                 Storage.ObjectCreate1Times[guid].Add(createData);
             }
             else
             {
                 List<ObjectCreate> createList = new List<ObjectCreate>();
-                ObjectCreate createData = new ObjectCreate();
-                createData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
-                if (movement != null)
-                {
-                    createData.Map = map;
-                    createData.PositionX = movement.Position.X;
-                    createData.PositionY = movement.Position.Y;
-                    createData.PositionZ = movement.Position.Z;
-                    createData.Orientation = movement.Orientation;
-                }
                 createList.Add(createData);
                 Storage.ObjectCreate1Times.Add(guid, createList);
             }
@@ -302,33 +290,21 @@ namespace WowPacketParser.Store
             if (guid.GetObjectType() == ObjectType.ActivePlayer && !Settings.SqlTables.player_create2_time)
                 return;
 
+            ObjectCreate createData = new ObjectCreate();
+            createData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
+            if (movement != null)
+            {
+                createData.Map = map;
+                createData.MoveInfo = movement.CopyFromMe();
+            }
+
             if (Storage.ObjectCreate2Times.ContainsKey(guid))
             {
-                ObjectCreate createData = new ObjectCreate();
-                createData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
-                if (movement != null)
-                {
-                    createData.Map = map;
-                    createData.PositionX = movement.Position.X;
-                    createData.PositionY = movement.Position.Y;
-                    createData.PositionZ = movement.Position.Z;
-                    createData.Orientation = movement.Orientation;
-                }
                 Storage.ObjectCreate2Times[guid].Add(createData);
             }
             else
             {
                 List<ObjectCreate> createList = new List<ObjectCreate>();
-                ObjectCreate createData = new ObjectCreate();
-                createData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
-                if (movement != null)
-                {
-                    createData.Map = map;
-                    createData.PositionX = movement.Position.X;
-                    createData.PositionY = movement.Position.Y;
-                    createData.PositionZ = movement.Position.Z;
-                    createData.Orientation = movement.Orientation;
-                }
                 createList.Add(createData);
                 Storage.ObjectCreate2Times.Add(guid, createList);
             }

@@ -19,24 +19,26 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         public static WowGuid ReadMovementStats(Packet packet, params object[] idx)
         {
             PlayerMovement moveData = new PlayerMovement();
+            moveData.MoveInfo = new MovementInfo();
             moveData.Guid = packet.ReadPackedGuid128("MoverGUID", idx);
 
             packet.ReadUInt32("MoveIndex", idx);
-            moveData.Position = packet.ReadVector4("Position", idx);
+            moveData.MoveInfo.Position = packet.ReadVector3("Position", idx);
+            moveData.MoveInfo.Orientation = packet.ReadSingle("Orientation", idx);
 
-            moveData.SwimPitch = packet.ReadSingle("Pitch", idx);
-            packet.ReadSingle("StepUpStartElevation", idx);
+            moveData.MoveInfo.SwimPitch = packet.ReadSingle("Pitch", idx);
+            moveData.MoveInfo.SplineElevation = packet.ReadSingle("StepUpStartElevation", idx);
 
             var int152 = packet.ReadInt32("RemoveForcesCount", idx);
-            moveData.MoveTime = packet.ReadUInt32("MoveTime", idx);
+            moveData.MoveInfo.MoveTime = packet.ReadUInt32("MoveTime", idx);
 
             for (var i = 0; i < int152; i++)
                 packet.ReadPackedGuid128("RemoveForcesIDs", idx, i);
 
             packet.ResetBitReader();
 
-            moveData.MoveFlags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30, idx);
-            packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", ClientVersion.AddedInVersion(ClientVersionBuild.V6_2_0_20173) ? 16 : 15, idx);
+            moveData.MoveInfo.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30, idx);
+            moveData.MoveInfo.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", ClientVersion.AddedInVersion(ClientVersionBuild.V6_2_0_20173) ? 16 : 15, idx);
 
             var hasTransport = packet.ReadBit("Has Transport Data", idx);
             var hasFall = packet.ReadBit("Has Fall Data", idx);
@@ -45,10 +47,10 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadBit("RemoteTimeValid", idx);
 
             if (hasTransport)
-                ReadTransportData(moveData, packet, idx, "TransportData");
+                ReadTransportData(moveData.MoveInfo, packet, idx, "TransportData");
 
             if (hasFall)
-                ReadFallData(moveData, packet, idx, "FallData");
+                ReadFallData(moveData.MoveInfo, packet, idx, "FallData");
 
             if (Settings.SqlTables.player_movement_client || Settings.SqlTables.creature_movement_client)
             {
@@ -61,10 +63,10 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             return moveData.Guid;
         }
 
-        public static void ReadTransportData(PlayerMovement moveData, Packet packet, params object[] idx)
+        public static void ReadTransportData(MovementInfo moveData, Packet packet, params object[] idx)
         {
             moveData.TransportGuid = packet.ReadPackedGuid128("TransportGuid", idx);
-            moveData.TransportPosition = packet.ReadVector4("TransportPosition", idx);
+            moveData.TransportOffset = packet.ReadVector4("TransportPosition", idx);
             packet.ReadByte("TransportSeat", idx);
             packet.ReadInt32("TransportMoveTime", idx);
 
@@ -80,7 +82,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 packet.ReadUInt32("VehicleRecID", idx);
         }
 
-        public static void ReadFallData(PlayerMovement moveData, Packet packet, params object[] idx)
+        public static void ReadFallData(MovementInfo moveData, Packet packet, params object[] idx)
         {
             moveData.FallTime = packet.ReadUInt32("Jump Fall Time", idx);
             moveData.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed", idx);
@@ -290,7 +292,9 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadByte("Mode", indexes);
             packet.ReadByte("VehicleExitVoluntary", indexes);
 
-            packet.ReadPackedGuid128("TransportGUID", indexes);
+            WowGuid transportGuid = packet.ReadPackedGuid128("TransportGUID", indexes);
+            if (savedata != null)
+                savedata.TransportGuid = transportGuid;
             packet.ReadSByte("VehicleSeat", indexes);
 
             var packedDeltasCount = packet.ReadInt32("PackedDeltasCount", indexes);
@@ -398,7 +402,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
 
             ReadMovementMonsterSpline(movementData, packet, pos, "MovementMonsterSpline");
 
-            if (movementData != null)
+            if (movementData != null && (Settings.SaveTransports || (movementData.TransportGuid == null || movementData.TransportGuid.IsEmpty())))
                 obj.AddWaypoint(movementData, pos, packet.Time);
         }
 

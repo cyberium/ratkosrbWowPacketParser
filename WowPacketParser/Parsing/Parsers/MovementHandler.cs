@@ -86,14 +86,14 @@ namespace WowPacketParser.Parsing.Parsers
             var info = new MovementInfo();
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
-                info.Flags = packet.ReadInt32E<MovementFlag>("Movement Flags", index);
+                info.Flags = (uint)packet.ReadInt32E<MovementFlag>("Movement Flags", index);
             else
-                info.Flags = ConvertVanillaMovementFlags(packet.ReadInt32E<MovementFlagVanilla>("Movement Flags", index));
+                info.Flags = (uint)ConvertVanillaMovementFlags(packet.ReadInt32E<MovementFlagVanilla>("Movement Flags", index));
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
-                info.FlagsExtra = packet.ReadInt16E<MovementFlagExtra>("Extra Movement Flags", index);
+                info.FlagsExtra = (uint)packet.ReadInt16E<MovementFlagExtra>("Extra Movement Flags", index);
             else if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
-                info.FlagsExtra = packet.ReadByteE<MovementFlagExtra>("Extra Movement Flags", index);
+                info.FlagsExtra = (uint)packet.ReadByteE<MovementFlagExtra>("Extra Movement Flags", index);
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_2_2_14545))
                 if (packet.ReadGuid("Guid 2", index) != guid)
@@ -154,7 +154,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             // HACK: "generic" movement flags are wrong for 4.2.2
             if (info.Flags.HasAnyFlag(MovementFlag.SplineElevation) && ClientVersion.Build != ClientVersionBuild.V4_2_2_14545)
-                packet.ReadSingle("Spline Elevation", index);
+                info.SplineElevation = packet.ReadSingle("Spline Elevation", index);
 
             return info;
         }
@@ -163,7 +163,7 @@ namespace WowPacketParser.Parsing.Parsers
         {
             var info = new MovementInfo
             {
-                Flags = packet.ReadBitsE<MovementFlag>("Movement Flags", 30, index)
+                Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30, index)
             };
 
             packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12, index);
@@ -224,7 +224,7 @@ namespace WowPacketParser.Parsing.Parsers
                 }
             }
             if (splineElevation)
-                packet.ReadSingle("Spline Elevation", index);
+                info.SplineElevation = packet.ReadSingle("Spline Elevation", index);
 
             return info;
         }
@@ -242,7 +242,7 @@ namespace WowPacketParser.Parsing.Parsers
                 if (obj.UpdateFields != null)
                 {
                     obj.Movement.HasWpsOrRandMov = true;
-                    if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_ON_MONSTER_MOVE, Direction.ServerToClient))
+                    if (Settings.SaveTransports || packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_ON_MONSTER_MOVE, Direction.ServerToClient))
                         movementData = new ServerSideMovement();
                 }   
             }
@@ -250,6 +250,8 @@ namespace WowPacketParser.Parsing.Parsers
             if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_MONSTER_MOVE_TRANSPORT, Direction.ServerToClient))
             {
                 WowGuid transportGuid = packet.ReadPackedGuid("Transport GUID");
+                if (movementData != null)
+                    movementData.TransportGuid = transportGuid;
 
                 int seat = -1;
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_0_9767)) // no idea when this was added exactly
@@ -917,7 +919,7 @@ namespace WowPacketParser.Parsing.Parsers
             var guidBytes = new byte[8];
             var transportGuidBytes = new byte[8];
 
-            info.Flags = packet.ReadBitsE<MovementFlag>("Movement Flags", 30);
+            info.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30);
 
             guidBytes[4] = packet.ReadBit();
             guidBytes[2] = packet.ReadBit();
@@ -1118,7 +1120,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             info.HasSplineData = packet.ReadBit("HasSplineData");
 
-            info.Flags = packet.ReadBitsE<MovementFlag>("Movement Flags", 30);
+            info.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30);
 
             guidBytes[4] = packet.ReadBit();
             guidBytes[6] = packet.ReadBit();
@@ -1244,7 +1246,7 @@ namespace WowPacketParser.Parsing.Parsers
             guidBytes[1] = packet.ReadBit();
             guidBytes[4] = packet.ReadBit();
             guidBytes[0] = packet.ReadBit();
-            info.Flags = packet.ReadBitsE<MovementFlag>("Movement Flags", 30);
+            info.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30);
             var havePitch = packet.ReadBit("HavePitch");
             guidBytes[2] = packet.ReadBit();
             packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12);
@@ -1382,24 +1384,8 @@ namespace WowPacketParser.Parsing.Parsers
             {
                 PlayerMovement moveData = new PlayerMovement();
                 moveData.Guid = guid;
-                moveData.MoveTime = movementInfo.MoveTime;
                 moveData.Map = WowPacketParser.Parsing.Parsers.MovementHandler.CurrentMapId;
-                moveData.Position.X = movementInfo.Position.X;
-                moveData.Position.Y = movementInfo.Position.Y;
-                moveData.Position.Z = movementInfo.Position.Z;
-                moveData.Position.O = movementInfo.Orientation;
-                if (movementInfo.TransportGuid != null && movementInfo.TransportOffset != null)
-                {
-                    moveData.TransportGuid = movementInfo.TransportGuid;
-                    moveData.TransportPosition = movementInfo.TransportOffset;
-                }
-                moveData.MoveFlags = (uint)movementInfo.Flags;
-                moveData.SwimPitch = movementInfo.SwimPitch;
-                moveData.FallTime = movementInfo.FallTime;
-                moveData.JumpHorizontalSpeed = movementInfo.JumpHorizontalSpeed;
-                moveData.JumpVerticalSpeed = movementInfo.JumpVerticalSpeed;
-                moveData.JumpCosAngle = movementInfo.JumpCosAngle;
-                moveData.JumpSinAngle = movementInfo.JumpSinAngle;
+                moveData.MoveInfo = movementInfo;
                 moveData.Opcode = packet.Opcode;
                 moveData.OpcodeDirection = packet.Direction;
                 moveData.Time = packet.Time;

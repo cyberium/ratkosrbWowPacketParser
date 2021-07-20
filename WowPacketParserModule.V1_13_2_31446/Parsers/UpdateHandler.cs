@@ -179,7 +179,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 moveInfo.Orientation = packet.ReadSingle("Orientation", index);
 
                 moveInfo.SwimPitch = packet.ReadSingle("Pitch", index);
-                packet.ReadSingle("StepUpStartElevation", index);
+                moveInfo.SplineElevation = packet.ReadSingle("StepUpStartElevation", index);
 
                 var removeForcesIDsCount = packet.ReadInt32();
                 packet.ReadInt32("MoveIndex", index);
@@ -187,8 +187,8 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 for (var i = 0; i < removeForcesIDsCount; i++)
                     packet.ReadPackedGuid128("RemoveForcesIDs", index, i);
 
-                moveInfo.Flags = (MovementFlag)packet.ReadBitsE<V6_0_2_19033.Enums.MovementFlag>("Movement Flags", 30, index);
-                moveInfo.FlagsExtra = (MovementFlagExtra)packet.ReadBitsE<V8_0_1_27101.Enums.MovementFlags2>("Extra Movement Flags", 18, index);
+                moveInfo.Flags = (uint)(MovementFlag)packet.ReadBitsE<V6_0_2_19033.Enums.MovementFlag>("Movement Flags", 30, index);
+                moveInfo.FlagsExtra = (uint)(MovementFlagExtra)packet.ReadBitsE<V8_0_1_27101.Enums.MovementFlags2>("Extra Movement Flags", 18, index);
 
                 var hasTransport = packet.ReadBit("Has Transport Data", index);
                 var hasFall = packet.ReadBit("Has Fall Data", index);
@@ -319,8 +319,11 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                         if (hasJumpExtraData)
                             V8_0_1_27101.Parsers.MovementHandler.ReadMonsterSplineJumpExtraData(packet, index);
 
-                        if (pointsCount > 0)
+                        if (pointsCount > 0 && (Settings.SaveTransports || (moveInfo.TransportGuid == null || moveInfo.TransportGuid.IsEmpty())))
                         {
+                            if (moveInfo.TransportGuid != null)
+                                movementData.TransportGuid = moveInfo.TransportGuid;
+
                             Unit unit = obj as Unit;
                             if (unit != null)
                                 unit.AddWaypoint(movementData, moveInfo.Position, packet.Time);
@@ -344,7 +347,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 packet.ReadPackedGuid128("CombatVictim Guid", index);
 
             if (hasServerTime)
-                packet.ReadUInt32("ServerTime", index);
+                moveInfo.TransportPathTimer = packet.ReadUInt32("ServerTime", index);
 
             if (hasVehicleCreate)
             {

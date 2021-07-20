@@ -248,7 +248,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
                 hasSplineElevation = !packet.ReadBit("Has SplineElevation", index);
 
                 if (hasMoveFlagsExtra)
-                    moveInfo.FlagsExtra = packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 13, index);
+                    moveInfo.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 13, index);
 
                 hasOrientation = !packet.ReadBit();
                 hasTimestamp = !packet.ReadBit();
@@ -262,7 +262,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
                 guid1[0] = packet.ReadBit();
 
                 if (hasMovementFlags)
-                    moveInfo.Flags = packet.ReadBitsE<MovementFlag>("Movement Flags", 30, index);
+                    moveInfo.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30, index);
                 packet.ReadBit();
                 if (hasFallData)
                     hasFallDirection = packet.ReadBit();
@@ -544,7 +544,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
                 packet.ReadXORByte(guid1, 5);
 
                 if (hasSplineElevation)
-                    packet.ReadSingle("Spline Elevation", index);
+                    moveInfo.SplineElevation = packet.ReadSingle("Spline Elevation", index);
 
                 if (bitA8)
                     packet.ReadInt32("IntA8", index);

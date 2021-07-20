@@ -68,7 +68,9 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             if (ClientVersion.RemovedInVersion(ClientType.Shadowlands))
                 packet.ReadByte("VehicleExitVoluntary", indexes);
 
-            packet.ReadPackedGuid128("TransportGUID", indexes);
+            WowGuid transportGuid = packet.ReadPackedGuid128("TransportGUID", indexes);
+            if (savedata != null)
+                savedata.TransportGuid = transportGuid;
             packet.ReadSByte("VehicleSeat", indexes);
 
             packet.ResetBitReader();
@@ -220,7 +222,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
 
             ReadMovementMonsterSpline(movementData, packet, pos, "MovementMonsterSpline");
 
-            if (movementData != null)
+            if (movementData != null && (Settings.SaveTransports || (movementData.TransportGuid == null || movementData.TransportGuid.IsEmpty())))
                 obj.AddWaypoint(movementData, pos, packet.Time);
         }
 

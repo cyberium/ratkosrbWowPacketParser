@@ -249,7 +249,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
                 hasFallData = packet.ReadBit(); //132
 
                 if (hasMovementFlags)
-                    moveInfo.Flags = packet.ReadBitsE<MovementFlag>("Movement Flags", 30, index);
+                    moveInfo.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30, index);
 
                 hasSplineElevation = !packet.ReadBit("Has SplineElevation", index);//136
                 moveInfo.HasSplineData = packet.ReadBit("Has SplineData", index);
@@ -285,7 +285,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
                     hasFallDirection = packet.ReadBit(); //128
 
                 if (hasMoveFlagsExtra)
-                    moveInfo.FlagsExtra = packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 13, index);
+                    moveInfo.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 13, index);
 
             }
 
@@ -497,7 +497,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
                 moveInfo.SwimSpeed = packet.ReadSingle("Swim Speed", index); //176
 
                 if (hasSplineElevation) //136
-                    packet.ReadSingle("Spline Elevation", index);//196
+                    moveInfo.SplineElevation = packet.ReadSingle("Spline Elevation", index);//196
 
                 packet.ReadXORByte(guid1, 7);
                 moveInfo.PitchRate = packet.ReadSingle("Pitch Speed", index); //200

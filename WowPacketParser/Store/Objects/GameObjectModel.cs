@@ -56,21 +56,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("orientation")]
         public float? Orientation;
 
-        [DBFieldName("transport_guid", false, true, OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
-        public string TransportGuid = "0";
-
-        [DBFieldName("transport_x", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
-        public float TransportPositionX;
-
-        [DBFieldName("transport_y", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
-        public float TransportPositionY;
-
-        [DBFieldName("transport_z", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
-        public float TransportPositionZ;
-
-        [DBFieldName("transport_o", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
-        public float TransportOrientation;
-
         [DBFieldName("rotation", 4, true)]
         public float?[] Rotation;
 
@@ -151,6 +136,24 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("orientation")]
         public float? Orientation;
+
+        [DBFieldName("transport_guid", false, true, OnlyWhenSavingTransports = true)]
+        public string TransportGuid = "0";
+
+        [DBFieldName("transport_x", OnlyWhenSavingTransports = true)]
+        public float TransportPositionX;
+
+        [DBFieldName("transport_y", OnlyWhenSavingTransports = true)]
+        public float TransportPositionY;
+
+        [DBFieldName("transport_z", OnlyWhenSavingTransports = true)]
+        public float TransportPositionZ;
+
+        [DBFieldName("transport_o", OnlyWhenSavingTransports = true)]
+        public float TransportOrientation;
+
+        [DBFieldName("transport_path_timer", OnlyWhenSavingTransports = true)]
+        public float TransportPathTimer;
     }
 
     [DBTableName("gameobject_create2_time")]
@@ -176,6 +179,24 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("orientation")]
         public float? Orientation;
+
+        [DBFieldName("transport_guid", false, true, OnlyWhenSavingTransports = true)]
+        public string TransportGuid = "0";
+
+        [DBFieldName("transport_x", OnlyWhenSavingTransports = true)]
+        public float TransportPositionX;
+
+        [DBFieldName("transport_y", OnlyWhenSavingTransports = true)]
+        public float TransportPositionY;
+
+        [DBFieldName("transport_z", OnlyWhenSavingTransports = true)]
+        public float TransportPositionZ;
+
+        [DBFieldName("transport_o", OnlyWhenSavingTransports = true)]
+        public float TransportOrientation;
+
+        [DBFieldName("transport_path_timer", OnlyWhenSavingTransports = true)]
+        public float TransportPathTimer;
     }
 
     [DBTableName("gameobject_destroy_time")]

@@ -151,15 +151,6 @@ namespace WowPacketParser.SQL.Builders
                     row.Data.PositionY = creature.OriginalMovement.Position.Y;
                     row.Data.PositionZ = creature.OriginalMovement.Position.Z;
                     row.Data.Orientation = creature.OriginalMovement.Orientation;
-
-                    if (creature.WasOriginallyOnTransport())
-                    {
-                        row.Data.TransportGuid = Storage.GetObjectDbGuid(creature.OriginalMovement.TransportGuid);
-                        row.Data.TransportPositionX = creature.OriginalMovement.TransportOffset.X;
-                        row.Data.TransportPositionY = creature.OriginalMovement.TransportOffset.Y;
-                        row.Data.TransportPositionZ = creature.OriginalMovement.TransportOffset.Z;
-                        row.Data.TransportOrientation = creature.OriginalMovement.TransportOffset.O;
-                    } 
                 }
                 else
                 {
@@ -207,7 +198,6 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.PvpFlags = unitData.PvpFlags;
                 //row.Data.PetFlags = unitData.PetFlags;
                 row.Data.ShapeshiftForm = unitData.ShapeshiftForm;
-                row.Data.MovementFlags = (uint)creature.OriginalMovement.Flags;
                 row.Data.SpeedWalk = creature.OriginalMovement.WalkSpeed / MovementInfo.DEFAULT_WALK_SPEED;
                 row.Data.SpeedRun = creature.OriginalMovement.RunSpeed / MovementInfo.DEFAULT_RUN_SPEED;
                 row.Data.SpeedRunBack = creature.OriginalMovement.RunBackSpeed / MovementInfo.DEFAULT_RUN_BACK_SPEED;
@@ -277,10 +267,28 @@ namespace WowPacketParser.SQL.Builders
                             var create1Row = new Row<CreatureCreate1>();
                             create1Row.Data.GUID = "@CGUID+" + creature.DbGuid;
                             create1Row.Data.Map = createTime.Map;
-                            create1Row.Data.PositionX = createTime.PositionX;
-                            create1Row.Data.PositionY = createTime.PositionY;
-                            create1Row.Data.PositionZ = createTime.PositionZ;
-                            create1Row.Data.Orientation = createTime.Orientation;
+                            create1Row.Data.PositionX = createTime.MoveInfo.Position.X;
+                            create1Row.Data.PositionY = createTime.MoveInfo.Position.Y;
+                            create1Row.Data.PositionZ = createTime.MoveInfo.Position.Z;
+                            create1Row.Data.Orientation = createTime.MoveInfo.Orientation;
+                            if (createTime.MoveInfo.TransportGuid != null && !createTime.MoveInfo.TransportGuid.IsEmpty())
+                            {
+                                create1Row.Data.TransportGuid = Storage.GetObjectDbGuid(createTime.MoveInfo.TransportGuid);
+                                create1Row.Data.TransportPositionX = createTime.MoveInfo.TransportOffset.X;
+                                create1Row.Data.TransportPositionY = createTime.MoveInfo.TransportOffset.Y;
+                                create1Row.Data.TransportPositionZ = createTime.MoveInfo.TransportOffset.Z;
+                                create1Row.Data.TransportOrientation = createTime.MoveInfo.TransportOffset.O;
+                            }
+                            create1Row.Data.MoveTime = createTime.MoveInfo.MoveTime;
+                            create1Row.Data.MoveFlags = createTime.MoveInfo.Flags;
+                            create1Row.Data.MoveFlags2 = createTime.MoveInfo.FlagsExtra;
+                            create1Row.Data.SwimPitch = createTime.MoveInfo.SwimPitch;
+                            create1Row.Data.FallTime = createTime.MoveInfo.FallTime;
+                            create1Row.Data.JumpHorizontalSpeed = createTime.MoveInfo.JumpHorizontalSpeed;
+                            create1Row.Data.JumpVerticalSpeed = createTime.MoveInfo.JumpVerticalSpeed;
+                            create1Row.Data.JumpCosAngle = createTime.MoveInfo.JumpCosAngle;
+                            create1Row.Data.JumpSinAngle = createTime.MoveInfo.JumpSinAngle;
+                            create1Row.Data.SplineElevation = createTime.MoveInfo.SplineElevation;
                             create1Row.Data.UnixTimeMs = createTime.UnixTimeMs;
                             create1Rows.Add(create1Row);
                         }
@@ -296,10 +304,28 @@ namespace WowPacketParser.SQL.Builders
                             var create2Row = new Row<CreatureCreate2>();
                             create2Row.Data.GUID = "@CGUID+" + creature.DbGuid;
                             create2Row.Data.Map = createTime.Map;
-                            create2Row.Data.PositionX = createTime.PositionX;
-                            create2Row.Data.PositionY = createTime.PositionY;
-                            create2Row.Data.PositionZ = createTime.PositionZ;
-                            create2Row.Data.Orientation = createTime.Orientation;
+                            create2Row.Data.PositionX = createTime.MoveInfo.Position.X;
+                            create2Row.Data.PositionY = createTime.MoveInfo.Position.Y;
+                            create2Row.Data.PositionZ = createTime.MoveInfo.Position.Z;
+                            create2Row.Data.Orientation = createTime.MoveInfo.Orientation;
+                            if (createTime.MoveInfo.TransportGuid != null && !createTime.MoveInfo.TransportGuid.IsEmpty())
+                            {
+                                create2Row.Data.TransportGuid = Storage.GetObjectDbGuid(createTime.MoveInfo.TransportGuid);
+                                create2Row.Data.TransportPositionX = createTime.MoveInfo.TransportOffset.X;
+                                create2Row.Data.TransportPositionY = createTime.MoveInfo.TransportOffset.Y;
+                                create2Row.Data.TransportPositionZ = createTime.MoveInfo.TransportOffset.Z;
+                                create2Row.Data.TransportOrientation = createTime.MoveInfo.TransportOffset.O;
+                            }
+                            create2Row.Data.MoveTime = createTime.MoveInfo.MoveTime;
+                            create2Row.Data.MoveFlags = createTime.MoveInfo.Flags;
+                            create2Row.Data.MoveFlags2 = createTime.MoveInfo.FlagsExtra;
+                            create2Row.Data.SwimPitch = createTime.MoveInfo.SwimPitch;
+                            create2Row.Data.FallTime = createTime.MoveInfo.FallTime;
+                            create2Row.Data.JumpHorizontalSpeed = createTime.MoveInfo.JumpHorizontalSpeed;
+                            create2Row.Data.JumpVerticalSpeed = createTime.MoveInfo.JumpVerticalSpeed;
+                            create2Row.Data.JumpCosAngle = createTime.MoveInfo.JumpCosAngle;
+                            create2Row.Data.JumpSinAngle = createTime.MoveInfo.JumpSinAngle;
+                            create2Row.Data.SplineElevation = createTime.MoveInfo.SplineElevation;
                             create2Row.Data.UnixTimeMs = createTime.UnixTimeMs;
                             create2Rows.Add(create2Row);
                         }
@@ -416,24 +442,28 @@ namespace WowPacketParser.SQL.Builders
 
                         Row<ClientSideMovement> clientMovementRow = new Row<ClientSideMovement>();
                         clientMovementRow.Data.Guid = "@CGUID+" + creature.DbGuid;
-                        clientMovementRow.Data.MoveFlags = movement.MoveFlags;
-                        clientMovementRow.Data.MoveTime = movement.MoveTime;
+                        clientMovementRow.Data.MoveFlags = movement.MoveInfo.Flags;
+                        clientMovementRow.Data.MoveTime = movement.MoveInfo.MoveTime;
                         clientMovementRow.Data.Map = movement.Map;
-                        clientMovementRow.Data.PositionX = movement.Position.X;
-                        clientMovementRow.Data.PositionY = movement.Position.Y;
-                        clientMovementRow.Data.PositionZ = movement.Position.Z;
-                        clientMovementRow.Data.TransportGuid = Storage.GetObjectDbGuid(movement.TransportGuid);
-                        clientMovementRow.Data.TransportPositionX = movement.TransportPosition.X;
-                        clientMovementRow.Data.TransportPositionY = movement.TransportPosition.Y;
-                        clientMovementRow.Data.TransportPositionZ = movement.TransportPosition.Z;
-                        clientMovementRow.Data.TransportOrientation = movement.TransportPosition.O;
-                        clientMovementRow.Data.Orientation = movement.Position.O;
-                        clientMovementRow.Data.SwimPitch = movement.SwimPitch;
-                        clientMovementRow.Data.FallTime = movement.FallTime;
-                        clientMovementRow.Data.JumpHorizontalSpeed = movement.JumpHorizontalSpeed;
-                        clientMovementRow.Data.JumpVerticalSpeed = movement.JumpVerticalSpeed;
-                        clientMovementRow.Data.JumpCosAngle = movement.JumpCosAngle;
-                        clientMovementRow.Data.JumpSinAngle = movement.JumpSinAngle;
+                        clientMovementRow.Data.PositionX = movement.MoveInfo.Position.X;
+                        clientMovementRow.Data.PositionY = movement.MoveInfo.Position.Y;
+                        clientMovementRow.Data.PositionZ = movement.MoveInfo.Position.Z;
+                        clientMovementRow.Data.Orientation = movement.MoveInfo.Orientation;
+                        if (movement.MoveInfo.TransportGuid != null && !movement.MoveInfo.TransportGuid.IsEmpty())
+                        {
+                            clientMovementRow.Data.TransportGuid = Storage.GetObjectDbGuid(movement.MoveInfo.TransportGuid);
+                            clientMovementRow.Data.TransportPositionX = movement.MoveInfo.TransportOffset.X;
+                            clientMovementRow.Data.TransportPositionY = movement.MoveInfo.TransportOffset.Y;
+                            clientMovementRow.Data.TransportPositionZ = movement.MoveInfo.TransportOffset.Z;
+                            clientMovementRow.Data.TransportOrientation = movement.MoveInfo.TransportOffset.O;
+                        }
+                        clientMovementRow.Data.SwimPitch = movement.MoveInfo.SwimPitch;
+                        clientMovementRow.Data.FallTime = movement.MoveInfo.FallTime;
+                        clientMovementRow.Data.JumpHorizontalSpeed = movement.MoveInfo.JumpHorizontalSpeed;
+                        clientMovementRow.Data.JumpVerticalSpeed = movement.MoveInfo.JumpVerticalSpeed;
+                        clientMovementRow.Data.JumpCosAngle = movement.MoveInfo.JumpCosAngle;
+                        clientMovementRow.Data.JumpSinAngle = movement.MoveInfo.JumpSinAngle;
+                        clientMovementRow.Data.SplineElevation = movement.MoveInfo.SplineElevation;
                         clientMovementRow.Data.Opcode = Opcodes.GetOpcodeName(movement.Opcode, movement.OpcodeDirection);
                         clientMovementRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(movement.Time);
                         movementClientRows.Add(clientMovementRow);
@@ -479,6 +509,8 @@ namespace WowPacketParser.SQL.Builders
                             var movementRow = new Row<ServerSideMovement>();
                             movementRow.Data = waypoint;
                             movementRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            if (waypoint.TransportGuid != null && !waypoint.TransportGuid.IsEmpty())
+                                movementRow.Data.TransportGUID = Storage.GetObjectDbGuid(waypoint.TransportGuid);
                             movementRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
                             movementRows.Add(movementRow);
                         }
@@ -528,6 +560,8 @@ namespace WowPacketParser.SQL.Builders
                         var movementCombatRow = new Row<ServerSideMovement>();
                         movementCombatRow.Data = waypoint;
                         movementCombatRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                        if (waypoint.TransportGuid != null && !waypoint.TransportGuid.IsEmpty())
+                            movementCombatRow.Data.TransportGUID = Storage.GetObjectDbGuid(waypoint.TransportGuid);
                         movementCombatRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
                         movementCombatRows.Add(movementCombatRow);
                     }
@@ -911,15 +945,6 @@ namespace WowPacketParser.SQL.Builders
                     row.Data.PositionY = go.OriginalMovement.Position.Y;
                     row.Data.PositionZ = go.OriginalMovement.Position.Z;
                     row.Data.Orientation = go.OriginalMovement.Orientation;
-
-                    if (go.WasOriginallyOnTransport())
-                    {
-                        row.Data.TransportGuid = Storage.GetObjectDbGuid(go.OriginalMovement.TransportGuid);
-                        row.Data.TransportPositionX = go.OriginalMovement.TransportOffset.X;
-                        row.Data.TransportPositionY = go.OriginalMovement.TransportOffset.Y;
-                        row.Data.TransportPositionZ = go.OriginalMovement.TransportOffset.Z;
-                        row.Data.TransportOrientation = go.OriginalMovement.TransportOffset.O;
-                    }
                 }
                 else
                 {
@@ -975,10 +1000,19 @@ namespace WowPacketParser.SQL.Builders
                             var create1Row = new Row<GameObjectCreate1>();
                             create1Row.Data.GUID = "@OGUID+" + go.DbGuid;
                             create1Row.Data.Map = createTime.Map;
-                            create1Row.Data.PositionX = createTime.PositionX;
-                            create1Row.Data.PositionY = createTime.PositionY;
-                            create1Row.Data.PositionZ = createTime.PositionZ;
-                            create1Row.Data.Orientation = createTime.Orientation;
+                            create1Row.Data.PositionX = createTime.MoveInfo.Position.X;
+                            create1Row.Data.PositionY = createTime.MoveInfo.Position.Y;
+                            create1Row.Data.PositionZ = createTime.MoveInfo.Position.Z;
+                            create1Row.Data.Orientation = createTime.MoveInfo.Orientation;
+                            if (createTime.MoveInfo.TransportGuid != null && !createTime.MoveInfo.TransportGuid.IsEmpty())
+                            {
+                                create1Row.Data.TransportGuid = Storage.GetObjectDbGuid(createTime.MoveInfo.TransportGuid);
+                                create1Row.Data.TransportPositionX = createTime.MoveInfo.TransportOffset.X;
+                                create1Row.Data.TransportPositionY = createTime.MoveInfo.TransportOffset.Y;
+                                create1Row.Data.TransportPositionZ = createTime.MoveInfo.TransportOffset.Z;
+                                create1Row.Data.TransportOrientation = createTime.MoveInfo.TransportOffset.O;
+                            }
+                            create1Row.Data.TransportPathTimer = createTime.MoveInfo.TransportPathTimer;
                             create1Row.Data.UnixTimeMs = createTime.UnixTimeMs;
                             create1Rows.Add(create1Row);
                         }
@@ -994,10 +1028,19 @@ namespace WowPacketParser.SQL.Builders
                             var create2Row = new Row<GameObjectCreate2>();
                             create2Row.Data.GUID = "@OGUID+" + go.DbGuid;
                             create2Row.Data.Map = createTime.Map;
-                            create2Row.Data.PositionX = createTime.PositionX;
-                            create2Row.Data.PositionY = createTime.PositionY;
-                            create2Row.Data.PositionZ = createTime.PositionZ;
-                            create2Row.Data.Orientation = createTime.Orientation;
+                            create2Row.Data.PositionX = createTime.MoveInfo.Position.X;
+                            create2Row.Data.PositionY = createTime.MoveInfo.Position.Y;
+                            create2Row.Data.PositionZ = createTime.MoveInfo.Position.Z;
+                            create2Row.Data.Orientation = createTime.MoveInfo.Orientation;
+                            if (createTime.MoveInfo.TransportGuid != null && !createTime.MoveInfo.TransportGuid.IsEmpty())
+                            {
+                                create2Row.Data.TransportGuid = Storage.GetObjectDbGuid(createTime.MoveInfo.TransportGuid);
+                                create2Row.Data.TransportPositionX = createTime.MoveInfo.TransportOffset.X;
+                                create2Row.Data.TransportPositionY = createTime.MoveInfo.TransportOffset.Y;
+                                create2Row.Data.TransportPositionZ = createTime.MoveInfo.TransportOffset.Z;
+                                create2Row.Data.TransportOrientation = createTime.MoveInfo.TransportOffset.O;
+                            }
+                            create2Row.Data.TransportPathTimer = createTime.MoveInfo.TransportPathTimer;
                             create2Row.Data.UnixTimeMs = createTime.UnixTimeMs;
                             create2Rows.Add(create2Row);
                         }
@@ -1220,15 +1263,6 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.PositionZ = dynObject.OriginalMovement.Position.Z;
                 row.Data.Orientation = dynObject.OriginalMovement.Orientation;
 
-                if (dynObject.WasOriginallyOnTransport())
-                {
-                    row.Data.TransportGuid = Storage.GetObjectDbGuid(dynObject.OriginalMovement.TransportGuid);
-                    row.Data.TransportPositionX = dynObject.OriginalMovement.TransportOffset.X;
-                    row.Data.TransportPositionY = dynObject.OriginalMovement.TransportOffset.Y;
-                    row.Data.TransportPositionZ = dynObject.OriginalMovement.TransportOffset.Z;
-                    row.Data.TransportOrientation = dynObject.OriginalMovement.TransportOffset.O;
-                }
-
                 Storage.GetObjectDbGuidEntryType(dynObject.DynamicObjectDataOriginal.Caster, out row.Data.CasterGuid, out row.Data.CasterId, out row.Data.CasterType);
                 row.Data.SpellId = (uint)dynObject.DynamicObjectDataOriginal.SpellID;
                 row.Data.VisualId = (uint)dynObject.DynamicObjectDataOriginal.SpellXSpellVisualID;
@@ -1247,10 +1281,18 @@ namespace WowPacketParser.SQL.Builders
                             var create1Row = new Row<DynamicObjectCreate1>();
                             create1Row.Data.GUID = "@DGUID+" + dynObject.DbGuid;
                             create1Row.Data.Map = createTime.Map;
-                            create1Row.Data.PositionX = createTime.PositionX;
-                            create1Row.Data.PositionY = createTime.PositionY;
-                            create1Row.Data.PositionZ = createTime.PositionZ;
-                            create1Row.Data.Orientation = createTime.Orientation;
+                            create1Row.Data.PositionX = createTime.MoveInfo.Position.X;
+                            create1Row.Data.PositionY = createTime.MoveInfo.Position.Y;
+                            create1Row.Data.PositionZ = createTime.MoveInfo.Position.Z;
+                            create1Row.Data.Orientation = createTime.MoveInfo.Orientation;
+                            if (createTime.MoveInfo.TransportGuid != null && !createTime.MoveInfo.TransportGuid.IsEmpty())
+                            {
+                                create1Row.Data.TransportGuid = Storage.GetObjectDbGuid(createTime.MoveInfo.TransportGuid);
+                                create1Row.Data.TransportPositionX = createTime.MoveInfo.TransportOffset.X;
+                                create1Row.Data.TransportPositionY = createTime.MoveInfo.TransportOffset.Y;
+                                create1Row.Data.TransportPositionZ = createTime.MoveInfo.TransportOffset.Z;
+                                create1Row.Data.TransportOrientation = createTime.MoveInfo.TransportOffset.O;
+                            }
                             create1Row.Data.UnixTimeMs = createTime.UnixTimeMs;
                             create1Rows.Add(create1Row);
                         }
@@ -1266,10 +1308,18 @@ namespace WowPacketParser.SQL.Builders
                             var create2Row = new Row<DynamicObjectCreate2>();
                             create2Row.Data.GUID = "@DGUID+" + dynObject.DbGuid;
                             create2Row.Data.Map = createTime.Map;
-                            create2Row.Data.PositionX = createTime.PositionX;
-                            create2Row.Data.PositionY = createTime.PositionY;
-                            create2Row.Data.PositionZ = createTime.PositionZ;
-                            create2Row.Data.Orientation = createTime.Orientation;
+                            create2Row.Data.PositionX = createTime.MoveInfo.Position.X;
+                            create2Row.Data.PositionY = createTime.MoveInfo.Position.Y;
+                            create2Row.Data.PositionZ = createTime.MoveInfo.Position.Z;
+                            create2Row.Data.Orientation = createTime.MoveInfo.Orientation;
+                            if (createTime.MoveInfo.TransportGuid != null && !createTime.MoveInfo.TransportGuid.IsEmpty())
+                            {
+                                create2Row.Data.TransportGuid = Storage.GetObjectDbGuid(createTime.MoveInfo.TransportGuid);
+                                create2Row.Data.TransportPositionX = createTime.MoveInfo.TransportOffset.X;
+                                create2Row.Data.TransportPositionY = createTime.MoveInfo.TransportOffset.Y;
+                                create2Row.Data.TransportPositionZ = createTime.MoveInfo.TransportOffset.Z;
+                                create2Row.Data.TransportOrientation = createTime.MoveInfo.TransportOffset.O;
+                            }
                             create2Row.Data.UnixTimeMs = createTime.UnixTimeMs;
                             create2Rows.Add(create2Row);
                         }
