@@ -576,6 +576,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("move_flags", true)]
         public uint MoveFlags;
 
+        [DBFieldName("move_flags2", true)]
+        public uint MoveFlags2;
+
         [DBFieldName("map")]
         public uint Map;
 

@@ -173,7 +173,6 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `sheath_state` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
   `pvp_flags` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
   `shapeshift_form` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
-  `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `speed_walk` float NOT NULL DEFAULT '0',
   `speed_run` float NOT NULL DEFAULT '0',
   `speed_run_back` float NOT NULL DEFAULT '0',
@@ -290,6 +289,21 @@ CREATE TABLE IF NOT EXISTS `creature_create1_time` (
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
+  `move_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `move_flags2` int(10) unsigned NOT NULL DEFAULT '0',
+  `swim_pitch` float NOT NULL DEFAULT '0',
+  `fall_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `jump_horizontal_speed` float NOT NULL DEFAULT '0',
+  `jump_vertical_speed` float NOT NULL DEFAULT '0',
+  `jump_cos_angle` float NOT NULL DEFAULT '0',
+  `jump_sin_angle` float NOT NULL DEFAULT '0',
+  `spline_elevation` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the object became visible to the client';
 
@@ -306,6 +320,21 @@ CREATE TABLE IF NOT EXISTS `creature_create2_time` (
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
+  `move_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `move_flags2` int(10) unsigned NOT NULL DEFAULT '0',
+  `swim_pitch` float NOT NULL DEFAULT '0',
+  `fall_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `jump_horizontal_speed` float NOT NULL DEFAULT '0',
+  `jump_vertical_speed` float NOT NULL DEFAULT '0',
+  `jump_cos_angle` float NOT NULL DEFAULT '0',
+  `jump_sin_angle` float NOT NULL DEFAULT '0',
+  `spline_elevation` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='the time at which the object spawned';
 
@@ -471,17 +500,24 @@ CREATE TABLE IF NOT EXISTS `creature_movement_client` (
   `opcode` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `move_time` int(10) unsigned NOT NULL DEFAULT '0',
   `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `move_flags2` int(10) unsigned NOT NULL DEFAULT '0',
   `map` smallint(5) unsigned NOT NULL DEFAULT '0',
   `position_x` float NOT NULL DEFAULT '0',
   `position_y` float NOT NULL DEFAULT '0',
   `position_z` float NOT NULL DEFAULT '0',
   `orientation` float NOT NULL DEFAULT '0',
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
   `swim_pitch` float NOT NULL DEFAULT '0',
-  `fall_time` int(11) NOT NULL DEFAULT '0',
+  `fall_time` int(11) unsigned NOT NULL DEFAULT '0',
   `jump_horizontal_speed` float NOT NULL DEFAULT '0',
   `jump_vertical_speed` float NOT NULL DEFAULT '0',
   `jump_cos_angle` float NOT NULL DEFAULT '0',
   `jump_sin_angle` float NOT NULL DEFAULT '0',
+  `spline_elevation` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`opcode`,`unixtimems`,`move_time`,`move_flags`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='client side movement';
 
@@ -504,6 +540,7 @@ CREATE TABLE IF NOT EXISTS `creature_movement_server` (
   `end_position_y` float NOT NULL,
   `end_position_z` float NOT NULL,
   `orientation` float NOT NULL COMMENT 'final orientation',
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`point`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='out of combat movement points from SMSG_ON_MONSTER_MOVE';
 
@@ -526,6 +563,7 @@ CREATE TABLE IF NOT EXISTS `creature_movement_server_combat` (
   `end_position_y` float NOT NULL,
   `end_position_z` float NOT NULL,
   `orientation` float NOT NULL COMMENT 'final orientation',
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`point`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='in combat movement points from SMSG_ON_MONSTER_MOVE';
 
@@ -913,6 +951,11 @@ CREATE TABLE IF NOT EXISTS `dynamicobject_create1_time` (
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the object became visible to the client';
 
@@ -929,6 +972,11 @@ CREATE TABLE IF NOT EXISTS `dynamicobject_create2_time` (
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='the time at which the object spawned';
 
@@ -1025,6 +1073,12 @@ CREATE TABLE IF NOT EXISTS `gameobject_create1_time` (
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
+  `transport_path_timer` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the object became visible to the client';
 
@@ -1041,6 +1095,12 @@ CREATE TABLE IF NOT EXISTS `gameobject_create2_time` (
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
+  `transport_path_timer` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='the time at which the object spawned';
 
@@ -1613,7 +1673,6 @@ CREATE TABLE IF NOT EXISTS `player` (
   `sheath_state` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
   `pvp_flags` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
   `shapeshift_form` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_2',
-  `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `speed_walk` float NOT NULL DEFAULT '0',
   `speed_run` float NOT NULL DEFAULT '0',
   `speed_run_back` float NOT NULL DEFAULT '0',
@@ -1796,6 +1855,21 @@ CREATE TABLE IF NOT EXISTS `player_create1_time` (
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
+  `move_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `move_flags2` int(10) unsigned NOT NULL DEFAULT '0',
+  `swim_pitch` float NOT NULL DEFAULT '0',
+  `fall_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `jump_horizontal_speed` float NOT NULL DEFAULT '0',
+  `jump_vertical_speed` float NOT NULL DEFAULT '0',
+  `jump_cos_angle` float NOT NULL DEFAULT '0',
+  `jump_sin_angle` float NOT NULL DEFAULT '0',
+  `spline_elevation` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the object became visible to the client';
 
@@ -1812,6 +1886,21 @@ CREATE TABLE IF NOT EXISTS `player_create2_time` (
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
+  `move_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `move_flags2` int(10) unsigned NOT NULL DEFAULT '0',
+  `swim_pitch` float NOT NULL DEFAULT '0',
+  `fall_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `jump_horizontal_speed` float NOT NULL DEFAULT '0',
+  `jump_vertical_speed` float NOT NULL DEFAULT '0',
+  `jump_cos_angle` float NOT NULL DEFAULT '0',
+  `jump_sin_angle` float NOT NULL DEFAULT '0',
+  `spline_elevation` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='the time at which the object spawned';
 
@@ -1950,17 +2039,24 @@ CREATE TABLE IF NOT EXISTS `player_movement_client` (
   `opcode` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `move_time` int(10) unsigned NOT NULL DEFAULT '0',
   `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
+  `move_flags2` int(10) unsigned NOT NULL DEFAULT '0',
   `map` smallint(5) unsigned NOT NULL DEFAULT '0',
   `position_x` float NOT NULL DEFAULT '0',
   `position_y` float NOT NULL DEFAULT '0',
   `position_z` float NOT NULL DEFAULT '0',
   `orientation` float NOT NULL DEFAULT '0',
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
   `swim_pitch` float NOT NULL DEFAULT '0',
-  `fall_time` int(11) NOT NULL DEFAULT '0',
+  `fall_time` int(11) unsigned NOT NULL DEFAULT '0',
   `jump_horizontal_speed` float NOT NULL DEFAULT '0',
   `jump_vertical_speed` float NOT NULL DEFAULT '0',
   `jump_cos_angle` float NOT NULL DEFAULT '0',
   `jump_sin_angle` float NOT NULL DEFAULT '0',
+  `spline_elevation` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`opcode`,`unixtimems`,`move_time`,`move_flags`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='client side movement';
 
@@ -1983,6 +2079,7 @@ CREATE TABLE IF NOT EXISTS `player_movement_server` (
   `end_position_y` float NOT NULL,
   `end_position_z` float NOT NULL,
   `orientation` float NOT NULL COMMENT 'final orientation',
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`point`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='movement points from SMSG_ON_MONSTER_MOVE';
 

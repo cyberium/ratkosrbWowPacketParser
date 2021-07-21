@@ -443,6 +443,7 @@ namespace WowPacketParser.SQL.Builders
                         Row<ClientSideMovement> clientMovementRow = new Row<ClientSideMovement>();
                         clientMovementRow.Data.Guid = "@CGUID+" + creature.DbGuid;
                         clientMovementRow.Data.MoveFlags = movement.MoveInfo.Flags;
+                        clientMovementRow.Data.MoveFlags2 = movement.MoveInfo.FlagsExtra;
                         clientMovementRow.Data.MoveTime = movement.MoveInfo.MoveTime;
                         clientMovementRow.Data.Map = movement.Map;
                         clientMovementRow.Data.PositionX = movement.MoveInfo.Position.X;

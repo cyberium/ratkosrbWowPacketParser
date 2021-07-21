@@ -723,6 +723,7 @@ namespace WowPacketParser.SQL.Builders
                         Row<ClientSideMovement> row = new Row<ClientSideMovement>();
                         row.Data.Guid = "@PGUID+" + player.DbGuid;
                         row.Data.MoveFlags = movement.MoveInfo.Flags;
+                        row.Data.MoveFlags2 = movement.MoveInfo.FlagsExtra;
                         row.Data.MoveTime = movement.MoveInfo.MoveTime;
                         row.Data.Map = movement.Map;
                         row.Data.PositionX = movement.MoveInfo.Position.X;
