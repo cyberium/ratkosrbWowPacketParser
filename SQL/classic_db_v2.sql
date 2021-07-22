@@ -817,6 +817,9 @@ CREATE TABLE IF NOT EXISTS `creature_text` (
   `entry` int(10) unsigned NOT NULL COMMENT 'creature template id',
   `group_id` int(10) unsigned NOT NULL COMMENT 'counter of unique texts per creature id',
   `health_percent` float DEFAULT NULL COMMENT 'the creature''s current health percent at the time the text was sent',
+  `target_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `target_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`entry`,`group_id`,`unixtimems`,`guid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='individual instances of creatures sending a text message';
 
@@ -1242,36 +1245,6 @@ CREATE TABLE IF NOT EXISTS `gameobject_template_addon` (
   `flags` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.gameobject_text
-DROP TABLE IF EXISTS `gameobject_text`;
-CREATE TABLE IF NOT EXISTS `gameobject_text` (
-  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
-  `guid` int(10) unsigned NOT NULL COMMENT 'gameobject spawn guid',
-  `entry` int(10) unsigned NOT NULL COMMENT 'gameobject template id',
-  `group_id` int(10) unsigned NOT NULL COMMENT 'counter of unique texts per gameobject id',
-  PRIMARY KEY (`entry`,`group_id`,`unixtimems`,`guid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='individual instances of gameobjects sending a text message';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.gameobject_text_template
-DROP TABLE IF EXISTS `gameobject_text_template`;
-CREATE TABLE IF NOT EXISTS `gameobject_text_template` (
-  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'gameobject template id',
-  `group_id` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'counter of unique texts per gameobject id',
-  `text` longtext COMMENT 'the actual text that was sent',
-  `chat_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'chat type',
-  `language` tinyint(3) NOT NULL DEFAULT '0' COMMENT 'references Languages.dbc',
-  `sound` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'references SoundEntries.dbc',
-  `broadcast_text_id` mediumint(6) NOT NULL DEFAULT '0' COMMENT 'must be manually set',
-  `comment` varchar(255) DEFAULT '',
-  PRIMARY KEY (`entry`,`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='unique texts per gameobject id';
 
 -- Data exporting was unselected.
 

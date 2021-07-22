@@ -45,8 +45,6 @@
         gameobject_custom_anim,
         gameobject_despawn_anim,
         gameobject_destroy_time,
-        gameobject_text,
-        gameobject_text_template,
         gameobject_values_update,
         play_music,
         play_sound,

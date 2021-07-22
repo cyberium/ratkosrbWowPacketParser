@@ -60,7 +60,17 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("health_percent", false, false, true)]
         public float? HealthPercent;
 
+        [DBFieldName("target_guid", false, true)]
+        public string TargetGuid = "0";
+
+        [DBFieldName("target_id")]
+        public uint TargetId;
+
+        [DBFieldName("target_type")]
+        public string TargetType;
+
         public WowGuid SenderGUID;
+        public WowGuid ReceiverGUID;
         public string Text;
     }
 
@@ -113,74 +123,6 @@ namespace WowPacketParser.Store.Objects
 
         public CreatureTextTemplate() { }
         public CreatureTextTemplate(ChatPacketData textTemplate)
-        {
-            Text = textTemplate.Text;
-            Type = textTemplate.Type;
-            Language = textTemplate.Language;
-            SenderGUID = textTemplate.SenderGUID;
-            SenderName = textTemplate.SenderName;
-            ReceiverGUID = textTemplate.ReceiverGUID;
-            ReceiverName = textTemplate.ReceiverName;
-            Time = textTemplate.Time;
-        }
-    }
-
-    [DBTableName("gameobject_text")]
-    public sealed class GameObjectText : IDataModel
-    {
-        [DBFieldName("unixtimems", true)]
-        public ulong UnixTimeMs;
-
-        [DBFieldName("guid", true, true)]
-        public string Guid;
-
-        [DBFieldName("entry", true)]
-        public uint? Entry;
-
-        [DBFieldName("group_id", true)]
-        public uint GroupId;
-
-        public WowGuid SenderGUID;
-        public string Text;
-    }
-
-    [DBTableName("gameobject_text_template")]
-    public sealed class GameObjectTextTemplate : IDataModel
-    {
-        [DBFieldName("entry", true)]
-        public uint? Entry;
-
-        [DBFieldName("group_id", true)]
-        public uint GroupId;
-
-        [DBFieldName("text")]
-        public string Text;
-
-        [DBFieldName("chat_type")]
-        public ChatMessageType? Type;
-
-        [DBFieldName("language")]
-        public Language? Language;
-
-        [DBFieldName("sound")]
-        public uint? Sound;
-
-        [DBFieldName("broadcast_text_id", false, true)]
-        public object BroadcastTextID = 0;
-
-        [DBFieldName("comment")]
-        public string Comment = String.Empty;
-
-        public WowGuid SenderGUID;
-        public string SenderName;
-        public WowGuid ReceiverGUID;
-        public string ReceiverName;
-        public DateTime Time;
-
-        public string BroadcastTextIDHelper;
-
-        public GameObjectTextTemplate() { }
-        public GameObjectTextTemplate(ChatPacketData textTemplate)
         {
             Text = textTemplate.Text;
             Type = textTemplate.Type;

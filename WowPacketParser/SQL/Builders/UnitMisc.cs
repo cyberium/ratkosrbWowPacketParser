@@ -1623,6 +1623,8 @@ namespace WowPacketParser.SQL.Builders
                 {
                     if (text.Item1.Guid == null)
                         text.Item1.Guid = Storage.GetObjectDbGuid(text.Item1.SenderGUID);
+                    if (text.Item1.ReceiverGUID != null)
+                        Storage.GetObjectDbGuidEntryType(text.Item1.ReceiverGUID, out text.Item1.TargetGuid, out text.Item1.TargetId, out text.Item1.TargetType);
                     var sameTextList = rows.Where(text2 => text2.Data.Entry == text.Item1.Entry && text2.Data.Text == text.Item1.Text);
                     if (sameTextList.Count() != 0)
                     {
@@ -1637,150 +1639,6 @@ namespace WowPacketParser.SQL.Builders
 
                 result += SQLUtil.Compare(Storage.CreatureTexts, SQLDatabase.Get(Storage.CreatureTexts),
                     t => t.Entry.ToString(), false);
-            }
-
-            return result;
-        }
-
-        // copy paste of creature text method
-        [BuilderMethod]
-        public static string GameObjectTextTemplate()
-        {
-            if (Storage.GameObjectTextTemplates.IsEmpty() || !Settings.SqlTables.gameobject_text_template)
-                return string.Empty;
-
-            // For each sound and emote, if the time they were send is in the +1/-1 seconds range of
-            // our texts, add that sound and emote to our Storage.GameObjectTextTemplates
-
-            foreach (var text in Storage.GameObjectTextTemplates)
-            {
-                // For each text
-                foreach (var textValue in text.Value)
-                {
-                    // For each sound
-                    foreach (var sound in Storage.Sounds)
-                    {
-                        DateTime textTime = textValue.Item1.Time;
-                        if (sound.guid == textValue.Item1.SenderGUID)
-                        {
-                            if (System.Math.Abs((textTime - sound.time).TotalSeconds) <= 1)
-                                textValue.Item1.Sound = sound.sound;
-                        }
-                    }
-
-                    List<int> textList;
-                    if (SQLDatabase.BroadcastTexts.TryGetValue(textValue.Item1.Text, out textList) ||
-                        SQLDatabase.BroadcastText1s.TryGetValue(textValue.Item1.Text, out textList))
-                    {
-                        if (textList.Count == 1)
-                            textValue.Item1.BroadcastTextID = (uint)textList.First();
-                        else
-                        {
-                            textValue.Item1.BroadcastTextID = "PLEASE_SET_A_BROADCASTTEXT_ID";
-                            textValue.Item1.BroadcastTextIDHelper = "BroadcastTextID: ";
-                            textValue.Item1.BroadcastTextIDHelper += string.Join(" - ", textList);
-                        }
-
-                    }
-
-                    // Set comment
-                    string from = null, to = null;
-                    if (!textValue.Item1.SenderGUID.IsEmpty())
-                    {
-                        if (textValue.Item1.SenderGUID.GetObjectType() == ObjectType.Player)
-                            from = "Player";
-                        else
-                            from = !string.IsNullOrEmpty(textValue.Item1.SenderName) ? textValue.Item1.SenderName : StoreGetters.GetName(StoreNameType.Unit, (int)textValue.Item1.SenderGUID.GetEntry(), false);
-                    }
-
-                    if (!textValue.Item1.ReceiverGUID.IsEmpty())
-                    {
-                        if (textValue.Item1.ReceiverGUID.GetObjectType() == ObjectType.Player)
-                            to = "Player";
-                        else
-                            to = !string.IsNullOrEmpty(textValue.Item1.ReceiverName) ? textValue.Item1.ReceiverName : StoreGetters.GetName(StoreNameType.Unit, (int)textValue.Item1.ReceiverGUID.GetEntry(), false);
-                    }
-
-                    Trace.Assert(text.Key == textValue.Item1.SenderGUID.GetEntry() ||
-                        text.Key == textValue.Item1.ReceiverGUID.GetEntry());
-
-                    if (from != null && to != null)
-                        textValue.Item1.Comment = from + " to " + to;
-                    else if (from != null)
-                        textValue.Item1.Comment = from;
-                    else
-                        Trace.Assert(false);
-                }
-            }
-
-            /* can't use compare DB without knowing values of groupid or id
-            var entries = Storage.GameObjectTextTemplates.Keys.ToList();
-            var gameObjectTextDb = SQLDatabase.GetDict<uint, GameObjectTextTemplates>(entries);
-            */
-
-            var rows = new RowList<GameObjectTextTemplate>();
-            Dictionary<uint, uint> entryCount = new Dictionary<uint, uint>();
-
-            foreach (var text in Storage.GameObjectTextTemplates.OrderBy(t => t.Key))
-            {
-                foreach (var textValue in text.Value)
-                {
-                    textValue.Item1.Entry = text.Key;
-                    var count = entryCount.ContainsKey(text.Key) ? entryCount[text.Key] : 0;
-
-                    var sameTextList = rows.Where(text2 => text2.Data.Entry == text.Key && text2.Data.Text == textValue.Item1.Text);
-                    if (sameTextList.Count() != 0)
-                        continue;
-
-                    var row = new Row<GameObjectTextTemplate>
-                    {
-                        Data = new GameObjectTextTemplate
-                        {
-                            Entry = textValue.Item1.Entry,
-                            GroupId = count,
-                            Text = textValue.Item1.Text,
-                            Type = textValue.Item1.Type,
-                            Language = textValue.Item1.Language,
-                            Sound = (textValue.Item1.Sound != null ? textValue.Item1.Sound : 0),
-                            BroadcastTextID = textValue.Item1.BroadcastTextID,
-                            Comment = textValue.Item1.Comment
-                        },
-
-                        Comment = textValue.Item1.BroadcastTextIDHelper
-                    };
-
-                    if (!entryCount.ContainsKey(text.Key))
-                        entryCount.Add(text.Key, count + 1);
-                    else
-                        entryCount[text.Key] = count + 1;
-
-                    rows.Add(row);
-                }
-            }
-
-            string result = new SQLInsert<GameObjectTextTemplate>(rows, false).Build();
-
-            if (Settings.SqlTables.gameobject_text)
-            {
-                foreach (var text in Storage.GameObjectTexts)
-                {
-                    if (text.Item1.Guid == null)
-                        text.Item1.Guid = Storage.GetObjectDbGuid(text.Item1.SenderGUID);
-
-                    var sameTextList = rows.Where(text2 => text2.Data.Entry == text.Item1.Entry && text2.Data.Text == text.Item1.Text);
-                    if (sameTextList.Count() != 0)
-                    {
-                        foreach (var textRow in sameTextList)
-                        {
-                            text.Item1.GroupId = textRow.Data.GroupId;
-                            break;
-                        }
-                        continue;
-                    }
-                }
-
-                result += SQLUtil.Compare(Storage.GameObjectTexts, SQLDatabase.Get(Storage.GameObjectTexts),
-                t => t.Entry.ToString());
             }
 
             return result;

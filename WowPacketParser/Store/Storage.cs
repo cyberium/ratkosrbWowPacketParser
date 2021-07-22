@@ -810,8 +810,6 @@ namespace WowPacketParser.Store
         public static readonly DataBag<WorldText> WorldTexts = new DataBag<WorldText>(Settings.SqlTables.world_text);
         public static readonly DataBag<CreatureText> CreatureTexts = new DataBag<CreatureText>(Settings.SqlTables.creature_text);
         public static readonly StoreMulti<uint, CreatureTextTemplate> CreatureTextTemplates = new StoreMulti<uint, CreatureTextTemplate>(Settings.SqlTables.creature_text_template);
-        public static readonly DataBag<GameObjectText> GameObjectTexts = new DataBag<GameObjectText>(Settings.SqlTables.gameobject_text);
-        public static readonly StoreMulti<uint, GameObjectTextTemplate> GameObjectTextTemplates = new StoreMulti<uint, GameObjectTextTemplate>(Settings.SqlTables.gameobject_text_template);
         public static readonly DataBag<CharacterChat> CharacterTexts = new DataBag<CharacterChat>(Settings.SqlTables.player_chat);
 
         public static void StoreText(ChatPacketData text, Packet packet)
@@ -822,10 +820,6 @@ namespace WowPacketParser.Store
                 creatureId = text.SenderGUID.GetEntry();
             else if (text.ReceiverGUID != null && text.ReceiverGUID.GetObjectType() == ObjectType.Unit)
                 creatureId = text.ReceiverGUID.GetEntry();
-            else if (text.SenderGUID.GetObjectType() == ObjectType.GameObject)
-                gameObjectId = text.SenderGUID.GetEntry();
-            else if (text.ReceiverGUID != null && text.ReceiverGUID.GetObjectType() == ObjectType.GameObject)
-                gameObjectId = text.ReceiverGUID.GetEntry();
 
             text.Time = packet.Time;
 
@@ -844,31 +838,13 @@ namespace WowPacketParser.Store
                         textEntry.Text = textTemplate.Text;
                         textEntry.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
                         textEntry.SenderGUID = textTemplate.SenderGUID;
+                        textEntry.ReceiverGUID = textTemplate.ReceiverGUID;
                         if (Storage.Objects.ContainsKey(textTemplate.SenderGUID))
                         {
                             var obj = Storage.Objects[textTemplate.SenderGUID].Item1 as Unit;
                             textEntry.HealthPercent = obj.UnitData.HealthPercent;
                         }
                         Storage.CreatureTexts.Add(textEntry);
-                    }
-                }
-            }
-            else if (gameObjectId != 0)
-            {
-                if (Settings.SqlTables.gameobject_text_template)
-                {
-                    GameObjectTextTemplate textTemplate = new GameObjectTextTemplate(text);
-                    textTemplate.Entry = gameObjectId;
-                    Storage.GameObjectTextTemplates.Add(gameObjectId, textTemplate, packet.TimeSpan);
-
-                    if (Settings.SqlTables.gameobject_text)
-                    {
-                        GameObjectText textEntry = new GameObjectText();
-                        textEntry.Entry = gameObjectId;
-                        textEntry.Text = textTemplate.Text;
-                        textEntry.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
-                        textEntry.SenderGUID = textTemplate.SenderGUID;
-                        Storage.GameObjectTexts.Add(textEntry);
                     }
                 }
             }
@@ -1153,8 +1129,6 @@ namespace WowPacketParser.Store
             WorldTexts.Clear();
             CreatureTexts.Clear();
             CreatureTextTemplates.Clear();
-            GameObjectTexts.Clear();
-            GameObjectTextTemplates.Clear();
             CharacterTexts.Clear();
 
             GossipPOIs.Clear();

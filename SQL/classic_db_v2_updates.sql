@@ -155,3 +155,10 @@ ALTER TABLE `creature_movement_server_combat`
 ALTER TABLE `player_movement_server`
 	ADD COLUMN `transport_guid` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `orientation`;
 
+ALTER TABLE `creature_text`
+	ADD COLUMN `target_guid` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `health_percent`,
+	ADD COLUMN `target_id` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `target_guid`,
+	ADD COLUMN `target_type` VARCHAR(16) NOT NULL DEFAULT '' COLLATE 'utf8_unicode_ci' AFTER `target_id`;
+
+DROP TABLE `gameobject_text`;
+DROP TABLE `gameobject_text_template`;
