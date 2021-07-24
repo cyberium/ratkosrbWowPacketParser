@@ -707,6 +707,7 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.player_movement_client && Storage.PlayerMovements.Count != 0)
             {
+                uint moveCounter = 0;
                 var movementRows = new RowList<ClientSideMovement>();
                 foreach (var movement in Storage.PlayerMovements)
                 {
@@ -745,6 +746,7 @@ namespace WowPacketParser.SQL.Builders
                         row.Data.JumpCosAngle = movement.MoveInfo.JumpCosAngle;
                         row.Data.JumpSinAngle = movement.MoveInfo.JumpSinAngle;
                         row.Data.SplineElevation = movement.MoveInfo.SplineElevation;
+                        row.Data.PacketId = moveCounter++;
                         row.Data.Opcode = Opcodes.GetOpcodeName(movement.Opcode, movement.OpcodeDirection);
                         row.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(movement.Time);
                         movementRows.Add(row);

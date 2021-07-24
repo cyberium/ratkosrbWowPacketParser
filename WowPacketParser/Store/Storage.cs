@@ -815,7 +815,6 @@ namespace WowPacketParser.Store
         public static void StoreText(ChatPacketData text, Packet packet)
         {
             uint creatureId = 0;
-            uint gameObjectId = 0;
             if (text.SenderGUID.GetObjectType() == ObjectType.Unit)
                 creatureId = text.SenderGUID.GetEntry();
             else if (text.ReceiverGUID != null && text.ReceiverGUID.GetObjectType() == ObjectType.Unit)

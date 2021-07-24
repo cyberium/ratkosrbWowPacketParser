@@ -497,6 +497,7 @@ DROP TABLE IF EXISTS `creature_movement_client`;
 CREATE TABLE IF NOT EXISTS `creature_movement_client` (
   `unixtimems` bigint(20) unsigned NOT NULL,
   `guid` int(10) unsigned NOT NULL,
+  `packet_id` int(10) unsigned NOT NULL,
   `opcode` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `move_time` int(10) unsigned NOT NULL DEFAULT '0',
   `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
@@ -518,7 +519,7 @@ CREATE TABLE IF NOT EXISTS `creature_movement_client` (
   `jump_cos_angle` float NOT NULL DEFAULT '0',
   `jump_sin_angle` float NOT NULL DEFAULT '0',
   `spline_elevation` float NOT NULL DEFAULT '0',
-  PRIMARY KEY (`guid`,`opcode`,`unixtimems`,`move_time`,`move_flags`)
+  PRIMARY KEY (`packet_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='client side movement';
 
 -- Data exporting was unselected.
@@ -2009,6 +2010,7 @@ DROP TABLE IF EXISTS `player_movement_client`;
 CREATE TABLE IF NOT EXISTS `player_movement_client` (
   `unixtimems` bigint(20) unsigned NOT NULL,
   `guid` int(10) unsigned NOT NULL,
+  `packet_id` int(10) unsigned NOT NULL,
   `opcode` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `move_time` int(10) unsigned NOT NULL DEFAULT '0',
   `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
@@ -2030,7 +2032,7 @@ CREATE TABLE IF NOT EXISTS `player_movement_client` (
   `jump_cos_angle` float NOT NULL DEFAULT '0',
   `jump_sin_angle` float NOT NULL DEFAULT '0',
   `spline_elevation` float NOT NULL DEFAULT '0',
-  PRIMARY KEY (`guid`,`opcode`,`unixtimems`,`move_time`,`move_flags`)
+  PRIMARY KEY (`packet_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='client side movement';
 
 -- Data exporting was unselected.

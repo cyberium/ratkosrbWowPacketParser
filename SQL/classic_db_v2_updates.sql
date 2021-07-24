@@ -162,3 +162,17 @@ ALTER TABLE `creature_text`
 
 DROP TABLE `gameobject_text`;
 DROP TABLE `gameobject_text_template`;
+
+ALTER TABLE `creature_movement_client`
+	ADD COLUMN `packet_id` INT(10) UNSIGNED NOT NULL AFTER `guid`;
+
+ALTER TABLE `creature_movement_client`
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`packet_id`);
+
+ALTER TABLE `player_movement_client`
+	ADD COLUMN `packet_id` INT(10) UNSIGNED NOT NULL AFTER `guid`;
+
+ALTER TABLE `player_movement_client`
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`packet_id`);

@@ -561,22 +561,25 @@ namespace WowPacketParser.Store.Objects
     [DBTableName("player_movement_client")]
     public sealed class ClientSideMovement : IDataModel
     {
-        [DBFieldName("unixtimems", true)]
+        [DBFieldName("unixtimems")]
         public ulong UnixTimeMs;
 
-        [DBFieldName("guid", true, true)]
+        [DBFieldName("guid", false, true)]
         public string Guid;
 
-        [DBFieldName("opcode", true)]
+        [DBFieldName("packet_id", true)]
+        public uint PacketId;
+
+        [DBFieldName("opcode")]
         public string Opcode;
 
-        [DBFieldName("move_time", true)]
+        [DBFieldName("move_time")]
         public uint MoveTime;
 
-        [DBFieldName("move_flags", true)]
+        [DBFieldName("move_flags")]
         public uint MoveFlags;
 
-        [DBFieldName("move_flags2", true)]
+        [DBFieldName("move_flags2")]
         public uint MoveFlags2;
 
         [DBFieldName("map")]
