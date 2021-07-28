@@ -62,7 +62,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                     return new int[] { 0, 0, 0, 0, 0 };
 
                 int size = 5;
-                if (ClientVersion.AddedInVersion(ClientType.Legion) && !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+                if (ClientVersion.AddedInVersion(ClientType.Legion) && !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build) && !ClientVersion.IsBurningCrusadeClassicClientVersionBuild(ClientVersion.Build))
                     size = 4;
 
                 return UpdateFields.GetArray<UnitField, int>(statsBegin, size);
@@ -82,7 +82,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                     return new int[] { 0, 0, 0, 0, 0 };
 
                 int size = 5;
-                if (ClientVersion.AddedInVersion(ClientType.Legion) && !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+                if (ClientVersion.AddedInVersion(ClientType.Legion) && !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build) && !ClientVersion.IsBurningCrusadeClassicClientVersionBuild(ClientVersion.Build))
                     size = 4;
 
                 return UpdateFields.GetArray<UnitField, int>(statsBegin, size);
@@ -102,7 +102,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                     return new int[] { 0, 0, 0, 0, 0 };
 
                 int size = 5;
-                if (ClientVersion.AddedInVersion(ClientType.Legion) && !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+                if (ClientVersion.AddedInVersion(ClientType.Legion) && !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build) && !ClientVersion.IsBurningCrusadeClassicClientVersionBuild(ClientVersion.Build))
                     size = 4;
 
                 return UpdateFields.GetArray<UnitField, int>(statsBegin, size);
@@ -340,7 +340,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                     return new int[] { 0, 0, 0, 0, 0 };
 
                 int size = 5;
-                if (ClientVersion.AddedInVersion(ClientType.Legion) && !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+                if (ClientVersion.AddedInVersion(ClientType.Legion) && !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build) && !ClientVersion.IsBurningCrusadeClassicClientVersionBuild(ClientVersion.Build))
                     size = 4;
 
                 return UpdateFields.GetArray<UnitField, int>(statsBegin, size);
@@ -360,7 +360,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                     return new int[] { 0, 0, 0, 0, 0 };
 
                 int size = 5;
-                if (ClientVersion.AddedInVersion(ClientType.Legion) && !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+                if (ClientVersion.AddedInVersion(ClientType.Legion) && !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build) && !ClientVersion.IsBurningCrusadeClassicClientVersionBuild(ClientVersion.Build))
                     size = 4;
 
                 return UpdateFields.GetArray<UnitField, int>(statsBegin, size);
@@ -380,7 +380,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                     return new int[] { 0, 0, 0, 0, 0 };
 
                 int size = 5;
-                if (ClientVersion.AddedInVersion(ClientType.Legion) && !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+                if (ClientVersion.AddedInVersion(ClientType.Legion) && !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build) && !ClientVersion.IsBurningCrusadeClassicClientVersionBuild(ClientVersion.Build))
                     size = 4;
 
                 return UpdateFields.GetArray<UnitField, int>(statsBegin, size);
