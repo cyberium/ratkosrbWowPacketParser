@@ -90,7 +90,7 @@ namespace WowPacketParser.Parsing.Parsers
             if (Storage.Objects.ContainsKey(guid))
             {
                 var existObj = Storage.Objects[guid].Item1;
-                ProcessExistingObject(ref existObj, guid, packet.Time, updates, dynamicUpdates, moves); // can't do "ref Storage.Objects[guid].Item1 directly
+                ProcessExistingObject(ref existObj, guid, packet, updates, dynamicUpdates, moves); // can't do "ref Storage.Objects[guid].Item1 directly
             }
             else
             {
@@ -141,13 +141,13 @@ namespace WowPacketParser.Parsing.Parsers
             StoreObjectSpeedUpdate(time, guid, moveInfo);
             obj.Movement = moveInfo;
         }
-        public static void ProcessExistingObject(ref WoWObject obj, WowGuid guid, DateTime time, Dictionary<int, UpdateField> updates, Dictionary<int, List<UpdateField>> dynamicUpdates, MovementInfo moveInfo)
+        public static void ProcessExistingObject(ref WoWObject obj, WowGuid guid, Packet packet, Dictionary<int, UpdateField> updates, Dictionary<int, List<UpdateField>> dynamicUpdates, MovementInfo moveInfo)
         {
             obj.PhaseMask |= (uint)MovementHandler.CurrentPhaseMask;
-            HandleMovementInfoChange(obj, guid, time, moveInfo);
+            HandleMovementInfoChange(obj, guid, packet.Time, moveInfo);
             if (updates != null)
             {
-                bool savePlayerStats = StoreObjectUpdate(time, guid, updates);
+                bool savePlayerStats = StoreObjectUpdate(packet, guid, updates, true);
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
                 if (savePlayerStats)
                     Storage.SavePlayerStats(obj, false);
@@ -177,7 +177,7 @@ namespace WowPacketParser.Parsing.Parsers
             if (Storage.Objects.TryGetValue(guid, out obj))
             {
                 var updates = ReadValuesUpdateBlock(packet, obj.Type, index, false, obj.UpdateFields);
-                bool savePlayerStats = StoreObjectUpdate(packet.Time, guid, updates);
+                bool savePlayerStats = StoreObjectUpdate(packet, guid, updates, false);
                 var dynamicUpdates = ReadDynamicValuesUpdateBlock(packet, obj.Type, index, false, obj.DynamicUpdateFields);
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
                 if (savePlayerStats)
@@ -295,7 +295,7 @@ namespace WowPacketParser.Parsing.Parsers
         }
 
         // returns true if active player leveled up and we need to save stats
-        public static bool StoreObjectUpdate(DateTime time, WowGuid guid, Dictionary<int, UpdateField> updates)
+        public static bool StoreObjectUpdate(Packet packet, WowGuid guid, Dictionary<int, UpdateField> updates, bool isCreate)
         {
             bool hasPlayerLevelup = false;
             if ((guid.GetObjectType() == ObjectType.Unit) ||
@@ -521,16 +521,23 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
-                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_HEALTH) &&
-                             Settings.SaveHealthUpdates)
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_HEALTH))
                     {
                         if (Storage.Objects.ContainsKey(guid))
                         {
                             var obj = Storage.Objects[guid].Item1 as Unit;
                             if (obj.UnitData.Health != update.Value.UInt32Value)
                             {
-                                hasData = true;
-                                creatureUpdate.CurrentHealth = update.Value.UInt32Value;
+                                if (!isCreate && update.Value.UInt32Value == 0 &&
+                                    guid.GetObjectType() == ObjectType.Unit &&
+                                    guid.GetHighType() != HighGuidType.Pet)
+                                    packet.AddSniffData(StoreNameType.Unit, (int)guid.GetEntry(), "DEATH");
+
+                                if (Settings.SaveHealthUpdates)
+                                {
+                                    hasData = true;
+                                    creatureUpdate.CurrentHealth = update.Value.UInt32Value;
+                                }
                             }
                         }
                     }
@@ -650,7 +657,7 @@ namespace WowPacketParser.Parsing.Parsers
                                 CreatureEquipmentValuesUpdate equipmentUpdate = new CreatureEquipmentValuesUpdate();
                                 equipmentUpdate.ItemId = update.Value.UInt32Value;
                                 equipmentUpdate.Slot = slot;
-                                equipmentUpdate.time = time;
+                                equipmentUpdate.time = packet.Time;
                                 Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
                             }
                         }
@@ -668,7 +675,7 @@ namespace WowPacketParser.Parsing.Parsers
                                 CreatureEquipmentValuesUpdate equipmentUpdate = new CreatureEquipmentValuesUpdate();
                                 equipmentUpdate.ItemId = update.Value.UInt32Value;
                                 equipmentUpdate.Slot = slot;
-                                equipmentUpdate.time = time;
+                                equipmentUpdate.time = packet.Time;
                                 Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
                             }
                         }
@@ -688,7 +695,7 @@ namespace WowPacketParser.Parsing.Parsers
                                 CreatureEquipmentValuesUpdate equipmentUpdate = new CreatureEquipmentValuesUpdate();
                                 equipmentUpdate.ItemId = itemId;
                                 equipmentUpdate.Slot = slot;
-                                equipmentUpdate.time = time;
+                                equipmentUpdate.time = packet.Time;
                                 Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
                             }
                         }
@@ -707,7 +714,7 @@ namespace WowPacketParser.Parsing.Parsers
                                 CreatureEquipmentValuesUpdate equipmentUpdate = new CreatureEquipmentValuesUpdate();
                                 equipmentUpdate.ItemId = update.Value.UInt32Value;
                                 equipmentUpdate.Slot = slot;
-                                equipmentUpdate.time = time;
+                                equipmentUpdate.time = packet.Time;
                                 Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
                             }
                         }
@@ -729,7 +736,7 @@ namespace WowPacketParser.Parsing.Parsers
                                         CreatureEquipmentValuesUpdate equipmentUpdate = new CreatureEquipmentValuesUpdate();
                                         equipmentUpdate.ItemId = update.Value.UInt32Value;
                                         equipmentUpdate.Slot = i;
-                                        equipmentUpdate.time = time;
+                                        equipmentUpdate.time = packet.Time;
                                         Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
                                     }
                                 }
@@ -796,7 +803,7 @@ namespace WowPacketParser.Parsing.Parsers
                             {
                                 CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
                                 guidUpdate.guid = GetGuidValue(updates, UnitField.UNIT_FIELD_CHARM);
-                                guidUpdate.time = time;
+                                guidUpdate.time = packet.Time;
                                 guidUpdate.FieldName = "Charm";
                                 Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                             }
@@ -811,7 +818,7 @@ namespace WowPacketParser.Parsing.Parsers
                             {
                                 CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
                                 guidUpdate.guid = GetGuidValue(updates, UnitField.UNIT_FIELD_SUMMON);
-                                guidUpdate.time = time;
+                                guidUpdate.time = packet.Time;
                                 guidUpdate.FieldName = "Summon";
                                 Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                             }
@@ -826,7 +833,7 @@ namespace WowPacketParser.Parsing.Parsers
                             {
                                 CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
                                 guidUpdate.guid = GetGuidValue(updates, UnitField.UNIT_FIELD_CHARMEDBY);
-                                guidUpdate.time = time;
+                                guidUpdate.time = packet.Time;
                                 guidUpdate.FieldName = "CharmedBy";
                                 Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                             }
@@ -841,7 +848,7 @@ namespace WowPacketParser.Parsing.Parsers
                             {
                                 CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
                                 guidUpdate.guid = GetGuidValue(updates, UnitField.UNIT_FIELD_SUMMONEDBY);
-                                guidUpdate.time = time;
+                                guidUpdate.time = packet.Time;
                                 guidUpdate.FieldName = "SummonedBy";
                                 Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                             }
@@ -856,7 +863,7 @@ namespace WowPacketParser.Parsing.Parsers
                             {
                                 CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
                                 guidUpdate.guid = GetGuidValue(updates, UnitField.UNIT_FIELD_CREATEDBY);
-                                guidUpdate.time = time;
+                                guidUpdate.time = packet.Time;
                                 guidUpdate.FieldName = "CreatedBy";
                                 Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                             }
@@ -871,7 +878,7 @@ namespace WowPacketParser.Parsing.Parsers
                             {
                                 CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
                                 guidUpdate.guid = GetGuidValue(updates, UnitField.UNIT_FIELD_DEMON_CREATOR);
-                                guidUpdate.time = time;
+                                guidUpdate.time = packet.Time;
                                 guidUpdate.FieldName = "DemonCreator";
                                 Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                             }
@@ -886,7 +893,7 @@ namespace WowPacketParser.Parsing.Parsers
                             {
                                 CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
                                 guidUpdate.guid = GetGuidValue(updates, UnitField.UNIT_FIELD_TARGET);
-                                guidUpdate.time = time;
+                                guidUpdate.time = packet.Time;
                                 guidUpdate.FieldName = "Target";
                                 Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                             }
@@ -896,7 +903,7 @@ namespace WowPacketParser.Parsing.Parsers
 
                 if (hasData)
                 {
-                    creatureUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
+                    creatureUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
                     Storage.StoreUnitValuesUpdate(guid, creatureUpdate);
                 }
             }
@@ -1038,7 +1045,7 @@ namespace WowPacketParser.Parsing.Parsers
 
                 if (hasData)
                 {
-                    goUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
+                    goUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
                     Storage.StoreGameObjectUpdate(guid, goUpdate);
                 }
             }

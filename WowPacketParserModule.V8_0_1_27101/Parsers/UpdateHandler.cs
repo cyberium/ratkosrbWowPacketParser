@@ -136,7 +136,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                                 }
 
                                 if (obj != null)
-                                    StoreObjectUpdate(packet.Time, guid, obj, oldObjectData, oldGameObjectData, oldUnitData, oldPlayerData);
+                                    StoreObjectUpdate(packet, guid, obj, oldObjectData, oldGameObjectData, oldUnitData, oldPlayerData, false);
                             }
                         }
                         else
@@ -159,7 +159,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             }
         }
 
-        public static void StoreObjectUpdate(DateTime time, WowGuid guid, WoWObject obj, IObjectData oldObjectData, IGameObjectData oldGameObjectData, IUnitData oldUnitData, IPlayerData oldPlayerData)
+        public static void StoreObjectUpdate(Packet packet, WowGuid guid, WoWObject obj, IObjectData oldObjectData, IGameObjectData oldGameObjectData, IUnitData oldUnitData, IPlayerData oldPlayerData, bool isCreate)
         {
             if ((guid.GetObjectType() == ObjectType.Unit) ||
                 (guid.GetObjectType() == ObjectType.Player) ||
@@ -280,10 +280,18 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                         hasData = true;
                         creatureUpdate.UnitFlag2 = unit.UnitData.Flags2;
                     }
-                    if (oldUnitData.Health != unit.UnitData.Health && Settings.SaveHealthUpdates)
+                    if (oldUnitData.Health != unit.UnitData.Health)
                     {
-                        hasData = true;
-                        creatureUpdate.CurrentHealth = (uint)unit.UnitData.Health;
+                        if (!isCreate && unit.UnitData.Health == 0 &&
+                            guid.GetObjectType() == ObjectType.Unit &&
+                            guid.GetHighType() != HighGuidType.Pet)
+                            packet.AddSniffData(StoreNameType.Unit, (int)guid.GetEntry(), "DEATH");
+
+                        if (Settings.SaveHealthUpdates)
+                        {
+                            hasData = true;
+                            creatureUpdate.CurrentHealth = (uint)unit.UnitData.Health;
+                        }
                     }
                     if (oldUnitData.MaxHealth != unit.UnitData.MaxHealth && Settings.SaveHealthUpdates)
                     {
@@ -343,7 +351,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                             CreatureEquipmentValuesUpdate equipmentUpdate = new CreatureEquipmentValuesUpdate();
                             equipmentUpdate.ItemId = (uint)unit.UnitData.VirtualItems[slot].ItemID;
                             equipmentUpdate.Slot = slot;
-                            equipmentUpdate.time = time;
+                            equipmentUpdate.time = packet.Time;
                             Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
                         }
                         slot++;
@@ -352,7 +360,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     {
                         CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
                         guidUpdate.guid = unit.UnitData.Charm;
-                        guidUpdate.time = time;
+                        guidUpdate.time = packet.Time;
                         guidUpdate.FieldName = "Charm";
                         Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                     }
@@ -360,7 +368,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     {
                         CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
                         guidUpdate.guid = unit.UnitData.Summon;
-                        guidUpdate.time = time;
+                        guidUpdate.time = packet.Time;
                         guidUpdate.FieldName = "Summon";
                         Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                     }
@@ -368,7 +376,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     {
                         CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
                         guidUpdate.guid = unit.UnitData.CharmedBy;
-                        guidUpdate.time = time;
+                        guidUpdate.time = packet.Time;
                         guidUpdate.FieldName = "CharmedBy";
                         Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                     }
@@ -376,7 +384,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     {
                         CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
                         guidUpdate.guid = unit.UnitData.SummonedBy;
-                        guidUpdate.time = time;
+                        guidUpdate.time = packet.Time;
                         guidUpdate.FieldName = "SummonedBy";
                         Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                     }
@@ -384,7 +392,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     {
                         CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
                         guidUpdate.guid = unit.UnitData.CreatedBy;
-                        guidUpdate.time = time;
+                        guidUpdate.time = packet.Time;
                         guidUpdate.FieldName = "CreatedBy";
                         Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                     }
@@ -392,7 +400,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     {
                         CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
                         guidUpdate.guid = unit.UnitData.DemonCreator;
-                        guidUpdate.time = time;
+                        guidUpdate.time = packet.Time;
                         guidUpdate.FieldName = "DemonCreator";
                         Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                     }
@@ -400,7 +408,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     {
                         CreatureGuidValuesUpdate guidUpdate = new CreatureGuidValuesUpdate();
                         guidUpdate.guid = unit.UnitData.Target;
-                        guidUpdate.time = time;
+                        guidUpdate.time = packet.Time;
                         guidUpdate.FieldName = "Target";
                         Storage.StoreUnitGuidValuesUpdate(guid, guidUpdate);
                     }
@@ -416,7 +424,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                             CreatureEquipmentValuesUpdate equipmentUpdate = new CreatureEquipmentValuesUpdate();
                             equipmentUpdate.ItemId = (uint)player.PlayerData.VisibleItems[slot].ItemID;
                             equipmentUpdate.Slot = slot;
-                            equipmentUpdate.time = time;
+                            equipmentUpdate.time = packet.Time;
                             Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
                         }
                         slot++;
@@ -424,7 +432,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 }
                 if (hasData)
                 {
-                    creatureUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
+                    creatureUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
                     Storage.StoreUnitValuesUpdate(guid, creatureUpdate);
                 }
             }
@@ -473,7 +481,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 }
                 if (hasData)
                 {
-                    goUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
+                    goUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
                     Storage.StoreGameObjectUpdate(guid, goUpdate);
                 }
             }
@@ -484,35 +492,42 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             ObjectType objType = ObjectTypeConverter.Convert(packet.ReadByteE<ObjectType801>("Object Type", index));
             if (ClientVersion.RemovedInVersion(ClientVersionBuild.V8_1_0_28724))
                 packet.ReadInt32("HeirFlags", index);
+
             WoWObject obj;
-            switch (objType)
+            bool isExistingObject = Storage.Objects.ContainsKey(guid);
+            if (isExistingObject)
+                obj = Storage.Objects[guid].Item1;
+            else
             {
-                case ObjectType.Unit:
-                    obj = new Unit();
-                    break;
-                case ObjectType.GameObject:
-                    obj = new GameObject();
-                    break;
-                case ObjectType.DynamicObject:
-                    obj = new DynamicObject();
-                    break;
-                case ObjectType.Player:
-                    obj = new Player();
-                    break;
-                case ObjectType.ActivePlayer:
-                    Player me = new Player();
-                    me.IsActivePlayer = true;
-                    obj = me;
-                    break;
-                case ObjectType.AreaTrigger:
-                    obj = new SpellAreaTrigger();
-                    break;
-                case ObjectType.Conversation:
-                    obj = new ConversationTemplate();
-                    break;
-                default:
-                    obj = new WoWObject();
-                    break;
+                switch (objType)
+                {
+                    case ObjectType.Unit:
+                        obj = new Unit();
+                        break;
+                    case ObjectType.GameObject:
+                        obj = new GameObject();
+                        break;
+                    case ObjectType.DynamicObject:
+                        obj = new DynamicObject();
+                        break;
+                    case ObjectType.Player:
+                        obj = new Player();
+                        break;
+                    case ObjectType.ActivePlayer:
+                        Player me = new Player();
+                        me.IsActivePlayer = true;
+                        obj = me;
+                        break;
+                    case ObjectType.AreaTrigger:
+                        obj = new SpellAreaTrigger();
+                        break;
+                    case ObjectType.Conversation:
+                        obj = new ConversationTemplate();
+                        break;
+                    default:
+                        obj = new WoWObject();
+                        break;
+                }
             }
 
             var moves = ReadMovementUpdateBlock(packet, guid, obj, index);
@@ -524,8 +539,20 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 {
                     var flags = fieldsData.ReadByteE<UpdateFieldFlag>("FieldFlags", index);
                     var handler = CoreFields.UpdateFields.GetHandler();
+
+                    IObjectData oldObjectData = null;
+                    IGameObjectData oldGameObjectData = null;
+                    IUnitData oldUnitData = null;
+                    IPlayerData oldPlayerData = null;
+
+                    if (isExistingObject)
+                        oldObjectData = obj.ObjectData.Clone();
+
                     obj.ObjectData = handler.ReadCreateObjectData(fieldsData, flags, index);
-                    obj.ObjectDataOriginal = obj.ObjectData.Clone();
+
+                    if (!isExistingObject)
+                        obj.ObjectDataOriginal = obj.ObjectData.Clone();
+
                     switch (objType)
                     {
                         case ObjectType.Item:
@@ -544,29 +571,51 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                             handler.ReadCreateAzeriteItemData(fieldsData, flags, index);
                             break;
                         case ObjectType.Unit:
+                            if (isExistingObject && (obj as Unit).UnitData != null)
+                                oldUnitData = (obj as Unit).UnitData.Clone(); ;
                             (obj as Unit).UnitData = handler.ReadCreateUnitData(fieldsData, flags, index);
-                            (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData.Clone();
+                            if (!isExistingObject)
+                                (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData.Clone();
                             break;
                         case ObjectType.Player:
+                            if (isExistingObject && (obj as Unit).UnitData != null)
+                                oldUnitData = (obj as Unit).UnitData.Clone(); ;
                             (obj as Unit).UnitData = handler.ReadCreateUnitData(fieldsData, flags, index);
-                            (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData.Clone();
+                            if (!isExistingObject)
+                                (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData.Clone();
+
+                            if (isExistingObject && (obj as Player).PlayerData != null)
+                                oldPlayerData = (obj as Player).PlayerData.Clone(); ;
                             (obj as Player).PlayerData = handler.ReadCreatePlayerData(fieldsData, flags, index);
-                            (obj as Player).PlayerDataOriginal = (obj as Player).PlayerData.Clone();
+                            if (!isExistingObject)
+                                (obj as Player).PlayerDataOriginal = (obj as Player).PlayerData.Clone();
                             break;
                         case ObjectType.ActivePlayer:
+                            if (isExistingObject && (obj as Unit).UnitData != null)
+                                oldUnitData = (obj as Unit).UnitData.Clone(); ;
                             (obj as Unit).UnitData = handler.ReadCreateUnitData(fieldsData, flags, index);
-                            (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData.Clone();
+                            if (!isExistingObject)
+                                (obj as Unit).UnitDataOriginal = (obj as Unit).UnitData.Clone();
+
+                            if (isExistingObject && (obj as Player).PlayerData != null)
+                                oldPlayerData = (obj as Player).PlayerData.Clone(); ;
                             (obj as Player).PlayerData = handler.ReadCreatePlayerData(fieldsData, flags, index);
-                            (obj as Player).PlayerDataOriginal = (obj as Player).PlayerData.Clone();
+                            if (!isExistingObject)
+                                (obj as Player).PlayerDataOriginal = (obj as Player).PlayerData.Clone();
+
                             handler.ReadCreateActivePlayerData(fieldsData, flags, index);
                             break;
                         case ObjectType.GameObject:
+                            if (isExistingObject && (obj as GameObject).GameObjectData != null)
+                                oldGameObjectData = (obj as GameObject).GameObjectData.Clone();
                             (obj as GameObject).GameObjectData = handler.ReadCreateGameObjectData(fieldsData, flags, index);
-                            (obj as GameObject).GameObjectDataOriginal = (obj as GameObject).GameObjectData.Clone();
+                            if (!isExistingObject)
+                                (obj as GameObject).GameObjectDataOriginal = (obj as GameObject).GameObjectData.Clone();
                             break;
                         case ObjectType.DynamicObject:
                             (obj as DynamicObject).DynamicObjectData = handler.ReadCreateDynamicObjectData(fieldsData, flags, index);
-                            (obj as DynamicObject).DynamicObjectDataOriginal = (obj as DynamicObject).DynamicObjectData;
+                            if (!isExistingObject)
+                                (obj as DynamicObject).DynamicObjectDataOriginal = (obj as DynamicObject).DynamicObjectData;
                             break;
                         case ObjectType.Corpse:
                             handler.ReadCreateCorpseData(fieldsData, flags, index);
@@ -581,6 +630,9 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                             (obj as ConversationTemplate).ConversationData = handler.ReadCreateConversationData(fieldsData, flags, index);
                             break;
                     }
+
+                    if (isExistingObject)
+                        StoreObjectUpdate(packet, guid, obj, oldObjectData, oldGameObjectData, oldUnitData, oldPlayerData, true);
                 }
             }
             else
@@ -603,11 +655,8 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
 
             // If this is the second time we see the same object (same guid,
             // same position) update its phasemask
-            if (Storage.Objects.ContainsKey(guid))
-            {
-                var existObj = Storage.Objects[guid].Item1;
-                CoreParsers.UpdateHandler.ProcessExistingObject(ref existObj, guid, packet.Time, obj.UpdateFields, obj.DynamicUpdateFields, moves); // can't do "ref Storage.Objects[guid].Item1 directly
-            }
+            if (isExistingObject)
+                CoreParsers.UpdateHandler.ProcessExistingObject(ref obj, guid, packet, obj.UpdateFields, obj.DynamicUpdateFields, moves); // can't do "ref Storage.Objects[guid].Item1 directly
             else
                 Storage.StoreNewObject(guid, obj, type, packet);
 

@@ -105,7 +105,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             // same position) update its phasemask
             if (Storage.Objects.ContainsKey(guid))
             {
-                CoreParsers.UpdateHandler.ProcessExistingObject(ref obj, guid, packet.Time, updates, dynamicUpdates, moves); // can't do "ref Storage.Objects[guid].Item1 directly
+                CoreParsers.UpdateHandler.ProcessExistingObject(ref obj, guid, packet, updates, dynamicUpdates, moves); // can't do "ref Storage.Objects[guid].Item1 directly
             }
             else
             {
