@@ -1027,6 +1027,93 @@ namespace WowPacketParser.SQL.Builders
             return result;
         }
 
+        [BuilderMethod(false, Units = true)]
+        public static string CreatureFaction(Dictionary<WowGuid, Unit> units)
+        {
+            if (units.Count == 0)
+                return string.Empty;
+
+            if (!Settings.SqlTables.creature_faction)
+                return string.Empty;
+
+            Dictionary<int, SortedSet<int>> factionsPerCreature = new Dictionary<int, SortedSet<int>>();
+
+            foreach (var unit in units)
+            {
+                if (unit.Key.GetHighType() == HighGuidType.Pet)
+                    continue;
+
+                if (unit.Value.ObjectDataOriginal != null && unit.Value.UnitDataOriginal != null)
+                {
+                    int entry = unit.Value.ObjectDataOriginal.EntryID;
+                    if (!factionsPerCreature.ContainsKey(entry))
+                        factionsPerCreature.Add(entry, new SortedSet<int>());
+                    factionsPerCreature[entry].Add(unit.Value.UnitDataOriginal.FactionTemplate);
+                }
+
+                if (unit.Value.ObjectData != null && unit.Value.UnitData != null)
+                {
+                    int entry = unit.Value.ObjectData.EntryID;
+                    if (!factionsPerCreature.ContainsKey(entry))
+                        factionsPerCreature.Add(entry, new SortedSet<int>());
+                    factionsPerCreature[entry].Add(unit.Value.UnitData.FactionTemplate);
+                }
+
+                if (Storage.UnitValuesUpdates.ContainsKey(unit.Key))
+                {
+                    int entry = unit.Value.ObjectDataOriginal != null ? unit.Value.ObjectDataOriginal.EntryID : (int)unit.Key.GetEntry();
+                    foreach (var update in Storage.UnitValuesUpdates[unit.Key])
+                    {
+                        if (update.Entry != null)
+                            entry = (int)update.Entry;
+
+                        if (update.FactionTemplate != null)
+                        {
+                            if (!factionsPerCreature.ContainsKey(entry))
+                                factionsPerCreature.Add(entry, new SortedSet<int>());
+                            factionsPerCreature[entry].Add((int)update.FactionTemplate);
+                        }
+                    }
+                }
+            }
+
+            StringBuilder result = new StringBuilder();
+
+            if (factionsPerCreature.Count != 0)
+            {
+                var rows = new RowList<CreatureFaction>();
+                foreach (var itr in factionsPerCreature)
+                {
+                    foreach(var faction in itr.Value)
+                    {
+                        Row<CreatureFaction> row = new Row<CreatureFaction>();
+                        row.Data.Entry = (uint)itr.Key;
+                        row.Data.Faction = (uint)faction;
+                        rows.Add(row);
+                    }
+                }
+
+                var updateSql = new SQLInsert<CreatureFaction>(rows, false, true);
+                result.Append(updateSql.Build());
+                result.AppendLine();
+            }  
+
+            return result.ToString();
+        }
+
+        [BuilderMethod]
+        public static string CreatureDamageSchools()
+        {
+            if (Storage.CreatureDamageSchools.IsEmpty() || !Settings.SqlTables.creature_damage_school)
+                return string.Empty;
+
+            var result = "";
+
+            result += SQLUtil.Compare(Storage.CreatureDamageSchools, SQLDatabase.Get(Storage.CreatureDamageSchools), StoreNameType.Unit);
+
+            return result;
+        }
+
         class CreatureTemplateNonWdbExport
         {
             public uint Entry = 0;

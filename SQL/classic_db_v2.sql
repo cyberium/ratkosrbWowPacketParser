@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
--- Host:                         127.0.0.1
+-- Host:                         localhost
 -- Server version:               5.5.53 - MySQL Community Server (GPL)
 -- Server OS:                    Win32
--- HeidiSQL Version:             9.3.0.4998
+-- HeidiSQL Version:             9.3.0.4984
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -341,6 +341,17 @@ CREATE TABLE IF NOT EXISTS `creature_create2_time` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_damage_school
+DROP TABLE IF EXISTS `creature_damage_school`;
+CREATE TABLE IF NOT EXISTS `creature_damage_school` (
+  `entry` mediumint(8) unsigned NOT NULL,
+  `total_school_mask` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`entry`,`total_school_mask`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all schools of damage dealt with melee attacks by a given creature id';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_destroy_time
 DROP TABLE IF EXISTS `creature_destroy_time`;
 CREATE TABLE IF NOT EXISTS `creature_destroy_time` (
@@ -405,6 +416,17 @@ CREATE TABLE IF NOT EXISTS `creature_equip_template` (
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.creature_faction
+DROP TABLE IF EXISTS `creature_faction`;
+CREATE TABLE IF NOT EXISTS `creature_faction` (
+  `entry` mediumint(8) unsigned NOT NULL,
+  `faction` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`entry`,`faction`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all unique faction template ids used by a given creature id';
 
 -- Data exporting was unselected.
 

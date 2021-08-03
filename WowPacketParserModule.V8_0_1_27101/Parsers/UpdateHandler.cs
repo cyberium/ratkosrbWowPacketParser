@@ -280,22 +280,22 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                         hasData = true;
                         creatureUpdate.UnitFlag2 = unit.UnitData.Flags2;
                     }
-                    if (oldUnitData.Health != unit.UnitData.Health)
+                    if (oldUnitData.Health != unit.UnitData.Health && Settings.SaveHealthUpdates)
                     {
                         hasData = true;
                         creatureUpdate.CurrentHealth = (uint)unit.UnitData.Health;
                     }
-                    if (oldUnitData.MaxHealth != unit.UnitData.MaxHealth)
+                    if (oldUnitData.MaxHealth != unit.UnitData.MaxHealth && Settings.SaveHealthUpdates)
                     {
                         hasData = true;
                         creatureUpdate.MaxHealth = (uint)unit.UnitData.MaxHealth;
                     }
-                    if (oldUnitData.Mana != unit.UnitData.Mana)
+                    if (oldUnitData.Mana != unit.UnitData.Mana && Settings.SaveManaUpdates)
                     {
                         hasData = true;
                         creatureUpdate.CurrentMana = (uint)unit.UnitData.Mana;
                     }
-                    if (oldUnitData.MaxMana != unit.UnitData.MaxMana)
+                    if (oldUnitData.MaxMana != unit.UnitData.MaxMana && Settings.SaveManaUpdates)
                     {
                         hasData = true;
                         creatureUpdate.MaxMana = (uint)unit.UnitData.MaxMana;

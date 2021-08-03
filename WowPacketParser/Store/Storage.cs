@@ -609,14 +609,30 @@ namespace WowPacketParser.Store
         public static void StoreUnitAttackLog(UnitMeleeAttackLog attackData)
         {
             WowGuid attackerGuid = attackData.Attacker;
+            ObjectType attackerType = attackerGuid.GetObjectType();
 
-            if (attackerGuid.GetObjectType() == ObjectType.Unit)
+            if (attackData.TotalSchoolMask != 0 &&
+                Settings.SqlTables.creature_damage_school &&
+                attackerType == ObjectType.Unit &&
+                Storage.Objects.ContainsKey(attackerGuid))
+            {
+                Unit creature = Storage.Objects[attackerGuid].Item1 as Unit;
+                if (creature != null && creature.ObjectData != null)
+                {
+                    CreatureDamageSchool row = new CreatureDamageSchool();
+                    row.Entry = (uint)creature.ObjectData.EntryID;
+                    row.TotalSchoolMask = attackData.TotalSchoolMask;
+                    Storage.CreatureDamageSchools.Add(row);
+                }
+            }
+
+            if (attackerType == ObjectType.Unit)
             {
                 if (!Settings.SqlTables.creature_attack_log)
                     return;
             }
-            else if (attackerGuid.GetObjectType() == ObjectType.Player ||
-                     attackerGuid.GetObjectType() == ObjectType.ActivePlayer)
+            else if (attackerType == ObjectType.Player ||
+                     attackerType == ObjectType.ActivePlayer)
             {
                 if (!Settings.SqlTables.player_attack_log)
                     return;
@@ -741,6 +757,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<QuestObjective> QuestObjectives = new DataBag<QuestObjective>(Settings.SqlTables.quest_template);
         public static readonly DataBag<QuestVisualEffect> QuestVisualEffects = new DataBag<QuestVisualEffect>(Settings.SqlTables.quest_template);
         public static readonly DataBag<QuestRewardDisplaySpell> QuestRewardDisplaySpells = new DataBag<QuestRewardDisplaySpell>(Settings.SqlTables.quest_template);
+        public static readonly DataBag<CreatureDamageSchool> CreatureDamageSchools = new DataBag<CreatureDamageSchool>(Settings.SqlTables.creature_damage_school);
         public static readonly DataBag<CreatureTemplate> CreatureTemplates = new DataBag<CreatureTemplate>(Settings.SqlTables.creature_template_wdb);
         public static readonly DataBag<CreatureTemplateNonWDB> CreatureTemplatesNonWDB = new DataBag<CreatureTemplateNonWDB>(Settings.SqlTables.creature_template);
         public static readonly DataBag<CreatureTemplateQuestItem> CreatureTemplateQuestItems = new DataBag<CreatureTemplateQuestItem>(Settings.SqlTables.creature_template_wdb);

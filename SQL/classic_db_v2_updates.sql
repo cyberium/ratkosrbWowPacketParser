@@ -176,3 +176,30 @@ ALTER TABLE `player_movement_client`
 ALTER TABLE `player_movement_client`
 	DROP PRIMARY KEY,
 	ADD PRIMARY KEY (`packet_id`);
+
+CREATE TABLE `creature_faction` (
+	`entry` MEDIUMINT UNSIGNED NOT NULL,
+	`faction` INT UNSIGNED NOT NULL,
+	PRIMARY KEY (`entry`, `faction`)
+)
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;
+
+ALTER TABLE `creature_faction`
+	COMMENT='all unique faction template ids used by a given creature id';
+
+
+CREATE TABLE `creature_damage_school` (
+	`entry` MEDIUMINT UNSIGNED NOT NULL,
+	`total_school_mask` INT UNSIGNED NOT NULL,
+	PRIMARY KEY (`entry`, `total_school_mask`)
+)
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;
+
+ALTER TABLE `creature_damage_school`
+	COMMENT='all schools of damage dealt with melee attacks by a given creature id';
+
+    

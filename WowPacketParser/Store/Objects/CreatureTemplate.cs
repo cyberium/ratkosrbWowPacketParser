@@ -91,6 +91,26 @@ namespace WowPacketParser.Store.Objects
         public string Auras;
     }
 
+    [DBTableName("creature_faction")]
+    public sealed class CreatureFaction : IDataModel
+    {
+        [DBFieldName("entry", true)]
+        public uint Entry;
+
+        [DBFieldName("faction", true)]
+        public uint Faction;
+    }
+
+    [DBTableName("creature_damage_school")]
+    public sealed class CreatureDamageSchool : IDataModel
+    {
+        [DBFieldName("entry", true)]
+        public uint Entry;
+
+        [DBFieldName("total_school_mask", true)]
+        public uint TotalSchoolMask;
+    }
+
     [DBTableName("creature_questitem")]
     public sealed class CreatureTemplateQuestItem : IDataModel
     {
