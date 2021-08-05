@@ -60,6 +60,8 @@ namespace WowPacketParserModule.V5_4_1_17538.Parsers
 
             packet.ReadByte("Unk1 Byte");
 
+            packet.AddSniffData(StoreNameType.GameObject, entry.Key, "QUERY_RESPONSE");
+
             Storage.GameObjectTemplates.Add(gameObject, packet.TimeSpan);
 
             ObjectName objectName = new ObjectName

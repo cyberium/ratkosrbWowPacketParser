@@ -143,6 +143,15 @@ namespace WowPacketParser.SQL.Builders
                 if (Settings.SqlTables.player)
                 {
                     Row<PlayerTemplate> playerRow = new Row<PlayerTemplate>();
+
+                    playerRow.Data.AreaID = 0;
+                    if (player.Area != -1)
+                        playerRow.Data.AreaID = (uint)player.Area;
+
+                    playerRow.Data.ZoneID = 0;
+                    if (player.Zone != -1)
+                        playerRow.Data.ZoneID = (uint)player.Zone;
+
                     playerRow.Data.Guid = row.Data.Guid;
                     playerRow.Data.Name = row.Data.Name;
                     playerRow.Data.Race = row.Data.Race;

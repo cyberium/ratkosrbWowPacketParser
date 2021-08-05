@@ -1120,6 +1120,7 @@ namespace WowPacketParser.Store
             CreatureLoot.Clear();
             CreatureStats.Clear();
 
+            CreatureDamageSchools.Clear();
             CreatureTemplates.Clear();
             CreatureTemplatesNonWDB.Clear();
             CreatureTemplateQuestItems.Clear();

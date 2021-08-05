@@ -202,4 +202,7 @@ ENGINE=InnoDB
 ALTER TABLE `creature_damage_school`
 	COMMENT='all schools of damage dealt with melee attacks by a given creature id';
 
-    
+ALTER TABLE `player`
+	CHANGE COLUMN `map` `map` SMALLINT UNSIGNED NULL DEFAULT '0' COMMENT 'Map Identifier' AFTER `guid`,
+	ADD COLUMN `zone_id` SMALLINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Zone Identifier' AFTER `map`,
+	ADD COLUMN `area_id` SMALLINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Area Identifier' AFTER `zone_id`;

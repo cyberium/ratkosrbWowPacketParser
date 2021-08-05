@@ -77,6 +77,12 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("map")]
         public uint Map;
 
+        [DBFieldName("zone_id")]
+        public uint? ZoneID;
+
+        [DBFieldName("area_id")]
+        public uint? AreaID;
+
         [DBFieldName("position_x")]
         public float PositionX;
 

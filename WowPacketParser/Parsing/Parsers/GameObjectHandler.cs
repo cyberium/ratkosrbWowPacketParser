@@ -105,6 +105,7 @@ namespace WowPacketParser.Parsing.Parsers
         {
             WowGuid guid = packet.ReadGuid("GUID");
             Storage.StoreGameObjectUse(guid, packet.Time);
+            packet.AddSniffData(StoreNameType.GameObject, (int)guid.GetEntry(), "USE");
         }
         
         [Parser(Opcode.SMSG_PAGE_TEXT)]

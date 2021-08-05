@@ -59,6 +59,8 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
 
             packet.ReadUInt32E<ClientType>("Expansion");
 
+            packet.AddSniffData(StoreNameType.GameObject, entry.Key, "QUERY_RESPONSE");
+
             Storage.GameObjectTemplates.Add(gameObject, packet.TimeSpan);
 
             ObjectName objectName = new ObjectName

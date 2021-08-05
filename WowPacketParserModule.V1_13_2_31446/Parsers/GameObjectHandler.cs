@@ -61,6 +61,8 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
 
             gameObject.RequiredLevel = packet.ReadInt32("RequiredLevel");
 
+            packet.AddSniffData(StoreNameType.GameObject, entry.Key, "QUERY_RESPONSE");
+
             Storage.GameObjectTemplates.Add(gameObject, packet.TimeSpan);
 
             ObjectName objectName = new ObjectName
