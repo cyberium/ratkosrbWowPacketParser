@@ -1404,9 +1404,11 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.CMSG_MOVE_SPLINE_DONE, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleMoveSplineDone(Packet packet)
         {
-            var guid = packet.ReadPackedGuid("Guid");
+            var guid = ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056) ? packet.ReadPackedGuid("Guid") : Storage.CurrentActivePlayer;
             ReadMovementInfo(packet, guid);
             packet.ReadInt32("Movement Counter"); // Possibly
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadSingle("Unk");
         }
 
         [Parser(Opcode.SMSG_MOVE_SPLINE_SET_RUN_SPEED, ClientVersionBuild.V4_2_2_14545, ClientVersionBuild.V4_3_0_15005)]
