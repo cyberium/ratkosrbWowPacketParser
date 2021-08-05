@@ -746,6 +746,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("level", true)]
         public uint Level;
 
+        [DBFieldName("is_pet", true)]
+        public bool IsPet;
+
         [DBFieldName("dmg_min", false, false, true)]
         public float? DmgMin;
 

@@ -655,14 +655,12 @@ namespace WowPacketParser.SQL.Builders
 
             // Update fields system changed in BfA.
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_1_0_28724) &&
-                ClientVersion.Expansion != ClientType.Classic)
+                ClientVersion.Expansion != ClientType.Classic &&
+                ClientVersion.Expansion != ClientType.BurningCrusadeClassic)
                 return string.Empty;
 
             foreach (var unit in units)
             {
-                if (unit.Key.GetHighType() == HighGuidType.Pet)
-                    continue;
-
                 uint entry = (uint)unit.Value.ObjectData.EntryID;
                 if (entry == 0)
                     continue;   // broken entry
@@ -1017,6 +1015,7 @@ namespace WowPacketParser.SQL.Builders
                 {
                     creatureStats.Entry = entry;
                     creatureStats.Level = (uint)unit.Value.UnitData.Level;
+                    creatureStats.IsPet = (unit.Key.GetHighType() == HighGuidType.Pet);
                     Storage.CreatureStats.Add(creatureStats);
                 }
             }

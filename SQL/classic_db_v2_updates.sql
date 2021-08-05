@@ -206,3 +206,8 @@ ALTER TABLE `player`
 	CHANGE COLUMN `map` `map` SMALLINT UNSIGNED NULL DEFAULT '0' COMMENT 'Map Identifier' AFTER `guid`,
 	ADD COLUMN `zone_id` SMALLINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Zone Identifier' AFTER `map`,
 	ADD COLUMN `area_id` SMALLINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Area Identifier' AFTER `zone_id`;
+
+ALTER TABLE `creature_stats`
+	ADD COLUMN `is_pet` TINYINT UNSIGNED NOT NULL AFTER `level`,
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`entry`, `level`, `is_pet`);

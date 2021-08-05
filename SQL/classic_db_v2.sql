@@ -686,6 +686,7 @@ DROP TABLE IF EXISTS `creature_stats`;
 CREATE TABLE IF NOT EXISTS `creature_stats` (
   `entry` int(10) unsigned NOT NULL COMMENT 'creature template id',
   `level` int(10) unsigned NOT NULL,
+  `is_pet` tinyint(3) unsigned NOT NULL,
   `dmg_min` float DEFAULT NULL,
   `dmg_max` float DEFAULT NULL,
   `offhand_dmg_min` float DEFAULT NULL,
@@ -738,7 +739,7 @@ CREATE TABLE IF NOT EXISTS `creature_stats` (
   `negative_frost_res` int(11) DEFAULT NULL,
   `negative_shadow_res` int(11) DEFAULT NULL,
   `negative_arcane_res` int(11) DEFAULT NULL,
-  PRIMARY KEY (`entry`,`level`)
+  PRIMARY KEY (`entry`,`level`,`is_pet`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='stats data from SMSG_UPDATE_OBJECT, server only sends it if the creature is mind controlled';
 
 -- Data exporting was unselected.
