@@ -19,6 +19,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("PositionY", DbType = (TargetedDbType.TRINITY))]
         public float? PositionY;
 
+        [DBFieldName("z", TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("PositionZ", TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.TRINITY))]
+        public float? PositionZ;
+
         [DBFieldName("icon", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("Icon", DbType = (TargetedDbType.TRINITY))]
         public GossipPOIIcon? Icon;

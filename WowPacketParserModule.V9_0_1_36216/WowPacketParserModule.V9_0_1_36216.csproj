@@ -360,6 +360,8 @@
     <Compile Include="Parsers\EquipmentSetHandler.cs" />
     <Compile Include="Parsers\GarrisonHandler.cs" />
     <Compile Include="Parsers\GroupHandler.cs" />
+    <Compile Include="Parsers\GuildHandler.cs" />
+    <Compile Include="Parsers\MailHandler.cs" />
     <Compile Include="Parsers\MovementHandler.cs" />
     <Compile Include="Parsers\MiscellaneousHandler.cs" />
     <Compile Include="Parsers\MythicPlusHandler.cs" />

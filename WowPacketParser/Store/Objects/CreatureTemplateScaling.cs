@@ -13,10 +13,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("DifficultyID", true)]
         public uint? DifficultyID;
 
-        [DBFieldName("LevelScalingMin")]
+        [DBFieldName("LevelScalingMin", TargetedDbExpansion.Legion, TargetedDbExpansion.Shadowlands)]
         public uint? LevelScalingMin;
 
-        [DBFieldName("LevelScalingMax")]
+        [DBFieldName("LevelScalingMax", TargetedDbExpansion.Legion, TargetedDbExpansion.Shadowlands)]
         public uint? LevelScalingMax;
 
         [DBFieldName("LevelScalingDeltaMin")]

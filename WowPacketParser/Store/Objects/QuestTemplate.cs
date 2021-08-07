@@ -197,6 +197,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("PortraitGiverMount", TargetedDbExpansion.BattleForAzeroth)]
         public uint? PortraitGiverMount;
 
+        [DBFieldName("PortraitGiverModelSceneID", TargetedDbExpansion.Shadowlands)]
+        public int? PortraitGiverModelSceneID;
+
         [DBFieldName("PortraitTurnIn", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero)]
         [DBFieldName("QuestTurnInPortrait", TargetedDbExpansion.Cataclysm, TargetedDbExpansion.WarlordsOfDraenor)]
         [DBFieldName("PortraitTurnIn", TargetedDbExpansion.WarlordsOfDraenor)]

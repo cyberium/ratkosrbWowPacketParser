@@ -18,11 +18,23 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ReadUInt16("ScalingHealthItemLevelCurveID", idx);
             packet.ReadByte("TargetLevel", idx);
             packet.ReadByte("Expansion", idx);
-            packet.ReadByte("TargetMinScalingLevel", idx);
-            packet.ReadByte("TargetMaxScalingLevel", idx);
+
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V9_1_0_39185))
+            {
+                packet.ReadByte("TargetMinScalingLevel", idx);
+                packet.ReadByte("TargetMaxScalingLevel", idx);
+            }
+
             packet.ReadSByte("TargetScalingLevelDelta", idx);
+
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_2_36639))
                 packet.ReadUInt32("Flags", idx);
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_1_0_39185))
+            {
+                packet.ReadInt32("PlayerContentTuningID", idx);
+                packet.ReadInt32("TargetContentTuningID", idx);
+            }
 
             packet.ReadBits("Type", 4, idx);
 
@@ -61,8 +73,13 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ReadByte("Type", idx);
             packet.ReadByte("TargetLevel", idx);
             packet.ReadByte("Expansion", idx);
-            packet.ReadByte("TargetMinScalingLevel", idx);
-            packet.ReadByte("TargetMaxScalingLevel", idx);
+
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V9_1_0_39185))
+            {
+                packet.ReadByte("TargetMinScalingLevel", idx);
+                packet.ReadByte("TargetMaxScalingLevel", idx);
+            }
+
             packet.ReadInt16("PlayerLevelDelta", idx);
             packet.ReadSByte("TargetScalingLevelDelta", idx);
             packet.ReadSingle("PlayerItemLevel", idx);
@@ -72,6 +89,12 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
                 packet.ReadByte("ScalesWithItemLevel", idx);
             else
                 packet.ReadUInt32("Flags", idx);
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_1_0_39185))
+            {
+                packet.ReadInt32("PlayerContentTuningID", idx);
+                packet.ReadInt32("TargetContentTuningID", idx);
+            }
         }
 
         public static UnitMeleeAttackLog ReadAttackRoundInfo(Packet packet, params object[] indexes)

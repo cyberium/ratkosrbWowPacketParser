@@ -253,6 +253,9 @@ namespace WowPacketParser.Store.Objects
         public float? FadeRegionRadius;
 
         [DBFieldName("difficulty_id", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Classic, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("difficulty_id", TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("CreatureDifficultyID", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Classic, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("CreatureDifficultyID", TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.TRINITY))]
         public int? DifficultyID;
 
         [DBFieldName("widget_set_id", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Classic, DbType = (TargetedDbType.WPP))]
