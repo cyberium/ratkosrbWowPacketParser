@@ -59,6 +59,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("rotation", 4, true)]
         public float?[] Rotation;
 
+        [DBFieldName("is_spawn", DbType = (TargetedDbType.WPP))]
+        public ObjectCreateType? IsSpawn;
+
         [DBFieldName("is_temporary", DbType = (TargetedDbType.WPP))]
         public byte? TemporarySpawn;
 

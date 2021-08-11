@@ -315,3 +315,6 @@ ALTER TABLE `weather_update`
 ALTER TABLE `world_text`
 	COMMENT='texts sent by the server which did not originate from a creature or player';
 
+ALTER TABLE `gameobject`
+	ADD COLUMN `is_spawn` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'create object type 2' AFTER `rotation3`;
+

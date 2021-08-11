@@ -1162,6 +1162,7 @@ namespace WowPacketParser.SQL.Builders
 
                 // set some defaults
                 row.Data.PhaseGroup = 0;
+                row.Data.IsSpawn = go.FirstCreateType;
                 row.Data.TemporarySpawn = (byte)(go.IsTemporarySpawn() ? 1 : 0);
 
                 if (go.WasOriginallyOnTransport() && badTransport)

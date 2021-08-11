@@ -1063,6 +1063,7 @@ CREATE TABLE IF NOT EXISTS `gameobject` (
   `rotation1` float NOT NULL DEFAULT '0',
   `rotation2` float NOT NULL DEFAULT '0',
   `rotation3` float NOT NULL DEFAULT '0',
+  `is_spawn` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'create object type 2',
   `is_temporary` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `creator_guid` int(11) unsigned NOT NULL DEFAULT '0',
   `creator_id` int(11) unsigned NOT NULL DEFAULT '0',
