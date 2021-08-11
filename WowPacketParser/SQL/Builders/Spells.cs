@@ -30,9 +30,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.spell_unique_caster)
                 return string.Empty;
 
-            var templatesDb = SQLDatabase.Get(Storage.SpellUniqueCasters);
-
-            return SQLUtil.Compare(Storage.SpellUniqueCasters, templatesDb, StoreNameType.None);
+            return SQLUtil.Compare(Storage.SpellUniqueCasters, null, StoreNameType.None);
         }
 
         [BuilderMethod]
@@ -240,9 +238,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.CreaturePetCooldown.IsEmpty())
                 return string.Empty;
 
-            var templatesDb = SQLDatabase.Get(Storage.CreaturePetCooldown);
-
-            return SQLUtil.Compare(Storage.CreaturePetCooldown, templatesDb, StoreNameType.None);
+            return SQLUtil.Compare(Storage.CreaturePetCooldown, null, StoreNameType.None);
         }
 
         [BuilderMethod(false)]
@@ -254,9 +250,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.CreaturePetActions.IsEmpty())
                 return string.Empty;
 
-            var templatesDb = SQLDatabase.Get(Storage.CreaturePetActions);
-
-            return SQLUtil.Compare(Storage.CreaturePetActions, templatesDb, StoreNameType.None);
+            return SQLUtil.Compare(Storage.CreaturePetActions, null, StoreNameType.None);
         }
 
         [BuilderMethod]

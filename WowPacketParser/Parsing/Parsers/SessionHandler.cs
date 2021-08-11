@@ -4,6 +4,8 @@ using System.Text;
 using Ionic.Zlib;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParser.Parsing.Parsers
 {
@@ -462,6 +464,11 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleLogoutComplete(Packet packet)
         {
             LoginGuid = new WowGuid64(0);
+            LogoutTime logoutTime = new LogoutTime()
+            {
+                UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
+            };
+            Storage.LogoutTimes.Add(logoutTime);
         }
 
         [Parser(Opcode.SMSG_CONNECT_TO, ClientVersionBuild.Zero, ClientVersionBuild.V4_0_6a_13623)]

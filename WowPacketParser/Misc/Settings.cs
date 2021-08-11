@@ -137,6 +137,7 @@ namespace WowPacketParser.Misc
             public static readonly bool gameobject_despawn_anim = Conf.GetBoolean("gameobject_despawn_anim", false);
             public static readonly bool gameobject_destroy_time = Conf.GetBoolean("gameobject_destroy_time", false);
             public static readonly bool gameobject_values_update = Conf.GetBoolean("gameobject_values_update", false);
+            public static readonly bool logout_time = Conf.GetBoolean("logout_time", false);
             public static readonly bool play_music = Conf.GetBoolean("play_music", false);
             public static readonly bool play_sound = Conf.GetBoolean("play_sound", false);
             public static readonly bool play_spell_visual_kit = Conf.GetBoolean("play_spell_visual_kit", false);

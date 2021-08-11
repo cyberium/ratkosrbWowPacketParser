@@ -46,6 +46,7 @@
         gameobject_despawn_anim,
         gameobject_destroy_time,
         gameobject_values_update,
+        logout_time,
         play_music,
         play_sound,
         play_spell_visual_kit,

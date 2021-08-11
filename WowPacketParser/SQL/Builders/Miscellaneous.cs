@@ -239,9 +239,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.client_item_use)
                 return string.Empty;
 
-            var templateDb = SQLDatabase.Get(Storage.ItemClientUseTimes, Settings.TDBDatabase);
-
-            return SQLUtil.Compare(Storage.ItemClientUseTimes, templateDb, StoreNameType.None);
+            return SQLUtil.Compare(Storage.ItemClientUseTimes, null, StoreNameType.None);
         }
 
         [BuilderMethod]
@@ -253,9 +251,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.world_text)
                 return string.Empty;
 
-            var templateDb = SQLDatabase.Get(Storage.WorldTexts, Settings.TDBDatabase);
-
-            return SQLUtil.Compare(Storage.WorldTexts, templateDb, StoreNameType.None);
+            return SQLUtil.Compare(Storage.WorldTexts, null, StoreNameType.None);
         }
 
         [BuilderMethod]
@@ -267,9 +263,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.client_reclaim_corpse)
                 return string.Empty;
 
-            var templateDb = SQLDatabase.Get(Storage.ClientReclaimCorpseTimes, Settings.TDBDatabase);
-
-            return SQLUtil.Compare(Storage.ClientReclaimCorpseTimes, templateDb, StoreNameType.None);
+            return SQLUtil.Compare(Storage.ClientReclaimCorpseTimes, null, StoreNameType.None);
         }
 
         [BuilderMethod]
@@ -281,9 +275,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.client_release_spirit)
                 return string.Empty;
 
-            var templateDb = SQLDatabase.Get(Storage.ClientReleaseSpiritTimes, Settings.TDBDatabase);
-
-            return SQLUtil.Compare(Storage.ClientReleaseSpiritTimes, templateDb, StoreNameType.None);
+            return SQLUtil.Compare(Storage.ClientReleaseSpiritTimes, null, StoreNameType.None);
         }
 
         [BuilderMethod]
@@ -295,9 +287,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.world_state_init)
                 return string.Empty;
 
-            var templateDb = SQLDatabase.Get(Storage.WorldStateInits, Settings.TDBDatabase);
-
-            return SQLUtil.Compare(Storage.WorldStateInits, templateDb, StoreNameType.None);
+            return SQLUtil.Compare(Storage.WorldStateInits, null, StoreNameType.None);
         }
 
         [BuilderMethod]
@@ -309,9 +299,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.world_state_update)
                 return string.Empty;
 
-            var templateDb = SQLDatabase.Get(Storage.WorldStateUpdates, Settings.TDBDatabase);
-
-            return SQLUtil.Compare(Storage.WorldStateUpdates, templateDb, StoreNameType.None);
+            return SQLUtil.Compare(Storage.WorldStateUpdates, null, StoreNameType.None);
         }
 
         [BuilderMethod]
@@ -380,6 +368,18 @@ namespace WowPacketParser.SQL.Builders
 
             var sql = new SQLInsert<FactionStandingUpdate>(rows, false);
             return sql.Build();
+        }
+
+        [BuilderMethod]
+        public static string LogoutTimes()
+        {
+            if (Storage.LogoutTimes.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.logout_time)
+                return string.Empty;
+
+            return SQLUtil.Compare(Storage.LogoutTimes, null, StoreNameType.None);
         }
     }
 }

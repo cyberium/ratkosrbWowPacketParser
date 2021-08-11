@@ -682,4 +682,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("offnote")]
         public string offnote = "";
     }
+
+    [DBTableName("logout_time")]
+    public sealed class LogoutTime : IDataModel
+    {
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+    }
 }

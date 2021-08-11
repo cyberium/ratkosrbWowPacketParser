@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
--- Host:                         localhost
+-- Host:                         127.0.0.1
 -- Server version:               5.5.53 - MySQL Community Server (GPL)
 -- Server OS:                    Win32
--- HeidiSQL Version:             9.3.0.4984
+-- HeidiSQL Version:             9.3.0.4998
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -1526,6 +1526,16 @@ CREATE TABLE IF NOT EXISTS `item_template` (
   KEY `idx_name` (`name`),
   KEY `items_index` (`class`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Item System';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.logout_time
+DROP TABLE IF EXISTS `logout_time`;
+CREATE TABLE IF NOT EXISTS `logout_time` (
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  PRIMARY KEY (`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_LOGOUT_COMPLETE';
 
 -- Data exporting was unselected.
 

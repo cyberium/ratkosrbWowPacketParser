@@ -211,3 +211,13 @@ ALTER TABLE `creature_stats`
 	ADD COLUMN `is_pet` TINYINT UNSIGNED NOT NULL AFTER `level`,
 	DROP PRIMARY KEY,
 	ADD PRIMARY KEY (`entry`, `level`, `is_pet`);
+
+CREATE TABLE `logout_time` (
+	`unixtimems` BIGINT(20) UNSIGNED NOT NULL COMMENT 'when the packet was received',
+	PRIMARY KEY (`unixtimems`)
+)
+COMMENT='from SMSG_LOGOUT_COMPLETE'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;
+
