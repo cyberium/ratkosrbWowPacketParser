@@ -64,6 +64,8 @@ namespace WowPacketParser.SQL.Builders
             var updateThreatTargetRows = new RowList<CreatureThreatUpdateTarget>();
             var updateValuesRows = new RowList<CreatureValuesUpdate>();
             var updateSpeedRows = new RowList<CreatureSpeedUpdate>();
+            var threatClearRows = new RowList<CreatureThreatClear>();
+            var threatRemoveRows = new RowList<CreatureThreatRemove>();
             var attackLogRows = new RowList<UnitMeleeAttackLog>();
             var attackStartRows = new RowList<CreatureAttackToggle>();
             var attackStopRows = new RowList<CreatureAttackToggle>();
@@ -374,6 +376,37 @@ namespace WowPacketParser.SQL.Builders
                                 updateRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(update.Item2);
                                 updateAurasRows.Add(updateRow);
                             }
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.creature_threat_clear)
+                {
+                    if (Storage.CreatureThreatClears.ContainsKey(unit.Key))
+                    {
+                        foreach (var threatClear in Storage.CreatureThreatClears[unit.Key])
+                        {
+                            var threatClearRow = new Row<CreatureThreatClear>();
+                            threatClearRow.Data = threatClear;
+                            threatClearRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            threatClearRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(threatClearRow.Data.Time);
+                            threatClearRows.Add(threatClearRow);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.creature_threat_remove)
+                {
+                    if (Storage.CreatureThreatRemoves.ContainsKey(unit.Key))
+                    {
+                        foreach (var threatRemove in Storage.CreatureThreatRemoves[unit.Key])
+                        {
+                            var threatRemoveRow = new Row<CreatureThreatRemove>();
+                            threatRemoveRow.Data = threatRemove;
+                            threatRemoveRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            Storage.GetObjectDbGuidEntryType(threatRemove.TargetGUID, out threatRemoveRow.Data.TargetGuid, out threatRemoveRow.Data.TargetId, out threatRemoveRow.Data.TargetType);
+                            threatRemoveRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(threatRemoveRow.Data.Time);
+                            threatRemoveRows.Add(threatRemoveRow);
                         }
                     }
                 }
@@ -769,6 +802,20 @@ namespace WowPacketParser.SQL.Builders
             if (Settings.SqlTables.creature_auras_update && updateAurasRows.Count != 0)
             {
                 var updateSql = new SQLInsert<CreatureAurasUpdate>(updateAurasRows, false);
+                result.Append(updateSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.creature_threat_clear && threatClearRows.Count != 0)
+            {
+                var updateSql = new SQLInsert<CreatureThreatClear>(threatClearRows, false);
+                result.Append(updateSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.creature_threat_remove && threatRemoveRows.Count != 0)
+            {
+                var updateSql = new SQLInsert<CreatureThreatRemove>(threatRemoveRows, false);
                 result.Append(updateSql.Build());
                 result.AppendLine();
             }

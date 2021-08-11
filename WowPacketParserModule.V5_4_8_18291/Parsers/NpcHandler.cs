@@ -291,8 +291,12 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             packet.ReadXORByte(victimGUID, 2);
             packet.ReadXORByte(hostileGUID, 5);
 
-            packet.WriteGuid("Hostile GUID", hostileGUID);
-            packet.WriteGuid("GUID", victimGUID);
+            WowGuid creatureGuid = packet.WriteGuid("GUID", hostileGUID);
+
+            CreatureThreatRemove threatRemove = new CreatureThreatRemove();
+            threatRemove.TargetGUID = packet.WriteGuid("Victim GUID", victimGUID);
+            threatRemove.Time = packet.Time;
+            Storage.StoreCreatureThreatRemove(creatureGuid, threatRemove);
         }
 
         [Parser(Opcode.SMSG_THREAT_CLEAR)]
@@ -303,7 +307,11 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             packet.StartBitStream(guid, 6, 7, 4, 5, 2, 1, 0, 3);
             packet.ParseBitStream(guid, 7, 0, 4, 3, 2, 1, 6, 5);
 
-            packet.WriteGuid("Guid", guid);
+            WowGuid creatureGuid = packet.WriteGuid("Guid", guid);
+
+            CreatureThreatClear threatClear = new CreatureThreatClear();
+            threatClear.Time = packet.Time;
+            Storage.StoreCreatureThreatClear(creatureGuid, threatClear);
         }
 
         [Parser(Opcode.SMSG_THREAT_UPDATE)]

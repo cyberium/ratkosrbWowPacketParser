@@ -33,6 +33,8 @@
         creature_speed_update,
         creature_text,
         creature_text_template,
+        creature_threat_clear,
+        creature_threat_remove,
         creature_threat_update,
         creature_values_update,
         dynamicobject,

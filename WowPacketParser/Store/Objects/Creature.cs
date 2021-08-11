@@ -1063,6 +1063,40 @@ namespace WowPacketParser.Store.Objects
         public long Threat;
     }
 
+    [DBTableName("creature_threat_clear")]
+    public sealed class CreatureThreatClear : IDataModel
+    {
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        public DateTime Time;
+    }
+
+    [DBTableName("creature_threat_remove")]
+    public sealed class CreatureThreatRemove : IDataModel
+    {
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("target_guid", true, true)]
+        public string TargetGuid;
+
+        [DBFieldName("target_id")]
+        public uint TargetId;
+
+        [DBFieldName("target_type", true)]
+        public string TargetType;
+
+        public DateTime Time;
+        public WowGuid TargetGUID;
+    }
+
     [DBTableName("creature_pet_name")]
     public sealed class CreaturePetName : IDataModel
     {

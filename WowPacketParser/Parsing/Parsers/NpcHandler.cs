@@ -647,13 +647,24 @@ namespace WowPacketParser.Parsing.Parsers
         }
 
         [Parser(Opcode.SMSG_THREAT_CLEAR)]
+        public static void HandleClearThreatlist(Packet packet)
+        {
+            WowGuid guid = packet.ReadPackedGuid("GUID");
+
+            CreatureThreatClear threatClear = new CreatureThreatClear();
+            threatClear.Time = packet.Time;
+            Storage.StoreCreatureThreatClear(guid, threatClear);
+        }
+
         [Parser(Opcode.SMSG_THREAT_REMOVE)]
         public static void HandleRemoveThreatlist(Packet packet)
         {
-            packet.ReadPackedGuid("GUID");
+            WowGuid guid = packet.ReadPackedGuid("GUID");
 
-            if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_THREAT_REMOVE, Direction.ServerToClient))
-                packet.ReadPackedGuid("Victim GUID");
+            CreatureThreatRemove threatRemove = new CreatureThreatRemove();
+            threatRemove.TargetGUID = packet.ReadPackedGuid("Victim GUID");
+            threatRemove.Time = packet.Time;
+            Storage.StoreCreatureThreatRemove(guid, threatRemove);
         }
     }
 }

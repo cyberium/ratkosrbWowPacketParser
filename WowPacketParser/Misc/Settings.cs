@@ -124,6 +124,8 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_speed_update = Conf.GetBoolean("creature_speed_update", false);
             public static readonly bool creature_text = Conf.GetBoolean("creature_text", false);
             public static readonly bool creature_text_template = Conf.GetBoolean("creature_text_template", false);
+            public static readonly bool creature_threat_clear = Conf.GetBoolean("creature_threat_clear", false);
+            public static readonly bool creature_threat_remove = Conf.GetBoolean("creature_threat_remove", false);
             public static readonly bool creature_threat_update = Conf.GetBoolean("creature_threat_update", false);
             public static readonly bool creature_values_update = Conf.GetBoolean("creature_values_update", false);
             public static readonly bool dynamicobject = Conf.GetBoolean("dynamicobject", false);

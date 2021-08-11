@@ -879,6 +879,31 @@ CREATE TABLE IF NOT EXISTS `creature_text_template` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_threat_clear
+DROP TABLE IF EXISTS `creature_threat_clear`;
+CREATE TABLE IF NOT EXISTS `creature_threat_clear` (
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `guid` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`unixtimems`,`guid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_THREAT_CLEAR';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.creature_threat_remove
+DROP TABLE IF EXISTS `creature_threat_remove`;
+CREATE TABLE IF NOT EXISTS `creature_threat_remove` (
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `guid` int(10) unsigned NOT NULL,
+  `target_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `target_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`unixtimems`,`guid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_THREAT_REMOVE';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_threat_update
 DROP TABLE IF EXISTS `creature_threat_update`;
 CREATE TABLE IF NOT EXISTS `creature_threat_update` (

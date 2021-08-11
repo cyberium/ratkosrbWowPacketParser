@@ -152,14 +152,22 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_THREAT_REMOVE)]
         public static void HandleRemoveThreatlist(Packet packet)
         {
-            packet.ReadPackedGuid128("UnitGUID");
-            packet.ReadPackedGuid128("AboutGUID");
+            WowGuid guid = packet.ReadPackedGuid128("GUID");
+
+            CreatureThreatRemove threatRemove = new CreatureThreatRemove();
+            threatRemove.TargetGUID = packet.ReadPackedGuid128("Victim GUID");
+            threatRemove.Time = packet.Time;
+            Storage.StoreCreatureThreatRemove(guid, threatRemove);
         }
 
         [Parser(Opcode.SMSG_THREAT_CLEAR)]
         public static void HandleClearThreatlist(Packet packet)
         {
-            packet.ReadPackedGuid128("GUID");
+            WowGuid guid = packet.ReadPackedGuid128("GUID");
+
+            CreatureThreatClear threatClear = new CreatureThreatClear();
+            threatClear.Time = packet.Time;
+            Storage.StoreCreatureThreatClear(guid, threatClear);
         }
 
         [Parser(Opcode.SMSG_AI_REACTION)]

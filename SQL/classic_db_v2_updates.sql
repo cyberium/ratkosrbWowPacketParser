@@ -318,3 +318,25 @@ ALTER TABLE `world_text`
 ALTER TABLE `gameobject`
 	ADD COLUMN `is_spawn` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'create object type 2' AFTER `rotation3`;
 
+CREATE TABLE `creature_threat_clear` (
+	`unixtimems` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+	`guid` INT UNSIGNED NOT NULL,
+	PRIMARY KEY (`unixtimems`, `guid`)
+)
+COMMENT='from SMSG_THREAT_CLEAR'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;
+
+CREATE TABLE `creature_threat_remove` (
+	`unixtimems` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+	`guid` INT UNSIGNED NOT NULL,
+	`target_guid` INT UNSIGNED NOT NULL DEFAULT '0',
+	`target_id` INT UNSIGNED NOT NULL DEFAULT '0',
+	`target_type` VARCHAR(16) NOT NULL DEFAULT '',
+	PRIMARY KEY (`unixtimems`, `guid`)
+)
+COMMENT='from SMSG_THREAT_REMOVE'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;

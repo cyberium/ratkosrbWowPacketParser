@@ -605,6 +605,40 @@ namespace WowPacketParser.Store
                 Storage.CreatureThreatUpdates.Add(guid, threatList);
             }
         }
+        public static readonly Dictionary<WowGuid, List<CreatureThreatClear>> CreatureThreatClears = new Dictionary<WowGuid, List<CreatureThreatClear>>();
+        public static void StoreCreatureThreatClear(WowGuid guid, CreatureThreatClear update)
+        {
+            if (!Settings.SqlTables.creature_threat_clear)
+                return;
+
+            if (Storage.CreatureThreatClears.ContainsKey(guid))
+            {
+                Storage.CreatureThreatClears[guid].Add(update);
+            }
+            else
+            {
+                List<CreatureThreatClear> threatList = new List<CreatureThreatClear>();
+                threatList.Add(update);
+                Storage.CreatureThreatClears.Add(guid, threatList);
+            }
+        }
+        public static readonly Dictionary<WowGuid, List<CreatureThreatRemove>> CreatureThreatRemoves = new Dictionary<WowGuid, List<CreatureThreatRemove>>();
+        public static void StoreCreatureThreatRemove(WowGuid guid, CreatureThreatRemove update)
+        {
+            if (!Settings.SqlTables.creature_threat_remove)
+                return;
+
+            if (Storage.CreatureThreatRemoves.ContainsKey(guid))
+            {
+                Storage.CreatureThreatRemoves[guid].Add(update);
+            }
+            else
+            {
+                List<CreatureThreatRemove> threatList = new List<CreatureThreatRemove>();
+                threatList.Add(update);
+                Storage.CreatureThreatRemoves.Add(guid, threatList);
+            }
+        }
         public static readonly Dictionary<WowGuid, List<UnitMeleeAttackLog>> UnitAttackLogs = new Dictionary<WowGuid, List<UnitMeleeAttackLog>>();
         public static void StoreUnitAttackLog(UnitMeleeAttackLog attackData)
         {
