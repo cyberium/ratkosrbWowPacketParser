@@ -1062,4 +1062,14 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("threat", true)]
         public long Threat;
     }
+
+    [DBTableName("creature_pet_name")]
+    public sealed class CreaturePetName : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("name")]
+        public string Name;
+    }
 }

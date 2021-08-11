@@ -120,6 +120,7 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_movement_client = Conf.GetBoolean("creature_movement_client", false);
             public static readonly bool creature_movement_server = Conf.GetBoolean("creature_movement_server", false);
             public static readonly bool creature_movement_server_combat = Conf.GetBoolean("creature_movement_server_combat", false);
+            public static readonly bool creature_pet_name = Conf.GetBoolean("creature_pet_name", false);
             public static readonly bool creature_speed_update = Conf.GetBoolean("creature_speed_update", false);
             public static readonly bool creature_text = Conf.GetBoolean("creature_text", false);
             public static readonly bool creature_text_template = Conf.GetBoolean("creature_text_template", false);

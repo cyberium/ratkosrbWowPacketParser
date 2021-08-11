@@ -29,6 +29,7 @@
         creature_movement_client,
         creature_movement_server,
         creature_movement_server_combat,
+        creature_pet_name,
         creature_speed_update,
         creature_text,
         creature_text_template,

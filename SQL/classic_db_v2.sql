@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `client_creature_interact` (
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   PRIMARY KEY (`guid`,`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the client talked to the creature';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the client talked to a creature';
 
 -- Data exporting was unselected.
 
@@ -126,7 +126,7 @@ DROP TABLE IF EXISTS `client_release_spirit`;
 CREATE TABLE IF NOT EXISTS `client_release_spirit` (
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
   PRIMARY KEY (`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from CMSG_CLIENT_PORT_GRAVEYARD';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from CMSG_REPOP_REQUEST';
 
 -- Data exporting was unselected.
 
@@ -196,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `creature` (
   PRIMARY KEY (`guid`),
   KEY `idx_map` (`map`),
   KEY `idx_id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Creature System';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='the initial state of all individual creature spawns seen in the sniff';
 
 -- Data exporting was unselected.
 
@@ -374,7 +374,7 @@ CREATE TABLE IF NOT EXISTS `creature_display_info_addon` (
   `gender` tinyint(3) unsigned NOT NULL DEFAULT '2',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`display_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Creature System (Model related info)';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='data for display ids used by creatures';
 
 -- Data exporting was unselected.
 
@@ -415,7 +415,7 @@ CREATE TABLE IF NOT EXISTS `creature_equip_template` (
   `item_id3` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='all weapons used by a given creature id, assigned in the virtual item slots';
 
 -- Data exporting was unselected.
 
@@ -439,7 +439,7 @@ CREATE TABLE IF NOT EXISTS `creature_gossip` (
   `is_default` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`gossip_menu_id`,`is_default`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all unique gossip menu ids used for given creature id';
 
 -- Data exporting was unselected.
 
@@ -498,7 +498,7 @@ CREATE TABLE IF NOT EXISTS `creature_loot` (
   `money` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'copper',
   `items_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'number of items dropped',
   PRIMARY KEY (`entry`,`loot_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='each row represents a separate loot instance';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='each row represents a separate loot instance\r\nmight not contain all the items or gold that dropped if somebody else looted them first';
 
 -- Data exporting was unselected.
 
@@ -637,7 +637,7 @@ CREATE TABLE IF NOT EXISTS `creature_pet_actions` (
   `slot8` int(10) unsigned NOT NULL DEFAULT '0',
   `slot9` int(10) unsigned NOT NULL DEFAULT '0',
   `slot10` int(10) unsigned NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_PET_SPELLS_MESSAGE';
 
 -- Data exporting was unselected.
 
@@ -651,7 +651,18 @@ CREATE TABLE IF NOT EXISTS `creature_pet_cooldown` (
   `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
   `cooldown` int(10) unsigned NOT NULL DEFAULT '0',
   `mod_rate` float unsigned NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_SPELL_COOLDOWN';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.creature_pet_name
+DROP TABLE IF EXISTS `creature_pet_name`;
+CREATE TABLE IF NOT EXISTS `creature_pet_name` (
+  `guid` int(10) unsigned NOT NULL,
+  `name` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`guid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_QUERY_PET_NAME_RESPONSE';
 
 -- Data exporting was unselected.
 
@@ -664,7 +675,7 @@ CREATE TABLE IF NOT EXISTS `creature_questitem` (
   `item_id` int(10) unsigned NOT NULL DEFAULT '0',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='quest items that drop from a given creature id\r\nfrom SMSG_QUERY_CREATURE_RESPONSE';
 
 -- Data exporting was unselected.
 
@@ -740,7 +751,7 @@ CREATE TABLE IF NOT EXISTS `creature_stats` (
   `negative_shadow_res` int(11) DEFAULT NULL,
   `negative_arcane_res` int(11) DEFAULT NULL,
   PRIMARY KEY (`entry`,`level`,`is_pet`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='stats data from SMSG_UPDATE_OBJECT, server only sends it if the creature is mind controlled';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='stats data from SMSG_UPDATE_OBJECT\r\nserver only sends it to the creature''s charmer, or player who casts beast lore on it';
 
 -- Data exporting was unselected.
 
@@ -749,23 +760,23 @@ CREATE TABLE IF NOT EXISTS `creature_stats` (
 DROP TABLE IF EXISTS `creature_template`;
 CREATE TABLE IF NOT EXISTS `creature_template` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `gossip_menu_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `gossip_menu_id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'will only be set if the client talked to this npc',
   `level_min` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `level_max` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `faction` smallint(5) unsigned NOT NULL DEFAULT '0',
   `npc_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `speed_walk` float NOT NULL DEFAULT '1' COMMENT 'Result of 2.5/2.5, most common value',
   `speed_run` float NOT NULL DEFAULT '1.14286' COMMENT 'Result of 8.0/7.0, most common value',
-  `scale` float NOT NULL DEFAULT '1.14286',
+  `scale` float NOT NULL DEFAULT '1',
   `base_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
   `ranged_attack_time` int(10) unsigned NOT NULL DEFAULT '0',
   `unit_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `unit_flags2` int(10) unsigned NOT NULL DEFAULT '0',
   `vehicle_id` int(11) NOT NULL DEFAULT '0',
   `hover_height` float NOT NULL DEFAULT '0',
-  `auras` text,
+  `auras` text COMMENT 'only includes auras with the NO_CASTER flag',
   PRIMARY KEY (`entry`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Creature System';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='most commonly seen values per given creature id\r\ndata here is not guaranteed to be the true default';
 
 -- Data exporting was unselected.
 
@@ -828,7 +839,7 @@ CREATE TABLE IF NOT EXISTS `creature_template_wdb` (
   `movement_id` int(11) NOT NULL DEFAULT '0',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='static creature data from SMSG_QUERY_CREATURE_RESPONSE which gets saved to wdb cache';
 
 -- Data exporting was unselected.
 
@@ -876,7 +887,7 @@ CREATE TABLE IF NOT EXISTS `creature_threat_update` (
   `target_count` int(10) unsigned NOT NULL DEFAULT '0',
   `target_list_id` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`,`target_list_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACK_START';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_THREAT_UPDATE and SMSG_HIGHEST_THREAT_UPDATE';
 
 -- Data exporting was unselected.
 
@@ -889,7 +900,7 @@ CREATE TABLE IF NOT EXISTS `creature_threat_update_target` (
   `target_id` int(10) unsigned NOT NULL DEFAULT '0',
   `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `threat` bigint(20) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_ATTACK_START';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='individual targets and their threat from SMSG_THREAT_UPDATE and SMSG_HIGHEST_THREAT_UPDATE';
 
 -- Data exporting was unselected.
 
@@ -963,7 +974,7 @@ CREATE TABLE IF NOT EXISTS `dynamicobject` (
   `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `cast_time` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Gameobject System';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='the initial state of all individual dynamicobject spawns seen in the sniff\r\nthese are the objects used for ground targeted spell animations';
 
 -- Data exporting was unselected.
 
@@ -1031,7 +1042,7 @@ CREATE TABLE IF NOT EXISTS `faction_standing_update` (
   `achievement_bonus` float NOT NULL DEFAULT '0',
   `show_visual` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`unixtimems`,`reputation_list_id`,`standing`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_LOG_XP_GAIN';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_SET_FACTION_STANDING';
 
 -- Data exporting was unselected.
 
@@ -1069,7 +1080,7 @@ CREATE TABLE IF NOT EXISTS `gameobject` (
   `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0',
   `sniff_build` smallint(5) unsigned DEFAULT '0',
   PRIMARY KEY (`guid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Gameobject System';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='the initial state of all individual gameobject spawns seen in the sniff';
 
 -- Data exporting was unselected.
 
@@ -1177,7 +1188,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_loot` (
   `money` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'copper',
   `items_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'number of items dropped',
   PRIMARY KEY (`entry`,`loot_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='each row represents a separate loot instance';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='each row represents a separate loot instance\r\nmight not contain all the items or gold that dropped if somebody else looted them first';
 
 -- Data exporting was unselected.
 
@@ -1201,7 +1212,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_questitem` (
   `item_id` int(10) unsigned NOT NULL DEFAULT '0',
   `sniff_build` smallint(5) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='quest items that drop from a given gameobject id\r\nfrom SMSG_QUERY_GAME_OBJECT_RESPONSE';
 
 -- Data exporting was unselected.
 
@@ -1256,7 +1267,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_template` (
   `sniff_build` mediumint(8) unsigned DEFAULT '0',
   PRIMARY KEY (`entry`),
   KEY `idx_name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Gameobject System';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='static gameobject data from SMSG_QUERY_GAME_OBJECT_RESPONSE which gets saved to wdb cache';
 
 -- Data exporting was unselected.
 
@@ -1700,7 +1711,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   `equipment_cache` text,
   `auras` text,
   PRIMARY KEY (`guid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='player data in format used by vmangos db';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='the initial state of all players seen in the sniff';
 
 -- Data exporting was unselected.
 
@@ -2599,7 +2610,7 @@ CREATE TABLE IF NOT EXISTS `sniff_data` (
   `id` int(10) NOT NULL DEFAULT '0',
   `data` text NOT NULL,
   UNIQUE KEY `SniffName` (`object_type`,`id`,`data`(255),`sniff_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='information about the contents of each sniff included in the database\r\ncan be used to figure out where specific data can be found';
 
 -- Data exporting was unselected.
 
@@ -2611,7 +2622,7 @@ CREATE TABLE IF NOT EXISTS `sniff_file` (
   `build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `name` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='the names of all sniffs included in the database';
 
 -- Data exporting was unselected.
 
@@ -2757,7 +2768,7 @@ CREATE TABLE IF NOT EXISTS `spell_target_position` (
   `orientation` float NOT NULL DEFAULT '0',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`effect_index`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Spell System';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='target coordinates for spells which need them defined in the database';
 
 -- Data exporting was unselected.
 
@@ -2817,7 +2828,7 @@ CREATE TABLE IF NOT EXISTS `weather_update` (
   `sound` int(11) NOT NULL DEFAULT '0',
   `instant` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_WEATHER';
 
 -- Data exporting was unselected.
 
@@ -2857,7 +2868,7 @@ CREATE TABLE IF NOT EXISTS `world_text` (
   `chat_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'chat type',
   `language` tinyint(3) NOT NULL DEFAULT '0' COMMENT 'references Languages.dbc',
   PRIMARY KEY (`unixtimems`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='unique texts per creature id';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='texts sent by the server which did not originate from a creature or player';
 
 -- Data exporting was unselected.
 

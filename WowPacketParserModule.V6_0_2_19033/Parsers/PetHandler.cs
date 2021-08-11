@@ -17,7 +17,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_QUERY_PET_NAME_RESPONSE)]
         public static void HandlePetNameQueryResponse(Packet packet)
         {
-            packet.ReadPackedGuid128("PetID");
+            WowGuid guid = packet.ReadPackedGuid128("PetID");
 
             var hasData = packet.ReadBit("Has Data");
             if (!hasData)
@@ -35,7 +35,8 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 packet.ReadWoWString("DeclinedNames", declinedNameLen[i], i);
 
             packet.ReadTime("Timestamp");
-            packet.ReadWoWString("Pet name", len);
+            string name = packet.ReadWoWString("Pet name", len);
+            StoreGetters.AddName(guid, name);
         }
 
         public static uint ReadPetAction(Packet packet, params object[] indexes)

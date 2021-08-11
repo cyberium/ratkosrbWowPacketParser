@@ -58,6 +58,7 @@ namespace WowPacketParser.SQL.Builders
             var movementCombatSplineRows = new RowList<ServerSideMovementSpline>();
             var movementSplineRows = new RowList<ServerSideMovementSpline>();
             var movementClientRows = new RowList<ClientSideMovement>();
+            var petNameRows = new RowList<CreaturePetName>();
             var updateAurasRows = new RowList<CreatureAurasUpdate>();
             var updateThreatRows = new RowList<CreatureThreatUpdate>();
             var updateThreatTargetRows = new RowList<CreatureThreatUpdateTarget>();
@@ -663,6 +664,23 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
+                if (Settings.SqlTables.creature_pet_name)
+                {
+                    string petName = StoreGetters.GetName(unit.Key);
+                    if (petName != null)
+                    {
+                        var petNameRow = new Row<CreaturePetName>();
+                        petNameRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                        petNameRow.Data.Name = petName;
+                        petNameRows.Add(petNameRow);
+                    }
+                    else if (row.Data.IsPet == 1)
+                    {
+                        Console.WriteLine("no name");
+                        Console.ReadKey();
+                    }
+                }
+
                 if (creature.WasOriginallyOnTransport() && badTransport)
                 {
                     row.CommentOut = true;
@@ -810,6 +828,13 @@ namespace WowPacketParser.SQL.Builders
                 // creature_movement_server_combat_spline
                 var movementSplineSql = new SQLInsert<ServerSideMovementSpline>(movementCombatSplineRows, false, false, "creature_movement_server_combat_spline");
                 result.Append(movementSplineSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.creature_pet_name && petNameRows.Count != 0)
+            {
+                var petNameSql = new SQLInsert<CreaturePetName>(petNameRows, false);
+                result.Append(petNameSql.Build());
                 result.AppendLine();
             }
 
