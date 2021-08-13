@@ -45,7 +45,7 @@ namespace WowPacketParser.SQL.Builders
                     if (!(npc.Map.ToString(CultureInfo.InvariantCulture).MatchesFilters(Settings.MapFilters)))
                         continue;
 
-                var auras = npc.GetAurasString(true);
+                var auras = npc.GetOriginalAurasString(true);
 
                 var addon = new CreatureTemplateAddon
                 {
@@ -1161,9 +1161,9 @@ namespace WowPacketParser.SQL.Builders
                     continue;   // broken entry
 
                 var auras = string.Empty;
-                if (npc.Auras != null && npc.Auras.Count != 0)
+                if (npc.AurasOriginal != null && npc.AurasOriginal.Count != 0)
                 {
-                    foreach (var aura in npc.Auras.Where(aura =>
+                    foreach (var aura in npc.AurasOriginal.Where(aura =>
                         aura != null &&
                         (ClientVersion.AddedInVersion(ClientType.MistsOfPandaria) ?
                             aura.AuraFlags.HasAnyFlag(AuraFlagMoP.NoCaster) :

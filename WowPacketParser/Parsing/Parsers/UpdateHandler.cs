@@ -114,6 +114,10 @@ namespace WowPacketParser.Parsing.Parsers
                 obj.Zone = WorldStateHandler.CurrentZoneId;
                 obj.PhaseMask = (uint)MovementHandler.CurrentPhaseMask;
                 Storage.StoreNewObject(guid, obj, type, packet);
+
+                // Must be after unit has been added to store.
+                if (ClientVersion.HasAurasInUpdateFields())
+                    ParseAurasFromUpdateFields(packet, guid, updates);
             }
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))
@@ -302,6 +306,10 @@ namespace WowPacketParser.Parsing.Parsers
                 (guid.GetObjectType() == ObjectType.Player) ||
                 (guid.GetObjectType() == ObjectType.ActivePlayer))
             {
+
+                if (ClientVersion.HasAurasInUpdateFields())
+                    ParseAurasFromUpdateFields(packet, guid, updates);
+
                 bool hasData = false;
                 CreatureValuesUpdate creatureUpdate = new CreatureValuesUpdate();
                 foreach (var update in updates)
@@ -1050,6 +1058,84 @@ namespace WowPacketParser.Parsing.Parsers
                 }
             }
             return hasPlayerLevelup;
+        }
+
+        private static void ParseAurasFromUpdateFields(Packet packet, WowGuid guid, Dictionary<int, UpdateField> updates)
+        {
+            if ((guid.GetObjectType() == ObjectType.Unit) ||
+                (guid.GetObjectType() == ObjectType.Player) ||
+                (guid.GetObjectType() == ObjectType.ActivePlayer))
+            {
+                int UNIT_FIELD_AURA = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_AURA);
+                int UNIT_FIELD_AURAFLAGS = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_AURAFLAGS);
+                int UNIT_FIELD_AURALEVELS = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_AURALEVELS);
+                int UNIT_FIELD_AURAAPPLICATIONS = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_AURAAPPLICATIONS);
+                int UNIT_FIELD_AURASTATE = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_AURASTATE);
+
+                if (UNIT_FIELD_AURA > 0 && UNIT_FIELD_AURAFLAGS > 0 && UNIT_FIELD_AURALEVELS > 0 && UNIT_FIELD_AURAAPPLICATIONS > 0 && UNIT_FIELD_AURASTATE > 0)
+                {
+                    var auras = new List<Aura>();
+
+                    foreach (var update in updates)
+                    {
+                        if (update.Key >= UNIT_FIELD_AURA && update.Key < UNIT_FIELD_AURASTATE)
+                        {
+                            if (update.Key >= UNIT_FIELD_AURA && update.Key < UNIT_FIELD_AURAFLAGS)
+                            {
+                                var aura = new Aura();
+                                aura.Slot = (uint)(update.Key - UNIT_FIELD_AURA);
+                                aura.SpellId = update.Value.UInt32Value;
+                                auras.Add(aura);
+                            }
+                            else if (update.Key >= UNIT_FIELD_AURAFLAGS && update.Key < UNIT_FIELD_AURALEVELS)
+                            {
+                                for (int i = 0; i < 8; i++)
+                                {
+                                    uint slot = (uint)(update.Key - UNIT_FIELD_AURAFLAGS) * 8 + (uint)i;
+                                    uint flags = (update.Value.UInt32Value >> (i * 4)) & 0xF;
+                                    foreach (Aura aura in auras)
+                                    {
+                                        if (aura.Slot == slot)
+                                            aura.AuraFlags = flags;
+                                    }
+                                }
+                            }
+                            else if (update.Key >= UNIT_FIELD_AURALEVELS && update.Key < UNIT_FIELD_AURAAPPLICATIONS)
+                            {
+                                for (int i = 0; i < 4; i++)
+                                {
+                                    uint slot = (uint)(update.Key - UNIT_FIELD_AURALEVELS) * 4 + (uint)i;
+                                    uint level = (update.Value.UInt32Value >> (i * 8)) & 0xFF;
+                                    foreach (Aura aura in auras)
+                                    {
+                                        if (aura.Slot == slot)
+                                            aura.Level = level;
+                                    }
+                                }
+                            }
+                            else if (update.Key >= UNIT_FIELD_AURAAPPLICATIONS && update.Key < UNIT_FIELD_AURASTATE)
+                            {
+                                for (int i = 0; i < 4; i++)
+                                {
+                                    uint slot = (uint)(update.Key - UNIT_FIELD_AURAAPPLICATIONS) * 4 + (uint)i;
+                                    byte charges = (byte)((update.Value.UInt32Value >> (i * 8)) & 0xFF);
+                                    if (charges != 0)
+                                        charges += 1;
+
+                                    foreach (Aura aura in auras)
+                                    {
+                                        if (aura.Slot == slot)
+                                            aura.Charges = charges;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (auras.Count > 0)
+                        Storage.StoreUnitAurasUpdate(guid, auras, packet.Time);
+                }
+            }
         }
 
         private static Dictionary<int, UpdateField> ReadValuesUpdateBlock(Packet packet, ObjectType type, object index, bool isCreating, Dictionary<int, UpdateField> oldValues)

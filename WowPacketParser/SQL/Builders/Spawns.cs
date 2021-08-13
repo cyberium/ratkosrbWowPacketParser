@@ -222,7 +222,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.SniffId = "@SNIFFID+" + creature.SourceSniffId;
                 row.Data.SniffBuild = creature.SourceSniffBuild;
 
-                row.Data.Auras = creature.GetAurasString(false);
+                row.Data.Auras = creature.GetOriginalAurasString(false);
 
                 if (Settings.SqlTables.creature_guid_values)
                 {
@@ -566,7 +566,7 @@ namespace WowPacketParser.SQL.Builders
                     addonRow.Data.PvpFlags = unitData.PvpFlags;
                     addonRow.Data.Emote = (uint)unitData.EmoteState;
                     addonRow.Data.MoveFlags = (uint)creature.OriginalMovement.Flags;
-                    addonRow.Data.Auras = creature.GetAurasString(true);
+                    addonRow.Data.Auras = creature.GetOriginalAurasString(true);
                     addonRow.Data.AIAnimKit = creature.AIAnimKit.GetValueOrDefault(0);
                     addonRow.Data.MovementAnimKit = creature.MovementAnimKit.GetValueOrDefault(0);
                     addonRow.Data.MeleeAnimKit = creature.MeleeAnimKit.GetValueOrDefault(0);

@@ -1013,5 +1013,10 @@ namespace WowPacketParser.Misc
                     return false;
             }
         }
+
+        public static bool HasAurasInUpdateFields()
+        {
+            return ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056);
+        }
     }
 }

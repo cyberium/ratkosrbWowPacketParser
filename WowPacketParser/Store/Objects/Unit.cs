@@ -14,6 +14,7 @@ namespace WowPacketParser.Store.Objects
         public uint DbGuid;
 
         public List<Aura> Auras;
+        public List<Aura> AurasOriginal;
         public List<ServerSideMovement> Waypoints;
         public List<ServerSideMovement> CombatMovements;
         public List<ServerSideMovementSpline> WaypointSplines;
@@ -83,12 +84,26 @@ namespace WowPacketParser.Store.Objects
             return UnitDataOriginal.DynamicFlags;
         }
 
-        public string GetAurasString(bool noCaster)
+        public Aura GetAuraInSlot(uint slot)
+        {
+            if (Auras == null)
+                return null;
+
+            foreach (Aura aura in Auras)
+            {
+                if (aura.Slot == slot)
+                    return aura;
+            }
+
+            return null;
+        }
+
+        public string GetOriginalAurasString(bool noCaster)
         {
             string auras = string.Empty;
-            if (Auras != null && Auras.Count != 0)
+            if (AurasOriginal != null && AurasOriginal.Count != 0)
             {
-                foreach (Aura aura in Auras)
+                foreach (Aura aura in AurasOriginal)
                 {
                     if (aura == null)
                         continue;
@@ -106,6 +121,95 @@ namespace WowPacketParser.Store.Objects
             }
 
             return auras;
+        }
+
+        public void ApplyAuraUpdates(List<Aura> updates)
+        {
+            if (Auras == null)
+            {
+                // Remove empty slots for clients which have auras in update fields
+                if (ClientVersion.HasAurasInUpdateFields())
+                {
+                    for (int i = updates.Count - 1; i >= 0; i--)
+                    {
+                        if (updates[i].SpellId == 0)
+                            updates.RemoveAt(i);
+                    }
+                }
+
+                Auras = updates;
+                return;
+            }
+
+            for (int i = updates.Count - 1; i >= 0; i--)
+            {
+                Aura update = updates[i];
+                Aura aura = GetAuraInSlot((uint)update.Slot);
+
+                // For versions that have auras in update fields we have to modify the list sometimes.
+                if (ClientVersion.HasAurasInUpdateFields())
+                {
+                    if (aura != null)
+                    {
+                        // Assign missing data from previous update.
+                        if (update.SpellId == 0 && (update.AuraFlags != 0 || update.Charges != 0 || update.Level != 0))
+                            update.SpellId = aura.SpellId;
+                        if (update.AuraFlags == 0 && (update.SpellId != 0 || update.Charges != 0 || update.Level != 0))
+                            update.AuraFlags = aura.AuraFlags;
+                        if (update.Charges == 0 && (update.SpellId != 0 || update.AuraFlags != 0 || update.Level != 0))
+                            update.Charges = aura.Charges;
+                        if (update.Level == 0 && (update.SpellId != 0 || update.AuraFlags != 0 || update.Charges != 0))
+                            update.Level = aura.Level;
+
+                        // Useless update.
+                        if (update.SpellId == aura.SpellId &&
+                            update.AuraFlags == aura.AuraFlags &&
+                            update.Charges == aura.Charges &&
+                            update.Level == aura.Level)
+                        {
+                            updates.RemoveAt(i);
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        // Remove updates to 0 for slots that are null.
+                        if (update.SpellId == 0)
+                            updates.RemoveAt(i);
+                        else
+                            Auras.Add(update);
+
+                        continue;
+                    }
+                    
+                }
+                else if (aura == null)
+                {
+                    Auras.Add(update);
+                    continue;
+                }
+
+                if (aura.SpellId != update.SpellId)
+                    aura.SpellId = update.SpellId;
+                if (aura.VisualId != update.VisualId)
+                    aura.VisualId = update.VisualId;
+                if (aura.AuraFlags != update.AuraFlags)
+                    aura.AuraFlags = update.AuraFlags;
+                if (aura.ActiveFlags != update.ActiveFlags)
+                    aura.ActiveFlags = update.ActiveFlags;
+                if (aura.Level != update.Level)
+                    aura.Level = update.Level;
+                if (aura.Charges != update.Charges)
+                    aura.Charges = update.Charges;
+                if (aura.ContentTuningId != update.ContentTuningId)
+                    aura.ContentTuningId = update.ContentTuningId;
+                if (aura.CasterGuid != update.CasterGuid)
+                    aura.CasterGuid = update.CasterGuid;
+                if (aura.MaxDuration != update.MaxDuration)
+                    aura.MaxDuration = update.MaxDuration;
+                if (aura.Duration != update.Duration)
+                    aura.Duration = update.Duration;
+            }
         }
 
         public void AddWaypoint(ServerSideMovement movementData, Vector3 startPosition, DateTime packetTime)

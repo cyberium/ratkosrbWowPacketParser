@@ -26,5 +26,22 @@ namespace WowPacketParser.Store.Objects
         public int MaxDuration;
 
         public int Duration;
+
+        public Aura Clone()
+        {
+            Aura aura = new Aura();
+            aura.Slot = Slot;
+            aura.SpellId = SpellId;
+            aura.VisualId = VisualId;
+            aura.AuraFlags = AuraFlags;
+            aura.ActiveFlags = ActiveFlags;
+            aura.Level = Level;
+            aura.Charges = Charges;
+            aura.ContentTuningId = ContentTuningId;
+            aura.CasterGuid = CasterGuid;
+            aura.MaxDuration = MaxDuration;
+            aura.Duration = Duration;
+            return aura;
+        }
     }
 }

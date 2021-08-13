@@ -121,11 +121,13 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                     Storage.StartPositions.Add(startPos, packet.TimeSpan);
                 }
 
+                /*
                 var playerInfo = new Player { Race = race, Class = klass, Name = name, FirstLogin = firstLogins[c], Level = level, Type = ObjectType.Player };
                 if (Storage.Objects.ContainsKey(playerGuid))
                     Storage.Objects[playerGuid] = new Tuple<WoWObject, TimeSpan?>(playerInfo, packet.TimeSpan);
                 else
                     Storage.Objects.Add(playerGuid, playerInfo, packet.TimeSpan);
+                */
 
                 StoreGetters.AddName(playerGuid, name);
             }

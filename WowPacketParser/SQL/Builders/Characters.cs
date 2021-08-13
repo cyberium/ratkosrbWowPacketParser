@@ -205,7 +205,7 @@ namespace WowPacketParser.SQL.Builders
                     playerRow.Data.RangedAttackTime = player.UnitDataOriginal.RangedAttackRoundBaseTime;
                     playerRow.Data.ChannelSpellId = (uint)player.UnitDataOriginal.ChannelData.SpellID;
                     playerRow.Data.ChannelVisualId = (uint)player.UnitDataOriginal.ChannelData.SpellVisual.SpellXSpellVisualID;
-                    playerRow.Data.Auras = player.GetAurasString(false);
+                    playerRow.Data.Auras = player.GetOriginalAurasString(false);
                     playerRow.Data.EquipmentCache = row.Data.EquipmentCache;
                     playerRows.Add(playerRow);
                 }
