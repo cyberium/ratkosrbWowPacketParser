@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Store.Objects.UpdateFields;
@@ -127,65 +128,16 @@ namespace WowPacketParser.Store.Objects
         {
             if (Auras == null)
             {
-                // Remove empty slots for clients which have auras in update fields
-                if (ClientVersion.HasAurasInUpdateFields())
-                {
-                    for (int i = updates.Count - 1; i >= 0; i--)
-                    {
-                        if (updates[i].SpellId == 0)
-                            updates.RemoveAt(i);
-                    }
-                }
-
-                Auras = updates;
+                Auras = updates.Select(aura => aura.Clone()).ToList(); ;
                 return;
             }
 
-            for (int i = updates.Count - 1; i >= 0; i--)
+            foreach (Aura update in updates)
             {
-                Aura update = updates[i];
                 Aura aura = GetAuraInSlot((uint)update.Slot);
-
-                // For versions that have auras in update fields we have to modify the list sometimes.
-                if (ClientVersion.HasAurasInUpdateFields())
+                if (aura == null)
                 {
-                    if (aura != null)
-                    {
-                        // Assign missing data from previous update.
-                        if (update.SpellId == 0 && (update.AuraFlags != 0 || update.Charges != 0 || update.Level != 0))
-                            update.SpellId = aura.SpellId;
-                        if (update.AuraFlags == 0 && (update.SpellId != 0 || update.Charges != 0 || update.Level != 0))
-                            update.AuraFlags = aura.AuraFlags;
-                        if (update.Charges == 0 && (update.SpellId != 0 || update.AuraFlags != 0 || update.Level != 0))
-                            update.Charges = aura.Charges;
-                        if (update.Level == 0 && (update.SpellId != 0 || update.AuraFlags != 0 || update.Charges != 0))
-                            update.Level = aura.Level;
-
-                        // Useless update.
-                        if (update.SpellId == aura.SpellId &&
-                            update.AuraFlags == aura.AuraFlags &&
-                            update.Charges == aura.Charges &&
-                            update.Level == aura.Level)
-                        {
-                            updates.RemoveAt(i);
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        // Remove updates to 0 for slots that are null.
-                        if (update.SpellId == 0)
-                            updates.RemoveAt(i);
-                        else
-                            Auras.Add(update);
-
-                        continue;
-                    }
-                    
-                }
-                else if (aura == null)
-                {
-                    Auras.Add(update);
+                    Auras.Add(update.Clone());
                     continue;
                 }
 

@@ -327,17 +327,9 @@ namespace WowPacketParser.Store
                 {
                     // If this is the first packet that sends auras
                     // (hopefully at spawn time) add it to the "Auras" field
-                    if (unit.AurasOriginal == null && unit.FirstCreateTime != null && ((time - unit.FirstCreateTime).TotalSeconds < 3))
+                    int maxInitialAurasDelay = ClientVersion.HasAurasInUpdateFields() ? 1 : 3;
+                    if (unit.AurasOriginal == null && unit.FirstCreateTime != null && ((time - unit.FirstCreateTime).TotalSeconds < maxInitialAurasDelay))
                     {
-                        // Remove empty slots for clients which have auras in update fields
-                        if (ClientVersion.HasAurasInUpdateFields())
-                        {
-                            for (int i = auras.Count - 1; i >= 0; i--)
-                            {
-                                if (auras[i].SpellId == 0)
-                                    auras.RemoveAt(i);
-                            }
-                        }
                         unit.AurasOriginal = auras;
                         unit.Auras = auras.Select(aura => aura.Clone()).ToList();
                     }

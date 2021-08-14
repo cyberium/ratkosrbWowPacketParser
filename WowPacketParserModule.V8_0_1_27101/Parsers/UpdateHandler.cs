@@ -10,6 +10,7 @@ using SplineFlag = WowPacketParserModule.V7_0_3_22248.Enums.SplineFlag;
 using CoreFields = WowPacketParser.Enums.Version;
 using WowPacketParser.Store.Objects.UpdateFields;
 using System;
+using System.Collections;
 
 namespace WowPacketParserModule.V8_0_1_27101.Parsers
 {
@@ -530,6 +531,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 }
             }
 
+            BitArray updateMaskArray = null;
             var moves = ReadMovementUpdateBlock(packet, guid, obj, index);
             Storage.StoreObjectCreateTime(guid, map, moves, packet.Time, type);
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_1_0_28724))
@@ -637,7 +639,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             }
             else
             {
-                var updates = CoreParsers.UpdateHandler.ReadValuesUpdateBlockOnCreate(packet, objType, index);
+                var updates = CoreParsers.UpdateHandler.ReadValuesUpdateBlockOnCreate(packet, objType, index, out updateMaskArray);
                 var dynamicUpdates = CoreParsers.UpdateHandler.ReadDynamicValuesUpdateBlockOnCreate(packet, objType, index);
 
                 obj.UpdateFields = updates;
@@ -656,7 +658,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             // If this is the second time we see the same object (same guid,
             // same position) update its phasemask
             if (isExistingObject)
-                CoreParsers.UpdateHandler.ProcessExistingObject(ref obj, guid, packet, obj.UpdateFields, obj.DynamicUpdateFields, moves); // can't do "ref Storage.Objects[guid].Item1 directly
+                CoreParsers.UpdateHandler.ProcessExistingObject(ref obj, guid, packet, updateMaskArray, obj.UpdateFields, obj.DynamicUpdateFields, moves); // can't do "ref Storage.Objects[guid].Item1 directly
             else
                 Storage.StoreNewObject(guid, obj, type, packet);
 

@@ -82,7 +82,9 @@ namespace WowPacketParser.Parsing.Parsers
             ObjectType objType = ObjectTypeConverter.Convert(packet.ReadByteE<ObjectTypeLegacy>("Object Type", index));
             var moves = ReadMovementUpdateBlock(packet, guid, index);
             Storage.StoreObjectCreateTime(guid, map, moves, packet.Time, type);
-            var updates = ReadValuesUpdateBlockOnCreate(packet, objType, index);
+
+            BitArray updateMaskArray = null;
+            var updates = ReadValuesUpdateBlockOnCreate(packet, objType, index, out updateMaskArray);
             var dynamicUpdates = ReadDynamicValuesUpdateBlockOnCreate(packet, objType, index);
 
             // If this is the second time we see the same object (same guid,
@@ -90,7 +92,7 @@ namespace WowPacketParser.Parsing.Parsers
             if (Storage.Objects.ContainsKey(guid))
             {
                 var existObj = Storage.Objects[guid].Item1;
-                ProcessExistingObject(ref existObj, guid, packet, updates, dynamicUpdates, moves); // can't do "ref Storage.Objects[guid].Item1 directly
+                ProcessExistingObject(ref existObj, guid, packet, updateMaskArray, updates, dynamicUpdates, moves); // can't do "ref Storage.Objects[guid].Item1 directly
             }
             else
             {
@@ -117,16 +119,16 @@ namespace WowPacketParser.Parsing.Parsers
 
                 // Must be after unit has been added to store.
                 if (ClientVersion.HasAurasInUpdateFields())
-                    ParseAurasFromUpdateFields(packet, guid, updates);
+                    ParseAurasFromUpdateFields(packet, guid, updateMaskArray, updates);
             }
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))
                 packet.AddSniffData(Utilities.ObjectTypeToStore(objType), (int)guid.GetEntry(), "SPAWN");
         }
 
-        public static Dictionary<int, UpdateField> ReadValuesUpdateBlockOnCreate(Packet packet, ObjectType type, object index)
+        public static Dictionary<int, UpdateField> ReadValuesUpdateBlockOnCreate(Packet packet, ObjectType type, object index, out BitArray outUpdateMaskArray)
         {
-            return ReadValuesUpdateBlock(packet, type, index, true, null);
+            return ReadValuesUpdateBlock(packet, type, index, true, null, out outUpdateMaskArray);
         }
 
         public static Dictionary<int, List<UpdateField>> ReadDynamicValuesUpdateBlockOnCreate(Packet packet, ObjectType type, object index)
@@ -145,13 +147,13 @@ namespace WowPacketParser.Parsing.Parsers
             StoreObjectSpeedUpdate(time, guid, moveInfo);
             obj.Movement = moveInfo;
         }
-        public static void ProcessExistingObject(ref WoWObject obj, WowGuid guid, Packet packet, Dictionary<int, UpdateField> updates, Dictionary<int, List<UpdateField>> dynamicUpdates, MovementInfo moveInfo)
+        public static void ProcessExistingObject(ref WoWObject obj, WowGuid guid, Packet packet, BitArray updateMaskArray, Dictionary<int, UpdateField> updates, Dictionary<int, List<UpdateField>> dynamicUpdates, MovementInfo moveInfo)
         {
             obj.PhaseMask |= (uint)MovementHandler.CurrentPhaseMask;
             HandleMovementInfoChange(obj, guid, packet.Time, moveInfo);
             if (updates != null)
             {
-                bool savePlayerStats = StoreObjectUpdate(packet, guid, updates, true);
+                bool savePlayerStats = StoreObjectUpdate(packet, guid, updateMaskArray, updates, true);
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
                 if (savePlayerStats)
                     Storage.SavePlayerStats(obj, false);
@@ -180,8 +182,9 @@ namespace WowPacketParser.Parsing.Parsers
             WoWObject obj;
             if (Storage.Objects.TryGetValue(guid, out obj))
             {
-                var updates = ReadValuesUpdateBlock(packet, obj.Type, index, false, obj.UpdateFields);
-                bool savePlayerStats = StoreObjectUpdate(packet, guid, updates, false);
+                BitArray updateMaskArray = null;
+                var updates = ReadValuesUpdateBlock(packet, obj.Type, index, false, obj.UpdateFields, out updateMaskArray);
+                bool savePlayerStats = StoreObjectUpdate(packet, guid, updateMaskArray, updates, false);
                 var dynamicUpdates = ReadDynamicValuesUpdateBlock(packet, obj.Type, index, false, obj.DynamicUpdateFields);
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
                 if (savePlayerStats)
@@ -189,7 +192,8 @@ namespace WowPacketParser.Parsing.Parsers
             }
             else
             {
-                ReadValuesUpdateBlock(packet, guid.GetObjectType(), index, false, null);
+                BitArray updateMaskArray = null;
+                ReadValuesUpdateBlock(packet, guid.GetObjectType(), index, false, null, out updateMaskArray);
                 ReadDynamicValuesUpdateBlock(packet, guid.GetObjectType(), index, false, null);
             }
         }
@@ -299,7 +303,7 @@ namespace WowPacketParser.Parsing.Parsers
         }
 
         // returns true if active player leveled up and we need to save stats
-        public static bool StoreObjectUpdate(Packet packet, WowGuid guid, Dictionary<int, UpdateField> updates, bool isCreate)
+        public static bool StoreObjectUpdate(Packet packet, WowGuid guid, BitArray updateMaskArray, Dictionary<int, UpdateField> updates, bool isCreate)
         {
             bool hasPlayerLevelup = false;
             if ((guid.GetObjectType() == ObjectType.Unit) ||
@@ -308,12 +312,15 @@ namespace WowPacketParser.Parsing.Parsers
             {
 
                 if (ClientVersion.HasAurasInUpdateFields())
-                    ParseAurasFromUpdateFields(packet, guid, updates);
+                    ParseAurasFromUpdateFields(packet, guid, updateMaskArray, updates);
 
                 bool hasData = false;
                 CreatureValuesUpdate creatureUpdate = new CreatureValuesUpdate();
                 foreach (var update in updates)
                 {
+                    if (updateMaskArray != null && !updateMaskArray[update.Key])
+                        continue;
+
                     if (update.Key == UpdateFields.GetUpdateField(ObjectField.OBJECT_FIELD_ENTRY))
                     {
                         if (Storage.Objects.ContainsKey(guid))
@@ -1060,7 +1067,7 @@ namespace WowPacketParser.Parsing.Parsers
             return hasPlayerLevelup;
         }
 
-        private static void ParseAurasFromUpdateFields(Packet packet, WowGuid guid, Dictionary<int, UpdateField> updates)
+        private static void ParseAurasFromUpdateFields(Packet packet, WowGuid guid, BitArray updateMaskArray, Dictionary<int, UpdateField> updates)
         {
             if ((guid.GetObjectType() == ObjectType.Unit) ||
                 (guid.GetObjectType() == ObjectType.Player) ||
@@ -1074,18 +1081,56 @@ namespace WowPacketParser.Parsing.Parsers
 
                 if (UNIT_FIELD_AURA > 0 && UNIT_FIELD_AURAFLAGS > 0 && UNIT_FIELD_AURALEVELS > 0 && UNIT_FIELD_AURAAPPLICATIONS > 0 && UNIT_FIELD_AURASTATE > 0)
                 {
+                    Unit unit = Storage.Objects.ContainsKey(guid) ? Storage.Objects[guid].Item1 as Unit : null;
+                    if (unit == null)
+                        return;
+
                     var auras = new List<Aura>();
+
+                    Func<uint, bool> HasDataForAuraInSlot = delegate (uint slot)
+                    {
+                        foreach (Aura addedAura in auras)
+                        {
+                            if (addedAura.Slot == slot)
+                                return true;
+                        }
+
+                        return unit.GetAuraInSlot(slot) != null;
+                    };
+
+                    Func<uint, Aura> GetOrCreateAuraInSlot = delegate (uint slot)
+                    {
+                        foreach (Aura addedAura in auras)
+                        {
+                            if (addedAura.Slot == slot)
+                                return addedAura;
+                        }
+
+                        Aura aura = unit.GetAuraInSlot(slot);
+                        if (aura != null)
+                            aura = aura.Clone();
+                        else
+                        {
+                            aura = new Aura();
+                            aura.Slot = slot;
+                        }
+                        auras.Add(aura);
+                        return aura;
+                    };
 
                     foreach (var update in updates)
                     {
+                        if (updateMaskArray != null && !updateMaskArray[update.Key])
+                            continue;
+
                         if (update.Key >= UNIT_FIELD_AURA && update.Key < UNIT_FIELD_AURASTATE)
                         {
                             if (update.Key >= UNIT_FIELD_AURA && update.Key < UNIT_FIELD_AURAFLAGS)
                             {
-                                var aura = new Aura();
-                                aura.Slot = (uint)(update.Key - UNIT_FIELD_AURA);
+                                uint slot = (uint)(update.Key - UNIT_FIELD_AURA);
+
+                                Aura aura = GetOrCreateAuraInSlot(slot);
                                 aura.SpellId = update.Value.UInt32Value;
-                                auras.Add(aura);
                             }
                             else if (update.Key >= UNIT_FIELD_AURAFLAGS && update.Key < UNIT_FIELD_AURALEVELS)
                             {
@@ -1093,11 +1138,11 @@ namespace WowPacketParser.Parsing.Parsers
                                 {
                                     uint slot = (uint)(update.Key - UNIT_FIELD_AURAFLAGS) * 8 + (uint)i;
                                     uint flags = (update.Value.UInt32Value >> (i * 4)) & 0xF;
-                                    foreach (Aura aura in auras)
-                                    {
-                                        if (aura.Slot == slot)
-                                            aura.AuraFlags = flags;
-                                    }
+                                    if (flags == 0 && !HasDataForAuraInSlot(slot))
+                                        continue;
+
+                                    Aura aura = GetOrCreateAuraInSlot(slot);
+                                    aura.AuraFlags = flags;
                                 }
                             }
                             else if (update.Key >= UNIT_FIELD_AURALEVELS && update.Key < UNIT_FIELD_AURAAPPLICATIONS)
@@ -1106,11 +1151,11 @@ namespace WowPacketParser.Parsing.Parsers
                                 {
                                     uint slot = (uint)(update.Key - UNIT_FIELD_AURALEVELS) * 4 + (uint)i;
                                     uint level = (update.Value.UInt32Value >> (i * 8)) & 0xFF;
-                                    foreach (Aura aura in auras)
-                                    {
-                                        if (aura.Slot == slot)
-                                            aura.Level = level;
-                                    }
+                                    if (level == 0 && !HasDataForAuraInSlot(slot))
+                                        continue;
+
+                                    Aura aura = GetOrCreateAuraInSlot(slot);
+                                    aura.Level = level;
                                 }
                             }
                             else if (update.Key >= UNIT_FIELD_AURAAPPLICATIONS && update.Key < UNIT_FIELD_AURASTATE)
@@ -1119,26 +1164,52 @@ namespace WowPacketParser.Parsing.Parsers
                                 {
                                     uint slot = (uint)(update.Key - UNIT_FIELD_AURAAPPLICATIONS) * 4 + (uint)i;
                                     byte charges = (byte)((update.Value.UInt32Value >> (i * 8)) & 0xFF);
+                                    if (charges == 0 && !HasDataForAuraInSlot(slot))
+                                        continue;
+
                                     if (charges != 0)
                                         charges += 1;
 
-                                    foreach (Aura aura in auras)
-                                    {
-                                        if (aura.Slot == slot)
-                                            aura.Charges = charges;
-                                    }
+                                    Aura aura = GetOrCreateAuraInSlot(slot);
+                                    aura.Charges = charges;
                                 }
                             }
                         }
                     }
 
                     if (auras.Count > 0)
+                    {
+                        // Remove redundant updates from list.
+                        // Happens because the flags, levels and charges fields contain data for 4 to 8 slots.
+                        for (int i = auras.Count - 1; i >= 0; i--)
+                        {
+                            Aura updatedAura = auras[i];
+
+                            if (unit.Auras != null)
+                            {
+                                Aura existingAura = unit.GetAuraInSlot((uint)updatedAura.Slot);
+
+                                if (existingAura != null &&
+                                    existingAura.Slot == updatedAura.Slot &&
+                                    existingAura.SpellId == updatedAura.SpellId &&
+                                    existingAura.AuraFlags == updatedAura.AuraFlags &&
+                                    existingAura.Level == updatedAura.Level &&
+                                    existingAura.Charges == updatedAura.Charges)
+                                {
+                                    auras.RemoveAt(i);
+                                }
+                            }
+                            else if (updatedAura.SpellId == 0)
+                                auras.RemoveAt(i);
+                        }
+
                         Storage.StoreUnitAurasUpdate(guid, auras, packet.Time);
+                    }
                 }
             }
         }
 
-        private static Dictionary<int, UpdateField> ReadValuesUpdateBlock(Packet packet, ObjectType type, object index, bool isCreating, Dictionary<int, UpdateField> oldValues)
+        private static Dictionary<int, UpdateField> ReadValuesUpdateBlock(Packet packet, ObjectType type, object index, bool isCreating, Dictionary<int, UpdateField> oldValues, out BitArray outUpdateMaskArray)
         {
             bool skipDictionary = false;
             bool missingCreateObject = !isCreating && oldValues == null;
@@ -1149,6 +1220,7 @@ namespace WowPacketParser.Parsing.Parsers
                 updateMask[i] = packet.ReadInt32();
 
             var mask = new BitArray(updateMask);
+            outUpdateMaskArray = mask;
             var dict = new Dictionary<int, UpdateField>();
 
             if (missingCreateObject)

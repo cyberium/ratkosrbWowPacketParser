@@ -145,9 +145,13 @@ namespace WowPacketParser.Enums
         UNIT_FIELD_ATTACK_POWER_MOD_POS,
         UNIT_FIELD_ATTACK_POWER_MULTIPLIER,
         UNIT_FIELD_ATTACK_SPEED_AURA,
+        [UpdateField(UpdateFieldType.Uint)]
         UNIT_FIELD_AURA,
+        [UpdateField(UpdateFieldType.Uint)]
         UNIT_FIELD_AURAFLAGS,
+        [UpdateField(UpdateFieldType.Bytes)]
         UNIT_FIELD_AURALEVELS,
+        [UpdateField(UpdateFieldType.Bytes)]
         UNIT_FIELD_AURAAPPLICATIONS,
         UNIT_FIELD_AURASTATE,
         UNIT_FIELD_BASEATTACKTIME,
