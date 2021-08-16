@@ -74,14 +74,15 @@ namespace WowPacketParser.Parsing.Parsers
         {
             var text = new ChatPacketData
             {
-                Type = packet.ReadByteE<ChatMessageType>("Type"),
+                TypeNormalized = packet.ReadByteE<ChatMessageType>("Type"),
                 Language = packet.ReadInt32E<Language>("Language"),
                 SenderGUID = packet.ReadGuid("GUID")
             };
+            text.TypeOriginal = (uint)text.TypeNormalized;
 
             packet.ReadInt32("Constant time");
 
-            switch (text.Type)
+            switch (text.TypeNormalized)
             {
                 case ChatMessageType.Achievement:
                 case ChatMessageType.GuildAchievement:
@@ -146,7 +147,7 @@ namespace WowPacketParser.Parsing.Parsers
                         packet.ReadCString("GMSenderName");
                     }
 
-                    if (text.Type == ChatMessageType.Channel)
+                    if (text.TypeNormalized == ChatMessageType.Channel)
                     {
                         text.ChannelName = packet.ReadCString("Channel Name");
                     }
@@ -169,14 +170,14 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_2_0_14333))
             {
-                if (text.Type == ChatMessageType.RaidBossEmote || text.Type == ChatMessageType.RaidBossWhisper)
+                if (text.TypeNormalized == ChatMessageType.RaidBossEmote || text.TypeNormalized == ChatMessageType.RaidBossWhisper)
                 {
                     packet.ReadSingle("Unk single");
                     packet.ReadByte("Unk byte");
                 }
             }
 
-            if (text.Type == ChatMessageType.Achievement || text.Type == ChatMessageType.GuildAchievement)
+            if (text.TypeNormalized == ChatMessageType.Achievement || text.TypeNormalized == ChatMessageType.GuildAchievement)
                 packet.ReadInt32<AchievementId>("Achievement Id");
 
             Storage.StoreText(text, packet);

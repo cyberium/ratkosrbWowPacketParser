@@ -98,7 +98,9 @@ namespace WowPacketParserModule.V5_4_1_17538.Parsers
 
             text.Text = packet.ReadWoWString("Text", textLen);
 
-            text.Type = (ChatMessageType)packet.ReadByteE<ChatMessageTypeNew>("SlashCmd");
+            ChatMessageTypeNew chatType = packet.ReadByteE<ChatMessageTypeNew>("SlashCmd");
+            text.TypeNormalized = (ChatMessageType)chatType;
+            text.TypeOriginal = (uint)chatType;
 
             if (hasAchi)
                 packet.ReadInt32<AchievementId>("Achievement Id");

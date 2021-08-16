@@ -125,7 +125,9 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             packet.ParseBitStream(guildGUIDBytes, 7, 2, 1, 4, 6, 5, 3, 0);
             packet.ParseBitStream(groupGUIDBytes, 5, 3, 2, 4, 1, 0, 7, 6);
 
-            text.Type = (ChatMessageType)packet.ReadByteE<ChatMessageTypeNew>("SlashCmd");
+            ChatMessageTypeNew chatType = packet.ReadByteE<ChatMessageTypeNew>("SlashCmd");
+            text.TypeNormalized = (ChatMessageType)chatType;
+            text.TypeOriginal = (uint)chatType;
 
             if (hasRealmId1)
                 packet.ReadInt32("Realm Id");

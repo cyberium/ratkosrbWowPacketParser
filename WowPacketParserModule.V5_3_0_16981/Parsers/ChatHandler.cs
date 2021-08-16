@@ -83,7 +83,9 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
             if (hasReceiver)
                 text.ReceiverName = packet.ReadWoWString("Receiver Name", receiverLen);
 
-            text.Type = (ChatMessageType)packet.ReadByteE<ChatMessageTypeNew>("Chat type");
+            ChatMessageTypeNew chatType = packet.ReadByteE<ChatMessageTypeNew>("Chat type");
+            text.TypeOriginal = (uint)chatType;
+            text.TypeNormalized = (ChatMessageType)chatType;
             if (hasText)
                 text.Text = packet.ReadWoWString("Text", textLen);
 

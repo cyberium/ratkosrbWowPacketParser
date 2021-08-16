@@ -569,7 +569,8 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
-                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER) &&
+                    else if ((update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER) ||
+                             update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER1)) &&
                              Settings.SaveManaUpdates)
                     {
                         if (Storage.Objects.ContainsKey(guid))
@@ -582,7 +583,8 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
-                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER) &&
+                    else if ((update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER) ||
+                             update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER1)) &&
                              Settings.SaveManaUpdates)
                     {
                         if (Storage.Objects.ContainsKey(guid))

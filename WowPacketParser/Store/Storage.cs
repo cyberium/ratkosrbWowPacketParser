@@ -904,7 +904,7 @@ namespace WowPacketParser.Store
                     }
                 }
             }
-            else if (((text.SenderGUID.GetObjectType() == ObjectType.Player) || (text.SenderName != null && text.Type == ChatMessageType.Channel)) &&
+            else if (((text.SenderGUID.GetObjectType() == ObjectType.Player) || (text.SenderName != null && text.TypeNormalized == ChatMessageType.Channel)) &&
                      (text.Language != Language.Addon && text.Language != Language.AddonBfA && text.Language != Language.AddonLogged))
             {
                 if (Settings.SqlTables.player_chat)
@@ -914,21 +914,21 @@ namespace WowPacketParser.Store
                         SenderGUID = text.SenderGUID,
                         SenderName = text.SenderName,
                         Text = text.Text,
-                        Type = text.Type,
+                        Type = text.TypeOriginal,
                         ChannelName = text.ChannelName,
                         UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
                     };
                     Storage.CharacterTexts.Add(textEntry);
                 }
             }
-            else if (text.SenderGUID.IsEmpty() && (text.Type == ChatMessageType.BattlegroundNeutral))
+            else if (text.SenderGUID.IsEmpty() && (text.TypeNormalized == ChatMessageType.BattlegroundNeutral))
             {
                 if (Settings.SqlTables.world_text)
                 {
                     var worldText = new WorldText
                     {
                         UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time),
-                        Type = text.Type,
+                        Type = text.TypeOriginal,
                         Language = text.Language,
                         Text = text.Text
                     };

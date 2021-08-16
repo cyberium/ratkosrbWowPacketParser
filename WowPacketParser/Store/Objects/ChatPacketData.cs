@@ -8,7 +8,8 @@ namespace WowPacketParser.Store.Objects
     public sealed class ChatPacketData
     {
         public string Text;
-        public ChatMessageType? Type;
+        public uint TypeOriginal;
+        public ChatMessageType? TypeNormalized;
         public Language? Language;
         public WowGuid SenderGUID;
         public string SenderName;
@@ -34,7 +35,7 @@ namespace WowPacketParser.Store.Objects
         public string Text;
 
         [DBFieldName("chat_type")]
-        public ChatMessageType? Type;
+        public uint Type;
 
         [DBFieldName("channel_name")]
         public string ChannelName;
@@ -92,7 +93,7 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("chat_type", DbType = TargetedDbType.WPP)]
         [DBFieldName("Type", DbType = TargetedDbType.TRINITY)]
-        public ChatMessageType? Type;
+        public uint Type;
 
         [DBFieldName("language", DbType = TargetedDbType.WPP)]
         [DBFieldName("Language", DbType = TargetedDbType.TRINITY)]
@@ -125,7 +126,7 @@ namespace WowPacketParser.Store.Objects
         public CreatureTextTemplate(ChatPacketData textTemplate)
         {
             Text = textTemplate.Text;
-            Type = textTemplate.Type;
+            Type = textTemplate.TypeOriginal;
             Language = textTemplate.Language;
             SenderGUID = textTemplate.SenderGUID;
             SenderName = textTemplate.SenderName;
@@ -145,7 +146,7 @@ namespace WowPacketParser.Store.Objects
         public string Text;
 
         [DBFieldName("chat_type")]
-        public ChatMessageType? Type;
+        public uint Type;
 
         [DBFieldName("language")]
         public Language? Language;

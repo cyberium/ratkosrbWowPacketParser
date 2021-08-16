@@ -108,7 +108,9 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
             if (hasText)
                 text.Text = packet.ReadWoWString("Text", textLen);
 
-            text.Type = (ChatMessageType)packet.ReadByteE<ChatMessageTypeNew>("SlashCmd");
+            ChatMessageTypeNew chatType = packet.ReadByteE<ChatMessageTypeNew>("SlashCmd");
+            text.TypeNormalized = (ChatMessageType)chatType;
+            text.TypeOriginal = (uint)chatType;
 
             text.SenderGUID = packet.WriteGuid("SenderGUID", senderGUIDBytes);
             text.ReceiverGUID = packet.WriteGuid("ReceiverGUID", receiverGUIDBytes);

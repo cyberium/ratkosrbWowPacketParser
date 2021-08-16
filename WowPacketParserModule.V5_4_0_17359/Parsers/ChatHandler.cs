@@ -105,7 +105,9 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
 
             packet.ParseBitStream(receiverGUIDBytes, 0, 4, 1, 3, 5, 7, 2, 6);
 
-            text.Type = (ChatMessageType)packet.ReadByteE<ChatMessageTypeNew>("SlashCmd");
+            ChatMessageTypeNew chatType = packet.ReadByteE<ChatMessageTypeNew>("SlashCmd");
+            text.TypeNormalized = (ChatMessageType)chatType;
+            text.TypeOriginal = (uint)chatType;
 
             packet.ParseBitStream(senderGUIDBytes, 7, 6, 5, 4, 0, 2, 1, 3);
 

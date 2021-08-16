@@ -154,9 +154,37 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public int BaseMana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_BASE_MANA);
 
-        public int Mana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_POWER);
+        public int Mana
+        {
+            get
+            {
+                UnitField manaField;
+                if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER) > 0)
+                    manaField = UnitField.UNIT_FIELD_POWER;
+                else if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER1) > 0)
+                    manaField = UnitField.UNIT_FIELD_POWER1;
+                else
+                    return 0;
 
-        public int MaxMana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MAXPOWER);
+                return UpdateFields.GetValue<UnitField, int>(manaField);
+            }
+        }
+
+        public int MaxMana
+        {
+            get
+            {
+                UnitField manaField;
+                if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER) > 0)
+                    manaField = UnitField.UNIT_FIELD_POWER;
+                else if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER1) > 0)
+                    manaField = UnitField.UNIT_FIELD_POWER1;
+                else
+                    return 0;
+
+                return UpdateFields.GetValue<UnitField, int>(manaField);
+            }
+        }
 
         public IVisibleItem[] VirtualItems
         {
@@ -432,9 +460,37 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public int BaseMana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_BASE_MANA);
 
-        public int Mana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_POWER);
+        public int Mana
+        {
+            get
+            {
+                UnitField manaField;
+                if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER) > 0)
+                    manaField = UnitField.UNIT_FIELD_POWER;
+                else if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER1) > 0)
+                    manaField = UnitField.UNIT_FIELD_POWER1;
+                else
+                    return 0;
 
-        public int MaxMana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_MAXPOWER);
+                return UpdateFields.GetValue<UnitField, int>(manaField);
+            }
+        }
+
+        public int MaxMana
+        {
+            get
+            {
+                UnitField manaField;
+                if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER) > 0)
+                    manaField = UnitField.UNIT_FIELD_MAXPOWER;
+                else if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER1) > 0)
+                    manaField = UnitField.UNIT_FIELD_MAXPOWER1;
+                else
+                    return 0;
+
+                return UpdateFields.GetValue<UnitField, int>(manaField);
+            }
+        }
 
         public IVisibleItem[] VirtualItems
         {

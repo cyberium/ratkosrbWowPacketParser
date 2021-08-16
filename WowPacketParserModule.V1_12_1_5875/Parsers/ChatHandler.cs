@@ -97,14 +97,16 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_GM_MESSAGECHAT)]
         public static void HandleServerChatMessage(Packet packet)
         {
+            ChatMessageTypeVanilla chatType = packet.ReadByteE<ChatMessageTypeVanilla>("Type");
             var text = new ChatPacketData
             {
-                Type = ConvertVanillaMessageType(packet.ReadByteE<ChatMessageTypeVanilla>("Type")),
+                TypeNormalized = ConvertVanillaMessageType(chatType),
+                TypeOriginal = (uint)chatType,
                 Language = packet.ReadInt32E<Language>("Language"),
                 SenderGUID = WowGuid.Empty
             };
 
-            switch (text.Type)
+            switch (text.TypeNormalized)
             {
                 case ChatMessageType.MonsterWhisper:
                 //case CHAT_MSG_RAID_BOSS_WHISPER:
