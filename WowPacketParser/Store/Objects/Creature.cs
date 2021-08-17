@@ -709,10 +709,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("object_guid", true, true)]
         public string ObjectGuid;
 
-        [DBFieldName("object_id")]
+        [DBFieldName("object_id", true)]
         public uint ObjectId;
 
-        [DBFieldName("object_type")]
+        [DBFieldName("object_type", true)]
         public string ObjectType;
 
         public WowGuid guid;

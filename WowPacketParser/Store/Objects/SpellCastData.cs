@@ -56,7 +56,7 @@ namespace WowPacketParser.Store.Objects
         public uint VisualId;
 
         [DBFieldName("reason")]
-        public uint? Reason;
+        public uint Reason;
 
         public WowGuid Guid;
         public DateTime Time;
