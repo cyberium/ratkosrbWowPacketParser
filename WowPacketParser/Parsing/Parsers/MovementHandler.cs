@@ -364,9 +364,15 @@ namespace WowPacketParser.Parsing.Parsers
                 for (var i = 1; i < waypoints; i++)
                 {
                     var vec = packet.ReadPackedVector3();
-                    vec = mid - vec;
+
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                        vec = mid - vec;
+                    else
+                        vec = newpos - vec;
+
                     if (movementData != null)
                         movementData.SplinePoints.Add(vec);
+
                     packet.AddValue("Waypoint", vec, i);
                 }
 

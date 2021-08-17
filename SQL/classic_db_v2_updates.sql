@@ -340,3 +340,11 @@ COMMENT='from SMSG_THREAT_REMOVE'
 COLLATE='utf8_unicode_ci'
 ENGINE=InnoDB
 ;
+
+ALTER TABLE `creature_guid_values_update`
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`guid`, `unixtimems`, `field_name`, `object_guid`, `object_id`, `object_type`);
+
+ALTER TABLE `player_guid_values_update`
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`guid`, `unixtimems`, `field_name`, `object_guid`, `object_id`, `object_type`);

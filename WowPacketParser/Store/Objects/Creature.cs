@@ -706,7 +706,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("field_name", true)]
         public string FieldName;
 
-        [DBFieldName("object_guid", false, true)]
+        [DBFieldName("object_guid", true, true)]
         public string ObjectGuid;
 
         [DBFieldName("object_id")]

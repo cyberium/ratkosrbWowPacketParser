@@ -484,7 +484,7 @@ CREATE TABLE IF NOT EXISTS `creature_guid_values_update` (
   `object_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `object_id` int(10) unsigned NOT NULL DEFAULT '0',
   `object_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`guid`,`unixtimems`,`field_name`)
+  PRIMARY KEY (`guid`,`unixtimems`,`field_name`,`object_guid`,`object_id`,`object_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to guid type update fields';
 
 -- Data exporting was unselected.
@@ -2030,7 +2030,7 @@ CREATE TABLE IF NOT EXISTS `player_guid_values_update` (
   `object_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `object_id` int(10) unsigned NOT NULL DEFAULT '0',
   `object_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`guid`,`unixtimems`,`field_name`)
+  PRIMARY KEY (`guid`,`unixtimems`,`field_name`,`object_guid`,`object_id`,`object_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='changes to guid type update fields';
 
 -- Data exporting was unselected.

@@ -688,7 +688,7 @@ namespace WowPacketParser.SQL.Builders
                     row.Data.UnixTime = (uint)Utilities.GetUnixTimeFromDateTime(itr.Time);
                     activePlayersRows.Add(row);
                 }
-                var activePlayersSql = new SQLInsert<CharacterActivePlayer>(activePlayersRows, true);
+                var activePlayersSql = new SQLInsert<CharacterActivePlayer>(activePlayersRows, false);
                 result.Append(activePlayersSql.Build());
                 result.AppendLine();
             }
