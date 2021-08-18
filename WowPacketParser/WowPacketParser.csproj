@@ -636,6 +636,7 @@
     <Compile Include="Store\Objects\BroadcastText.cs" />
     <Compile Include="Store\Objects\BroadcastTextLocale.cs" />
     <Compile Include="Store\Objects\Characters.cs" />
+    <Compile Include="Store\Objects\Cinematic.cs" />
     <Compile Include="Store\Objects\ClientActions.cs" />
     <Compile Include="Store\Objects\ConversationActor.cs" />
     <Compile Include="Store\Objects\ConversationActorTemplate.cs" />

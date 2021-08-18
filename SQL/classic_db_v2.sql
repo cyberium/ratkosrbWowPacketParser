@@ -50,6 +50,27 @@ CREATE TABLE IF NOT EXISTS `broadcast_text_locale` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.cinematic_begin
+DROP TABLE IF EXISTS `cinematic_begin`;
+CREATE TABLE IF NOT EXISTS `cinematic_begin` (
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  `cinematic_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_TRIGGER_CINEMATIC';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.cinematic_end
+DROP TABLE IF EXISTS `cinematic_end`;
+CREATE TABLE IF NOT EXISTS `cinematic_end` (
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
+  PRIMARY KEY (`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from CMSG_COMPLETE_CINEMATIC';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.client_creature_interact
 DROP TABLE IF EXISTS `client_creature_interact`;
 CREATE TABLE IF NOT EXISTS `client_creature_interact` (

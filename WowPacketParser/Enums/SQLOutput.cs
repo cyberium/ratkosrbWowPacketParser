@@ -7,6 +7,8 @@
         SniffData,
         SniffDataOpcodes,
 
+        cinematic_begin,
+        cinematic_end,
         client_creature_interact,
         client_gameobject_use,
         client_item_use,

@@ -1116,6 +1116,10 @@ namespace WowPacketParser.Store
         // Logout Time
         public static readonly DataBag<LogoutTime> LogoutTimes = new DataBag<LogoutTime>(Settings.SqlTables.logout_time);
 
+        // Cinematic
+        public static readonly DataBag<CinematicBegin> CinematicBeginTimes = new DataBag<CinematicBegin>(Settings.SqlTables.cinematic_begin);
+        public static readonly DataBag<CinematicEnd> CinematicEndTimes = new DataBag<CinematicEnd>(Settings.SqlTables.cinematic_end);
+
         // Guild
         public static readonly DataBag<GuildTemplate> Guild = new DataBag<GuildTemplate>(Settings.SqlTables.guild);
         public static readonly DataBag<GuildRankTemplate> GuildRank = new DataBag<GuildRankTemplate>(Settings.SqlTables.guild_rank);
@@ -1288,6 +1292,8 @@ namespace WowPacketParser.Store
             ClientReclaimCorpseTimes.Clear();
             ClientReleaseSpiritTimes.Clear();
             LogoutTimes.Clear();
+            CinematicBeginTimes.Clear();
+            CinematicEndTimes.Clear();
 
             Guild.Clear();
             GuildRank.Clear();

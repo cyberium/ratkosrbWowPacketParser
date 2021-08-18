@@ -381,5 +381,29 @@ namespace WowPacketParser.SQL.Builders
 
             return SQLUtil.Compare(Storage.LogoutTimes, null, StoreNameType.None);
         }
+
+        [BuilderMethod]
+        public static string CinematicBeginTimes()
+        {
+            if (Storage.CinematicBeginTimes.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.cinematic_begin)
+                return string.Empty;
+
+            return SQLUtil.Compare(Storage.CinematicBeginTimes, null, StoreNameType.None);
+        }
+
+        [BuilderMethod]
+        public static string CinematicEndTimes()
+        {
+            if (Storage.CinematicEndTimes.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.cinematic_end)
+                return string.Empty;
+
+            return SQLUtil.Compare(Storage.CinematicEndTimes, null, StoreNameType.None);
+        }
     }
 }

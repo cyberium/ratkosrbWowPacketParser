@@ -348,3 +348,23 @@ ALTER TABLE `creature_guid_values_update`
 ALTER TABLE `player_guid_values_update`
 	DROP PRIMARY KEY,
 	ADD PRIMARY KEY (`guid`, `unixtimems`, `field_name`, `object_guid`, `object_id`, `object_type`);
+
+CREATE TABLE `cinematic_begin` (
+	`unixtimems` BIGINT UNSIGNED NOT NULL COMMENT 'when the packet was received',
+	`cinematic_id` INT UNSIGNED NOT NULL,
+	PRIMARY KEY (`unixtimems`)
+)
+COMMENT='from SMSG_TRIGGER_CINEMATIC'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;
+
+CREATE TABLE `cinematic_end` (
+	`unixtimems` BIGINT UNSIGNED NOT NULL COMMENT 'when the packet was sent',
+	PRIMARY KEY (`unixtimems`)
+)
+COMMENT='from CMSG_COMPLETE_CINEMATIC'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;
+

@@ -397,7 +397,22 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_TRIGGER_MOVIE)]
         public static void HandleTriggerSequence(Packet packet)
         {
-            packet.ReadInt32("Sequence Id");
+            CinematicBegin cinematic = new CinematicBegin
+            {
+                UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time),
+                CinematicId = packet.ReadUInt32("Sequence Id")
+            };
+            Storage.CinematicBeginTimes.Add(cinematic);
+        }
+
+        [Parser(Opcode.CMSG_COMPLETE_CINEMATIC)]
+        public static void HandleCompleteCinematic(Packet packet)
+        {
+            CinematicEnd cinematic = new CinematicEnd
+            {
+                UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
+            };
+            Storage.CinematicEndTimes.Add(cinematic);
         }
 
         [Parser(Opcode.SMSG_PLAY_SOUND)]
@@ -1146,7 +1161,6 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_DEBUG_SERVER_GEO)] // Was unknown
         [Parser(Opcode.SMSG_RESUME_COMMS)]
         [Parser(Opcode.SMSG_INVALID_PROMOTION_CODE)]
-        [Parser(Opcode.CMSG_COMPLETE_CINEMATIC)]
         [Parser(Opcode.CMSG_NEXT_CINEMATIC_CAMERA)]
         [Parser(Opcode.CMSG_REQUEST_VEHICLE_EXIT)]
         [Parser(Opcode.SMSG_ENABLE_BARBER_SHOP)]
