@@ -133,16 +133,21 @@ namespace WowPacketParser.Enums
 
     public enum UnitField
     {
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_CHANNEL_SPELL,
         UNIT_CHANNEL_SPELL_X_SPELL_VISUAL,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_CREATED_BY_SPELL,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_DYNAMIC_FLAGS,
         UNIT_END,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_ATTACK_POWER,
         [UpdateField(UpdateFieldType.Short)]
         UNIT_FIELD_ATTACK_POWER_MODS,
         UNIT_FIELD_ATTACK_POWER_MOD_NEG,
         UNIT_FIELD_ATTACK_POWER_MOD_POS,
+        [UpdateField(UpdateFieldType.Float)]
         UNIT_FIELD_ATTACK_POWER_MULTIPLIER,
         UNIT_FIELD_ATTACK_SPEED_AURA,
         [UpdateField(UpdateFieldType.Uint)]
@@ -153,9 +158,13 @@ namespace WowPacketParser.Enums
         UNIT_FIELD_AURALEVELS,
         [UpdateField(UpdateFieldType.Bytes)]
         UNIT_FIELD_AURAAPPLICATIONS,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_AURASTATE,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_BASEATTACKTIME,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_BASE_HEALTH,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_BASE_MANA,
         UNIT_FIELD_BATTLEPET_COMPANION_NAME_TIMESTAMP,
         UNIT_FIELD_BATTLE_PET_COMPANION_GUID,
@@ -180,10 +189,13 @@ namespace WowPacketParser.Enums
         UNIT_FIELD_COMBATREACH,
         [UpdateField(UpdateFieldType.Guid)]
         UNIT_FIELD_CREATEDBY,
+        [UpdateField(UpdateFieldType.Guid)]
         UNIT_FIELD_CRITTER,
         [UpdateField(UpdateFieldType.Guid)]
         UNIT_FIELD_DEMON_CREATOR,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_DISPLAYID,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_DISPLAY_POWER,
         UNIT_FIELD_DISPLAY_SCALE,
         UNIT_FIELD_EFFECTIVE_LEVEL,
@@ -202,6 +214,7 @@ namespace WowPacketParser.Enums
         [UpdateField(UpdateFieldType.Float)]
         UNIT_FIELD_HOVERHEIGHT,
         UNIT_FIELD_INTERACT_SPELLID,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_LEVEL,
         UNIT_FIELD_LOOKS_LIKE_CREATURE_ID,
         UNIT_FIELD_LOOKS_LIKE_MOUNT_ID,
@@ -210,10 +223,12 @@ namespace WowPacketParser.Enums
         UNIT_FIELD_LIFESTEAL,
         UNIT_FIELD_MAIN_HAND_WEAPON_ATTACK_POWER,
         UNIT_FIELD_MAXDAMAGE,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_MAXHEALTH,
         UNIT_FIELD_MAXHEALTHMODIFIER,
         UNIT_FIELD_MAXITEMLEVEL,
         UNIT_FIELD_MAXOFFHANDDAMAGE,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_MAXPOWER,
         UNIT_FIELD_MAXPOWER1,
         UNIT_FIELD_MAXPOWER10,
@@ -233,11 +248,17 @@ namespace WowPacketParser.Enums
         UNIT_FIELD_MIN_ITEM_LEVEL,
         UNIT_FIELD_MIN_ITEM_LEVEL_CUTOFF,
         UNIT_FIELD_MOD_BONUS_ARMOR,
+        [UpdateField(UpdateFieldType.Float)]
         UNIT_FIELD_MOD_HASTE,
+        [UpdateField(UpdateFieldType.Float)]
         UNIT_FIELD_MOD_HASTE_REGEN,
+        [UpdateField(UpdateFieldType.Float)]
         UNIT_FIELD_MOD_RANGED_HASTE,
+        [UpdateField(UpdateFieldType.Float)]
         UNIT_FIELD_MOD_TIME_RATE,
+        [UpdateField(UpdateFieldType.Uint)]
         UNIT_FIELD_MOUNTDISPLAYID,
+        [UpdateField(UpdateFieldType.Uint)]
         UNIT_FIELD_NATIVEDISPLAYID,
         UNIT_FIELD_NATIVE_X_DISPLAY_SCALE,
         [UpdateField(UpdateFieldType.Int)]
@@ -325,6 +346,7 @@ namespace WowPacketParser.Enums
         [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_RESISTANCES_SHADOW,
         UNIT_FIELD_SANDBOX_SCALING_ID,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_SCALE_DURATION,
         UNIT_FIELD_SCALING_DAMAGE_ITEM_LEVEL_CURVE_ID,
         UNIT_FIELD_SCALING_FACTION_GROUP,
@@ -351,12 +373,19 @@ namespace WowPacketParser.Enums
         [UpdateField(UpdateFieldType.Guid)]
         UNIT_FIELD_TARGET,
         UNIT_FIELD_UNK63,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_FIELD_WILD_BATTLEPET_LEVEL,
+        [UpdateField(UpdateFieldType.Float)]
         UNIT_MOD_CAST_HASTE,
+        [UpdateField(UpdateFieldType.Float)]
         UNIT_MOD_CAST_SPEED,
+        [UpdateField(UpdateFieldType.Int)]
         UNIT_NPC_EMOTESTATE,
+        [UpdateField(UpdateFieldType.Uint)]
         UNIT_NPC_FLAGS,
+        [UpdateField(UpdateFieldType.Uint)]
         UNIT_VIRTUAL_ITEM_SLOT_ID,
+        [UpdateField(UpdateFieldType.Uint)]
         UNIT_VIRTUAL_ITEM_SLOT_DISPLAY
     }
 
@@ -982,6 +1011,7 @@ namespace WowPacketParser.Enums
     {
         [UpdateField(UpdateFieldType.Bytes)]
         GAMEOBJECT_BYTES_1,
+        [UpdateField(UpdateFieldType.Int)]
         GAMEOBJECT_DISPLAYID,
         [UpdateField(UpdateFieldType.Short)]
         GAMEOBJECT_DYNAMIC,
@@ -993,7 +1023,9 @@ namespace WowPacketParser.Enums
         GAMEOBJECT_FIELD_CREATED_BY,
         GAMEOBJECT_FIELD_CUSTOM_PARAM,
         GAMEOBJECT_FIELD_GUILD_GUID,
+        [UpdateField(UpdateFieldType.Uint)]
         GAMEOBJECT_FLAGS,
+        [UpdateField(UpdateFieldType.Uint)]
         GAMEOBJECT_LEVEL,
         [UpdateField(UpdateFieldType.Quaternion)]
         [UpdateField(UpdateFieldType.PackedQuaternion, ClientVersionBuild.V3_0_2_9056)]
