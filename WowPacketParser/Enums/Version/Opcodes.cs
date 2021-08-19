@@ -1,6 +1,12 @@
 using System.Collections.Generic;
 using System.Globalization;
 using WowPacketParser.Enums.Version.V1_12_1_5875;
+using WowPacketParser.Enums.Version.V1_13_2_31446;
+using WowPacketParser.Enums.Version.V1_13_4_33598;
+using WowPacketParser.Enums.Version.v1_13_5_34713;
+using WowPacketParser.Enums.Version.V1_13_6_36231;
+using WowPacketParser.Enums.Version.V2_5_1_38835;
+using WowPacketParser.Enums.Version.V2_5_2_39570;
 using WowPacketParser.Enums.Version.V3_3_5a_12340;
 using WowPacketParser.Enums.Version.V4_0_3_13329;
 using WowPacketParser.Enums.Version.V4_0_6_13596;
@@ -48,12 +54,6 @@ using WowPacketParser.Enums.Version.V9_0_1_36216;
 using WowPacketParser.Enums.Version.V9_0_2_36639;
 using WowPacketParser.Enums.Version.V9_0_5_37862;
 using WowPacketParser.Enums.Version.V9_1_0_39185;
-using WowPacketParser.Enums.Version.V1_13_2_31446;
-using WowPacketParser.Enums.Version.V1_13_4_33598;
-using WowPacketParser.Enums.Version.v1_13_5_34713;
-using WowPacketParser.Enums.Version.V1_13_6_36231;
-using WowPacketParser.Enums.Version.V2_5_1_38835;
-using WowPacketParser.Enums.Version.V2_5_2_39570;
 using WowPacketParser.Misc;
 
 namespace WowPacketParser.Enums.Version

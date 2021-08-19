@@ -1,14 +1,14 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
-using MySql.Data.MySqlClient;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
-using WowPacketParser.Store.Objects;
 using WowPacketParser.DBC.Structures.BattleForAzeroth;
+using WowPacketParser.DBC.Structures.Shadowlands;
 
 namespace WowPacketParser.SQL
 {

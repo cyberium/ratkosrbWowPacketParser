@@ -2,7 +2,7 @@
 {
     [DBFile("Achievement")]
 
-    public sealed class AchievementEntry
+   public sealed class AchievementEntry
     {
         public string Description;
         public string Title;
@@ -16,9 +16,9 @@
         public sbyte Points;
         public int Flags;
         public short UiOrder;
-        public int IconFileID;        
+        public int IconFileID;
+        public uint RewardItemID;
         public uint CriteriaTree;
-        public uint Unknown1;
         public short SharesCriteria;
     }
 }

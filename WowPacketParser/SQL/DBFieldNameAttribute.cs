@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using WowPacketParser.Enums;
-using WowPacketParser.Loading;
 using WowPacketParser.Misc;
 
 namespace WowPacketParser.SQL
@@ -32,7 +31,7 @@ namespace WowPacketParser.SQL
         /// <summary>
         /// True if field is nullable or the default value should be NULL.
         /// </summary>
-        public bool Nullable { get; set;}
+        public bool Nullable { get; set; }
 
         /// <summary>
         /// True if the field is only used when parsing multiple sniff files into 1 sql.

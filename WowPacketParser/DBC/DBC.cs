@@ -1,15 +1,14 @@
+using DB2FileReaderLib.NET;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using DB2FileReaderLib.NET;
 using WowPacketParser.DBC.Structures.BattleForAzeroth;
 using WowPacketParser.DBC.Structures.Shadowlands;
 using WowPacketParser.Misc;
-using WowPacketParser.Enums;
 
 namespace WowPacketParser.DBC
 {

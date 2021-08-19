@@ -112,7 +112,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
 
             packet.ReadWoWString("QuestTitle", questTitleLen, idx);
         }
-        
+
         [Parser(Opcode.CMSG_BINDER_ACTIVATE)]
         [Parser(Opcode.SMSG_BINDER_CONFIRM)]
         public static void HandleBinderHello(Packet packet)

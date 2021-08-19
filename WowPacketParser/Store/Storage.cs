@@ -783,7 +783,7 @@ namespace WowPacketParser.Store
         /* Key: Entry */
 
         // Templates
-        public static readonly DataBag<AreaTriggerTemplate> AreaTriggerTemplates = new DataBag<AreaTriggerTemplate>(Settings.SqlTables.areatrigger_template );
+        public static readonly DataBag<AreaTriggerTemplate> AreaTriggerTemplates = new DataBag<AreaTriggerTemplate>(Settings.SqlTables.areatrigger_template);
         public static readonly DataBag<AreaTriggerTemplateVertices> AreaTriggerTemplatesVertices = new DataBag<AreaTriggerTemplateVertices>(Settings.SqlTables.areatrigger_template_polygon_vertices);
         public static readonly DataBag<ConversationActor> ConversationActors = new DataBag<ConversationActor>(Settings.SqlTables.conversation_actors);
         public static readonly DataBag<ConversationActorTemplate> ConversationActorTemplates = new DataBag<ConversationActorTemplate>(Settings.SqlTables.conversation_actor_template);
@@ -963,7 +963,7 @@ namespace WowPacketParser.Store
             if (player == null)
                 return;
 
-           var unitData = useInitialData ? player.UnitDataOriginal : player.UnitData;
+            var unitData = useInitialData ? player.UnitDataOriginal : player.UnitData;
 
 
             PlayerClassLevelStats classLevelStats = new PlayerClassLevelStats();
@@ -1279,7 +1279,7 @@ namespace WowPacketParser.Store
 
             BroadcastTexts.Clear();
             BroadcastTextLocales.Clear();
-            
+
             PlayerChoices.Clear();
             PlayerChoiceLocales.Clear();
             PlayerChoiceResponses.Clear();

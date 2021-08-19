@@ -1,9 +1,9 @@
+using Ionic.Zlib;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using System.Text;
-using Ionic.Zlib;
 using WowPacketParser.Enums;
 using WowPacketParser.Enums.Version;
 using WowPacketParser.Parsing.Parsers;

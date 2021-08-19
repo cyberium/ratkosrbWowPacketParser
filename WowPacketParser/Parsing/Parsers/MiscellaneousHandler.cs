@@ -772,7 +772,7 @@ namespace WowPacketParser.Parsing.Parsers
             MovementHandler.CurrentMapId = mapId;
 
             if (mapId < 1000) // Getting some weird results in a couple of packets
-                packet.AddSniffData(StoreNameType.Map, (int) mapId, "LOAD_SCREEN");
+                packet.AddSniffData(StoreNameType.Map, (int)mapId, "LOAD_SCREEN");
         }
 
         [HasSniffData]
@@ -784,7 +784,7 @@ namespace WowPacketParser.Parsing.Parsers
             MovementHandler.CurrentMapId = mapId;
 
             if (mapId < 1000) // Getting some weird results in a couple of packets
-                packet.AddSniffData(StoreNameType.Map, (int) mapId, "LOAD_SCREEN");
+                packet.AddSniffData(StoreNameType.Map, (int)mapId, "LOAD_SCREEN");
         }
 
         [Parser(Opcode.MSG_VERIFY_CONNECTIVITY)]

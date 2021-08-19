@@ -8,7 +8,6 @@ using WowPacketParser.Loading;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing.Parsers;
 using WowPacketParser.SQL;
-using WowPacketParser.DBC;
 using System.Collections.Generic;
 
 namespace WowPacketParser

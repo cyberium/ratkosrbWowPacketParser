@@ -358,7 +358,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             for (int i = 0; i < count; ++i)
             {
                 packet.ReadBit("Unk bit", i);
-                hasCondition[i]= !packet.ReadBit();
+                hasCondition[i] = !packet.ReadBit();
                 hasExtendedCost[i] = !packet.ReadBit();
             }
 
