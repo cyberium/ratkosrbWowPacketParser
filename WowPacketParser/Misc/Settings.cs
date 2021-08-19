@@ -14,6 +14,7 @@ namespace WowPacketParser.Misc
         public static readonly string[] AreaFilters = Conf.GetStringList("AreaFilters", new string[0]);
         public static readonly int FilterPacketsNum = Conf.GetInt("FilterPacketsNum", 0);
         public static readonly ClientVersionBuild ClientBuild = Conf.GetEnum("ClientBuild", ClientVersionBuild.Zero);
+        public static readonly LocaleConstant ClientLocale = Conf.GetEnum("ClientLocale", LocaleConstant.enUS);
         public static readonly TargetedDbExpansion TargetedDbExpansion = Conf.GetEnum("TargetedDbExpansion", TargetedDbExpansion.WrathOfTheLichKing);
         public static readonly TargetedDbType TargetedDbType = Conf.GetEnum("TargetedDbType", TargetedDbType.WPP);
         public static readonly DumpFormatType DumpFormat = Conf.GetEnum("DumpFormat", DumpFormatType.Text);

@@ -68,6 +68,8 @@ namespace WowPacketParser
                 if (Settings.ClientBuild != Enums.ClientVersionBuild.Zero)
                     ClientVersion.SetVersion(Settings.ClientBuild);
 
+                ClientLocale.SetLocale(Settings.ClientLocale.ToString());
+
                 // needs to be before processing
                 currentSniffFile = Path.GetFileName(file);
                 sniffFileNames.Add(currentSniffFile);
