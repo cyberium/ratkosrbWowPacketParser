@@ -369,7 +369,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("transport_guid", false, true, OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
         public string TransportGUID = "0";
 
-        public WowGuid TransportGuid = WowGuid.Empty;
+        public WowGuid TransportGuid = WowGuid64.Empty;
         public List<Vector3> SplinePoints = null;
     }
 

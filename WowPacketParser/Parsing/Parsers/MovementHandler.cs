@@ -1436,7 +1436,7 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.Direction == Direction.ServerToClient) && ClientVersion.Build != ClientVersionBuild.V4_2_2_14545)
                 guid = packet.ReadPackedGuid("Guid");
             else
-                guid = Storage.CurrentActivePlayer != null ? Storage.CurrentActivePlayer : new WowGuid64();
+                guid = Storage.CurrentActivePlayer != null ? Storage.CurrentActivePlayer : WowGuid64.Empty;
 
             MovementInfo movementInfo = ReadMovementInfo(packet, guid);
 

@@ -26,30 +26,30 @@ namespace WowPacketParser.Store
             Storage.PlayerActiveCreateTime.Add(activePlayer);
 
             // initial spells packet is sent before create object for own player
-            if (CharacterSpells.ContainsKey(WowGuid.Empty))
+            if (CharacterSpells.ContainsKey(WowGuid64.Empty))
             {
                 if (CharacterSpells.ContainsKey(guid))
                 {
-                    CharacterSpells[guid] = CharacterSpells[WowGuid.Empty];
+                    CharacterSpells[guid] = CharacterSpells[WowGuid64.Empty];
                 }
                 else
                 {
-                    Storage.CharacterSpells.Add(guid, CharacterSpells[WowGuid.Empty]);
+                    Storage.CharacterSpells.Add(guid, CharacterSpells[WowGuid64.Empty]);
                 }
-                CharacterSpells.Remove(WowGuid.Empty);
+                CharacterSpells.Remove(WowGuid64.Empty);
             }
             // initial factions packet is sent before create object for own player
-            if (CharacterReputations.ContainsKey(WowGuid.Empty))
+            if (CharacterReputations.ContainsKey(WowGuid64.Empty))
             {
                 if (CharacterReputations.ContainsKey(guid))
                 {
-                    CharacterReputations[guid] = CharacterReputations[WowGuid.Empty];
+                    CharacterReputations[guid] = CharacterReputations[WowGuid64.Empty];
                 }
                 else
                 {
-                    Storage.CharacterReputations.Add(guid, CharacterReputations[WowGuid.Empty]);
+                    Storage.CharacterReputations.Add(guid, CharacterReputations[WowGuid64.Empty]);
                 }
-                CharacterReputations.Remove(WowGuid.Empty);
+                CharacterReputations.Remove(WowGuid64.Empty);
             }
         }
 
@@ -750,8 +750,8 @@ namespace WowPacketParser.Store
         }
         public static void ClearTemporarySpellList()
         {
-            if (Storage.CharacterSpells.ContainsKey(WowGuid.Empty))
-                Storage.CharacterSpells[WowGuid.Empty].Clear();
+            if (Storage.CharacterSpells.ContainsKey(WowGuid64.Empty))
+                Storage.CharacterSpells[WowGuid64.Empty].Clear();
         }
 
         public static readonly Dictionary<WowGuid, List<CharacterReputationData>> CharacterReputations = new Dictionary<WowGuid, List<CharacterReputationData>>();
@@ -773,8 +773,8 @@ namespace WowPacketParser.Store
         }
         public static void ClearTemporaryReputationList()
         {
-            if (Storage.CharacterReputations.ContainsKey(WowGuid.Empty))
-                Storage.CharacterReputations[WowGuid.Empty].Clear();
+            if (Storage.CharacterReputations.ContainsKey(WowGuid64.Empty))
+                Storage.CharacterReputations[WowGuid64.Empty].Clear();
         }
 
         public static readonly List<PlayerMovement> PlayerMovements = new List<PlayerMovement>();

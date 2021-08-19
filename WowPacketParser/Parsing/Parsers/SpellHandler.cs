@@ -136,7 +136,7 @@ namespace WowPacketParser.Parsing.Parsers
                 else
                     spellId = packet.ReadUInt16<SpellId>("Spell ID", i);
 
-                Storage.StoreCharacterSpell(WowGuid.Empty, (uint)spellId);
+                Storage.StoreCharacterSpell(WowGuid64.Empty, (uint)spellId);
 
                 packet.ReadInt16("Unk Int16", i);
             }
@@ -173,7 +173,7 @@ namespace WowPacketParser.Parsing.Parsers
             for (var i = 0; i < count; i++)
             {
                 uint spellId = packet.ReadUInt32<SpellId>("Spell ID", i);
-                Storage.StoreCharacterSpell(WowGuid.Empty, spellId);
+                Storage.StoreCharacterSpell(WowGuid64.Empty, spellId);
             }
         }
 
@@ -198,7 +198,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             aura.Charges = packet.ReadByte("Charges", i);
 
-            aura.CasterGuid = !aura.AuraFlags.HasAnyFlag(AuraFlag.NotCaster) ? packet.ReadPackedGuid("Caster GUID", i) : new WowGuid64();
+            aura.CasterGuid = !aura.AuraFlags.HasAnyFlag(AuraFlag.NotCaster) ? packet.ReadPackedGuid("Caster GUID", i) : WowGuid64.Empty;
 
             if (aura.AuraFlags.HasAnyFlag(AuraFlag.Duration))
             {
@@ -249,7 +249,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             aura.Charges = packet.ReadByte("Charges", i);
 
-            aura.CasterGuid = !aura.AuraFlags.HasAnyFlag(AuraFlagMoP.NoCaster) ? packet.ReadPackedGuid("Caster GUID", i) : new WowGuid64();
+            aura.CasterGuid = !aura.AuraFlags.HasAnyFlag(AuraFlagMoP.NoCaster) ? packet.ReadPackedGuid("Caster GUID", i) : WowGuid64.Empty;
 
             if (aura.AuraFlags.HasAnyFlag(AuraFlagMoP.Duration))
             {
@@ -697,7 +697,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             var targetFlags = ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180) ? packet.ReadInt32E<TargetFlag>("Target Flags") : packet.ReadInt16E<TargetFlag>("Target Flags");
 
-            WowGuid targetGUID = new WowGuid64();
+            WowGuid targetGUID = WowGuid64.Empty;
             if (targetFlags.HasAnyFlag(TargetFlag.Unit | TargetFlag.CorpseEnemy | TargetFlag.GameObject |
                 TargetFlag.CorpseAlly | TargetFlag.UnitMinipet))
                 targetGUID = packet.ReadPackedGuid("Target GUID");

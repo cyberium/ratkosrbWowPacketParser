@@ -103,7 +103,7 @@ namespace WowPacketParser.Parsing.Parsers
                 TypeNormalized = ConvertVanillaMessageType(chatType),
                 TypeOriginal = (uint)chatType,
                 Language = packet.ReadInt32E<Language>("Language"),
-                SenderGUID = WowGuid.Empty
+                SenderGUID = WowGuid64.Empty
             };
 
             switch (text.TypeNormalized)

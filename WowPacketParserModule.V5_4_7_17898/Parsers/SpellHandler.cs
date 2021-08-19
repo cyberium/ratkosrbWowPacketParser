@@ -1013,7 +1013,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             for (var i = 0; i < count; i++)
             {
                 uint spellId = packet.ReadUInt32<SpellId>("Spell ID", i);
-                Storage.StoreCharacterSpell(WowGuid.Empty, spellId);
+                Storage.StoreCharacterSpell(WowGuid64.Empty, spellId);
             }
         }
 

@@ -422,7 +422,7 @@ namespace WowPacketParser.Parsing.Parsers
         {
             uint sound = packet.ReadUInt32("Sound Id");
 
-            WowGuid guid1 = WowGuid.Empty;
+            WowGuid guid1 = WowGuid64.Empty;
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_3_0_15005))
                 guid1 = packet.ReadGuid("GUID");
 

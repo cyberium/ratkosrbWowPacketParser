@@ -10,8 +10,6 @@ namespace WowPacketParser.Misc
         public HighGuid HighGuid { get; protected set; }
         public ulong High { get; protected set; }
 
-        public static WowGuid Empty = new WowGuid64(0);
-
         public bool HasEntry()
         {
             switch (GetHighType())
@@ -179,14 +177,12 @@ namespace WowPacketParser.Misc
 
     public class WowGuid64 : WowGuid
     {
+        public static WowGuid Empty = new WowGuid64(0);
+
         public WowGuid64(ulong id)
         {
             Low = id;
             HighGuid = new HighGuidLegacy(GetHighGuidTypeLegacy());
-        }
-
-        public WowGuid64()
-        {
         }
 
         public override ulong GetLow()

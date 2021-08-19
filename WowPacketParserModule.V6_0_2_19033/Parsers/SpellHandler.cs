@@ -139,7 +139,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             for (var i = 0; i < knownSpellsCount; i++)
             {
                 uint spellId = packet.ReadUInt32<SpellId>("KnownSpellId", i);
-                Storage.StoreCharacterSpell(WowGuid.Empty, spellId);
+                Storage.StoreCharacterSpell(WowGuid64.Empty, spellId);
             }
         }
 

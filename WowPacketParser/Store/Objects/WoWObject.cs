@@ -51,12 +51,12 @@ namespace WowPacketParser.Store.Objects
 
         public bool IsOnTransport()
         {
-            return Movement.TransportGuid != null && Movement.TransportGuid != WowGuid.Empty;
+            return Movement.TransportGuid != null && !Movement.TransportGuid.IsEmpty();
         }
 
         public bool WasOriginallyOnTransport()
         {
-            return OriginalMovement.TransportGuid != null && OriginalMovement.TransportGuid != WowGuid.Empty;
+            return OriginalMovement.TransportGuid != null && OriginalMovement.TransportGuid != WowGuid64.Empty;
         }
 
         public int GetDefaultSpawnTime(uint difficultyID)

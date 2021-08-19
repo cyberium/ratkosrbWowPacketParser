@@ -21,7 +21,7 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
             for (var i = 0; i < count; i++)
             {
                 uint spellId = packet.ReadUInt32<SpellId>("Spell ID", i);
-                Storage.StoreCharacterSpell(WowGuid.Empty, spellId);
+                Storage.StoreCharacterSpell(WowGuid64.Empty, spellId);
             }
         }
 
@@ -151,7 +151,7 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
                         aura.CasterGuid = new WowGuid64(BitConverter.ToUInt64(casterGUID[i], 0));
                     }
                     else
-                        aura.CasterGuid = new WowGuid64();
+                        aura.CasterGuid = WowGuid64.Empty;
 
                     aura.AuraFlags = (uint)packet.ReadByteE<AuraFlagMoP>("Flags", i);
 

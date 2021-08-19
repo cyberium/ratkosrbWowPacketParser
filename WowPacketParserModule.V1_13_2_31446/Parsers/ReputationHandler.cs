@@ -21,7 +21,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 repData.Faction = (uint)i;
                 repData.Flags = (uint)packet.ReadByteE<FactionFlag>("FactionFlags", i);
                 repData.Standing = (int)packet.ReadUInt32E<ReputationRank>("FactionStandings", i);
-                Storage.StoreCharacterReputation(WowGuid.Empty, repData);
+                Storage.StoreCharacterReputation(WowGuid64.Empty, repData);
             }
 
             for (var i = 0; i < FactionCount; i++)

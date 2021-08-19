@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using WowPacketParser.Enums;
 using WowPacketParser.Enums.Version;
 using WowPacketParser.Misc;
@@ -17,6 +16,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             ReadSpellCastData(castData, packet, "Cast");
             Storage.StoreSpellCastData(castData, Storage.SpellCastStart, packet);
         }
+
         [Parser(Opcode.SMSG_SPELL_GO)]
         public static void HandleSpellGo(Packet packet)
         {

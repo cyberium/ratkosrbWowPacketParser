@@ -442,7 +442,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             for (var i = 0; i < knownSpells; i++)
             {
                 uint spellId = packet.ReadUInt32<SpellId>("KnownSpellId", i);
-                Storage.StoreCharacterSpell(WowGuid.Empty, spellId);
+                Storage.StoreCharacterSpell(WowGuid64.Empty, spellId);
             }
 
             for (var i = 0; i < favoriteSpells; i++)
