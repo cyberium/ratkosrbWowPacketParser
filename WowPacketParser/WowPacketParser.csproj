@@ -291,6 +291,7 @@
     <Compile Include="Enums\RaidSummonFail.cs" />
     <Compile Include="Enums\ReportPvPAFKResult.cs" />
     <Compile Include="Enums\SecureAddonStatus.cs" />
+    <Compile Include="Enums\SplineFlagTBC.cs" />
     <Compile Include="Enums\SplineFlagVanilla.cs" />
     <Compile Include="Enums\StandState.cs" />
     <Compile Include="Enums\TalentErrors.cs" />

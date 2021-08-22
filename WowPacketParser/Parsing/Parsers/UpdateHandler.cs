@@ -4019,7 +4019,7 @@ namespace WowPacketParser.Parsing.Parsers
                                 packet.ReadVector3("Final Spline Coords", index);
                         }
                     }
-                    else if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                    else if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
                     {
                         var splineFlags = packet.ReadInt32E<SplineFlag>("Spline Flags", index);
                         if (splineFlags.HasAnyFlag(SplineFlag.FinalTarget))
@@ -4027,6 +4027,16 @@ namespace WowPacketParser.Parsing.Parsers
                         else if (splineFlags.HasAnyFlag(SplineFlag.FinalOrientation))
                             packet.ReadSingle("Final Spline Orientation", index);
                         else if (splineFlags.HasAnyFlag(SplineFlag.FinalPoint))
+                            packet.ReadVector3("Final Spline Coords", index);
+                    }
+                    else if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                    {
+                        var splineFlags = packet.ReadInt32E<SplineFlagTBC>("Spline Flags", index);
+                        if (splineFlags.HasAnyFlag(SplineFlagTBC.FinalTarget))
+                            packet.ReadGuid("Final Spline Target GUID", index);
+                        else if (splineFlags.HasAnyFlag(SplineFlagTBC.FinalOrientation))
+                            packet.ReadSingle("Final Spline Orientation", index);
+                        else if (splineFlags.HasAnyFlag(SplineFlagTBC.FinalPoint))
                             packet.ReadVector3("Final Spline Coords", index);
                     }
                     else
@@ -4048,7 +4058,7 @@ namespace WowPacketParser.Parsing.Parsers
                     {
                         packet.ReadSingle("Spline Duration Multiplier", index);
                         packet.ReadSingle("Spline Duration Multiplier Next", index);
-                        packet.ReadSingle("Spline Vertical Acceleration", index);
+                        packet.ReadInt32("Spline Vertical Acceleration", index);
                         packet.ReadInt32("Spline Start Time", index);
                     }
 

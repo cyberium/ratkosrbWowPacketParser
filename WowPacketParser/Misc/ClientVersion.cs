@@ -52,6 +52,7 @@ namespace WowPacketParser.Misc
             new KeyValuePair<ClientVersionBuild, DateTime>(ClientVersionBuild.V3_2_2a_10505, new DateTime(2009, 9, 25)),
             new KeyValuePair<ClientVersionBuild, DateTime>(ClientVersionBuild.V3_3_0_10958, new DateTime(2009, 12, 2)),
             new KeyValuePair<ClientVersionBuild, DateTime>(ClientVersionBuild.V3_3_0a_11159, new DateTime(2009, 12, 14)),
+            new KeyValuePair<ClientVersionBuild, DateTime>(ClientVersionBuild.V3_3_2_11403, new DateTime(2010, 2, 2)),
             new KeyValuePair<ClientVersionBuild, DateTime>(ClientVersionBuild.V3_3_3_11685, new DateTime(2010, 3, 23)),
             new KeyValuePair<ClientVersionBuild, DateTime>(ClientVersionBuild.V3_3_3a_11723, new DateTime(2010, 3, 26)),
             new KeyValuePair<ClientVersionBuild, DateTime>(ClientVersionBuild.V3_3_5_12213, new DateTime(2010, 6, 22)),
@@ -406,6 +407,7 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V3_3_0_10958:
                 case ClientVersionBuild.V3_3_0a_11159:
                     return ClientVersionBuild.V3_3_0a_11159;
+                case ClientVersionBuild.V3_3_2_11403:
                 case ClientVersionBuild.V3_3_3_11685:
                 case ClientVersionBuild.V3_3_3a_11723:
                 case ClientVersionBuild.V3_3_5_12213:

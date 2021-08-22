@@ -913,7 +913,7 @@ namespace WowPacketParser.Parsing.Parsers
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_0_9767))
                 {
                     var questAccepted = packet.ReadByte("QuestAccepted");
-                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_3_3_11685))
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_3_2_11403))
                         packet.ReadByte("Unk");
                 }
             }

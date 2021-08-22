@@ -381,7 +381,7 @@
 
     public enum GameObjectField
     {
-        OBJECT_FIELD_CREATED_BY = ObjectField.OBJECT_END + 0x0,                     // 0x006 - Size: 2 - Type: GUID - Flags: PUBLIC
+        GAMEOBJECT_FIELD_CREATED_BY = ObjectField.OBJECT_END + 0x0,                     // 0x006 - Size: 2 - Type: GUID - Flags: PUBLIC
         GAMEOBJECT_DISPLAYID = ObjectField.OBJECT_END + 0x2,                        // 0x008 - Size: 1 - Type: INT - Flags: PUBLIC
         GAMEOBJECT_FLAGS = ObjectField.OBJECT_END + 0x3,                            // 0x009 - Size: 1 - Type: INT - Flags: PUBLIC
         GAMEOBJECT_ROTATION = ObjectField.OBJECT_END + 0x4,                         // 0x00A - Size: 4 - Type: FLOAT - Flags: PUBLIC
