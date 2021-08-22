@@ -2219,17 +2219,6 @@ CREATE TABLE IF NOT EXISTS `player_values_update` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.play_cinematic
-DROP TABLE IF EXISTS `play_cinematic`;
-CREATE TABLE IF NOT EXISTS `play_cinematic` (
-  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
-  `cinematic_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`unixtimems`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_TRIGGER_CINEMATIC';
-
--- Data exporting was unselected.
-
-
 -- Dumping structure for table sniffs_new_test.play_music
 DROP TABLE IF EXISTS `play_music`;
 CREATE TABLE IF NOT EXISTS `play_music` (
