@@ -898,7 +898,8 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
             guid[1] = packet.ReadBit();
             packet.ParseBitStream(guid, 4, 2, 0, 3, 7, 1, 5, 6);
 
-            packet.WriteGuid("GUID", guid);
+            WowGuid GUID = packet.WriteGuid("GUID", guid);
+            Storage.StoreObjectDestroyTime(GUID, packet.Time);
         }
     }
 }

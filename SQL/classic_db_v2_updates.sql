@@ -368,3 +368,6 @@ COLLATE='utf8_unicode_ci'
 ENGINE=InnoDB
 ;
 
+ALTER TABLE `creature_threat_remove`
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`unixtimems`, `guid`, `target_guid`, `target_id`, `target_type`);

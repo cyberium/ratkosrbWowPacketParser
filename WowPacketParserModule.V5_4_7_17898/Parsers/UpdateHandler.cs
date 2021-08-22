@@ -29,7 +29,8 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
 
             packet.ParseBitStream(guid, 2, 1, 5, 4, 3, 6, 7, 0);
 
-            packet.WriteGuid("GUID", guid);
+            WowGuid GUID = packet.WriteGuid("GUID", guid);
+            Storage.StoreObjectDestroyTime(GUID, packet.Time);
         }
 
         [Parser(Opcode.CMSG_OBJECT_UPDATE_FAILED)]

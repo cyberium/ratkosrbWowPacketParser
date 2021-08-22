@@ -29,7 +29,8 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
 
             packet.ParseBitStream(guid, 0, 4, 7, 2, 6, 3, 1, 5);
 
-            packet.WriteGuid("GUID", guid);
+            WowGuid GUID = packet.WriteGuid("GUID", guid);
+            Storage.StoreObjectDestroyTime(GUID, packet.Time);
         }
 
         [HasSniffData] // in ReadCreateObjectBlock

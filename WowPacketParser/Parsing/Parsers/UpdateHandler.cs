@@ -62,12 +62,12 @@ namespace WowPacketParser.Parsing.Parsers
                         ReadCreateObjectBlock(packet, guid, map, i, ObjectCreateType.Create2);
                         break;
                     }
-                    case "FarObjects":
                     case "NearObjects":
                     {
                         ReadObjectsBlock(packet, i);
                         break;
                     }
+                    case "FarObjects":
                     case "DestroyObjects":
                     {
                         ReadDestroyObjectsBlock(packet, i);
@@ -4156,7 +4156,8 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_DESTROY_OBJECT)]
         public static void HandleDestroyObject(Packet packet)
         {
-            packet.ReadGuid("GUID");
+            WowGuid guid = packet.ReadGuid("GUID");
+            Storage.StoreObjectDestroyTime(guid, packet.Time);
 
             if (packet.CanRead())
                 packet.ReadBool("Despawn Animation");

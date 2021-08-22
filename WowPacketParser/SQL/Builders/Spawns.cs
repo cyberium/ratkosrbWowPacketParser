@@ -707,11 +707,6 @@ namespace WowPacketParser.SQL.Builders
                         petNameRow.Data.Name = petName;
                         petNameRows.Add(petNameRow);
                     }
-                    else if (row.Data.IsPet == 1)
-                    {
-                        Console.WriteLine("no name");
-                        Console.ReadKey();
-                    }
                 }
 
                 if (creature.WasOriginallyOnTransport() && badTransport)

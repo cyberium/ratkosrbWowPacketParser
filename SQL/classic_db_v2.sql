@@ -919,7 +919,7 @@ CREATE TABLE IF NOT EXISTS `creature_threat_remove` (
   `target_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `target_id` int(10) unsigned NOT NULL DEFAULT '0',
   `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`unixtimems`,`guid`)
+  PRIMARY KEY (`unixtimems`,`guid`,`target_guid`,`target_id`,`target_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_THREAT_REMOVE';
 
 -- Data exporting was unselected.
@@ -2215,6 +2215,17 @@ CREATE TABLE IF NOT EXISTS `player_values_update` (
   `channel_spell_id` int(10) unsigned DEFAULT NULL,
   `channel_visual_id` int(10) unsigned DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='values updates from SMSG_UPDATE_OBJECT';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.play_cinematic
+DROP TABLE IF EXISTS `play_cinematic`;
+CREATE TABLE IF NOT EXISTS `play_cinematic` (
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
+  `cinematic_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_TRIGGER_CINEMATIC';
 
 -- Data exporting was unselected.
 

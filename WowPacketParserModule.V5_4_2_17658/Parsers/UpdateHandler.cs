@@ -933,7 +933,8 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
 
             packet.ParseBitStream(guid, 1, 5, 3, 0, 2, 6, 7, 4);
 
-            packet.WriteGuid("GUID", guid);
+            WowGuid GUID = packet.WriteGuid("GUID", guid);
+            Storage.StoreObjectDestroyTime(GUID, packet.Time);
         }
 
         [Parser(Opcode.CMSG_OBJECT_UPDATE_FAILED)]
