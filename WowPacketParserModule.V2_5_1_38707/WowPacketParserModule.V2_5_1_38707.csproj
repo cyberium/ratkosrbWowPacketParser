@@ -49,7 +49,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parsers\BattlePetHandler.cs" />
+    <Compile Include="Parsers\CharacterHandler.cs" />
+    <Compile Include="Parsers\CombatLogHandler.cs" />
+    <Compile Include="Parsers\HotfixHandler.cs" />
+    <Compile Include="Parsers\PetHandler.cs" />
+    <Compile Include="Parsers\QueryHandler.cs" />
+    <Compile Include="Parsers\QuestHandler.cs" />
     <Compile Include="Parsers\SpellHandler.cs" />
+    <Compile Include="Parsers\SystemHandler.cs" />
     <Compile Include="Parsers\UpdateHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
