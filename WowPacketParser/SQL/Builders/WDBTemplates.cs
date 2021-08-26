@@ -475,7 +475,8 @@ namespace WowPacketParser.SQL.Builders
 
             if (!Storage.NpcTextsMop.IsEmpty() && ClientVersion.AddedInVersion(ClientType.MistsOfPandaria) &&
                 (Settings.TargetedDbExpansion >= TargetedDbExpansion.WarlordsOfDraenor ||
-                Settings.TargetedDbExpansion == TargetedDbExpansion.Classic))
+                Settings.TargetedDbExpansion == TargetedDbExpansion.Classic ||
+                Settings.TargetedDbExpansion == TargetedDbExpansion.BurningCrusadeClassic))
             {
                 foreach (var npcText in Storage.NpcTextsMop)
                     npcText.Item1.ConvertToDBStruct();

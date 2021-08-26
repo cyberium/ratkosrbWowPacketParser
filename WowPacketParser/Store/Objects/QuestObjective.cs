@@ -16,7 +16,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Type")]
         public QuestRequirementType? Type;
 
-        [DBFieldName("Order", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero)]
+        [DBFieldName("Order", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero)]
         [DBFieldName("Order", TargetedDbExpansion.Legion)]
         public uint? Order;
 
@@ -32,7 +32,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Flags")]
         public uint? Flags;
 
-        [DBFieldName("Flags2", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero)]
+        [DBFieldName("Flags2", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero)]
         [DBFieldName("Flags2", TargetedDbExpansion.Legion)] // 7.1.0
         public uint? Flags2;
 

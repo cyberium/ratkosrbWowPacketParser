@@ -29,8 +29,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("SpeedRun", DbType = (TargetedDbType.CMANGOS))]
         public float? SpeedRun;
 
-        [DBFieldName("gender", TargetedDbExpansion.Classic, TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
-        [DBFieldName("Gender", TargetedDbExpansion.Classic, TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("gender", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("Gender", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.TRINITY))]
         public Gender? Gender;
 
         [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]

@@ -19,14 +19,14 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("NextPageID", DbType = (TargetedDbType.TRINITY))]
         public uint? NextPageID;
 
-        [DBFieldName("player_condition_id", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
-        [DBFieldName("PlayerConditionID", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("player_condition_id", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("PlayerConditionID", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.TRINITY))]
         [DBFieldName("player_condition_id", TargetedDbExpansion.Legion, DbType = (TargetedDbType.WPP))]
         [DBFieldName("PlayerConditionID", TargetedDbExpansion.Legion, DbType = (TargetedDbType.TRINITY))]
         public int? PlayerConditionID;
 
-        [DBFieldName("flags", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
-        [DBFieldName("Flags", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("flags", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("Flags", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.TRINITY))]
         [DBFieldName("flags", TargetedDbExpansion.Legion, DbType = (TargetedDbType.WPP))]
         [DBFieldName("Flags", TargetedDbExpansion.Legion, DbType = (TargetedDbType.TRINITY))]
         public byte? Flags;

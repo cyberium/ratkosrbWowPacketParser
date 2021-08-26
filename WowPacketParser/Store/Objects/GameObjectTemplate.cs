@@ -44,17 +44,17 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Data", TargetedDbExpansion.WarlordsOfDraenor, TargetedDbExpansion.BattleForAzeroth, 33, true, DbType = (TargetedDbType.TRINITY))]
         [DBFieldName("data", TargetedDbExpansion.BattleForAzeroth, 34, true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("Data", TargetedDbExpansion.BattleForAzeroth, 34, true, DbType = (TargetedDbType.TRINITY))]
-        [DBFieldName("data", TargetedDbExpansion.Classic, 34, true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
-        [DBFieldName("Data", TargetedDbExpansion.Classic, 34, true, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("data", TargetedDbExpansion.BurningCrusadeClassic, 34, true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("Data", TargetedDbExpansion.BurningCrusadeClassic, 34, true, DbType = (TargetedDbType.TRINITY))]
         public int?[] Data;
 
-        [DBFieldName("quest_items_count", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("quest_items_count", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
         [DBFieldName("quest_items_count", TargetedDbExpansion.WrathOfTheLichKing, DbType = (TargetedDbType.WPP))]
         public uint QuestItems;
 
-        [DBFieldName("required_level", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("required_level", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
         [DBFieldName("required_level", TargetedDbExpansion.Cataclysm, TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.WPP))]
-        [DBFieldName("RequiredLevel", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("RequiredLevel", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.TRINITY))]
         [DBFieldName("RequiredLevel", TargetedDbExpansion.Cataclysm, TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.TRINITY))]
         public int? RequiredLevel;
 

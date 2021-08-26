@@ -23,7 +23,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("b2_0_sheath", DbType = (TargetedDbType.CMANGOS))]
         public uint? SheathState;
 
-        [DBFieldName("b2_1_flags", TargetedDbExpansion.Classic, TargetedDbExpansion.WrathOfTheLichKing, DbType = (TargetedDbType.CMANGOS))]
+        [DBFieldName("b2_1_flags", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.WrathOfTheLichKing, DbType = (TargetedDbType.CMANGOS))]
         [DBFieldName("b2_1_pvp_state", TargetedDbExpansion.WrathOfTheLichKing, DbType = (TargetedDbType.CMANGOS))]
         public uint? PvpFlags;
 

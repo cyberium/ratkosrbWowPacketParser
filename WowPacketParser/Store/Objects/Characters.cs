@@ -452,14 +452,14 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("health")]
         public int Health;
 
-        [DBFieldName("power", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, 6, true)]
+        [DBFieldName("power", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, 6, true)]
         [DBFieldName("power", TargetedDbExpansion.Zero, TargetedDbExpansion.WrathOfTheLichKing, 5, true)]
         [DBFieldName("power", TargetedDbExpansion.WrathOfTheLichKing, TargetedDbExpansion.Cataclysm, 7, true)]
         [DBFieldName("power", TargetedDbExpansion.Cataclysm, TargetedDbExpansion.WarlordsOfDraenor, 5, true)]
         [DBFieldName("power", TargetedDbExpansion.WarlordsOfDraenor, 6, true)]
         public int?[] Power;
 
-        [DBFieldName("stat", TargetedDbExpansion.Classic, TargetedDbExpansion.Legion, 5, true)]
+        [DBFieldName("stat", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Legion, 5, true)]
         [DBFieldName("stat", TargetedDbExpansion.Legion, 4, true)]
         public int?[] Stat;
 

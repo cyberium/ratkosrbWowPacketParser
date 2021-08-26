@@ -104,7 +104,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("animprogress", TargetedDbExpansion.Zero)]
         public uint? AnimProgress;
 
-        [DBFieldName("custom_param", TargetedDbExpansion.Classic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("custom_param", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
         [DBFieldName("custom_param", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP))]
         public uint? CustomParam;
 
