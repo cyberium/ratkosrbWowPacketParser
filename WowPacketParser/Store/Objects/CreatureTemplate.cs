@@ -139,43 +139,64 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Entry", true, DbType = (TargetedDbType.CMANGOS))]
         public uint? Entry;
 
-        [DBFieldName("kill_credit", 2, DbType = (TargetedDbType.WPP))]
-        [DBFieldName("KillCredit", 2, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
+        [DBFieldName("kill_credit", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, 2, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("kill_credit", TargetedDbExpansion.WrathOfTheLichKing, 2, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("KillCredit", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, 2, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
+        [DBFieldName("KillCredit", TargetedDbExpansion.WrathOfTheLichKing, 2, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
         public uint?[] KillCredits;
 
-        [DBFieldName("display_total_count", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_total_count", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_total_count", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         public uint DisplayTotalCount;
 
-        [DBFieldName("display_total_probability", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_total_probability", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_total_probability", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         public float DisplayTotalProbability;
 
-        [DBFieldName("display_id", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.BattleForAzeroth, 4, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
-        [DBFieldName("modelid", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.BattleForAzeroth, 4, DbType = (TargetedDbType.TRINITY))]
-        [DBFieldName("ModelId", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.BattleForAzeroth, 4, DbType = (TargetedDbType.CMANGOS))]
+        // 4 display ids sent in tbc classic - vanilla classic
+        [DBFieldName("display_id", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, 4, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("modelid", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, 4, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("ModelId", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, 4, DbType = (TargetedDbType.CMANGOS))]
+        // only 1 display id sent in vanilla
+        [DBFieldName("display_id", TargetedDbExpansion.Zero, TargetedDbExpansion.TheBurningCrusade, 1, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("modelid", TargetedDbExpansion.Zero, TargetedDbExpansion.TheBurningCrusade, 1, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("ModelId", TargetedDbExpansion.Zero, TargetedDbExpansion.TheBurningCrusade, 1, DbType = (TargetedDbType.CMANGOS))]
+        // 4 display ids sent in tbc - legion
+        [DBFieldName("display_id", TargetedDbExpansion.TheBurningCrusade, TargetedDbExpansion.BattleForAzeroth, 4, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("modelid", TargetedDbExpansion.TheBurningCrusade, TargetedDbExpansion.BattleForAzeroth, 4, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("ModelId", TargetedDbExpansion.TheBurningCrusade, TargetedDbExpansion.BattleForAzeroth, 4, DbType = (TargetedDbType.CMANGOS))]
         public uint?[] DisplayIDs;
 
-        [DBFieldName("display_scale1", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_scale1", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_scale1", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         public float DisplayScale1;
 
-        [DBFieldName("display_scale2", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_scale2", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_scale2", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         public float DisplayScale2;
 
-        [DBFieldName("display_scale3", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_scale3", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_scale3", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         public float DisplayScale3;
 
-        [DBFieldName("display_scale4", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_scale4", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_scale4", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         public float DisplayScale4;
 
-        [DBFieldName("display_probability1", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_probability1", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_probability1", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         public float DisplayProbability1;
 
-        [DBFieldName("display_probability2", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_probability2", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_probability2", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         public float DisplayProbability2;
 
-        [DBFieldName("display_probability3", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_probability3", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_probability3", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         public float DisplayProbability3;
 
-        [DBFieldName("display_probability4", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_probability4", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("display_probability4", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         public float DisplayProbability4;
 
         [DBFieldName("name", DbType = (TargetedDbType.WPP | TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
@@ -198,8 +219,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("TitleAlt", TargetedDbExpansion.WarlordsOfDraenor /*Mists of Pandaria*/, nullable: true, DbType = (TargetedDbType.TRINITY))]
         public string TitleAlt;
 
-        [DBFieldName("icon_name", nullable: true, DbType = (TargetedDbType.WPP))]
-        [DBFieldName("IconName", nullable: true, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
+        [DBFieldName("icon_name", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, nullable: true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("IconName", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, nullable: true, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
+        [DBFieldName("icon_name", TargetedDbExpansion.TheBurningCrusade, nullable: true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("IconName", TargetedDbExpansion.TheBurningCrusade, nullable: true, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
         public string IconName;
 
         [DBFieldName("health_scaling_expansion", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
@@ -229,9 +252,18 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("FadeRegionRadius", TargetedDbExpansion.BattleForAzeroth, TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.TRINITY))]
         public float? FadeRegionRadius;
 
+        [DBFieldName("difficulty_id", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Classic, DbType = (TargetedDbType.WPP))]
+        public int? DifficultyID;
+
+        [DBFieldName("widget_set_id", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Classic, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("widget_set_id", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("WidgetSetID", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Classic, DbType = (TargetedDbType.TRINITY))]
         [DBFieldName("WidgetSetID", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.TRINITY))]
         public int? WidgetSetID;
 
+        [DBFieldName("widget_set_unit_condition_id", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Classic, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("widget_set_unit_condition_id", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("WidgetSetUnitConditionID", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Classic, DbType = (TargetedDbType.TRINITY))]
         [DBFieldName("WidgetSetUnitConditionID", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.TRINITY))]
         public int? WidgetSetUnitConditionID;
 
@@ -239,7 +271,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Rank", DbType = (TargetedDbType.CMANGOS))]
         public CreatureRank? Rank;
 
-        [DBFieldName("beast_family", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("pet_family", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         [DBFieldName("family", DbType = (TargetedDbType.TRINITY))]
         [DBFieldName("Family", DbType = (TargetedDbType.CMANGOS))]
         public CreatureFamily? Family;
@@ -260,25 +292,33 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("PetSpellDataId", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Cataclysm, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
         public uint? PetSpellDataID;
 
-        [DBFieldName("health_multiplier", DbType = (TargetedDbType.WPP))]
-        [DBFieldName("HealthModifier", DbType = (TargetedDbType.TRINITY))]
-        [DBFieldName("HealthMultiplier", DbType = (TargetedDbType.CMANGOS))]
+        [DBFieldName("health_multiplier", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("HealthModifier", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("HealthMultiplier", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.CMANGOS))]
+        [DBFieldName("health_multiplier", TargetedDbExpansion.TheBurningCrusade, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("HealthModifier", TargetedDbExpansion.TheBurningCrusade, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("HealthMultiplier", TargetedDbExpansion.TheBurningCrusade, DbType = (TargetedDbType.CMANGOS))]
         public float? HealthMultiplier;
 
-        [DBFieldName("mana_multiplier", DbType = (TargetedDbType.WPP))]
-        [DBFieldName("ManaModifier", DbType = (TargetedDbType.TRINITY))]
-        [DBFieldName("PowerMultiplier", DbType = (TargetedDbType.CMANGOS))]
+        [DBFieldName("mana_multiplier", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("ManaModifier", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("PowerMultiplier", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.CMANGOS))]
+        [DBFieldName("mana_multiplier", TargetedDbExpansion.TheBurningCrusade, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("ManaModifier", TargetedDbExpansion.TheBurningCrusade, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("PowerMultiplier", TargetedDbExpansion.TheBurningCrusade,  DbType = (TargetedDbType.CMANGOS))]
         public float? ManaMultiplier;
 
-        [DBFieldName("civilian", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("civilian", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.TheBurningCrusade, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         public bool? Civilian;
 
         [DBFieldName("racial_leader", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         [DBFieldName("RacialLeader", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
         public bool? RacialLeader;
 
-        [DBFieldName("movement_id", DbType = (TargetedDbType.WPP))]
-        [DBFieldName("movementId", DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("movement_id", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("movementId", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("movement_id", TargetedDbExpansion.WrathOfTheLichKing, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("movementId", TargetedDbExpansion.WrathOfTheLichKing, DbType = (TargetedDbType.TRINITY))]
         public uint? MovementID;
 
         [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]

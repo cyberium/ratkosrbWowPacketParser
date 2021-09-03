@@ -87,14 +87,13 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             for (int i = 0; i < 2; ++i)
                 creature.KillCredits[i] = (uint)packet.ReadInt32("ProxyCreatureID", i);
 
-            uint displayIdCount = packet.ReadUInt32("DisplayIdCount");
-            creature.DisplayTotalCount = displayIdCount;
+            creature.DisplayTotalCount = packet.ReadUInt32("DisplayIdCount");
             creature.DisplayTotalProbability = packet.ReadSingle("TotalProbability");
 
             creature.DisplayIDs = new uint?[4];
             for (uint i = 0; i < 4; ++i)
                 creature.DisplayIDs[i] = 0;
-            for (uint i = 0; i < displayIdCount; ++i)
+            for (uint i = 0; i < creature.DisplayTotalCount; ++i)
             {
                 if (i == 0)
                 {

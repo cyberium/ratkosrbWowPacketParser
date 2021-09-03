@@ -101,14 +101,13 @@ namespace WowPacketParserModule.V2_5_1_38835.Parsers
             for (int i = 0; i < 2; ++i)
                 creature.KillCredits[i] = (uint)packet.ReadInt32("ProxyCreatureID", i);
 
-            uint displayIdCount = packet.ReadUInt32("DisplayIdCount");
-            creature.DisplayTotalCount = displayIdCount;
+            creature.DisplayTotalCount = packet.ReadUInt32("DisplayIdCount");
             creature.DisplayTotalProbability = packet.ReadSingle("TotalProbability");
 
             creature.DisplayIDs = new uint?[4];
             for (uint i = 0; i < 4; ++i)
                 creature.DisplayIDs[i] = 0;
-            for (uint i = 0; i < displayIdCount; ++i)
+            for (uint i = 0; i < creature.DisplayTotalCount; ++i)
             {
                 if (i == 0)
                 {
@@ -146,7 +145,7 @@ namespace WowPacketParserModule.V2_5_1_38835.Parsers
             creature.RequiredExpansion = packet.ReadInt32E<ClientType>("RequiredExpansion");
             creature.VignetteID = (uint)packet.ReadInt32("VignetteID");
             creature.UnitClass = (uint)packet.ReadInt32E<Class>("UnitClass");
-            packet.ReadInt32("CreatureDifficultyID");
+            creature.DifficultyID = packet.ReadInt32("CreatureDifficultyID");
             creature.WidgetSetID = packet.ReadInt32("WidgetSetID");
             creature.WidgetSetUnitConditionID = packet.ReadInt32("WidgetSetUnitConditionID");
 
