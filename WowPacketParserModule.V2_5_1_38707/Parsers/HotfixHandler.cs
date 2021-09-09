@@ -195,5 +195,24 @@ namespace WowPacketParserModule.V2_5_1_38835.Parsers
         {
             WowPacketParserModule.V9_0_1_36216.Parsers.HotfixHandler.HandleDBReply(packet);
         }
+
+        [Parser(Opcode.CMSG_HOTFIX_REQUEST)]
+        public static void HandleHotfixRequest(Packet packet)
+        {
+            WowPacketParserModule.V9_0_1_36216.Parsers.HotfixHandler.HandleHotfixRequest905(packet);
+        }
+
+        [Parser(Opcode.CMSG_DB_QUERY_BULK)]
+        public static void HandleDbQueryBulk(Packet packet)
+        {
+            packet.ReadInt32E<DB2Hash>("TableHash");
+
+            var count = packet.ReadBits("Count", 13);
+
+            for (var i = 0; i < count; ++i)
+            {
+                packet.ReadInt32("RecordID", i);
+            }
+        }
     }
 }
