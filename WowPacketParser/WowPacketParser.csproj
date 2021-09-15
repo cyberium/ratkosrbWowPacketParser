@@ -718,6 +718,7 @@
     <Compile Include="Store\Objects\ScenarioPOIPoints.cs" />
     <Compile Include="Store\Objects\SceneTemplate.cs" />
     <Compile Include="Store\Objects\SpellAreatriggerVertices.cs" />
+    <Compile Include="Store\Objects\SpellAreatriggerSpline.cs" />
     <Compile Include="Store\Objects\SniffData.cs" />
     <Compile Include="Store\Objects\PlayerChoice.cs" />
     <Compile Include="Store\Objects\PlayerChoiceLocale.cs" />

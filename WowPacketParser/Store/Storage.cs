@@ -784,6 +784,7 @@ namespace WowPacketParser.Store
 
         // Templates
         public static readonly DataBag<AreaTriggerTemplate> AreaTriggerTemplates = new DataBag<AreaTriggerTemplate>(Settings.SqlTables.areatrigger_template);
+        public static readonly DataBag<SpellAreatriggerSpline> SpellAreaTriggerSplines = new DataBag<SpellAreatriggerSpline>(Settings.SqlTables.spell_areatrigger_splines);
         public static readonly DataBag<SpellAreatriggerVertices> SpellAreaTriggerVertices = new DataBag<SpellAreatriggerVertices>(Settings.SqlTables.spell_areatrigger_vertices);
         public static readonly DataBag<ConversationActor> ConversationActors = new DataBag<ConversationActor>(Settings.SqlTables.conversation_actors);
         public static readonly DataBag<ConversationActorTemplate> ConversationActorTemplates = new DataBag<ConversationActorTemplate>(Settings.SqlTables.conversation_actor_template);
@@ -1134,6 +1135,7 @@ namespace WowPacketParser.Store
             ObjectCreate2Times.Clear();
 
             AreaTriggerTemplates.Clear();
+            SpellAreaTriggerSplines.Clear();
             SpellAreaTriggerVertices.Clear();
 
             ConversationActors.Clear();

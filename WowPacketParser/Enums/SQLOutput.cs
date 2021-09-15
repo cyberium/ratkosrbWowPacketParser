@@ -148,6 +148,7 @@
         scenario_poi,
         scene_template,
         spell_areatrigger,
+        spell_areatrigger_splines,
         spell_areatrigger_vertices,
         spell_target_position,
         spell_unique_caster,
