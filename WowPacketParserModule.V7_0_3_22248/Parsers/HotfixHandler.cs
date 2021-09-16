@@ -33,50 +33,50 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 switch (type)
                 {
                     case DB2Hash.BroadcastText:
+                    {
+                        var bct = new BroadcastText()
                         {
-                            var bct = new BroadcastText()
+                            ID = (uint)entry,
+                            Text = db2File.ReadCString("Text"),
+                            Text1 = db2File.ReadCString("Text1"),
+                        };
+
+                        bct.EmoteID = new ushort?[3];
+                        bct.EmoteDelay = new ushort?[3];
+
+                        for (int i = 0; i < 3; ++i)
+                            bct.EmoteID[i] = db2File.ReadUInt16("EmoteID", i);
+                        for (int i = 0; i < 3; ++i)
+                            bct.EmoteDelay[i] = db2File.ReadUInt16("EmoteDelay", i);
+
+                        bct.EmotesID = db2File.ReadUInt16("EmotesID");
+                        bct.LanguageID = db2File.ReadByte("LanguageID");
+                        bct.Flags = db2File.ReadByte("Flags");
+
+                        if (ClientVersion.AddedInVersion(ClientVersionBuild.V7_3_5_25848))
+                            bct.ConditionID = db2File.ReadUInt32("ConditionID");
+
+                        bct.SoundEntriesID = new uint?[2];
+                        for (int i = 0; i < 2; ++i)
+                            bct.SoundEntriesID[i] = db2File.ReadUInt32("SoundEntriesID", i);
+
+                        if (ClientVersion.AddedInVersion(ClientVersionBuild.V7_0_3_22248) && ClientVersion.RemovedInVersion(ClientVersionBuild.V7_3_5_25848))
+                            bct.ConditionID = db2File.ReadUInt32("ConditionID");
+
+                        Storage.BroadcastTexts.Add(bct, packet.TimeSpan);
+
+                        if (ClientLocale.PacketLocale != LocaleConstant.enUS)
+                        {
+                            BroadcastTextLocale lbct = new BroadcastTextLocale
                             {
-                                ID = (uint)entry,
-                                Text = db2File.ReadCString("Text"),
-                                Text1 = db2File.ReadCString("Text1"),
+                                ID = bct.ID,
+                                TextLang = bct.Text,
+                                Text1Lang = bct.Text1
                             };
-
-                            bct.EmoteID = new ushort?[3];
-                            bct.EmoteDelay = new ushort?[3];
-
-                            for (int i = 0; i < 3; ++i)
-                                bct.EmoteID[i] = db2File.ReadUInt16("EmoteID", i);
-                            for (int i = 0; i < 3; ++i)
-                                bct.EmoteDelay[i] = db2File.ReadUInt16("EmoteDelay", i);
-
-                            bct.EmotesID = db2File.ReadUInt16("EmotesID");
-                            bct.LanguageID = db2File.ReadByte("LanguageID");
-                            bct.Flags = db2File.ReadByte("Flags");
-
-                            if (ClientVersion.AddedInVersion(ClientVersionBuild.V7_3_5_25848))
-                                bct.ConditionID = db2File.ReadUInt32("ConditionID");
-
-                            bct.SoundEntriesID = new uint?[2];
-                            for (int i = 0; i < 2; ++i)
-                                bct.SoundEntriesID[i] = db2File.ReadUInt32("SoundEntriesID", i);
-
-                            if (ClientVersion.AddedInVersion(ClientVersionBuild.V7_0_3_22248) && ClientVersion.RemovedInVersion(ClientVersionBuild.V7_3_5_25848))
-                                bct.ConditionID = db2File.ReadUInt32("ConditionID");
-
-                            Storage.BroadcastTexts.Add(bct, packet.TimeSpan);
-
-                            if (ClientLocale.PacketLocale != LocaleConstant.enUS)
-                            {
-                                BroadcastTextLocale lbct = new BroadcastTextLocale
-                                {
-                                    ID = bct.ID,
-                                    TextLang = bct.Text,
-                                    Text1Lang = bct.Text1
-                                };
-                                Storage.BroadcastTextLocales.Add(lbct, packet.TimeSpan);
-                            }
-                            break;
+                            Storage.BroadcastTextLocales.Add(lbct, packet.TimeSpan);
                         }
+                        break;
+                    }
                     default:
                         HotfixStoreMgr.AddRecord(type, entry, db2File);
                         break;
