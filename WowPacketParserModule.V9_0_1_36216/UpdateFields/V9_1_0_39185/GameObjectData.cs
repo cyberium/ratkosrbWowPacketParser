@@ -17,16 +17,20 @@ namespace WowPacketParserModule.V9_0_1_36216.UpdateFields.V9_1_0_39185
         public WowGuid CreatedBy { get; set; }
         public WowGuid GuildGUID { get; set; }
         public uint Flags { get; set; }
+        public uint DynamicFlags { get; set; }
         public Quaternion ParentRotation { get; set; }
         public int FactionTemplate { get; set; }
         public sbyte State { get; set; }
         public sbyte TypeID { get; set; }
         public byte PercentHealth { get; set; }
+        public byte AnimProgress => PercentHealth;
         public uint ArtKit { get; set; }
         public uint CustomParam { get; set; }
         public int Level { get; set; }
         public uint AnimGroupInstance { get; set; }
         public DynamicUpdateField<int> EnableDoodadSets { get; } = new DynamicUpdateField<int>();
+
+        public IGameObjectData Clone() { return (IGameObjectData)MemberwiseClone(); }
     }
 }
 
