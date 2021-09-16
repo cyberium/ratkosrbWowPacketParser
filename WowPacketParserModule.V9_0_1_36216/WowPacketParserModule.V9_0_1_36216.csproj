@@ -216,6 +216,7 @@
     <Compile Include="Hotfix\ItemSpecEntry.cs" />
     <Compile Include="Hotfix\ItemSpecOverrideEntry.cs" />
     <Compile Include="Hotfix\ItemXBonusTreeEntry.cs" />
+    <Compile Include="Hotfix\ItemXItemEffectEntry.cs" />
     <Compile Include="Hotfix\KeyChainEntry.cs" />
     <Compile Include="Hotfix\LanguagesEntry910.cs" />
     <Compile Include="Hotfix\LanguageWordsEntry.cs" />
