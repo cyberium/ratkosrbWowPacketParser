@@ -324,6 +324,7 @@
     <Compile Include="Parsers\GroupHandler.cs" />
     <Compile Include="Parsers\MovementHandler.cs" />
     <Compile Include="Parsers\MiscellaneousHandler.cs" />
+    <Compile Include="Parsers\NpcHandler.cs" />
     <Compile Include="Parsers\ReputationHandler.cs" />
     <Compile Include="Parsers\ScenarioHandler.cs" />
     <Compile Include="Parsers\SceneHandler.cs" />
