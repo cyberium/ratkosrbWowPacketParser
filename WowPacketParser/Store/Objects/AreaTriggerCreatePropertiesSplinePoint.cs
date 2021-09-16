@@ -1,13 +1,15 @@
-﻿using WowPacketParser.Misc;
+﻿using WowPacketParser.Enums;
+using WowPacketParser.Misc;
 using WowPacketParser.SQL;
 
 namespace WowPacketParser.Store.Objects
 {
-    [DBTableName("spell_areatrigger_splines")]
-    public sealed class SpellAreatriggerSpline : IDataModel
+    [DBTableName("areatrigger_create_properties_spline_point")]
+    public sealed class AreaTriggerCreatePropertiesSplinePoint : IDataModel
     {
-        [DBFieldName("SpellMiscId", true)]
-        public uint? SpellMiscId;
+        [DBFieldName("SpellMiscId", TargetedDbExpansion.Zero, TargetedDbExpansion.Shadowlands, true)]
+        [DBFieldName("AreaTriggerCreatePropertiesId", TargetedDbExpansion.Shadowlands, true)]
+        public uint? AreaTriggerCreatePropertiesId;
 
         [DBFieldName("Idx", true)]
         public uint? Idx;

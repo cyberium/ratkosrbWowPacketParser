@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
 using WowPacketParser.Store;
 using WowPacketParser.Store.Objects;
+using WowPacketParserModule.V7_0_3_22248.Parsers;
 using CoreParsers = WowPacketParser.Parsing.Parsers;
 using SplineFlag = WowPacketParserModule.V7_0_3_22248.Enums.SplineFlag;
 
@@ -99,7 +101,7 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
                         obj = me;
                         break;
                     case ObjectType.AreaTrigger:
-                        obj = new SpellAreaTrigger();
+                        obj = new AreaTriggerCreateProperties();
                         break;
                     case ObjectType.Conversation:
                         obj = new ConversationTemplate();
@@ -439,14 +441,14 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
                 }
             }
 
-            if (hasAreaTrigger && obj is SpellAreaTrigger)
+            if (hasAreaTrigger && obj is AreaTriggerCreateProperties)
             {
                 AreaTriggerTemplate areaTriggerTemplate = new AreaTriggerTemplate
                 {
                     Id = guid.GetEntry()
                 };
 
-                SpellAreaTrigger spellAreaTrigger = (SpellAreaTrigger)obj;
+                AreaTriggerCreateProperties spellAreaTrigger = (AreaTriggerCreateProperties)obj;
                 spellAreaTrigger.AreaTriggerId = guid.GetEntry();
 
                 packet.ResetBitReader();
@@ -454,9 +456,9 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
                 // CliAreaTrigger
                 packet.ReadUInt32("ElapsedMs", index);
 
-                packet.ReadVector3("RollPitchYaw", index);
+                packet.ReadVector3("RollPitchYaw1", index);
 
-                areaTriggerTemplate.Flags   = 0;
+                areaTriggerTemplate.Flags = 0;
 
                 if (packet.ReadBit("HasAbsoluteOrientation", index))
                     areaTriggerTemplate.Flags |= (uint)AreaTriggerFlags.HasAbsoluteOrientation;
@@ -512,12 +514,16 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
                 if (packet.ReadBit("HasAreaTriggerOrbit", index))
                     areaTriggerTemplate.Flags |= (uint)AreaTriggerFlags.HasOrbit;
 
+                if (ClientVersion.AddedInVersion(ClientType.Shadowlands))
+                    if (packet.ReadBit("HasAreaTriggerMovementScript", index)) // seen with spellid 343597
+                        areaTriggerTemplate.Flags |= (uint)AreaTriggerFlags.HasMovementScript;
+
                 if ((areaTriggerTemplate.Flags & (uint)AreaTriggerFlags.Unk3) != 0)
                     packet.ReadBit();
 
                 if (hasAreaTriggerSpline)
-                    foreach (var splinePoint in V7_0_3_22248.Parsers.AreaTriggerHandler.ReadAreaTriggerSpline(guid, packet, index))
-                        Storage.SpellAreaTriggerSplines.Add(splinePoint);
+                    foreach (var splinePoint in AreaTriggerHandler.ReadAreaTriggerSpline(guid, packet, index, "AreaTriggerSpline"))
+                        Storage.AreaTriggerCreatePropertiesSplinePoints.Add(splinePoint);
 
                 if ((areaTriggerTemplate.Flags & (uint)AreaTriggerFlags.HasTargetRollPitchYaw) != 0)
                     packet.ReadVector3("TargetRollPitchYaw", index);
@@ -568,14 +574,14 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
                     var verticesCount = packet.ReadUInt32("VerticesCount", index);
                     var verticesTargetCount = packet.ReadUInt32("VerticesTargetCount", index);
 
-                    List<SpellAreatriggerVertices> verticesList = new List<SpellAreatriggerVertices>();
+                    List<AreaTriggerCreatePropertiesPolygonVertex> verticesList = new List<AreaTriggerCreatePropertiesPolygonVertex>();
 
                     areaTriggerTemplate.Data[0] = packet.ReadSingle("Height", index);
                     areaTriggerTemplate.Data[1] = packet.ReadSingle("HeightTarget", index);
 
                     for (uint i = 0; i < verticesCount; ++i)
                     {
-                        SpellAreatriggerVertices spellAreatriggerVertices = new SpellAreatriggerVertices
+                        AreaTriggerCreatePropertiesPolygonVertex spellAreatriggerVertices = new AreaTriggerCreatePropertiesPolygonVertex
                         {
                             areatriggerGuid = guid,
                             Idx = i
@@ -597,8 +603,8 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
                         verticesList[i].VerticeTargetY = verticesTarget.Y;
                     }
 
-                    foreach (SpellAreatriggerVertices vertice in verticesList)
-                        Storage.SpellAreaTriggerVertices.Add(vertice);
+                    foreach (AreaTriggerCreatePropertiesPolygonVertex vertice in verticesList)
+                        Storage.AreaTriggerCreatePropertiesPolygonVertices.Add(vertice);
                 }
 
                 if (areaTriggerTemplate.Type == (byte)AreaTriggerType.Cylinder)
@@ -611,8 +617,17 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
                     areaTriggerTemplate.Data[5] = packet.ReadSingle("LocationZOffsetTarget", index);
                 }
 
+                if ((areaTriggerTemplate.Flags & (uint)AreaTriggerFlags.HasMovementScript) != 0)
+                {
+                    packet.ReadInt32("SpellScriptID");
+                    packet.ReadVector3("Center");
+                }
+
                 if ((areaTriggerTemplate.Flags & (uint)AreaTriggerFlags.HasOrbit) != 0)
-                    V7_0_3_22248.Parsers.AreaTriggerHandler.ReadAreaTriggerOrbit(packet, index, "Orbit");
+                    Storage.AreaTriggerCreatePropertiesOrbits.Add(AreaTriggerHandler.ReadAreaTriggerOrbit(guid, packet, index, "AreaTriggerOrbit"));
+
+                spellAreaTrigger.Shape = areaTriggerTemplate.Type;
+                Array.Copy(areaTriggerTemplate.Data, spellAreaTrigger.ShapeData, Math.Min(areaTriggerTemplate.Data.Length, spellAreaTrigger.ShapeData.Length));
 
                 Storage.AreaTriggerTemplates.Add(areaTriggerTemplate);
             }

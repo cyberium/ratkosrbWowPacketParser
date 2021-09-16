@@ -99,12 +99,12 @@ namespace WowPacketParser.Parsing.Parsers
                 WoWObject obj;
                 switch (objType)
                 {
-                    case ObjectType.Unit: obj = new Unit(); break;
-                    case ObjectType.GameObject: obj = new GameObject(); break;
+                    case ObjectType.Unit:          obj = new Unit(); break;
+                    case ObjectType.GameObject:    obj = new GameObject(); break;
                     case ObjectType.DynamicObject: obj = new DynamicObject(); break;
-                    case ObjectType.Player: obj = new Player(); break;
-                    case ObjectType.AreaTrigger: obj = new SpellAreaTrigger(); break;
-                    default: obj = new WoWObject(); break;
+                    case ObjectType.Player:        obj = new Player(); break;
+                    case ObjectType.AreaTrigger:   obj = new AreaTriggerCreateProperties(); break;
+                    default:                       obj = new WoWObject(); break;
                 }
 
                 obj.Type = objType;

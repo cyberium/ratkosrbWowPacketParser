@@ -1,13 +1,15 @@
-﻿using WowPacketParser.Misc;
+﻿using WowPacketParser.Enums;
+using WowPacketParser.Misc;
 using WowPacketParser.SQL;
 
 namespace WowPacketParser.Store.Objects
 {
-    [DBTableName("spell_areatrigger_vertices")]
-    public sealed class SpellAreatriggerVertices : IDataModel
+    [DBTableName("areatrigger_create_properties_polygon_vertex")]
+    public sealed class AreaTriggerCreatePropertiesPolygonVertex : IDataModel
     {
-        [DBFieldName("SpellMiscId", true)]
-        public uint? SpellMiscId;
+        [DBFieldName("SpellMiscId", TargetedDbExpansion.Zero, TargetedDbExpansion.Shadowlands, true)]
+        [DBFieldName("AreaTriggerCreatePropertiesId", TargetedDbExpansion.Shadowlands, true)]
+        public uint? AreaTriggerCreatePropertiesId;
 
         [DBFieldName("Idx", true)]
         public uint? Idx;
@@ -27,7 +29,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("VerifiedBuild")]
         public int? VerifiedBuild = ClientVersion.BuildInt;
 
-        // Will be inserted as comment to facilitate SpellMiscId research
+        // Will be inserted as comment
         public uint spellId = 0;
 
         public WowGuid areatriggerGuid;

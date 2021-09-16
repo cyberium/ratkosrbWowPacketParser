@@ -195,6 +195,10 @@ namespace WowPacketParser.Misc
             public static readonly bool guild = Conf.GetBoolean("guild", false);
             public static readonly bool guild_rank = Conf.GetBoolean("guild_rank", false);
 
+            public static readonly bool areatrigger_create_properties = Conf.GetBoolean("areatrigger_create_properties", false);
+            public static readonly bool areatrigger_create_properties_orbit = Conf.GetBoolean("areatrigger_create_properties_orbit", false);
+            public static readonly bool areatrigger_create_properties_polygon_vertex = Conf.GetBoolean("areatrigger_create_properties_polygon_vertex", false);
+            public static readonly bool areatrigger_create_properties_spline_point = Conf.GetBoolean("areatrigger_create_properties_spline_point", false);
             public static readonly bool areatrigger_template = Conf.GetBoolean("areatrigger_template", false);
             public static readonly bool broadcast_text = Conf.GetBoolean("broadcast_text", false);
             public static readonly bool broadcast_text_locale = Conf.GetBoolean("broadcast_text_locale", false);
@@ -263,9 +267,6 @@ namespace WowPacketParser.Misc
             public static readonly bool scenario_poi = Conf.GetBoolean("scenario_poi", false);
             public static readonly bool scene_template = Conf.GetBoolean("scene_template", false);
             public static readonly bool sound_unique_source = Conf.GetBoolean("sound_unique_source", false);
-            public static readonly bool spell_areatrigger = Conf.GetBoolean("spell_areatrigger", false);
-            public static readonly bool spell_areatrigger_splines = Conf.GetBoolean("spell_areatrigger_splines", false);
-            public static readonly bool spell_areatrigger_vertices = Conf.GetBoolean("spell_areatrigger_vertices", false);
             public static readonly bool spell_aura_flags = Conf.GetBoolean("spell_aura_flags", false);
             public static readonly bool spell_script_target = Conf.GetBoolean("spell_script_target", false);
             public static readonly bool spell_target_position = Conf.GetBoolean("spell_target_position", false);

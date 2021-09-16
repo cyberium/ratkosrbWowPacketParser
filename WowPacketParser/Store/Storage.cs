@@ -1199,8 +1199,9 @@ namespace WowPacketParser.Store
 
         // Templates
         public static readonly DataBag<AreaTriggerTemplate> AreaTriggerTemplates = new DataBag<AreaTriggerTemplate>(Settings.SqlTables.areatrigger_template);
-        public static readonly DataBag<SpellAreatriggerSpline> SpellAreaTriggerSplines = new DataBag<SpellAreatriggerSpline>(Settings.SqlTables.spell_areatrigger_splines);
-        public static readonly DataBag<SpellAreatriggerVertices> SpellAreaTriggerVertices = new DataBag<SpellAreatriggerVertices>(Settings.SqlTables.spell_areatrigger_vertices);
+        public static readonly DataBag<AreaTriggerCreatePropertiesOrbit> AreaTriggerCreatePropertiesOrbits = new DataBag<AreaTriggerCreatePropertiesOrbit>(Settings.SqlTables.areatrigger_create_properties_orbit);
+        public static readonly DataBag<AreaTriggerCreatePropertiesPolygonVertex> AreaTriggerCreatePropertiesPolygonVertices = new DataBag<AreaTriggerCreatePropertiesPolygonVertex>(Settings.SqlTables.areatrigger_create_properties_polygon_vertex);
+        public static readonly DataBag<AreaTriggerCreatePropertiesSplinePoint> AreaTriggerCreatePropertiesSplinePoints = new DataBag<AreaTriggerCreatePropertiesSplinePoint>(Settings.SqlTables.areatrigger_create_properties_spline_point);
         public static readonly DataBag<ConversationActor> ConversationActors = new DataBag<ConversationActor>(Settings.SqlTables.conversation_actors);
         public static readonly DataBag<ConversationActorTemplate> ConversationActorTemplates = new DataBag<ConversationActorTemplate>(Settings.SqlTables.conversation_actor_template);
         public static readonly DataBag<ConversationLineTemplate> ConversationLineTemplates = new DataBag<ConversationLineTemplate>(Settings.SqlTables.conversation_line_template);
@@ -2638,9 +2639,10 @@ namespace WowPacketParser.Store
             ObjectCreate1Times.Clear();
             ObjectCreate2Times.Clear();
 
+            AreaTriggerCreatePropertiesOrbits.Clear();
+            AreaTriggerCreatePropertiesPolygonVertices.Clear();
+            AreaTriggerCreatePropertiesSplinePoints.Clear();
             AreaTriggerTemplates.Clear();
-            SpellAreaTriggerSplines.Clear();
-            SpellAreaTriggerVertices.Clear();
 
             ConversationActors.Clear();
             ConversationActorTemplates.Clear();
