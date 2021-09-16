@@ -40,6 +40,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Hotfix\AchievementCategoryEntry.cs" />
     <Compile Include="Hotfix\AchievementEntry.cs" />
     <Compile Include="Hotfix\AdventureJournalEntry.cs" />
     <Compile Include="Hotfix\AdventureMapPoiEntry.cs" />
@@ -130,6 +131,8 @@
     <Compile Include="Hotfix\ExpectedStatModEntry.cs" />
     <Compile Include="Hotfix\FactionEntry.cs" />
     <Compile Include="Hotfix\FactionTemplateEntry.cs" />
+    <Compile Include="Hotfix\FriendshipRepReactionEntry.cs" />
+    <Compile Include="Hotfix\FriendshipReputationEntry.cs" />
     <Compile Include="Hotfix\GameObjectDisplayInfoEntry.cs" />
     <Compile Include="Hotfix\GameObjectsEntry.cs" />
     <Compile Include="Hotfix\GarrAbilityEntry.cs" />
@@ -185,6 +188,7 @@
     <Compile Include="Hotfix\ItemLimitCategoryConditionEntry.cs" />
     <Compile Include="Hotfix\ItemLimitCategoryEntry.cs" />
     <Compile Include="Hotfix\ItemModifiedAppearanceEntry.cs" />
+    <Compile Include="Hotfix\ItemModifiedAppearanceExtraEntry.cs" />
     <Compile Include="Hotfix\ItemNameDescriptionEntry.cs" />
     <Compile Include="Hotfix\ItemPriceBaseEntry.cs" />
     <Compile Include="Hotfix\ItemSearchNameEntry.cs" />
@@ -217,6 +221,7 @@
     <Compile Include="Hotfix\NamesReservedLocaleEntry.cs" />
     <Compile Include="Hotfix\NumTalentsAtLevelEntry.cs" />
     <Compile Include="Hotfix\OverrideSpellDataEntry.cs" />
+    <Compile Include="Hotfix\ParagonReputationEntry.cs" />
     <Compile Include="Hotfix\PhaseEntry.cs" />
     <Compile Include="Hotfix\PhaseXPhaseGroupEntry.cs" />
     <Compile Include="Hotfix\PlayerConditionEntry.cs" />
@@ -228,8 +233,10 @@
     <Compile Include="Hotfix\PvpTalentCategoryEntry.cs" />
     <Compile Include="Hotfix\PvpTalentEntry.cs" />
     <Compile Include="Hotfix\PvpTalentSlotUnlockEntry.cs" />
+    <Compile Include="Hotfix\PvpTierEntry.cs" />
     <Compile Include="Hotfix\QuestFactionRewardEntry.cs" />
     <Compile Include="Hotfix\QuestInfoEntry.cs" />
+    <Compile Include="Hotfix\QuestLineXQuestEntry.cs" />
     <Compile Include="Hotfix\QuestMoneyRewardEntry.cs" />
     <Compile Include="Hotfix\QuestPackageItemEntry.cs" />
     <Compile Include="Hotfix\QuestSortEntry.cs" />
@@ -266,6 +273,7 @@
     <Compile Include="Hotfix\SpellInterruptsEntry.cs" />
     <Compile Include="Hotfix\SpellItemEnchantmentConditionEntry.cs" />
     <Compile Include="Hotfix\SpellItemEnchantmentEntry.cs" />
+    <Compile Include="Hotfix\SpellLabelEntry.cs" />
     <Compile Include="Hotfix\SpellLearnSpellEntry.cs" />
     <Compile Include="Hotfix\SpellLevelsEntry.cs" />
     <Compile Include="Hotfix\SpellMiscEntry.cs" />
