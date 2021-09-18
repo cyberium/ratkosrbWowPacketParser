@@ -429,10 +429,12 @@ namespace WowPacketParser.Enums
         V2_5_1_39603 = 39603,
         V2_5_1_39640 = 39640,
 
-        V2_5_2_39570 = 39570,
-        V2_5_2_39618 = 39618,
-        V2_5_2_39926 = 39926,
-        V2_5_2_40011 = 40011,
+        V2_5_2_39570 = 39570, // ptr
+        V2_5_2_39618 = 39618, // ptr
+        V2_5_2_39926 = 39926, // ptr
+        V2_5_2_40011 = 40011, // both live and ptr
+        V2_5_2_40045 = 40045, // live
+        V2_5_2_40203 = 40203, // both live and ptr
 
         // Battle.net - should probably not mix this but oh well
         BattleNetV37165 = 37165,
