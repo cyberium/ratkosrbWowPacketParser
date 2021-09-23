@@ -37,23 +37,5 @@ namespace WowPacketParserModule.V2_5_1_38835.Parsers
             if (hasOwnerInfo)
                 V6_0_2_19033.Parsers.BattlePetHandler.ReadClientBattlePetOwnerInfo(packet, "OwnerInfo", idx);
         }
-
-        [Parser(Opcode.SMSG_BATTLE_PET_JOURNAL)]
-        public static void HandleBattlePetJournal(Packet packet)
-        {
-            packet.ReadInt16("TrapLevel");
-
-            var slotsCount = packet.ReadInt32("SlotsCount");
-            var petsCount = packet.ReadInt32("PetsCount");
-
-            packet.ReadBit("HasJournalLock");
-            packet.ResetBitReader();
-
-            for (var i = 0; i < slotsCount; i++)
-                V6_0_2_19033.Parsers.BattlePetHandler.ReadClientPetBattleSlot(packet, i);
-
-            for (var i = 0; i < petsCount; i++)
-                ReadClientBattlePet(packet, i);
-        }
     }
 }
