@@ -73,5 +73,20 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
 
             Storage.StoreUnitEmote(guid, emote, packet);
         }
+
+        [Parser(Opcode.CMSG_SEND_TEXT_EMOTE)]
+        public static void HandleSendTextEmote(Packet packet)
+        {
+            packet.ReadPackedGuid128("Target");
+            packet.ReadInt32E<EmoteTextType>("EmoteID");
+            packet.ReadInt32("SoundIndex");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503))
+            {
+                var count = packet.ReadUInt32("SpellVisualKitCount");
+                for (var i = 0; i < count; ++i)
+                    packet.ReadUInt32("SpellVisualKitID", i);
+            }
+        }
     }
 }
