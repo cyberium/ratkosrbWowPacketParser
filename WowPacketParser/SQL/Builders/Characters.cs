@@ -22,6 +22,2517 @@ namespace WowPacketParser.SQL.Builders
             return randomString.Substring(0, 1) + randomString.Substring(1).ToLower();
         }
 
+        public enum CharCustomizationOption
+        {
+            None,
+            Skin,
+            Face,
+            HairStyle,
+            HairColor,
+            FacialHair,
+        }
+
+        public static CharCustomizationOption GetCustomizationOption(uint option)
+        {
+            switch (option)
+            {
+                /*
+                case 1: // UNK - Skin Color
+                    return 0;
+                case 2: // UNK - Face
+                    return 1;
+                case 3: // UNK - Hair Style
+                    return 2;
+                case 4: // UNK - Hair Color
+                    return 3;
+                case 5: // UNK - Facial Hair
+                    return 4;
+                case 6: // UNK - Tattoo Style
+                    return 5;
+                case 7: // UNK - Horn Style
+                    return 6;
+                case 8: // UNK - Blindfolds
+                    return 7;
+                */
+                case 9: // Human Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 10: // Human Male - Face
+                    return CharCustomizationOption.Face;
+                case 11: // Human Male - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 12: // Human Male - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 13: // Human Male - Facial Hair
+                    return CharCustomizationOption.FacialHair;
+                case 14: // Human Female - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 15: // Human Female - Face
+                    return CharCustomizationOption.Face;
+                case 16: // Human Female - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 17: // Human Female - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 18: // Human Female - Piercings
+                    return CharCustomizationOption.FacialHair;
+                case 19: // Orc Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 20: // Orc Male - Face
+                    return CharCustomizationOption.Face;
+                case 21: // Orc Male - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 22: // Orc Male - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 23: // Orc Male - Facial Hair
+                    return CharCustomizationOption.FacialHair;
+                case 25: // Orc Female - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 26: // Orc Female - Face
+                    return CharCustomizationOption.Face;
+                case 27: // Orc Female - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 28: // Orc Female - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 29: // Orc Female - Piercings
+                    return CharCustomizationOption.FacialHair;
+                case 30: // Dwarf Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 31: // Dwarf Male - Face
+                    return CharCustomizationOption.Face;
+                case 32: // Dwarf Male - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 33: // Dwarf Male - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 34: // Dwarf Male - Facial Hair
+                    return CharCustomizationOption.FacialHair;
+                case 35: // Dwarf Female - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 36: // Dwarf Female - Face
+                    return CharCustomizationOption.Face;
+                case 37: // Dwarf Female - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 38: // Dwarf Female - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 39: // Dwarf Female - Piercings
+                    return CharCustomizationOption.FacialHair;
+                case 40: // Night Elf Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 41: // Night Elf Male - Face
+                    return CharCustomizationOption.Face;
+                case 42: // Night Elf Male - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 43: // Night Elf Male - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 44: // Night Elf Male - Facial Hair
+                    return CharCustomizationOption.FacialHair;
+                case 49: // Night Elf Female - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 50: // Night Elf Female - Face
+                    return CharCustomizationOption.Face;
+                case 51: // Night Elf Female - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 52: // Night Elf Female - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 53: // Night Elf Female - Markings
+                    return CharCustomizationOption.FacialHair;
+                case 58: // Undead Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 59: // Undead Male - Face
+                    return CharCustomizationOption.Face;
+                case 60: // Undead Male - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 61: // Undead Male - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 62: // Undead Male - Features
+                    return CharCustomizationOption.FacialHair;
+                case 63: // Undead Female - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 64: // Undead Female - Face
+                    return CharCustomizationOption.Face;
+                case 65: // Undead Female - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 66: // Undead Female - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 67: // Undead Female - Features
+                    return CharCustomizationOption.FacialHair;
+                case 68: // Tauren Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 71: // Tauren Male - Horn Style
+                    return CharCustomizationOption.HairStyle;
+                case 72: // Tauren Male - Horn Color
+                    return CharCustomizationOption.HairColor;
+                case 73: // Tauren Male - Facial Hair
+                    return CharCustomizationOption.FacialHair;
+                case 74: // Tauren Female - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 77: // Tauren Female - Horn Style
+                    return CharCustomizationOption.HairStyle;
+                case 78: // Tauren Female - Horn Color
+                    return CharCustomizationOption.HairColor;
+                case 79: // Tauren Female - Hair
+                    return CharCustomizationOption.FacialHair;
+                case 80: // Gnome Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 81: // Gnome Male - Face
+                    return CharCustomizationOption.Face;
+                case 82: // Gnome Male - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 83: // Gnome Male - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 84: // Gnome Male - Facial Hair
+                    return CharCustomizationOption.FacialHair;
+                case 85: // Gnome Female - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 86: // Gnome Female - Face
+                    return CharCustomizationOption.Face;
+                case 87: // Gnome Female - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 88: // Gnome Female - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 89: // Gnome Female - Earrings
+                    return CharCustomizationOption.FacialHair;
+                case 90: // Troll Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 91: // Troll Male - Face
+                    return CharCustomizationOption.Face;
+                case 92: // Troll Male - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 93: // Troll Male - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 94: // Troll Male - Tusks
+                    return CharCustomizationOption.FacialHair;
+                case 95: // Troll Female - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 96: // Troll Female - Face
+                    return CharCustomizationOption.Face;
+                case 97: // Troll Female - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 98: // Troll Female - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 99: // Troll Female - Tusks
+                    return CharCustomizationOption.FacialHair;
+                case 100: // Goblin Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 102: // Goblin Male - Hair Style
+                    return CharCustomizationOption.Face;
+                case 105: // Goblin Female - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 110: // Blood Elf Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 111: // Blood Elf Male - Face
+                    return CharCustomizationOption.Face;
+                case 112: // Blood Elf Male - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 113: // Blood Elf Male - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 114: // Blood Elf Male - Facial Hair
+                    return CharCustomizationOption.FacialHair;
+                case 119: // Blood Elf Female - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 120: // Blood Elf Female - Face
+                    return CharCustomizationOption.Face;
+                case 121: // Blood Elf Female - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 122: // Blood Elf Female - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 123: // Blood Elf Female - Earrings
+                    return CharCustomizationOption.FacialHair;
+                case 128: // Draenei Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 129: // Draenei Male - Face
+                    return CharCustomizationOption.Face;
+                case 130: // Draenei Male - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 131: // Draenei Male - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 132: // Draenei Male - Facial Hair
+                    return CharCustomizationOption.FacialHair;
+                case 133: // Draenei Female - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 134: // Draenei Female - Face
+                    return CharCustomizationOption.Face;
+                case 135: // Draenei Female - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 136: // Draenei Female - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 137: // Draenei Female - Horn Style
+                    return CharCustomizationOption.FacialHair;
+                case 138: // Fel Orc Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 139: // Fel Orc Male - Face
+                    return CharCustomizationOption.Face;
+                case 140: // Fel Orc Male - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 141: // Fel Orc Male - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 142: // Fel Orc Female - Hair Style
+                    return CharCustomizationOption.Skin;
+                case 143: // Fel Orc Female - Hair Color
+                    return CharCustomizationOption.Face;
+                case 144: // Naga Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 145: // Naga Male - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 146: // Naga Male - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 147: // Naga Female - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 148: // Naga Female - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 149: // Naga Female - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 150: // Broken Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 151: // Broken Male - Face
+                    return CharCustomizationOption.Face;
+                case 152: // Broken Male - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 153: // Broken Male - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 154: // Broken Female - Hair Style
+                    return CharCustomizationOption.Skin;
+                case 155: // Broken Female - Hair Color
+                    return CharCustomizationOption.Face;
+                case 156: // Skeleton Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 157: // Skeleton Male - Face
+                    return CharCustomizationOption.Face;
+                case 158: // Skeleton Male - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 159: // Skeleton Male - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 160: // Skeleton Female - Hair Style
+                    return CharCustomizationOption.Skin;
+                case 161: // Skeleton Female - Hair Color
+                    return CharCustomizationOption.Face;
+                case 176: // Forest Troll Male - Skin Color
+                    return CharCustomizationOption.Skin;
+                case 177: // Forest Troll Male - Face
+                    return CharCustomizationOption.Face;
+                case 178: // Forest Troll Male - Hair Style
+                    return CharCustomizationOption.HairStyle;
+                case 179: // Forest Troll Male - Hair Color
+                    return CharCustomizationOption.HairColor;
+                case 180: // Forest Troll Male - Facial Hair
+                    return CharCustomizationOption.FacialHair;
+                case 181: // Forest Troll Female - Hair Style
+                    return CharCustomizationOption.Skin;
+                case 182: // Forest Troll Female - Hair Color
+                    return CharCustomizationOption.Face;
+                case 378: // Tauren Male - Face
+                    return CharCustomizationOption.Face;
+                case 379: // Tauren Female - Face
+                    return CharCustomizationOption.Face;
+                case 1000: // Fel Orc Male - Facial Hair
+                    return CharCustomizationOption.FacialHair;
+                case 1001: // Fel Orc Female - Facial Hair
+                    return CharCustomizationOption.HairStyle;
+                case 1002: // Naga Male - Face
+                    return CharCustomizationOption.Face;
+                case 1003: // Naga Male - Facial Hair
+                    return CharCustomizationOption.FacialHair;
+                case 1004: // Naga Female - Face
+                    return CharCustomizationOption.Face;
+                case 1005: // Naga Female - Facial Hair
+                    return CharCustomizationOption.FacialHair;
+                case 1006: // Broken Female - Facial Hair
+                    return CharCustomizationOption.HairStyle;
+                case 1007: // Skeleton Male - Facial Hair
+                    return CharCustomizationOption.FacialHair;
+                case 1008: // Skeleton Female - Facial Hair
+                    return CharCustomizationOption.HairStyle;
+                case 1009: // Forest Troll Female - Facial Hair
+                    return CharCustomizationOption.HairStyle;
+            }
+            return CharCustomizationOption.None;
+        }
+
+        public static byte GetCustomizationChoice(uint value)
+        {
+            switch (value)
+            {
+                case 17160: // Human Male - Skin Color
+                    return 0;
+                case 17161: // Human Male - Skin Color
+                    return 1;
+                case 17162: // Human Male - Skin Color
+                    return 2;
+                case 17163: // Human Male - Skin Color
+                    return 3;
+                case 17164: // Human Male - Skin Color
+                    return 4;
+                case 17165: // Human Male - Skin Color
+                    return 5;
+                case 17166: // Human Male - Skin Color
+                    return 6;
+                case 17167: // Human Male - Skin Color
+                    return 7;
+                case 17168: // Human Male - Skin Color
+                    return 8;
+                case 17169: // Human Male - Skin Color
+                    return 9;
+                case 17170: // Human Male - Skin Color
+                    return 10;
+                case 17171: // Human Male - Skin Color
+                    return 11;
+                case 17172: // Human Male - Face
+                    return 0;
+                case 17173: // Human Male - Face
+                    return 1;
+                case 17174: // Human Male - Face
+                    return 2;
+                case 17175: // Human Male - Face
+                    return 3;
+                case 17176: // Human Male - Face
+                    return 4;
+                case 17177: // Human Male - Face
+                    return 5;
+                case 17178: // Human Male - Face
+                    return 6;
+                case 17179: // Human Male - Face
+                    return 7;
+                case 17180: // Human Male - Face
+                    return 8;
+                case 17181: // Human Male - Face
+                    return 9;
+                case 17182: // Human Male - Face
+                    return 10;
+                case 17183: // Human Male - Face
+                    return 11;
+                case 17184: // Human Male - Hair Style
+                    return 0;
+                case 17185: // Human Male - Hair Style
+                    return 1;
+                case 17186: // Human Male - Hair Style
+                    return 2;
+                case 17187: // Human Male - Hair Style
+                    return 3;
+                case 17188: // Human Male - Hair Style
+                    return 4;
+                case 17189: // Human Male - Hair Style
+                    return 5;
+                case 17190: // Human Male - Hair Style
+                    return 6;
+                case 17191: // Human Male - Hair Style
+                    return 7;
+                case 17192: // Human Male - Hair Style
+                    return 8;
+                case 17193: // Human Male - Hair Style
+                    return 9;
+                case 17194: // Human Male - Hair Style
+                    return 10;
+                case 17195: // Human Male - Hair Style
+                    return 11;
+                case 17196: // Human Male - Hair Color
+                    return 0;
+                case 17197: // Human Male - Hair Color
+                    return 1;
+                case 17198: // Human Male - Hair Color
+                    return 2;
+                case 17199: // Human Male - Hair Color
+                    return 3;
+                case 17200: // Human Male - Hair Color
+                    return 4;
+                case 17201: // Human Male - Hair Color
+                    return 5;
+                case 17202: // Human Male - Hair Color
+                    return 6;
+                case 17203: // Human Male - Hair Color
+                    return 7;
+                case 17204: // Human Male - Hair Color
+                    return 8;
+                case 17205: // Human Male - Hair Color
+                    return 9;
+                case 17206: // Human Male - Facial Hair
+                    return 0;
+                case 17207: // Human Male - Facial Hair
+                    return 1;
+                case 17208: // Human Male - Facial Hair
+                    return 2;
+                case 17209: // Human Male - Facial Hair
+                    return 3;
+                case 17210: // Human Male - Facial Hair
+                    return 4;
+                case 17211: // Human Male - Facial Hair
+                    return 5;
+                case 17212: // Human Male - Facial Hair
+                    return 6;
+                case 17213: // Human Male - Facial Hair
+                    return 7;
+                case 17214: // Human Male - Facial Hair
+                    return 8;
+                case 17215: // Human Female - Skin Color
+                    return 0;
+                case 17216: // Human Female - Skin Color
+                    return 1;
+                case 17217: // Human Female - Skin Color
+                    return 2;
+                case 17218: // Human Female - Skin Color
+                    return 3;
+                case 17219: // Human Female - Skin Color
+                    return 4;
+                case 17220: // Human Female - Skin Color
+                    return 5;
+                case 17221: // Human Female - Skin Color
+                    return 6;
+                case 17222: // Human Female - Skin Color
+                    return 7;
+                case 17223: // Human Female - Skin Color
+                    return 8;
+                case 17224: // Human Female - Skin Color
+                    return 9;
+                case 17225: // Human Female - Skin Color
+                    return 10;
+                case 17226: // Human Female - Skin Color
+                    return 11;
+                case 17227: // Human Female - Face
+                    return 0;
+                case 17228: // Human Female - Face
+                    return 1;
+                case 17229: // Human Female - Face
+                    return 2;
+                case 17230: // Human Female - Face
+                    return 3;
+                case 17231: // Human Female - Face
+                    return 4;
+                case 17232: // Human Female - Face
+                    return 5;
+                case 17233: // Human Female - Face
+                    return 6;
+                case 17234: // Human Female - Face
+                    return 7;
+                case 17235: // Human Female - Face
+                    return 8;
+                case 17236: // Human Female - Face
+                    return 9;
+                case 17237: // Human Female - Face
+                    return 10;
+                case 17238: // Human Female - Face
+                    return 11;
+                case 17239: // Human Female - Face
+                    return 12;
+                case 17240: // Human Female - Face
+                    return 13;
+                case 17241: // Human Female - Face
+                    return 14;
+                case 17242: // Human Female - Hair Style
+                    return 0;
+                case 17243: // Human Female - Hair Style
+                    return 1;
+                case 17244: // Human Female - Hair Style
+                    return 2;
+                case 17245: // Human Female - Hair Style
+                    return 3;
+                case 17246: // Human Female - Hair Style
+                    return 4;
+                case 17247: // Human Female - Hair Style
+                    return 5;
+                case 17248: // Human Female - Hair Style
+                    return 6;
+                case 17249: // Human Female - Hair Style
+                    return 7;
+                case 17250: // Human Female - Hair Style
+                    return 8;
+                case 17251: // Human Female - Hair Style
+                    return 9;
+                case 17252: // Human Female - Hair Style
+                    return 10;
+                case 17253: // Human Female - Hair Style
+                    return 11;
+                case 17254: // Human Female - Hair Style
+                    return 12;
+                case 17255: // Human Female - Hair Style
+                    return 13;
+                case 17256: // Human Female - Hair Style
+                    return 14;
+                case 17257: // Human Female - Hair Style
+                    return 15;
+                case 17258: // Human Female - Hair Style
+                    return 16;
+                case 17259: // Human Female - Hair Style
+                    return 17;
+                case 17260: // Human Female - Hair Style
+                    return 18;
+                case 17261: // Human Female - Hair Color
+                    return 0;
+                case 17262: // Human Female - Hair Color
+                    return 1;
+                case 17263: // Human Female - Hair Color
+                    return 2;
+                case 17264: // Human Female - Hair Color
+                    return 3;
+                case 17265: // Human Female - Hair Color
+                    return 4;
+                case 17266: // Human Female - Hair Color
+                    return 5;
+                case 17267: // Human Female - Hair Color
+                    return 6;
+                case 17268: // Human Female - Hair Color
+                    return 7;
+                case 17269: // Human Female - Hair Color
+                    return 8;
+                case 17270: // Human Female - Hair Color
+                    return 9;
+                case 17271: // Human Female - Piercings
+                    return 0;
+                case 17272: // Human Female - Piercings
+                    return 1;
+                case 17273: // Human Female - Piercings
+                    return 2;
+                case 17274: // Human Female - Piercings
+                    return 3;
+                case 17275: // Human Female - Piercings
+                    return 4;
+                case 17276: // Human Female - Piercings
+                    return 5;
+                case 17277: // Human Female - Piercings
+                    return 6;
+                case 17278: // Orc Male - Skin Color
+                    return 0;
+                case 17279: // Orc Male - Skin Color
+                    return 1;
+                case 17280: // Orc Male - Skin Color
+                    return 2;
+                case 17281: // Orc Male - Skin Color
+                    return 3;
+                case 17282: // Orc Male - Skin Color
+                    return 4;
+                case 17283: // Orc Male - Skin Color
+                    return 5;
+                case 17284: // Orc Male - Skin Color
+                    return 6;
+                case 17285: // Orc Male - Skin Color
+                    return 7;
+                case 17286: // Orc Male - Skin Color
+                    return 8;
+                case 17287: // Orc Male - Skin Color
+                    return 9;
+                case 17288: // Orc Male - Skin Color
+                    return 10;
+                case 17289: // Orc Male - Skin Color
+                    return 11;
+                case 17290: // Orc Male - Skin Color
+                    return 12;
+                case 17291: // Orc Male - Skin Color
+                    return 13;
+                case 17292: // Orc Male - Skin Color
+                    return 14;
+                case 17293: // Orc Male - Face
+                    return 0;
+                case 17294: // Orc Male - Face
+                    return 1;
+                case 17295: // Orc Male - Face
+                    return 2;
+                case 17296: // Orc Male - Face
+                    return 3;
+                case 17297: // Orc Male - Face
+                    return 4;
+                case 17298: // Orc Male - Face
+                    return 5;
+                case 17299: // Orc Male - Face
+                    return 6;
+                case 17300: // Orc Male - Face
+                    return 7;
+                case 17301: // Orc Male - Face
+                    return 8;
+                case 17302: // Orc Male - Hair Style
+                    return 0;
+                case 17303: // Orc Male - Hair Style
+                    return 1;
+                case 17304: // Orc Male - Hair Style
+                    return 2;
+                case 17305: // Orc Male - Hair Style
+                    return 3;
+                case 17306: // Orc Male - Hair Style
+                    return 4;
+                case 17307: // Orc Male - Hair Style
+                    return 5;
+                case 17308: // Orc Male - Hair Style
+                    return 6;
+                case 17309: // Orc Male - Hair Color
+                    return 0;
+                case 17310: // Orc Male - Hair Color
+                    return 1;
+                case 17311: // Orc Male - Hair Color
+                    return 2;
+                case 17312: // Orc Male - Hair Color
+                    return 3;
+                case 17313: // Orc Male - Hair Color
+                    return 4;
+                case 17314: // Orc Male - Hair Color
+                    return 5;
+                case 17315: // Orc Male - Hair Color
+                    return 6;
+                case 17316: // Orc Male - Hair Color
+                    return 7;
+                case 17317: // Orc Male - Facial Hair
+                    return 0;
+                case 17318: // Orc Male - Facial Hair
+                    return 1;
+                case 17319: // Orc Male - Facial Hair
+                    return 2;
+                case 17320: // Orc Male - Facial Hair
+                    return 3;
+                case 17321: // Orc Male - Facial Hair
+                    return 4;
+                case 17322: // Orc Male - Facial Hair
+                    return 5;
+                case 17323: // Orc Male - Facial Hair
+                    return 6;
+                case 17324: // Orc Male - Facial Hair
+                    return 7;
+                case 17325: // Orc Male - Facial Hair
+                    return 8;
+                case 17326: // Orc Male - Facial Hair
+                    return 9;
+                case 17327: // Orc Male - Facial Hair
+                    return 10;
+                case 17328: // Orc Female - Skin Color
+                    return 0;
+                case 17329: // Orc Female - Skin Color
+                    return 1;
+                case 17330: // Orc Female - Skin Color
+                    return 2;
+                case 17331: // Orc Female - Skin Color
+                    return 3;
+                case 17332: // Orc Female - Skin Color
+                    return 4;
+                case 17333: // Orc Female - Skin Color
+                    return 5;
+                case 17334: // Orc Female - Skin Color
+                    return 6;
+                case 17335: // Orc Female - Skin Color
+                    return 7;
+                case 17336: // Orc Female - Skin Color
+                    return 8;
+                case 17337: // Orc Female - Skin Color
+                    return 9;
+                case 17338: // Orc Female - Skin Color
+                    return 10;
+                case 17339: // Orc Female - Face
+                    return 0;
+                case 17340: // Orc Female - Face
+                    return 1;
+                case 17341: // Orc Female - Face
+                    return 2;
+                case 17342: // Orc Female - Face
+                    return 3;
+                case 17343: // Orc Female - Face
+                    return 4;
+                case 17344: // Orc Female - Face
+                    return 5;
+                case 17345: // Orc Female - Face
+                    return 6;
+                case 17346: // Orc Female - Face
+                    return 7;
+                case 17347: // Orc Female - Face
+                    return 8;
+                case 17348: // Orc Female - Hair Style
+                    return 0;
+                case 17349: // Orc Female - Hair Style
+                    return 1;
+                case 17350: // Orc Female - Hair Style
+                    return 2;
+                case 17351: // Orc Female - Hair Style
+                    return 3;
+                case 17352: // Orc Female - Hair Style
+                    return 4;
+                case 17353: // Orc Female - Hair Style
+                    return 5;
+                case 17354: // Orc Female - Hair Style
+                    return 6;
+                case 17355: // Orc Female - Hair Style
+                    return 7;
+                case 17356: // Orc Female - Hair Color
+                    return 0;
+                case 17357: // Orc Female - Hair Color
+                    return 1;
+                case 17358: // Orc Female - Hair Color
+                    return 2;
+                case 17359: // Orc Female - Hair Color
+                    return 3;
+                case 17360: // Orc Female - Hair Color
+                    return 4;
+                case 17361: // Orc Female - Hair Color
+                    return 5;
+                case 17362: // Orc Female - Hair Color
+                    return 6;
+                case 17363: // Orc Female - Hair Color
+                    return 7;
+                case 17364: // Orc Female - Piercings
+                    return 0;
+                case 17365: // Orc Female - Piercings
+                    return 1;
+                case 17366: // Orc Female - Piercings
+                    return 2;
+                case 17367: // Orc Female - Piercings
+                    return 3;
+                case 17368: // Orc Female - Piercings
+                    return 4;
+                case 17369: // Orc Female - Piercings
+                    return 5;
+                case 17370: // Orc Female - Piercings
+                    return 6;
+                case 17371: // Dwarf Male - Skin Color
+                    return 0;
+                case 17372: // Dwarf Male - Skin Color
+                    return 1;
+                case 17373: // Dwarf Male - Skin Color
+                    return 2;
+                case 17374: // Dwarf Male - Skin Color
+                    return 3;
+                case 17375: // Dwarf Male - Skin Color
+                    return 4;
+                case 17376: // Dwarf Male - Skin Color
+                    return 5;
+                case 17377: // Dwarf Male - Skin Color
+                    return 6;
+                case 17378: // Dwarf Male - Skin Color
+                    return 7;
+                case 17379: // Dwarf Male - Skin Color
+                    return 8;
+                case 17380: // Dwarf Male - Skin Color
+                    return 9;
+                case 17381: // Dwarf Male - Skin Color
+                    return 10;
+                case 17382: // Dwarf Male - Skin Color
+                    return 11;
+                case 17383: // Dwarf Male - Skin Color
+                    return 12;
+                case 17384: // Dwarf Male - Skin Color
+                    return 13;
+                case 17385: // Dwarf Male - Skin Color
+                    return 14;
+                case 17386: // Dwarf Male - Skin Color
+                    return 15;
+                case 17387: // Dwarf Male - Skin Color
+                    return 16;
+                case 17388: // Dwarf Male - Skin Color
+                    return 17;
+                case 17389: // Dwarf Male - Skin Color
+                    return 18;
+                case 17390: // Dwarf Male - Face
+                    return 0;
+                case 17391: // Dwarf Male - Face
+                    return 1;
+                case 17392: // Dwarf Male - Face
+                    return 2;
+                case 17393: // Dwarf Male - Face
+                    return 3;
+                case 17394: // Dwarf Male - Face
+                    return 4;
+                case 17395: // Dwarf Male - Face
+                    return 5;
+                case 17396: // Dwarf Male - Face
+                    return 6;
+                case 17397: // Dwarf Male - Face
+                    return 7;
+                case 17398: // Dwarf Male - Face
+                    return 8;
+                case 17399: // Dwarf Male - Face
+                    return 9;
+                case 17400: // Dwarf Male - Hair Style
+                    return 0;
+                case 17401: // Dwarf Male - Hair Style
+                    return 1;
+                case 17402: // Dwarf Male - Hair Style
+                    return 2;
+                case 17403: // Dwarf Male - Hair Style
+                    return 3;
+                case 17404: // Dwarf Male - Hair Style
+                    return 4;
+                case 17405: // Dwarf Male - Hair Style
+                    return 5;
+                case 17406: // Dwarf Male - Hair Style
+                    return 6;
+                case 17407: // Dwarf Male - Hair Style
+                    return 7;
+                case 17408: // Dwarf Male - Hair Style
+                    return 8;
+                case 17409: // Dwarf Male - Hair Style
+                    return 9;
+                case 17410: // Dwarf Male - Hair Style
+                    return 10;
+                case 17411: // Dwarf Male - Hair Color
+                    return 0;
+                case 17412: // Dwarf Male - Hair Color
+                    return 1;
+                case 17413: // Dwarf Male - Hair Color
+                    return 2;
+                case 17414: // Dwarf Male - Hair Color
+                    return 3;
+                case 17415: // Dwarf Male - Hair Color
+                    return 4;
+                case 17416: // Dwarf Male - Hair Color
+                    return 5;
+                case 17417: // Dwarf Male - Hair Color
+                    return 6;
+                case 17418: // Dwarf Male - Hair Color
+                    return 7;
+                case 17419: // Dwarf Male - Hair Color
+                    return 8;
+                case 17420: // Dwarf Male - Hair Color
+                    return 9;
+                case 17421: // Dwarf Male - Facial Hair
+                    return 0;
+                case 17422: // Dwarf Male - Facial Hair
+                    return 1;
+                case 17423: // Dwarf Male - Facial Hair
+                    return 2;
+                case 17424: // Dwarf Male - Facial Hair
+                    return 3;
+                case 17425: // Dwarf Male - Facial Hair
+                    return 4;
+                case 17426: // Dwarf Male - Facial Hair
+                    return 5;
+                case 17427: // Dwarf Male - Facial Hair
+                    return 6;
+                case 17428: // Dwarf Male - Facial Hair
+                    return 7;
+                case 17429: // Dwarf Male - Facial Hair
+                    return 8;
+                case 17430: // Dwarf Male - Facial Hair
+                    return 9;
+                case 17431: // Dwarf Male - Facial Hair
+                    return 10;
+                case 17432: // Dwarf Female - Skin Color
+                    return 0;
+                case 17433: // Dwarf Female - Skin Color
+                    return 1;
+                case 17434: // Dwarf Female - Skin Color
+                    return 2;
+                case 17435: // Dwarf Female - Skin Color
+                    return 3;
+                case 17436: // Dwarf Female - Skin Color
+                    return 4;
+                case 17437: // Dwarf Female - Skin Color
+                    return 5;
+                case 17438: // Dwarf Female - Skin Color
+                    return 6;
+                case 17439: // Dwarf Female - Skin Color
+                    return 7;
+                case 17440: // Dwarf Female - Skin Color
+                    return 8;
+                case 17441: // Dwarf Female - Skin Color
+                    return 9;
+                case 17442: // Dwarf Female - Skin Color
+                    return 10;
+                case 17443: // Dwarf Female - Face
+                    return 0;
+                case 17444: // Dwarf Female - Face
+                    return 1;
+                case 17445: // Dwarf Female - Face
+                    return 2;
+                case 17446: // Dwarf Female - Face
+                    return 3;
+                case 17447: // Dwarf Female - Face
+                    return 4;
+                case 17448: // Dwarf Female - Face
+                    return 5;
+                case 17449: // Dwarf Female - Face
+                    return 6;
+                case 17450: // Dwarf Female - Face
+                    return 7;
+                case 17451: // Dwarf Female - Face
+                    return 8;
+                case 17452: // Dwarf Female - Face
+                    return 9;
+                case 17453: // Dwarf Female - Hair Style
+                    return 0;
+                case 17454: // Dwarf Female - Hair Style
+                    return 1;
+                case 17455: // Dwarf Female - Hair Style
+                    return 2;
+                case 17456: // Dwarf Female - Hair Style
+                    return 3;
+                case 17457: // Dwarf Female - Hair Style
+                    return 4;
+                case 17458: // Dwarf Female - Hair Style
+                    return 5;
+                case 17459: // Dwarf Female - Hair Style
+                    return 6;
+                case 17460: // Dwarf Female - Hair Style
+                    return 7;
+                case 17461: // Dwarf Female - Hair Style
+                    return 8;
+                case 17462: // Dwarf Female - Hair Style
+                    return 9;
+                case 17463: // Dwarf Female - Hair Style
+                    return 10;
+                case 17464: // Dwarf Female - Hair Style
+                    return 11;
+                case 17465: // Dwarf Female - Hair Style
+                    return 12;
+                case 17466: // Dwarf Female - Hair Style
+                    return 13;
+                case 17467: // Dwarf Female - Hair Color
+                    return 0;
+                case 17468: // Dwarf Female - Hair Color
+                    return 1;
+                case 17469: // Dwarf Female - Hair Color
+                    return 2;
+                case 17470: // Dwarf Female - Hair Color
+                    return 3;
+                case 17471: // Dwarf Female - Hair Color
+                    return 4;
+                case 17472: // Dwarf Female - Hair Color
+                    return 5;
+                case 17473: // Dwarf Female - Hair Color
+                    return 6;
+                case 17474: // Dwarf Female - Hair Color
+                    return 7;
+                case 17475: // Dwarf Female - Hair Color
+                    return 8;
+                case 17476: // Dwarf Female - Hair Color
+                    return 9;
+                case 17477: // Dwarf Female - Piercings
+                    return 0;
+                case 17478: // Dwarf Female - Piercings
+                    return 1;
+                case 17479: // Dwarf Female - Piercings
+                    return 2;
+                case 17480: // Dwarf Female - Piercings
+                    return 3;
+                case 17481: // Dwarf Female - Piercings
+                    return 4;
+                case 17482: // Dwarf Female - Piercings
+                    return 5;
+                case 17483: // Night Elf Male - Skin Color
+                    return 0;
+                case 17484: // Night Elf Male - Skin Color
+                    return 1;
+                case 17485: // Night Elf Male - Skin Color
+                    return 2;
+                case 17486: // Night Elf Male - Skin Color
+                    return 3;
+                case 17487: // Night Elf Male - Skin Color
+                    return 4;
+                case 17488: // Night Elf Male - Skin Color
+                    return 5;
+                case 17489: // Night Elf Male - Skin Color
+                    return 6;
+                case 17490: // Night Elf Male - Skin Color
+                    return 7;
+                case 17491: // Night Elf Male - Skin Color
+                    return 8;
+                case 17492: // Night Elf Male - Face
+                    return 0;
+                case 17493: // Night Elf Male - Face
+                    return 1;
+                case 17494: // Night Elf Male - Face
+                    return 2;
+                case 17495: // Night Elf Male - Face
+                    return 3;
+                case 17496: // Night Elf Male - Face
+                    return 4;
+                case 17497: // Night Elf Male - Face
+                    return 5;
+                case 17498: // Night Elf Male - Face
+                    return 6;
+                case 17499: // Night Elf Male - Face
+                    return 7;
+                case 17500: // Night Elf Male - Face
+                    return 8;
+                case 17501: // Night Elf Male - Hair Style
+                    return 0;
+                case 17502: // Night Elf Male - Hair Style
+                    return 1;
+                case 17503: // Night Elf Male - Hair Style
+                    return 2;
+                case 17504: // Night Elf Male - Hair Style
+                    return 3;
+                case 17505: // Night Elf Male - Hair Style
+                    return 4;
+                case 17506: // Night Elf Male - Hair Style
+                    return 5;
+                case 17507: // Night Elf Male - Hair Style
+                    return 6;
+                case 17508: // Night Elf Male - Hair Color
+                    return 0;
+                case 17509: // Night Elf Male - Hair Color
+                    return 1;
+                case 17510: // Night Elf Male - Hair Color
+                    return 2;
+                case 17511: // Night Elf Male - Hair Color
+                    return 3;
+                case 17512: // Night Elf Male - Hair Color
+                    return 4;
+                case 17513: // Night Elf Male - Hair Color
+                    return 5;
+                case 17514: // Night Elf Male - Hair Color
+                    return 6;
+                case 17515: // Night Elf Male - Hair Color
+                    return 7;
+                case 17516: // Night Elf Male - Facial Hair
+                    return 0;
+                case 17517: // Night Elf Male - Facial Hair
+                    return 1;
+                case 17518: // Night Elf Male - Facial Hair
+                    return 2;
+                case 17519: // Night Elf Male - Facial Hair
+                    return 3;
+                case 17520: // Night Elf Male - Facial Hair
+                    return 4;
+                case 17521: // Night Elf Male - Facial Hair
+                    return 5;
+                case 17522: // Night Elf Female - Skin Color
+                    return 0;
+                case 17523: // Night Elf Female - Skin Color
+                    return 1;
+                case 17524: // Night Elf Female - Skin Color
+                    return 2;
+                case 17525: // Night Elf Female - Skin Color
+                    return 3;
+                case 17526: // Night Elf Female - Skin Color
+                    return 4;
+                case 17527: // Night Elf Female - Skin Color
+                    return 5;
+                case 17528: // Night Elf Female - Skin Color
+                    return 6;
+                case 17529: // Night Elf Female - Skin Color
+                    return 7;
+                case 17530: // Night Elf Female - Skin Color
+                    return 8;
+                case 17531: // Night Elf Female - Face
+                    return 0;
+                case 17532: // Night Elf Female - Face
+                    return 1;
+                case 17533: // Night Elf Female - Face
+                    return 2;
+                case 17534: // Night Elf Female - Face
+                    return 3;
+                case 17535: // Night Elf Female - Face
+                    return 4;
+                case 17536: // Night Elf Female - Face
+                    return 5;
+                case 17537: // Night Elf Female - Face
+                    return 6;
+                case 17538: // Night Elf Female - Face
+                    return 7;
+                case 17539: // Night Elf Female - Face
+                    return 8;
+                case 17540: // Night Elf Female - Hair Style
+                    return 0;
+                case 17541: // Night Elf Female - Hair Style
+                    return 1;
+                case 17542: // Night Elf Female - Hair Style
+                    return 2;
+                case 17543: // Night Elf Female - Hair Style
+                    return 3;
+                case 17544: // Night Elf Female - Hair Style
+                    return 4;
+                case 17545: // Night Elf Female - Hair Style
+                    return 5;
+                case 17546: // Night Elf Female - Hair Style
+                    return 6;
+                case 17547: // Night Elf Female - Hair Color
+                    return 0;
+                case 17548: // Night Elf Female - Hair Color
+                    return 1;
+                case 17549: // Night Elf Female - Hair Color
+                    return 2;
+                case 17550: // Night Elf Female - Hair Color
+                    return 3;
+                case 17551: // Night Elf Female - Hair Color
+                    return 4;
+                case 17552: // Night Elf Female - Hair Color
+                    return 5;
+                case 17553: // Night Elf Female - Hair Color
+                    return 6;
+                case 17554: // Night Elf Female - Hair Color
+                    return 7;
+                case 17555: // Night Elf Female - Markings
+                    return 0;
+                case 17556: // Night Elf Female - Markings
+                    return 1;
+                case 17557: // Night Elf Female - Markings
+                    return 2;
+                case 17558: // Night Elf Female - Markings
+                    return 3;
+                case 17559: // Night Elf Female - Markings
+                    return 4;
+                case 17560: // Night Elf Female - Markings
+                    return 5;
+                case 17561: // Night Elf Female - Markings
+                    return 6;
+                case 17562: // Night Elf Female - Markings
+                    return 7;
+                case 17563: // Night Elf Female - Markings
+                    return 8;
+                case 17564: // Night Elf Female - Markings
+                    return 9;
+                case 17565: // Undead Male - Skin Color
+                    return 0;
+                case 17566: // Undead Male - Skin Color
+                    return 1;
+                case 17567: // Undead Male - Skin Color
+                    return 2;
+                case 17568: // Undead Male - Skin Color
+                    return 3;
+                case 17569: // Undead Male - Skin Color
+                    return 4;
+                case 17570: // Undead Male - Skin Color
+                    return 5;
+                case 17571: // Undead Male - Face
+                    return 0;
+                case 17572: // Undead Male - Face
+                    return 1;
+                case 17573: // Undead Male - Face
+                    return 2;
+                case 17574: // Undead Male - Face
+                    return 3;
+                case 17575: // Undead Male - Face
+                    return 4;
+                case 17576: // Undead Male - Face
+                    return 5;
+                case 17577: // Undead Male - Face
+                    return 6;
+                case 17578: // Undead Male - Face
+                    return 7;
+                case 17579: // Undead Male - Face
+                    return 8;
+                case 17580: // Undead Male - Face
+                    return 9;
+                case 17581: // Undead Male - Hair Style
+                    return 0;
+                case 17582: // Undead Male - Hair Style
+                    return 1;
+                case 17583: // Undead Male - Hair Style
+                    return 2;
+                case 17584: // Undead Male - Hair Style
+                    return 3;
+                case 17585: // Undead Male - Hair Style
+                    return 4;
+                case 17586: // Undead Male - Hair Style
+                    return 5;
+                case 17587: // Undead Male - Hair Style
+                    return 6;
+                case 17588: // Undead Male - Hair Style
+                    return 7;
+                case 17589: // Undead Male - Hair Style
+                    return 8;
+                case 17590: // Undead Male - Hair Style
+                    return 9;
+                case 17591: // Undead Male - Hair Color
+                    return 0;
+                case 17592: // Undead Male - Hair Color
+                    return 1;
+                case 17593: // Undead Male - Hair Color
+                    return 2;
+                case 17594: // Undead Male - Hair Color
+                    return 3;
+                case 17595: // Undead Male - Hair Color
+                    return 4;
+                case 17596: // Undead Male - Hair Color
+                    return 5;
+                case 17597: // Undead Male - Hair Color
+                    return 6;
+                case 17598: // Undead Male - Hair Color
+                    return 7;
+                case 17599: // Undead Male - Hair Color
+                    return 8;
+                case 17600: // Undead Male - Hair Color
+                    return 9;
+                case 17601: // Undead Male - Features
+                    return 0;
+                case 17602: // Undead Male - Features
+                    return 1;
+                case 17603: // Undead Male - Features
+                    return 2;
+                case 17604: // Undead Male - Features
+                    return 3;
+                case 17605: // Undead Male - Features
+                    return 4;
+                case 17606: // Undead Male - Features
+                    return 5;
+                case 17607: // Undead Male - Features
+                    return 6;
+                case 17608: // Undead Male - Features
+                    return 7;
+                case 17609: // Undead Male - Features
+                    return 8;
+                case 17610: // Undead Male - Features
+                    return 9;
+                case 17611: // Undead Male - Features
+                    return 10;
+                case 17612: // Undead Male - Features
+                    return 11;
+                case 17613: // Undead Male - Features
+                    return 12;
+                case 17614: // Undead Male - Features
+                    return 13;
+                case 17615: // Undead Male - Features
+                    return 14;
+                case 17616: // Undead Male - Features
+                    return 15;
+                case 17617: // Undead Male - Features
+                    return 16;
+                case 17618: // Undead Female - Skin Color
+                    return 0;
+                case 17619: // Undead Female - Skin Color
+                    return 1;
+                case 17620: // Undead Female - Skin Color
+                    return 2;
+                case 17621: // Undead Female - Skin Color
+                    return 3;
+                case 17622: // Undead Female - Skin Color
+                    return 4;
+                case 17623: // Undead Female - Skin Color
+                    return 5;
+                case 17624: // Undead Female - Face
+                    return 0;
+                case 17625: // Undead Female - Face
+                    return 1;
+                case 17626: // Undead Female - Face
+                    return 2;
+                case 17627: // Undead Female - Face
+                    return 3;
+                case 17628: // Undead Female - Face
+                    return 4;
+                case 17629: // Undead Female - Face
+                    return 5;
+                case 17630: // Undead Female - Face
+                    return 6;
+                case 17631: // Undead Female - Face
+                    return 7;
+                case 17632: // Undead Female - Face
+                    return 8;
+                case 17633: // Undead Female - Face
+                    return 9;
+                case 17634: // Undead Female - Hair Style
+                    return 0;
+                case 17635: // Undead Female - Hair Style
+                    return 1;
+                case 17636: // Undead Female - Hair Style
+                    return 2;
+                case 17637: // Undead Female - Hair Style
+                    return 3;
+                case 17638: // Undead Female - Hair Style
+                    return 4;
+                case 17639: // Undead Female - Hair Style
+                    return 5;
+                case 17640: // Undead Female - Hair Style
+                    return 6;
+                case 17641: // Undead Female - Hair Style
+                    return 7;
+                case 17642: // Undead Female - Hair Style
+                    return 8;
+                case 17643: // Undead Female - Hair Style
+                    return 9;
+                case 17644: // Undead Female - Hair Color
+                    return 0;
+                case 17645: // Undead Female - Hair Color
+                    return 1;
+                case 17646: // Undead Female - Hair Color
+                    return 2;
+                case 17647: // Undead Female - Hair Color
+                    return 3;
+                case 17648: // Undead Female - Hair Color
+                    return 4;
+                case 17649: // Undead Female - Hair Color
+                    return 5;
+                case 17650: // Undead Female - Hair Color
+                    return 6;
+                case 17651: // Undead Female - Hair Color
+                    return 7;
+                case 17652: // Undead Female - Hair Color
+                    return 8;
+                case 17653: // Undead Female - Hair Color
+                    return 9;
+                case 17654: // Undead Female - Features
+                    return 0;
+                case 17655: // Undead Female - Features
+                    return 1;
+                case 17656: // Undead Female - Features
+                    return 2;
+                case 17657: // Undead Female - Features
+                    return 3;
+                case 17658: // Undead Female - Features
+                    return 4;
+                case 17659: // Undead Female - Features
+                    return 5;
+                case 17660: // Undead Female - Features
+                    return 6;
+                case 17661: // Undead Female - Features
+                    return 7;
+                case 17662: // Tauren Male - Skin Color
+                    return 0;
+                case 17663: // Tauren Male - Skin Color
+                    return 1;
+                case 17664: // Tauren Male - Skin Color
+                    return 2;
+                case 17665: // Tauren Male - Skin Color
+                    return 3;
+                case 17666: // Tauren Male - Skin Color
+                    return 4;
+                case 17667: // Tauren Male - Skin Color
+                    return 5;
+                case 17668: // Tauren Male - Skin Color
+                    return 6;
+                case 17669: // Tauren Male - Skin Color
+                    return 7;
+                case 17670: // Tauren Male - Skin Color
+                    return 8;
+                case 17671: // Tauren Male - Skin Color
+                    return 9;
+                case 17672: // Tauren Male - Skin Color
+                    return 10;
+                case 17673: // Tauren Male - Skin Color
+                    return 11;
+                case 17674: // Tauren Male - Skin Color
+                    return 12;
+                case 17675: // Tauren Male - Skin Color
+                    return 13;
+                case 17676: // Tauren Male - Skin Color
+                    return 14;
+                case 17677: // Tauren Male - Skin Color
+                    return 15;
+                case 17678: // Tauren Male - Skin Color
+                    return 16;
+                case 17679: // Tauren Male - Skin Color
+                    return 17;
+                case 17680: // Tauren Male - Skin Color
+                    return 18;
+                case 17681: // 378 - Face
+                    return 0;
+                case 17682: // 378 - Face
+                    return 1;
+                case 17683: // 378 - Face
+                    return 2;
+                case 17684: // 378 - Face
+                    return 3;
+                case 17685: // 378 - Face
+                    return 4;
+                case 17686: // Tauren Male - Horn Style
+                    return 0;
+                case 17687: // Tauren Male - Horn Style
+                    return 1;
+                case 17688: // Tauren Male - Horn Style
+                    return 2;
+                case 17689: // Tauren Male - Horn Style
+                    return 3;
+                case 17690: // Tauren Male - Horn Style
+                    return 4;
+                case 17691: // Tauren Male - Horn Style
+                    return 5;
+                case 17692: // Tauren Male - Horn Style
+                    return 6;
+                case 17693: // Tauren Male - Horn Style
+                    return 7;
+                case 17694: // Tauren Male - Horn Color
+                    return 0;
+                case 17695: // Tauren Male - Horn Color
+                    return 1;
+                case 17696: // Tauren Male - Horn Color
+                    return 2;
+                case 17697: // Tauren Male - Facial Hair
+                    return 0;
+                case 17698: // Tauren Male - Facial Hair
+                    return 1;
+                case 17699: // Tauren Male - Facial Hair
+                    return 2;
+                case 17700: // Tauren Male - Facial Hair
+                    return 3;
+                case 17701: // Tauren Male - Facial Hair
+                    return 4;
+                case 17702: // Tauren Male - Facial Hair
+                    return 5;
+                case 17703: // Tauren Male - Facial Hair
+                    return 6;
+                case 17704: // Tauren Female - Skin Color
+                    return 0;
+                case 17705: // Tauren Female - Skin Color
+                    return 1;
+                case 17706: // Tauren Female - Skin Color
+                    return 2;
+                case 17707: // Tauren Female - Skin Color
+                    return 3;
+                case 17708: // Tauren Female - Skin Color
+                    return 4;
+                case 17709: // Tauren Female - Skin Color
+                    return 5;
+                case 17710: // Tauren Female - Skin Color
+                    return 6;
+                case 17711: // Tauren Female - Skin Color
+                    return 7;
+                case 17712: // Tauren Female - Skin Color
+                    return 8;
+                case 17713: // Tauren Female - Skin Color
+                    return 9;
+                case 17714: // Tauren Female - Skin Color
+                    return 10;
+                case 17715: // 379 - Face
+                    return 0;
+                case 17716: // 379 - Face
+                    return 1;
+                case 17717: // 379 - Face
+                    return 2;
+                case 17718: // 379 - Face
+                    return 3;
+                case 17719: // Tauren Female - Horn Style
+                    return 0;
+                case 17720: // Tauren Female - Horn Style
+                    return 1;
+                case 17721: // Tauren Female - Horn Style
+                    return 2;
+                case 17722: // Tauren Female - Horn Style
+                    return 3;
+                case 17723: // Tauren Female - Horn Style
+                    return 4;
+                case 17724: // Tauren Female - Horn Style
+                    return 5;
+                case 17725: // Tauren Female - Horn Style
+                    return 6;
+                case 17726: // Tauren Female - Horn Color
+                    return 0;
+                case 17727: // Tauren Female - Horn Color
+                    return 1;
+                case 17728: // Tauren Female - Horn Color
+                    return 2;
+                case 17729: // Tauren Female - Hair
+                    return 0;
+                case 17730: // Tauren Female - Hair
+                    return 1;
+                case 17731: // Tauren Female - Hair
+                    return 2;
+                case 17732: // Tauren Female - Hair
+                    return 3;
+                case 17733: // Tauren Female - Hair
+                    return 4;
+                case 17734: // Gnome Male - Skin Color
+                    return 0;
+                case 17735: // Gnome Male - Skin Color
+                    return 1;
+                case 17736: // Gnome Male - Skin Color
+                    return 2;
+                case 17737: // Gnome Male - Skin Color
+                    return 3;
+                case 17738: // Gnome Male - Skin Color
+                    return 4;
+                case 17739: // Gnome Male - Skin Color
+                    return 5;
+                case 17740: // Gnome Male - Skin Color
+                    return 6;
+                case 17741: // Gnome Male - Face
+                    return 0;
+                case 17742: // Gnome Male - Face
+                    return 1;
+                case 17743: // Gnome Male - Face
+                    return 2;
+                case 17744: // Gnome Male - Face
+                    return 3;
+                case 17745: // Gnome Male - Face
+                    return 4;
+                case 17746: // Gnome Male - Face
+                    return 5;
+                case 17747: // Gnome Male - Face
+                    return 6;
+                case 17748: // Gnome Male - Hair Style
+                    return 0;
+                case 17749: // Gnome Male - Hair Style
+                    return 1;
+                case 17750: // Gnome Male - Hair Style
+                    return 2;
+                case 17751: // Gnome Male - Hair Style
+                    return 3;
+                case 17752: // Gnome Male - Hair Style
+                    return 4;
+                case 17753: // Gnome Male - Hair Style
+                    return 5;
+                case 17754: // Gnome Male - Hair Style
+                    return 6;
+                case 17755: // Gnome Male - Hair Color
+                    return 0;
+                case 17756: // Gnome Male - Hair Color
+                    return 1;
+                case 17757: // Gnome Male - Hair Color
+                    return 2;
+                case 17758: // Gnome Male - Hair Color
+                    return 3;
+                case 17759: // Gnome Male - Hair Color
+                    return 4;
+                case 17760: // Gnome Male - Hair Color
+                    return 5;
+                case 17761: // Gnome Male - Hair Color
+                    return 6;
+                case 17762: // Gnome Male - Hair Color
+                    return 7;
+                case 17763: // Gnome Male - Hair Color
+                    return 8;
+                case 17764: // Gnome Male - Facial Hair
+                    return 0;
+                case 17765: // Gnome Male - Facial Hair
+                    return 1;
+                case 17766: // Gnome Male - Facial Hair
+                    return 2;
+                case 17767: // Gnome Male - Facial Hair
+                    return 3;
+                case 17768: // Gnome Male - Facial Hair
+                    return 4;
+                case 17769: // Gnome Male - Facial Hair
+                    return 5;
+                case 17770: // Gnome Male - Facial Hair
+                    return 6;
+                case 17771: // Gnome Male - Facial Hair
+                    return 7;
+                case 17772: // Gnome Female - Skin Color
+                    return 0;
+                case 17773: // Gnome Female - Skin Color
+                    return 1;
+                case 17774: // Gnome Female - Skin Color
+                    return 2;
+                case 17775: // Gnome Female - Skin Color
+                    return 3;
+                case 17776: // Gnome Female - Skin Color
+                    return 4;
+                case 17777: // Gnome Female - Skin Color
+                    return 5;
+                case 17778: // Gnome Female - Skin Color
+                    return 6;
+                case 17779: // Gnome Female - Face
+                    return 0;
+                case 17780: // Gnome Female - Face
+                    return 1;
+                case 17781: // Gnome Female - Face
+                    return 2;
+                case 17782: // Gnome Female - Face
+                    return 3;
+                case 17783: // Gnome Female - Face
+                    return 4;
+                case 17784: // Gnome Female - Face
+                    return 5;
+                case 17785: // Gnome Female - Face
+                    return 6;
+                case 17786: // Gnome Female - Hair Style
+                    return 0;
+                case 17787: // Gnome Female - Hair Style
+                    return 1;
+                case 17788: // Gnome Female - Hair Style
+                    return 2;
+                case 17789: // Gnome Female - Hair Style
+                    return 3;
+                case 17790: // Gnome Female - Hair Style
+                    return 4;
+                case 17791: // Gnome Female - Hair Style
+                    return 5;
+                case 17792: // Gnome Female - Hair Style
+                    return 6;
+                case 17793: // Gnome Female - Hair Color
+                    return 0;
+                case 17794: // Gnome Female - Hair Color
+                    return 1;
+                case 17795: // Gnome Female - Hair Color
+                    return 2;
+                case 17796: // Gnome Female - Hair Color
+                    return 3;
+                case 17797: // Gnome Female - Hair Color
+                    return 4;
+                case 17798: // Gnome Female - Hair Color
+                    return 5;
+                case 17799: // Gnome Female - Hair Color
+                    return 6;
+                case 17800: // Gnome Female - Hair Color
+                    return 7;
+                case 17801: // Gnome Female - Hair Color
+                    return 8;
+                case 17802: // Gnome Female - Earrings
+                    return 0;
+                case 17803: // Gnome Female - Earrings
+                    return 1;
+                case 17804: // Gnome Female - Earrings
+                    return 2;
+                case 17805: // Gnome Female - Earrings
+                    return 3;
+                case 17806: // Gnome Female - Earrings
+                    return 4;
+                case 17807: // Gnome Female - Earrings
+                    return 5;
+                case 17808: // Gnome Female - Earrings
+                    return 6;
+                case 17809: // Troll Male - Skin Color
+                    return 0;
+                case 17810: // Troll Male - Skin Color
+                    return 1;
+                case 17811: // Troll Male - Skin Color
+                    return 2;
+                case 17812: // Troll Male - Skin Color
+                    return 3;
+                case 17813: // Troll Male - Skin Color
+                    return 4;
+                case 17814: // Troll Male - Skin Color
+                    return 5;
+                case 17815: // Troll Male - Skin Color
+                    return 6;
+                case 17816: // Troll Male - Skin Color
+                    return 7;
+                case 17817: // Troll Male - Skin Color
+                    return 8;
+                case 17818: // Troll Male - Skin Color
+                    return 9;
+                case 17819: // Troll Male - Skin Color
+                    return 10;
+                case 17820: // Troll Male - Skin Color
+                    return 11;
+                case 17821: // Troll Male - Skin Color
+                    return 12;
+                case 17822: // Troll Male - Skin Color
+                    return 13;
+                case 17823: // Troll Male - Skin Color
+                    return 14;
+                case 17824: // Troll Male - Face
+                    return 0;
+                case 17825: // Troll Male - Face
+                    return 1;
+                case 17826: // Troll Male - Face
+                    return 2;
+                case 17827: // Troll Male - Face
+                    return 3;
+                case 17828: // Troll Male - Face
+                    return 4;
+                case 17829: // Troll Male - Hair Style
+                    return 0;
+                case 17830: // Troll Male - Hair Style
+                    return 1;
+                case 17831: // Troll Male - Hair Style
+                    return 2;
+                case 17832: // Troll Male - Hair Style
+                    return 3;
+                case 17833: // Troll Male - Hair Style
+                    return 4;
+                case 17834: // Troll Male - Hair Style
+                    return 5;
+                case 17835: // Troll Male - Hair Color
+                    return 0;
+                case 17836: // Troll Male - Hair Color
+                    return 1;
+                case 17837: // Troll Male - Hair Color
+                    return 2;
+                case 17838: // Troll Male - Hair Color
+                    return 3;
+                case 17839: // Troll Male - Hair Color
+                    return 4;
+                case 17840: // Troll Male - Hair Color
+                    return 5;
+                case 17841: // Troll Male - Hair Color
+                    return 6;
+                case 17842: // Troll Male - Hair Color
+                    return 7;
+                case 17843: // Troll Male - Hair Color
+                    return 8;
+                case 17844: // Troll Male - Hair Color
+                    return 9;
+                case 17845: // Troll Male - Tusks
+                    return 0;
+                case 17846: // Troll Male - Tusks
+                    return 1;
+                case 17847: // Troll Male - Tusks
+                    return 2;
+                case 17848: // Troll Male - Tusks
+                    return 3;
+                case 17849: // Troll Male - Tusks
+                    return 4;
+                case 17850: // Troll Male - Tusks
+                    return 5;
+                case 17851: // Troll Male - Tusks
+                    return 6;
+                case 17852: // Troll Male - Tusks
+                    return 7;
+                case 17853: // Troll Male - Tusks
+                    return 8;
+                case 17854: // Troll Male - Tusks
+                    return 9;
+                case 17855: // Troll Male - Tusks
+                    return 10;
+                case 17856: // Troll Female - Skin Color
+                    return 0;
+                case 17857: // Troll Female - Skin Color
+                    return 1;
+                case 17858: // Troll Female - Skin Color
+                    return 2;
+                case 17859: // Troll Female - Skin Color
+                    return 3;
+                case 17860: // Troll Female - Skin Color
+                    return 4;
+                case 17861: // Troll Female - Skin Color
+                    return 5;
+                case 17862: // Troll Female - Skin Color
+                    return 6;
+                case 17863: // Troll Female - Skin Color
+                    return 7;
+                case 17864: // Troll Female - Skin Color
+                    return 8;
+                case 17865: // Troll Female - Skin Color
+                    return 9;
+                case 17866: // Troll Female - Skin Color
+                    return 10;
+                case 17867: // Troll Female - Skin Color
+                    return 11;
+                case 17868: // Troll Female - Skin Color
+                    return 12;
+                case 17869: // Troll Female - Skin Color
+                    return 13;
+                case 17870: // Troll Female - Skin Color
+                    return 14;
+                case 17871: // Troll Female - Face
+                    return 0;
+                case 17872: // Troll Female - Face
+                    return 1;
+                case 17873: // Troll Female - Face
+                    return 2;
+                case 17874: // Troll Female - Face
+                    return 3;
+                case 17875: // Troll Female - Face
+                    return 4;
+                case 17876: // Troll Female - Face
+                    return 5;
+                case 17877: // Troll Female - Hair Style
+                    return 0;
+                case 17878: // Troll Female - Hair Style
+                    return 1;
+                case 17879: // Troll Female - Hair Style
+                    return 2;
+                case 17880: // Troll Female - Hair Style
+                    return 3;
+                case 17881: // Troll Female - Hair Style
+                    return 4;
+                case 17882: // Troll Female - Hair Color
+                    return 0;
+                case 17883: // Troll Female - Hair Color
+                    return 1;
+                case 17884: // Troll Female - Hair Color
+                    return 2;
+                case 17885: // Troll Female - Hair Color
+                    return 3;
+                case 17886: // Troll Female - Hair Color
+                    return 4;
+                case 17887: // Troll Female - Hair Color
+                    return 5;
+                case 17888: // Troll Female - Hair Color
+                    return 6;
+                case 17889: // Troll Female - Hair Color
+                    return 7;
+                case 17890: // Troll Female - Hair Color
+                    return 8;
+                case 17891: // Troll Female - Hair Color
+                    return 9;
+                case 17892: // Troll Female - Tusks
+                    return 0;
+                case 17893: // Troll Female - Tusks
+                    return 1;
+                case 17894: // Troll Female - Tusks
+                    return 2;
+                case 17895: // Troll Female - Tusks
+                    return 3;
+                case 17896: // Troll Female - Tusks
+                    return 4;
+                case 17897: // Troll Female - Tusks
+                    return 5;
+                case 17898: // Goblin Male - Skin Color
+                    return 0;
+                case 17899: // Goblin Male - Skin Color
+                    return 1;
+                case 17900: // Goblin Male - Skin Color
+                    return 2;
+                case 17901: // Goblin Male - Hair Style
+                    return 0;
+                case 17902: // Goblin Male - Hair Style
+                    return 1;
+                case 17903: // Goblin Female - Skin Color
+                    return 0;
+                case 17904: // Goblin Female - Skin Color
+                    return 1;
+                case 17905: // Goblin Female - Skin Color
+                    return 2;
+                case 17906: // Blood Elf Male - Skin Color
+                    return 0;
+                case 17907: // Blood Elf Male - Skin Color
+                    return 1;
+                case 17908: // Blood Elf Male - Skin Color
+                    return 2;
+                case 17909: // Blood Elf Male - Skin Color
+                    return 3;
+                case 17910: // Blood Elf Male - Skin Color
+                    return 4;
+                case 17911: // Blood Elf Male - Skin Color
+                    return 5;
+                case 17912: // Blood Elf Male - Skin Color
+                    return 6;
+                case 17913: // Blood Elf Male - Skin Color
+                    return 7;
+                case 17914: // Blood Elf Male - Skin Color
+                    return 8;
+                case 17915: // Blood Elf Male - Skin Color
+                    return 9;
+                case 17916: // Blood Elf Male - Skin Color
+                    return 10;
+                case 17917: // Blood Elf Male - Skin Color
+                    return 11;
+                case 17918: // Blood Elf Male - Skin Color
+                    return 12;
+                case 17919: // Blood Elf Male - Skin Color
+                    return 13;
+                case 17920: // Blood Elf Male - Skin Color
+                    return 14;
+                case 17921: // Blood Elf Male - Skin Color
+                    return 15;
+                case 17922: // Blood Elf Male - Face
+                    return 0;
+                case 17923: // Blood Elf Male - Face
+                    return 1;
+                case 17924: // Blood Elf Male - Face
+                    return 2;
+                case 17925: // Blood Elf Male - Face
+                    return 3;
+                case 17926: // Blood Elf Male - Face
+                    return 4;
+                case 17927: // Blood Elf Male - Face
+                    return 5;
+                case 17928: // Blood Elf Male - Face
+                    return 6;
+                case 17929: // Blood Elf Male - Face
+                    return 7;
+                case 17930: // Blood Elf Male - Face
+                    return 8;
+                case 17931: // Blood Elf Male - Face
+                    return 9;
+                case 17932: // Blood Elf Male - Hair Style
+                    return 0;
+                case 17933: // Blood Elf Male - Hair Style
+                    return 1;
+                case 17934: // Blood Elf Male - Hair Style
+                    return 2;
+                case 17935: // Blood Elf Male - Hair Style
+                    return 3;
+                case 17936: // Blood Elf Male - Hair Style
+                    return 4;
+                case 17937: // Blood Elf Male - Hair Style
+                    return 5;
+                case 17938: // Blood Elf Male - Hair Style
+                    return 6;
+                case 17939: // Blood Elf Male - Hair Style
+                    return 7;
+                case 17940: // Blood Elf Male - Hair Style
+                    return 8;
+                case 17941: // Blood Elf Male - Hair Style
+                    return 9;
+                case 17942: // Blood Elf Male - Hair Style
+                    return 10;
+                case 17943: // Blood Elf Male - Hair Color
+                    return 0;
+                case 17944: // Blood Elf Male - Hair Color
+                    return 1;
+                case 17945: // Blood Elf Male - Hair Color
+                    return 2;
+                case 17946: // Blood Elf Male - Hair Color
+                    return 3;
+                case 17947: // Blood Elf Male - Hair Color
+                    return 4;
+                case 17948: // Blood Elf Male - Hair Color
+                    return 5;
+                case 17949: // Blood Elf Male - Hair Color
+                    return 6;
+                case 17950: // Blood Elf Male - Hair Color
+                    return 7;
+                case 17951: // Blood Elf Male - Hair Color
+                    return 8;
+                case 17952: // Blood Elf Male - Hair Color
+                    return 9;
+                case 17953: // Blood Elf Male - Facial Hair
+                    return 0;
+                case 17954: // Blood Elf Male - Facial Hair
+                    return 1;
+                case 17955: // Blood Elf Male - Facial Hair
+                    return 2;
+                case 17956: // Blood Elf Male - Facial Hair
+                    return 3;
+                case 17957: // Blood Elf Male - Facial Hair
+                    return 4;
+                case 17958: // Blood Elf Male - Facial Hair
+                    return 5;
+                case 17959: // Blood Elf Male - Facial Hair
+                    return 6;
+                case 17960: // Blood Elf Male - Facial Hair
+                    return 7;
+                case 17961: // Blood Elf Male - Facial Hair
+                    return 8;
+                case 17962: // Blood Elf Male - Facial Hair
+                    return 9;
+                case 17963: // Blood Elf Female - Skin Color
+                    return 0;
+                case 17964: // Blood Elf Female - Skin Color
+                    return 1;
+                case 17965: // Blood Elf Female - Skin Color
+                    return 2;
+                case 17966: // Blood Elf Female - Skin Color
+                    return 3;
+                case 17967: // Blood Elf Female - Skin Color
+                    return 4;
+                case 17968: // Blood Elf Female - Skin Color
+                    return 5;
+                case 17969: // Blood Elf Female - Skin Color
+                    return 6;
+                case 17970: // Blood Elf Female - Skin Color
+                    return 7;
+                case 17971: // Blood Elf Female - Skin Color
+                    return 8;
+                case 17972: // Blood Elf Female - Skin Color
+                    return 9;
+                case 17973: // Blood Elf Female - Skin Color
+                    return 10;
+                case 17974: // Blood Elf Female - Skin Color
+                    return 11;
+                case 17975: // Blood Elf Female - Skin Color
+                    return 12;
+                case 17976: // Blood Elf Female - Skin Color
+                    return 13;
+                case 17977: // Blood Elf Female - Skin Color
+                    return 14;
+                case 17978: // Blood Elf Female - Skin Color
+                    return 15;
+                case 17979: // Blood Elf Female - Face
+                    return 0;
+                case 17980: // Blood Elf Female - Face
+                    return 1;
+                case 17981: // Blood Elf Female - Face
+                    return 2;
+                case 17982: // Blood Elf Female - Face
+                    return 3;
+                case 17983: // Blood Elf Female - Face
+                    return 4;
+                case 17984: // Blood Elf Female - Face
+                    return 5;
+                case 17985: // Blood Elf Female - Face
+                    return 6;
+                case 17986: // Blood Elf Female - Face
+                    return 7;
+                case 17987: // Blood Elf Female - Face
+                    return 8;
+                case 17988: // Blood Elf Female - Face
+                    return 9;
+                case 17989: // Blood Elf Female - Hair Style
+                    return 0;
+                case 17990: // Blood Elf Female - Hair Style
+                    return 1;
+                case 17991: // Blood Elf Female - Hair Style
+                    return 2;
+                case 17992: // Blood Elf Female - Hair Style
+                    return 3;
+                case 17993: // Blood Elf Female - Hair Style
+                    return 4;
+                case 17994: // Blood Elf Female - Hair Style
+                    return 5;
+                case 17995: // Blood Elf Female - Hair Style
+                    return 6;
+                case 17996: // Blood Elf Female - Hair Style
+                    return 7;
+                case 17997: // Blood Elf Female - Hair Style
+                    return 8;
+                case 17998: // Blood Elf Female - Hair Style
+                    return 9;
+                case 17999: // Blood Elf Female - Hair Style
+                    return 10;
+                case 18000: // Blood Elf Female - Hair Style
+                    return 11;
+                case 18001: // Blood Elf Female - Hair Style
+                    return 12;
+                case 18002: // Blood Elf Female - Hair Style
+                    return 13;
+                case 18004: // Blood Elf Female - Hair Color
+                    return 0;
+                case 18005: // Blood Elf Female - Hair Color
+                    return 1;
+                case 18006: // Blood Elf Female - Hair Color
+                    return 2;
+                case 18007: // Blood Elf Female - Hair Color
+                    return 3;
+                case 18008: // Blood Elf Female - Hair Color
+                    return 4;
+                case 18009: // Blood Elf Female - Hair Color
+                    return 5;
+                case 18010: // Blood Elf Female - Hair Color
+                    return 6;
+                case 18011: // Blood Elf Female - Hair Color
+                    return 7;
+                case 18012: // Blood Elf Female - Hair Color
+                    return 8;
+                case 18013: // Blood Elf Female - Hair Color
+                    return 9;
+                case 18014: // Blood Elf Female - Earrings
+                    return 0;
+                case 18015: // Blood Elf Female - Earrings
+                    return 1;
+                case 18016: // Blood Elf Female - Earrings
+                    return 2;
+                case 18017: // Blood Elf Female - Earrings
+                    return 3;
+                case 18018: // Blood Elf Female - Earrings
+                    return 4;
+                case 18019: // Blood Elf Female - Earrings
+                    return 5;
+                case 18020: // Blood Elf Female - Earrings
+                    return 6;
+                case 18021: // Blood Elf Female - Earrings
+                    return 7;
+                case 18022: // Blood Elf Female - Earrings
+                    return 8;
+                case 18023: // Blood Elf Female - Earrings
+                    return 9;
+                case 18024: // Blood Elf Female - Earrings
+                    return 10;
+                case 18025: // Draenei Male - Skin Color
+                    return 0;
+                case 18026: // Draenei Male - Skin Color
+                    return 1;
+                case 18027: // Draenei Male - Skin Color
+                    return 2;
+                case 18028: // Draenei Male - Skin Color
+                    return 3;
+                case 18029: // Draenei Male - Skin Color
+                    return 4;
+                case 18030: // Draenei Male - Skin Color
+                    return 5;
+                case 18031: // Draenei Male - Skin Color
+                    return 6;
+                case 18032: // Draenei Male - Skin Color
+                    return 7;
+                case 18033: // Draenei Male - Skin Color
+                    return 8;
+                case 18034: // Draenei Male - Skin Color
+                    return 9;
+                case 18035: // Draenei Male - Skin Color
+                    return 10;
+                case 18036: // Draenei Male - Skin Color
+                    return 11;
+                case 18037: // Draenei Male - Skin Color
+                    return 12;
+                case 18038: // Draenei Male - Skin Color
+                    return 13;
+                case 18039: // Draenei Male - Face
+                    return 0;
+                case 18040: // Draenei Male - Face
+                    return 1;
+                case 18041: // Draenei Male - Face
+                    return 2;
+                case 18042: // Draenei Male - Face
+                    return 3;
+                case 18043: // Draenei Male - Face
+                    return 4;
+                case 18044: // Draenei Male - Face
+                    return 5;
+                case 18045: // Draenei Male - Face
+                    return 6;
+                case 18046: // Draenei Male - Face
+                    return 7;
+                case 18047: // Draenei Male - Face
+                    return 8;
+                case 18048: // Draenei Male - Face
+                    return 9;
+                case 18049: // Draenei Male - Hair Style
+                    return 0;
+                case 18050: // Draenei Male - Hair Style
+                    return 1;
+                case 18051: // Draenei Male - Hair Style
+                    return 2;
+                case 18052: // Draenei Male - Hair Style
+                    return 3;
+                case 18053: // Draenei Male - Hair Style
+                    return 4;
+                case 18054: // Draenei Male - Hair Style
+                    return 5;
+                case 18055: // Draenei Male - Hair Style
+                    return 6;
+                case 18056: // Draenei Male - Hair Style
+                    return 7;
+                case 18057: // Draenei Male - Hair Style
+                    return 8;
+                case 18058: // Draenei Male - Hair Color
+                    return 0;
+                case 18059: // Draenei Male - Hair Color
+                    return 1;
+                case 18060: // Draenei Male - Hair Color
+                    return 2;
+                case 18061: // Draenei Male - Hair Color
+                    return 3;
+                case 18062: // Draenei Male - Hair Color
+                    return 4;
+                case 18063: // Draenei Male - Hair Color
+                    return 5;
+                case 18064: // Draenei Male - Hair Color
+                    return 6;
+                case 18065: // Draenei Male - Facial Hair
+                    return 0;
+                case 18066: // Draenei Male - Facial Hair
+                    return 1;
+                case 18067: // Draenei Male - Facial Hair
+                    return 2;
+                case 18068: // Draenei Male - Facial Hair
+                    return 3;
+                case 18069: // Draenei Male - Facial Hair
+                    return 4;
+                case 18070: // Draenei Male - Facial Hair
+                    return 5;
+                case 18071: // Draenei Male - Facial Hair
+                    return 6;
+                case 18072: // Draenei Male - Facial Hair
+                    return 7;
+                case 18073: // Draenei Female - Skin Color
+                    return 0;
+                case 18074: // Draenei Female - Skin Color
+                    return 1;
+                case 18075: // Draenei Female - Skin Color
+                    return 2;
+                case 18076: // Draenei Female - Skin Color
+                    return 3;
+                case 18077: // Draenei Female - Skin Color
+                    return 4;
+                case 18078: // Draenei Female - Skin Color
+                    return 5;
+                case 18079: // Draenei Female - Skin Color
+                    return 6;
+                case 18080: // Draenei Female - Skin Color
+                    return 7;
+                case 18081: // Draenei Female - Skin Color
+                    return 8;
+                case 18082: // Draenei Female - Skin Color
+                    return 9;
+                case 18083: // Draenei Female - Skin Color
+                    return 10;
+                case 18084: // Draenei Female - Skin Color
+                    return 11;
+                case 18085: // Draenei Female - Face
+                    return 0;
+                case 18086: // Draenei Female - Face
+                    return 1;
+                case 18087: // Draenei Female - Face
+                    return 2;
+                case 18088: // Draenei Female - Face
+                    return 3;
+                case 18089: // Draenei Female - Face
+                    return 4;
+                case 18090: // Draenei Female - Face
+                    return 5;
+                case 18091: // Draenei Female - Face
+                    return 6;
+                case 18092: // Draenei Female - Face
+                    return 7;
+                case 18093: // Draenei Female - Face
+                    return 8;
+                case 18094: // Draenei Female - Face
+                    return 9;
+                case 18095: // Draenei Female - Hair Style
+                    return 0;
+                case 18096: // Draenei Female - Hair Style
+                    return 1;
+                case 18097: // Draenei Female - Hair Style
+                    return 2;
+                case 18098: // Draenei Female - Hair Style
+                    return 3;
+                case 18099: // Draenei Female - Hair Style
+                    return 4;
+                case 18100: // Draenei Female - Hair Style
+                    return 5;
+                case 18101: // Draenei Female - Hair Style
+                    return 6;
+                case 18102: // Draenei Female - Hair Style
+                    return 7;
+                case 18103: // Draenei Female - Hair Style
+                    return 8;
+                case 18104: // Draenei Female - Hair Style
+                    return 9;
+                case 18105: // Draenei Female - Hair Style
+                    return 10;
+                case 18106: // Draenei Female - Hair Color
+                    return 0;
+                case 18107: // Draenei Female - Hair Color
+                    return 1;
+                case 18108: // Draenei Female - Hair Color
+                    return 2;
+                case 18109: // Draenei Female - Hair Color
+                    return 3;
+                case 18110: // Draenei Female - Hair Color
+                    return 4;
+                case 18111: // Draenei Female - Hair Color
+                    return 5;
+                case 18112: // Draenei Female - Hair Color
+                    return 6;
+                case 18113: // Draenei Female - Horn Style
+                    return 0;
+                case 18114: // Draenei Female - Horn Style
+                    return 1;
+                case 18115: // Draenei Female - Horn Style
+                    return 2;
+                case 18116: // Draenei Female - Horn Style
+                    return 3;
+                case 18117: // Draenei Female - Horn Style
+                    return 4;
+                case 18118: // Draenei Female - Horn Style
+                    return 5;
+                case 18119: // Draenei Female - Horn Style
+                    return 6;
+                case 18120: // Fel Orc Male - Skin Color
+                    return 0;
+                case 18121: // Fel Orc Male - Skin Color
+                    return 1;
+                case 18122: // Fel Orc Male - Skin Color
+                    return 2;
+                case 18123: // Fel Orc Male - Face
+                    return 0;
+                case 18124: // Fel Orc Male - Hair Style
+                    return 0;
+                case 18125: // Fel Orc Male - Hair Color
+                    return 0;
+                case 18126: // Fel Orc Male - Facial Hair
+                    return 0;
+                case 18127: // Fel Orc Female - Hair Style
+                    return 0;
+                case 18128: // Fel Orc Female - Hair Color
+                    return 0;
+                case 18129: // Fel Orc Female - Facial Hair
+                    return 0;
+                case 18130: // Naga Male - Skin Color
+                    return 0;
+                case 18131: // Naga Male - Skin Color
+                    return 1;
+                case 18132: // Naga Male - Skin Color
+                    return 2;
+                case 18133: // Naga Male - Skin Color
+                    return 3;
+                case 18134: // Naga Male - Skin Color
+                    return 4;
+                case 18135: // Naga Male - Face
+                    return 0;
+                case 18136: // Naga Male - Hair Style
+                    return 0;
+                case 18137: // Naga Male - Hair Color
+                    return 0;
+                case 18138: // Naga Male - Facial Hair
+                    return 0;
+                case 18139: // Naga Female - Skin Color
+                    return 0;
+                case 18140: // Naga Female - Skin Color
+                    return 1;
+                case 18141: // Naga Female - Skin Color
+                    return 2;
+                case 18142: // Naga Female - Skin Color
+                    return 3;
+                case 18143: // Naga Female - Skin Color
+                    return 4;
+                case 18144: // Naga Female - Face
+                    return 0;
+                case 18145: // Naga Female - Hair Style
+                    return 0;
+                case 18146: // Naga Female - Hair Color
+                    return 0;
+                case 18147: // Naga Female - Facial Hair
+                    return 0;
+                case 18148: // Broken Male - Skin Color
+                    return 0;
+                case 18149: // Broken Male - Skin Color
+                    return 1;
+                case 18150: // Broken Male - Skin Color
+                    return 2;
+                case 18151: // Broken Male - Skin Color
+                    return 3;
+                case 18152: // Broken Male - Skin Color
+                    return 4;
+                case 18153: // Broken Male - Skin Color
+                    return 5;
+                case 18154: // Broken Male - Face
+                    return 0;
+                case 18155: // Broken Male - Hair Style
+                    return 0;
+                case 18156: // Broken Male - Hair Style
+                    return 1;
+                case 18157: // Broken Male - Hair Style
+                    return 2;
+                case 18158: // Broken Male - Hair Color
+                    return 0;
+                case 18159: // Broken Male - Hair Color
+                    return 1;
+                case 18160: // Broken Male - Hair Color
+                    return 2;
+                case 18161: // Broken Male - Hair Color
+                    return 3;
+                case 18162: // Broken Male - Hair Color
+                    return 4;
+                case 18163: // Broken Male - Hair Color
+                    return 5;
+                case 18164: // Broken Male - Hair Color
+                    return 6;
+                case 18165: // Broken Male - Hair Color
+                    return 7;
+                case 18166: // Broken Male - Hair Color
+                    return 8;
+                case 18167: // Broken Male - Hair Color
+                    return 9;
+                case 18168: // Broken Female - Hair Style
+                    return 0;
+                case 18169: // Broken Female - Hair Color
+                    return 0;
+                case 18170: // Broken Female - Facial Hair
+                    return 0;
+                case 18171: // Skeleton Male - Skin Color
+                    return 0;
+                case 18172: // Skeleton Male - Skin Color
+                    return 1;
+                case 18173: // Skeleton Male - Skin Color
+                    return 2;
+                case 18174: // Skeleton Male - Skin Color
+                    return 3;
+                case 18175: // Skeleton Male - Skin Color
+                    return 4;
+                case 18176: // Skeleton Male - Skin Color
+                    return 5;
+                case 18177: // Skeleton Male - Face
+                    return 0;
+                case 18178: // Skeleton Male - Hair Style
+                    return 0;
+                case 18179: // Skeleton Male - Hair Color
+                    return 0;
+                case 18180: // Skeleton Male - Facial Hair
+                    return 0;
+                case 18181: // Skeleton Female - Hair Style
+                    return 0;
+                case 18182: // Skeleton Female - Hair Color
+                    return 0;
+                case 18183: // Skeleton Female - Facial Hair
+                    return 0;
+                case 18184: // Forest Troll Male - Skin Color
+                    return 0;
+                case 18185: // Forest Troll Male - Skin Color
+                    return 1;
+                case 18186: // Forest Troll Male - Skin Color
+                    return 2;
+                case 18187: // Forest Troll Male - Skin Color
+                    return 3;
+                case 18188: // Forest Troll Male - Skin Color
+                    return 4;
+                case 18189: // Forest Troll Male - Skin Color
+                    return 5;
+                case 18190: // Forest Troll Male - Face
+                    return 0;
+                case 18191: // Forest Troll Male - Face
+                    return 1;
+                case 18192: // Forest Troll Male - Face
+                    return 2;
+                case 18193: // Forest Troll Male - Face
+                    return 3;
+                case 18194: // Forest Troll Male - Face
+                    return 4;
+                case 18195: // Forest Troll Male - Hair Style
+                    return 0;
+                case 18196: // Forest Troll Male - Hair Style
+                    return 1;
+                case 18197: // Forest Troll Male - Hair Style
+                    return 2;
+                case 18198: // Forest Troll Male - Hair Style
+                    return 3;
+                case 18199: // Forest Troll Male - Hair Style
+                    return 4;
+                case 18200: // Forest Troll Male - Hair Style
+                    return 5;
+                case 18201: // Forest Troll Male - Hair Color
+                    return 0;
+                case 18202: // Forest Troll Male - Hair Color
+                    return 1;
+                case 18203: // Forest Troll Male - Hair Color
+                    return 2;
+                case 18204: // Forest Troll Male - Hair Color
+                    return 3;
+                case 18205: // Forest Troll Male - Hair Color
+                    return 4;
+                case 18206: // Forest Troll Male - Hair Color
+                    return 5;
+                case 18207: // Forest Troll Male - Hair Color
+                    return 6;
+                case 18208: // Forest Troll Male - Hair Color
+                    return 7;
+                case 18209: // Forest Troll Male - Hair Color
+                    return 8;
+                case 18210: // Forest Troll Male - Hair Color
+                    return 9;
+                case 18211: // Forest Troll Male - Facial Hair
+                    return 0;
+                case 18212: // Forest Troll Male - Facial Hair
+                    return 1;
+                case 18213: // Forest Troll Male - Facial Hair
+                    return 2;
+                case 18214: // Forest Troll Male - Facial Hair
+                    return 3;
+                case 18215: // Forest Troll Male - Facial Hair
+                    return 4;
+                case 18216: // Forest Troll Male - Facial Hair
+                    return 5;
+                case 18217: // Forest Troll Male - Facial Hair
+                    return 6;
+                case 18218: // Forest Troll Male - Facial Hair
+                    return 7;
+                case 18219: // Forest Troll Male - Facial Hair
+                    return 8;
+                case 18220: // Forest Troll Male - Facial Hair
+                    return 9;
+                case 18221: // Forest Troll Male - Facial Hair
+                    return 10;
+                case 18222: // Forest Troll Female - Hair Style
+                    return 0;
+                case 18223: // Forest Troll Female - Hair Color
+                    return 0;
+                case 18224: // Forest Troll Female - Facial Hair
+                    return 0;
+            }
+            return 0;
+        }
+
+        public static void AssignPlayerBytes(Store.Objects.UpdateFields.IPlayerData playerData, out uint playerBytes1, out uint playerBytes2)
+        {
+            var customizations = playerData.GetCustomizations();
+            if (customizations == null || customizations.Length < 1)
+            {
+                playerBytes1 = playerData.PlayerBytes1;
+                playerBytes2 = playerData.PlayerBytes1;
+                return;
+            }
+
+            byte[] bytes1 = new byte[4];
+            byte[] bytes2 = new byte[4];
+            foreach (var custom in customizations)
+            {
+                CharCustomizationOption option = GetCustomizationOption(custom.ChrCustomizationOptionID);
+                byte choice = GetCustomizationChoice(custom.ChrCustomizationChoiceID);
+
+                switch (option)
+                {
+                    case CharCustomizationOption.Skin:
+                    {
+                        bytes1[0] = choice;
+                        break;
+                    }
+                    case CharCustomizationOption.Face:
+                    {
+                        bytes1[1] = choice;
+                        break;
+                    }
+                    case CharCustomizationOption.HairStyle:
+                    {
+                        bytes1[2] = choice;
+                        break;
+                    }
+                    case CharCustomizationOption.HairColor:
+                    {
+                        bytes1[3] = choice;
+                        break;
+                    }
+                    case CharCustomizationOption.FacialHair:
+                    {
+                        bytes2[0] = choice;
+                        break;
+                    }
+                }
+            }
+
+            playerBytes1 = BitConverter.ToUInt32(bytes1, 0);
+            playerBytes2 = BitConverter.ToUInt32(bytes2, 0);
+        }
+
         [BuilderMethod]
         public static string CharactersBuilder()
         {
@@ -86,9 +2597,9 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.Level = (uint)player.UnitDataOriginal.Level;
                 row.Data.XP = player.PlayerDataOriginal.Experience;
                 row.Data.Money = player.PlayerDataOriginal.Money;
-                row.Data.PlayerBytes = player.PlayerDataOriginal.PlayerBytes1;
-                row.Data.PlayerBytes2 = player.PlayerDataOriginal.PlayerBytes2;
+                AssignPlayerBytes(player.PlayerDataOriginal, out row.Data.PlayerBytes, out row.Data.PlayerBytes2);
                 row.Data.PlayerFlags = player.PlayerDataOriginal.PlayerFlags;
+
                 MovementInfo moveData = player.OriginalMovement == null ? player.Movement : player.OriginalMovement;
                 if (moveData != null)
                 {

@@ -100,6 +100,28 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
             }
         }
 
+        public ChrCustomizationChoice[] GetCustomizations()
+        {
+            int begin = WowPacketParser.Enums.Version.UpdateFields.GetUpdateField(PlayerField.PLAYER_FIELD_CUSTOMIZATION_CHOICES);
+            int end = WowPacketParser.Enums.Version.UpdateFields.GetUpdateField(PlayerField.PLAYER_END);
+            if (begin <= 0 || end <= 0)
+                return new ChrCustomizationChoice[0];
+
+            int size = (end - begin);
+
+            var array = UpdateFields.GetArray<PlayerField, uint>(PlayerField.PLAYER_FIELD_CUSTOMIZATION_CHOICES, size);
+
+            ChrCustomizationChoice[] data = new ChrCustomizationChoice[size / 2];
+            for (var i = 0; i < size / 2; ++i)
+            {
+                data[i] = new ChrCustomizationChoice();
+                data[i].ChrCustomizationOptionID = array[i * 2 + 0];
+                data[i].ChrCustomizationChoiceID = array[i * 2 + 1];
+            }
+            
+            return data;
+        }
+
         public IPlayerData Clone() { return new PlayerData(Object); }
     }
 
@@ -196,6 +218,28 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                     return items;
                 }
             }
+        }
+
+        public ChrCustomizationChoice[] GetCustomizations()
+        {
+            int begin = WowPacketParser.Enums.Version.UpdateFields.GetUpdateField(PlayerField.PLAYER_FIELD_CUSTOMIZATION_CHOICES);
+            int end = WowPacketParser.Enums.Version.UpdateFields.GetUpdateField(PlayerField.PLAYER_END);
+            if (begin <= 0 || end <= 0)
+                return new ChrCustomizationChoice[0];
+
+            int size = (end - begin);
+
+            var array = UpdateFields.GetArray<PlayerField, uint>(PlayerField.PLAYER_FIELD_CUSTOMIZATION_CHOICES, size);
+
+            ChrCustomizationChoice[] data = new ChrCustomizationChoice[size / 2];
+            for (var i = 0; i < size / 2; ++i)
+            {
+                data[i] = new ChrCustomizationChoice();
+                data[i].ChrCustomizationOptionID = array[i * 2 + 0];
+                data[i].ChrCustomizationChoiceID = array[i * 2 + 1];
+            }
+
+            return data;
         }
 
         public IPlayerData Clone() { return new OriginalPlayerData(Object); }

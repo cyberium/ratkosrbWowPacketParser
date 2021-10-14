@@ -13,6 +13,7 @@ namespace WowPacketParser.Store.Objects.UpdateFields
         uint PvPRank { get; }
         IVisibleItem[] VisibleItems { get; }
         uint GuildRankID { get; }
+        ChrCustomizationChoice[] GetCustomizations();
         IPlayerData Clone();
     }
 }

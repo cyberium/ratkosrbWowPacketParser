@@ -130,7 +130,7 @@ namespace WowPacketParser.SQL
                 value = Hexify((uint)value);
 
             if (value is float)
-                value = string.Format("{0:F20}", value).Substring(0, 20).TrimEnd('0').TrimEnd('.');
+                value = ((float)value).ToString("R");
 
             if (value is Blob)
             {

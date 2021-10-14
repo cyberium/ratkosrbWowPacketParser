@@ -48,6 +48,27 @@ namespace WowPacketParserModule.V9_0_1_36216.UpdateFields.V9_0_5_37862
         public bool HasQuestSession { get; set; }
         public bool HasLevelLink { get; set; }
 
+        public ChrCustomizationChoice[] GetCustomizations()
+        {
+            ChrCustomizationChoice[] data = new ChrCustomizationChoice[Customizations.Count];
+            for (var i = 0; i < Customizations.Count; ++i)
+            {
+                if (Customizations.UpdateMask[i])
+                {
+                    ChrCustomizationChoice custom = Customizations[i] as ChrCustomizationChoice;
+                    if (custom != null)
+                    {
+                        data[i] = custom;
+                    }
+                    else
+                        data[i] = new ChrCustomizationChoice();
+                }
+                else
+                    data[i] = new ChrCustomizationChoice();
+            }
+            return data;
+        }
+
         public IPlayerData Clone()
         {
             PlayerData copy = (PlayerData)MemberwiseClone();

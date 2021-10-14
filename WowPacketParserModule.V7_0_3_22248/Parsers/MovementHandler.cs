@@ -149,6 +149,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             var type = packet.ReadBitsE<SplineFacingType>("Face", 2, indexes);
             var pointsCount = packet.ReadBits("PointsCount", 16, indexes);
             var packedDeltasCount = packet.ReadBits("PackedDeltasCount", 16, indexes);
+            var totalPointsCount = pointsCount + packedDeltasCount;
             var hasSplineFilter = packet.ReadBit("HasSplineFilter", indexes);
             var hasSpellEffectExtraData = packet.ReadBit("HasSpellEffectExtraData", indexes);
 
@@ -174,12 +175,13 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             if (savedata != null)
             {
                 savedata.Orientation = orientation;
-                savedata.SplineCount = pointsCount;
-                if (pointsCount > 0)
+                savedata.SplineCount = totalPointsCount;
+                if (totalPointsCount > 0)
                     savedata.SplinePoints = new List<Vector3>();
             }
 
             Vector3 endpos = new Vector3();
+            List<Vector3> pointsList = (savedata != null) ? new List<Vector3>() : null;
             for (int i = 0; i < pointsCount; i++)
             {
                 var spot = packet.ReadVector3();
@@ -189,7 +191,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                     endpos = spot;
 
                 if (savedata != null)
-                    savedata.SplinePoints.Add(spot);
+                    pointsList.Add(spot);
 
                 packet.AddValue("Points", spot, indexes, i);
             }
@@ -222,7 +224,19 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                     Y = mid.Y - waypoints[i].Y,
                     Z = mid.Z - waypoints[i].Z
                 };
+
+                if (savedata != null)
+                    savedata.SplinePoints.Add(vec);
+
                 packet.AddValue("WayPoints", vec, indexes, i);
+            }
+
+            if (savedata != null)
+            {
+                foreach (var point in pointsList)
+                {
+                    savedata.SplinePoints.Add(point);
+                }
             }
 
             return orientation;

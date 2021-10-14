@@ -49,6 +49,11 @@ namespace WowPacketParserModule.V8_0_1_27101.UpdateFields.V8_3_0_33062
         public DynamicUpdateField<IArenaCooldown> ArenaCooldowns { get; } = new DynamicUpdateField<IArenaCooldown>();
         public bool HasQuestSession { get; set; }
         public bool HasLevelLink { get; set; }
+
+        public ChrCustomizationChoice[] GetCustomizations()
+        {
+            return new ChrCustomizationChoice[0];
+        }
         public IPlayerData Clone()
         {
             PlayerData copy = (PlayerData)MemberwiseClone();
