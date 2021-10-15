@@ -578,7 +578,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_MOVE_UPDATE_TELEPORT)]
         public static void HandleMoveUpdateTeleport(Packet packet)
         {
-            ReadMovementStats(packet);
+            WowGuid guid = ReadMovementStats(packet);
 
             var int32 = packet.ReadInt32("MovementForcesCount");
             for (int i = 0; i < int32; i++)
@@ -586,42 +586,96 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
 
             packet.ResetBitReader();
 
-            var bit260 = packet.ReadBit("HasWalkSpeed");
-            var bit276 = packet.ReadBit("HasRunSpeed");
-            var bit52 = packet.ReadBit("HasRunBackSpeed");
-            var bit28 = packet.ReadBit("HasSwimSpeed");
-            var bit76 = packet.ReadBit("HasSwimBackSpeed");
-            var bit20 = packet.ReadBit("HasFlightSpeed");
-            var bit268 = packet.ReadBit("HasFlightBackSpeed");
-            var bit60 = packet.ReadBit("HasTurnRate");
-            var bit68 = packet.ReadBit("HasPitchRate");
+            var hasWalkSpeed = packet.ReadBit("HasWalkSpeed");
+            var hasRunSpeed = packet.ReadBit("HasRunSpeed");
+            var hasRunBackSpeed = packet.ReadBit("HasRunBackSpeed");
+            var hasSwimSpeed = packet.ReadBit("HasSwimSpeed");
+            var hasSwimBackSpeed = packet.ReadBit("HasSwimBackSpeed");
+            var hasFlightSpeed = packet.ReadBit("HasFlightSpeed");
+            var hasFlightBackSpeed = packet.ReadBit("HasFlightBackSpeed");
+            var hasTurnRate = packet.ReadBit("HasTurnRate");
+            var hasPitchRate = packet.ReadBit("HasPitchRate");
 
-            if (bit260)
-                packet.ReadSingle("WalkSpeed");
+            if (hasWalkSpeed)
+            {
+                CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                speedUpdate.SpeedType = SpeedType.Walk;
+                speedUpdate.SpeedRate = packet.ReadSingle("WalkSpeed") / MovementInfo.DEFAULT_WALK_SPEED;
+                speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+                Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+            }
 
-            if (bit276)
-                packet.ReadSingle("RunSpeed");
+            if (hasRunSpeed)
+            {
+                CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                speedUpdate.SpeedType = SpeedType.Run;
+                speedUpdate.SpeedRate = packet.ReadSingle("RunSpeed") / MovementInfo.DEFAULT_RUN_SPEED;
+                speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+                Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+            }
 
-            if (bit52)
-                packet.ReadSingle("RunBackSpeed");
+            if (hasRunBackSpeed)
+            {
+                CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                speedUpdate.SpeedType = SpeedType.RunBack;
+                speedUpdate.SpeedRate = packet.ReadSingle("RunBackSpeed") / MovementInfo.DEFAULT_RUN_BACK_SPEED;
+                speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+                Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+            }
 
-            if (bit28)
-                packet.ReadSingle("SwimSpeed");
+            if (hasSwimSpeed)
+            {
+                CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                speedUpdate.SpeedType = SpeedType.Swim;
+                speedUpdate.SpeedRate = packet.ReadSingle("SwimSpeed") / MovementInfo.DEFAULT_SWIM_SPEED;
+                speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+                Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+            }
 
-            if (bit76)
-                packet.ReadSingle("SwimBackSpeed");
+            if (hasSwimBackSpeed)
+            {
+                CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                speedUpdate.SpeedType = SpeedType.SwimBack;
+                speedUpdate.SpeedRate = packet.ReadSingle("SwimBackSpeed") / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
+                speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+                Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+            }
 
-            if (bit20)
-                packet.ReadSingle("FlightSpeed");
+            if (hasFlightSpeed)
+            {
+                CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                speedUpdate.SpeedType = SpeedType.Fly;
+                speedUpdate.SpeedRate = packet.ReadSingle("FlightSpeed") / MovementInfo.DEFAULT_FLY_SPEED;
+                speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+                Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+            }
 
-            if (bit268)
-                packet.ReadSingle("FlightBackSpeed");
+            if (hasFlightBackSpeed)
+            {
+                CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                speedUpdate.SpeedType = SpeedType.FlyBack;
+                speedUpdate.SpeedRate = packet.ReadSingle("FlightBackSpeed") / MovementInfo.DEFAULT_FLY_BACK_SPEED;
+                speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+                Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+            }
 
-            if (bit60)
-                packet.ReadSingle("TurnRate");
+            if (hasTurnRate)
+            {
+                CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                speedUpdate.SpeedType = SpeedType.Turn;
+                speedUpdate.SpeedRate = packet.ReadSingle("TurnRate") / MovementInfo.DEFAULT_TURN_RATE;
+                speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+                Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+            }
 
-            if (bit68)
-                packet.ReadSingle("PitchRate");
+            if (hasPitchRate)
+            {
+                CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+                speedUpdate.SpeedType = SpeedType.Pitch;
+                speedUpdate.SpeedRate = packet.ReadSingle("PitchRate") / MovementInfo.DEFAULT_PITCH_RATE;
+                speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+                Storage.StoreUnitSpeedUpdate(guid, speedUpdate);
+            }
         }
 
         [Parser(Opcode.SMSG_MOVE_ENABLE_GRAVITY)]
