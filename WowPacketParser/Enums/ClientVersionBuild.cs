@@ -414,6 +414,9 @@ namespace WowPacketParser.Enums
         V1_13_7_39605 = 39605,
         V1_13_7_39692 = 39692,
 
+        // Classic SoM
+        V1_14_0_40441 = 40441,
+
         // TBC Classic
         V2_5_1_38598 = 38598, // ptr
         V2_5_1_38644 = 38644,
