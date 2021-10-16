@@ -987,7 +987,7 @@ namespace WowPacketParser.Store
             levelStats.Agility = stats[(int)StatType.Agility] - posstats[(int)StatType.Agility] - negstats[(int)StatType.Agility];
             levelStats.Stamina = stats[(int)StatType.Stamina] - posstats[(int)StatType.Stamina] - negstats[(int)StatType.Stamina];
             levelStats.Intellect = stats[(int)StatType.Intellect] - posstats[(int)StatType.Intellect] - negstats[(int)StatType.Intellect];
-            if (ClientVersion.RemovedInVersion(ClientType.Legion) || ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build) || ClientVersion.IsBurningCrusadeClassicClientVersionBuild(ClientVersion.Build))
+            if (ClientVersion.RemovedInVersion(ClientType.Legion) || ClientVersion.IsClassicVanillaClientVersionBuild(ClientVersion.Build) || ClientVersion.IsBurningCrusadeClassicClientVersionBuild(ClientVersion.Build))
                 levelStats.Spirit = stats[(int)StatType.Spirit] - posstats[(int)StatType.Spirit] - negstats[(int)StatType.Spirit];
             if (levelStats.Strength != 0 || levelStats.Agility != 0 ||
                 levelStats.Stamina != 0 || levelStats.Intellect != 0 ||

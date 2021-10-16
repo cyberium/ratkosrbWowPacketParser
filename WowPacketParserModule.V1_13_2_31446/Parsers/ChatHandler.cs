@@ -70,12 +70,6 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             if (unk801bit)
                 packet.ReadUInt32("Unk801");
 
-            uint entry = 0;
-            if (text.SenderGUID.GetObjectType() == ObjectType.Unit)
-                entry = text.SenderGUID.GetEntry();
-            else if (text.ReceiverGUID.GetObjectType() == ObjectType.Unit)
-                entry = text.ReceiverGUID.GetEntry();
-
             Storage.StoreText(text, packet);
         }
 

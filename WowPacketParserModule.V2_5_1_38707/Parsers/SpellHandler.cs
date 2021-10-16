@@ -9,6 +9,46 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
 {
     public static class SpellHandler
     {
+        public static void ReadSpellCastRequest(Packet packet, params object[] idx)
+        {
+            packet.ReadPackedGuid128("CastID", idx);
+
+            for (var i = 0; i < 2; i++)
+                packet.ReadInt32("Misc", idx, i);
+
+            var spellId = packet.ReadUInt32<SpellId>("SpellID", idx);
+
+            packet.ReadInt32("SpellXSpellVisualID", idx);
+
+            V6_0_2_19033.Parsers.SpellHandler.ReadMissileTrajectoryRequest(packet, idx, "MissileTrajectory");
+
+            packet.ReadPackedGuid128("Guid", idx);
+
+            var optionalReagentCount = packet.ReadUInt32("OptionalReagentCount", idx);
+            var optionalCurrenciesCount = packet.ReadUInt32("OptionalCurrenciesCount", idx);
+
+            for (var i = 0; i < optionalReagentCount; ++i)
+                WowPacketParserModule.V9_0_1_36216.Parsers.SpellHandler.ReadOptionalReagent(packet, idx, "OptionalReagent", i);
+
+            for (var j = 0; j < optionalCurrenciesCount; ++j)
+                WowPacketParserModule.V9_0_1_36216.Parsers.SpellHandler.ReadOptionalCurrency(packet, idx, "OptionalCurrency", j);
+
+            packet.ResetBitReader();
+            packet.ReadBits("SendCastFlags", 5, idx);
+            var hasMoveUpdate = packet.ReadBit("HasMoveUpdate", idx);
+
+            var weightCount = packet.ReadBits("WeightCount", 2, idx);
+
+            SpellCastData temp2 = new SpellCastData();
+            V7_0_3_22248.Parsers.SpellHandler.ReadSpellTargetData(temp2, packet, spellId, idx, "Target");
+
+            if (hasMoveUpdate)
+                V7_0_3_22248.Parsers.MovementHandler.ReadMovementStats(packet, idx, "MoveUpdate");
+
+            for (var i = 0; i < weightCount; ++i)
+                V6_0_2_19033.Parsers.SpellHandler.ReadSpellWeight(packet, idx, "Weight", i);
+        }
+
         public static void ReadSpellCastData(SpellCastData dbdata, Packet packet, params object[] idx)
         {
             dbdata.CasterGuid = packet.ReadPackedGuid128("CasterGUID", idx);
@@ -49,7 +89,7 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
             for (var i = 0; i < missStatusCount; ++i)
                 V6_0_2_19033.Parsers.SpellHandler.ReadSpellMissStatus(packet, idx, "MissStatus", i);
 
-            V8_0_1_27101.Parsers.SpellHandler.ReadSpellTargetData(dbdata, packet, dbdata.SpellID, idx, "Target");
+            V7_0_3_22248.Parsers.SpellHandler.ReadSpellTargetData(dbdata, packet, dbdata.SpellID, idx, "Target");
 
             for (var i = 0; i < hitTargetsCount; ++i)
             {
@@ -99,6 +139,30 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
                 V8_0_1_27101.Parsers.SpellHandler.ReadSpellCastLogData(packet, "LogData");
 
             Storage.StoreSpellCastData(castData, Storage.SpellCastGo, packet);
+        }
+
+        [Parser(Opcode.SMSG_CAST_FAILED)]
+        public static void HandleCastFailed(Packet packet)
+        {
+            V7_0_3_22248.Parsers.SpellHandler.HandleCastFailed(packet);
+        }
+
+        [Parser(Opcode.SMSG_SPELL_FAILED_OTHER)]
+        public static void HandleSpellFailedOther(Packet packet)
+        {
+            V7_0_3_22248.Parsers.SpellHandler.HandleSpellFailedOther(packet);
+        }
+
+        [Parser(Opcode.SMSG_SPELL_FAILURE)]
+        public static void HandleSpellFailure(Packet packet)
+        {
+            V7_0_3_22248.Parsers.SpellHandler.HandleSpellFailure(packet);
+        }
+
+        [Parser(Opcode.SMSG_SPELL_CHANNEL_START)]
+        public static void HandleSpellChannelStart(Packet packet)
+        {
+            V7_0_3_22248.Parsers.SpellHandler.HandleSpellChannelStart(packet);
         }
 
         [Parser(Opcode.SMSG_SET_FLAT_SPELL_MODIFIER)]
@@ -215,11 +279,23 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
             }
         }
 
+        [Parser(Opcode.CMSG_CAST_SPELL)]
+        public static void HandleCastSpell(Packet packet)
+        {
+            ReadSpellCastRequest(packet, "Cast");
+        }
+
         [Parser(Opcode.CMSG_LEARN_TALENT)]
         public static void HandleLearnTalent(Packet packet)
         {
             packet.ReadInt32("TalentID");
             packet.ReadUInt16("Rank?");
+        }
+
+        [Parser(Opcode.SMSG_PLAY_SPELL_VISUAL_KIT)]
+        public static void HandleCastVisualKit(Packet packet)
+        {
+            WowPacketParserModule.V9_0_1_36216.Parsers.SpellHandler.HandleCastVisualKit(packet);
         }
     }
 }

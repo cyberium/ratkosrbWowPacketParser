@@ -128,5 +128,11 @@ namespace WowPacketParserModule.V2_5_1_38835.Parsers
             if (hasAzeriteLevel)
                 packet.ReadInt32("AzeriteLevel");
         }
+
+        [Parser(Opcode.SMSG_ENUM_CHARACTERS_RESULT)]
+        public static void HandleEnumCharactersResult(Packet packet)
+        {
+            WowPacketParserModule.V9_0_1_36216.Parsers.CharacterHandler.HandleEnumCharactersResult(packet);
+        }
     }
 }

@@ -11,73 +11,6 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
 {
     public static class SpellHandler
     {
-        public static void ReadSpellTargetData(SpellCastData dbdata, Packet packet, uint spellID, params object[] idx)
-        {
-            packet.ResetBitReader();
-
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_1_5_29683))
-                packet.ReadBitsE<TargetFlag>("Flags", 26, idx);
-            else
-                packet.ReadBitsE<TargetFlag>("Flags", 25, idx);
-
-            var hasSrcLoc = packet.ReadBit("HasSrcLocation", idx);
-            var hasDstLoc = packet.ReadBit("HasDstLocation", idx);
-            var hasOrient = packet.ReadBit("HasOrientation", idx);
-            var hasMapID = packet.ReadBit("hasMapID ", idx);
-            var nameLength = packet.ReadBits(7);
-
-            dbdata.MainTargetGuid = packet.ReadPackedGuid128("Unit", idx);
-            packet.ReadPackedGuid128("Item", idx);
-
-            if (hasSrcLoc)
-                dbdata.SrcPosition = V6_0_2_19033.Parsers.SpellHandler.ReadLocation(packet, "SrcLocation");
-
-            if (hasDstLoc)
-                dbdata.DstPosition = V6_0_2_19033.Parsers.SpellHandler.ReadLocation(packet, "DstLocation");
-
-            float orientation = 0;
-            if (hasOrient)
-                orientation = packet.ReadSingle("Orientation", idx);
-            dbdata.Orientation = orientation;
-
-            int mapID = -1;
-            if (hasMapID)
-                mapID = (ushort)packet.ReadInt32("MapID", idx);
-
-            if (Settings.UseDBC && dbdata.DstPosition != null && mapID != -1)
-            {
-                for (uint i = 0; i < 32; i++)
-                {
-                    var tuple = Tuple.Create(spellID, i);
-                    if (DBC.SpellEffectStores.ContainsKey(tuple))
-                    {
-                        var effect = DBC.SpellEffectStores[tuple];
-                        if ((Targets)effect.ImplicitTarget[0] == Targets.TARGET_DEST_DB || (Targets)effect.ImplicitTarget[1] == Targets.TARGET_DEST_DB)
-                        {
-                            string effectHelper = $"Spell: { StoreGetters.GetName(StoreNameType.Spell, (int)spellID) } Efffect: { effect.Effect } ({ (SpellEffects)effect.Effect })";
-
-                            var spellTargetPosition = new SpellTargetPosition
-                            {
-                                ID = spellID,
-                                EffectIndex = (byte)i,
-                                PositionX = dbdata.DstPosition.X,
-                                PositionY = dbdata.DstPosition.Y,
-                                PositionZ = dbdata.DstPosition.Z,
-                                Orientation = orientation,
-                                MapID = (ushort)mapID,
-                                EffectHelper = effectHelper
-                            };
-
-                            if (!Storage.SpellTargetPositions.ContainsKey(spellTargetPosition))
-                                Storage.SpellTargetPositions.Add(spellTargetPosition);
-                        }
-                    }
-                }
-            }
-
-            packet.ReadWoWString("Name", nameLength, idx);
-        }
-
         public static void ReadTalentGroupInfo(Packet packet, params object[] idx)
         {
             packet.ReadInt32("SpecId", idx);
@@ -154,7 +87,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             for (var i = 0; i < missStatusCount; ++i)
                 V6_0_2_19033.Parsers.SpellHandler.ReadSpellMissStatus(packet, idx, "MissStatus", i);
 
-            ReadSpellTargetData(dbdata, packet, dbdata.SpellID, idx, "Target");
+            V7_0_3_22248.Parsers.SpellHandler.ReadSpellTargetData(dbdata, packet, dbdata.SpellID, idx, "Target");
 
             for (var i = 0; i < hitTargetsCount; ++i)
             {

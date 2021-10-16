@@ -113,7 +113,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             for (var i = 0; i < missStatusCount; ++i)
                 V6_0_2_19033.Parsers.SpellHandler.ReadSpellMissStatus(packet, idx, "MissStatus", i);
 
-            V8_0_1_27101.Parsers.SpellHandler.ReadSpellTargetData(dbdata, packet, dbdata.SpellID, idx, "Target");
+            V7_0_3_22248.Parsers.SpellHandler.ReadSpellTargetData(dbdata, packet, dbdata.SpellID, idx, "Target");
 
             for (var i = 0; i < hitTargetsCount; ++i)
             {
@@ -292,7 +292,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             ReadSpellCastRequest(packet, "Cast");
         }
 
-        [Parser(Opcode.SMSG_SPELL_CHANNEL_START, ClientVersionBuild.V7_2_0_23826)]
+        [Parser(Opcode.SMSG_SPELL_CHANNEL_START)]
         public static void HandleSpellChannelStart(Packet packet)
         {
             SpellChannelStart channel = new SpellChannelStart();

@@ -839,19 +839,21 @@ namespace WowPacketParser.Misc
             }
         }
 
-        public static ClientVersionBuild FallbackVersionDefiningBuild(ClientVersionBuild definingbuild)
+        public static ClientVersionBuild FallbackVersionDefiningBuild(ClientVersionBuild definingbuild, ClientVersionBuild originalDefiningBuild)
         {
             switch (definingbuild)
             {
                 case ClientVersionBuild.V1_13_2_31446:
                     return ClientVersionBuild.V8_0_1_27101;
                 case ClientVersionBuild.V2_5_1_38707:
-                    return ClientVersionBuild.V1_13_2_31446;
+                    return ClientVersionBuild.V9_0_1_36216;
                 case ClientVersionBuild.V7_0_3_22248:
                     return ClientVersionBuild.V6_0_2_19033;
                 case ClientVersionBuild.V8_0_1_27101:
                     return ClientVersionBuild.V7_0_3_22248;
                 case ClientVersionBuild.V9_0_1_36216:
+                    if (IsClassicClientVersionBuild(originalDefiningBuild))
+                        return ClientVersionBuild.V1_13_2_31446;
                     return ClientVersionBuild.V8_0_1_27101;
                 default:
                     return ClientVersionBuild.Zero;
@@ -866,7 +868,7 @@ namespace WowPacketParser.Misc
 
         private static ClientType GetExpansion(ClientVersionBuild build)
         {
-            if (IsClassicClientVersionBuild(build))
+            if (IsClassicVanillaClientVersionBuild(build))
                 return ClientType.Classic;
             if (IsBurningCrusadeClassicClientVersionBuild(build))
                 return ClientType.BurningCrusadeClassic;
@@ -914,7 +916,7 @@ namespace WowPacketParser.Misc
                 Handler.ResetHandlers();
                 UpdateFields.ResetUFDictionaries();
 
-                ClientVersionBuild tmpFallback = FallbackVersionDefiningBuild(VersionDefiningBuild);
+                ClientVersionBuild tmpFallback = FallbackVersionDefiningBuild(VersionDefiningBuild, VersionDefiningBuild);
 
                 while (tmpFallback != ClientVersionBuild.Zero)
                 {
@@ -928,7 +930,7 @@ namespace WowPacketParser.Misc
                     catch (FileNotFoundException)
                     {
                     }
-                    tmpFallback = FallbackVersionDefiningBuild(tmpFallback);
+                    tmpFallback = FallbackVersionDefiningBuild(tmpFallback, VersionDefiningBuild);
                 }
 
                 try
@@ -990,6 +992,11 @@ namespace WowPacketParser.Misc
         }
 
         public static bool IsClassicClientVersionBuild(ClientVersionBuild build)
+        {
+            return IsClassicVanillaClientVersionBuild(build) || IsBurningCrusadeClassicClientVersionBuild(build);
+        }
+
+        public static bool IsClassicVanillaClientVersionBuild(ClientVersionBuild build)
         {
             switch (build)
             {

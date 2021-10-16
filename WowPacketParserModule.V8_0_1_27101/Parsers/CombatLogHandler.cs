@@ -113,7 +113,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
         }
 
         [Parser(Opcode.SMSG_SPELL_PERIODIC_AURA_LOG)]
-        public static void HandleSpellPeriodicAuraLog720(Packet packet)
+        public static void HandleSpellPeriodicAuraLog(Packet packet)
         {
             packet.ReadPackedGuid128("TargetGUID");
             packet.ReadPackedGuid128("CasterGUID");
