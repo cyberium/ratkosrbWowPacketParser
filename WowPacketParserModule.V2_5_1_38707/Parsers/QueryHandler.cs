@@ -38,7 +38,8 @@ namespace WowPacketParserModule.V2_5_1_38835.Parsers
                 packet.ReadByteE<Gender>("Gender");
                 packet.ReadByteE<Class>("Class");
                 packet.ReadByte("Level");
-                packet.ReadByte("UnkBCC");
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_5_2_39926))
+                    packet.ReadByte("UnkBCC");
 
                 string name = packet.ReadWoWString("Name", nameLen);
 

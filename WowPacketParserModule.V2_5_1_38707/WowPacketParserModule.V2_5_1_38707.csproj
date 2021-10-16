@@ -52,11 +52,11 @@
     <Compile Include="Parsers\AuthenticationHandler.cs" />
     <Compile Include="Parsers\BattlePetHandler.cs" />
     <Compile Include="Parsers\CharacterHandler.cs" />
-    <Compile Include="Parsers\ChatHandler.cs" />
     <Compile Include="Parsers\CombatLogHandler.cs" />
     <Compile Include="Parsers\GuildHandler.cs" />
     <Compile Include="Parsers\HotfixHandler.cs" />
     <Compile Include="Parsers\ItemHandler.cs" />
+    <Compile Include="Parsers\LootHandler.cs" />
     <Compile Include="Parsers\MovementHandler.cs" />
     <Compile Include="Parsers\NpcHandler.cs" />
     <Compile Include="Parsers\PetHandler.cs" />

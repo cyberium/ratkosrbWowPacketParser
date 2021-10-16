@@ -145,23 +145,30 @@ namespace WowPacketParserModule.V2_5_1_38835.Parsers
             }
         }
 
-        [Parser(Opcode.SMSG_AVAILABLE_HOTFIXES)]
-        public static void HandleAvailableHotfixes(Packet packet)
+        [Parser(Opcode.SMSG_AVAILABLE_HOTFIXES, ClientVersionBuild.V2_5_1_38598, ClientVersionBuild.V2_5_2_39926)]
+        public static void HandleAvailableHotfixes251(Packet packet)
         {
-            packet.ReadUInt32("VirtualRealmAddress");
+            V9_0_1_36216.Parsers.HotfixHandler.HandleAvailableHotfixes905(packet);
+        }
 
-            var uniqueIDCount = packet.ReadUInt32("UniqueIDCount");
-            for (var i = 0; i < uniqueIDCount; ++i)
-            {
-                packet.ReadInt32("PushID", i);
-                packet.ReadUInt32("UniqueID", i);
-            }
+        [Parser(Opcode.SMSG_AVAILABLE_HOTFIXES, ClientVersionBuild.V2_5_2_39926)]
+        public static void HandleAvailableHotfixes252(Packet packet)
+        {
+            V1_13_2_31446.Parsers.HotfixHandler.HandleHotfixList(packet);
         }
 
         [HasSniffData]
-        [Parser(Opcode.SMSG_HOTFIX_MESSAGE)]
-        [Parser(Opcode.SMSG_HOTFIX_CONNECT)]
-        public static void HandleHotixData815(Packet packet)
+        [Parser(Opcode.SMSG_HOTFIX_MESSAGE, ClientVersionBuild.V2_5_1_38598, ClientVersionBuild.V2_5_2_39926)]
+        [Parser(Opcode.SMSG_HOTFIX_CONNECT, ClientVersionBuild.V2_5_1_38598, ClientVersionBuild.V2_5_2_39926)]
+        public static void HandleHotixData251(Packet packet)
+        {
+            V9_0_1_36216.Parsers.HotfixHandler.HandleHotixData815(packet);
+        }
+
+        [HasSniffData]
+        [Parser(Opcode.SMSG_HOTFIX_MESSAGE, ClientVersionBuild.V2_5_2_39926)]
+        [Parser(Opcode.SMSG_HOTFIX_CONNECT, ClientVersionBuild.V2_5_2_39926)]
+        public static void HandleHotixData252(Packet packet)
         {
             var hotfixRecords = new List<HotfixRecord>();
             var hotfixCount = packet.ReadUInt32("HotfixCount");
