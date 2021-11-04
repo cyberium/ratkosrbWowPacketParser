@@ -337,7 +337,7 @@ namespace WowPacketParser.Misc
             return dict;
         }
 
-        public static List<T> GetAttributes<T>(FieldInfo field) where T : Attribute
+        public static List<T> GetAttributes<T>(MemberInfo field) where T : Attribute
         {
             var list = new List<T>();
 
