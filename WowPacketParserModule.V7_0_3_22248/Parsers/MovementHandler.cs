@@ -18,6 +18,9 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
     {
         public static WowGuid ReadMovementStats(Packet packet, params object[] idx)
         {
+            if (ClientVersion.IsClassicVersionWithUpdatedMovementInfo(ClientVersion.Build))
+                return V1_14_1_40487.Parsers.MovementHandler.ReadMovementStats(packet, idx);
+
             PlayerMovement moveData = new PlayerMovement();
             moveData.MoveInfo = new MovementInfo();
             moveData.Guid = packet.ReadPackedGuid128("MoverGUID", idx);

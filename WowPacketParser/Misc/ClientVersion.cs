@@ -1104,6 +1104,24 @@ namespace WowPacketParser.Misc
             }
         }
 
+        public static bool IsClassicVersionWithUpdatedMovementInfo(ClientVersionBuild build)
+        {
+            switch (build)
+            {
+                case ClientVersionBuild.V1_14_1_40487:
+                case ClientVersionBuild.V1_14_1_40594:
+                case ClientVersionBuild.V1_14_1_40666:
+                case ClientVersionBuild.V1_14_1_40688:
+                case ClientVersionBuild.V1_14_1_40800:
+                case ClientVersionBuild.V1_14_1_40818:
+                {
+                    return true;
+                }
+                default:
+                    return false;
+            }
+        }
+
         public static bool IsBurningCrusadeClassicClientVersionBuild(ClientVersionBuild build)
         {
             switch (build)
