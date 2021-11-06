@@ -400,9 +400,12 @@ namespace WowPacketParser.Parsing.Parsers
             CinematicBegin cinematic = new CinematicBegin
             {
                 UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time),
-                CinematicId = packet.ReadUInt32("Sequence Id")
+                CinematicId = packet.ReadUInt32("CinematicID")
             };
             Storage.CinematicBeginTimes.Add(cinematic);
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_1_5_40772))
+                packet.ReadPackedGuid128("ConversationGuid");
         }
 
         [Parser(Opcode.CMSG_COMPLETE_CINEMATIC)]

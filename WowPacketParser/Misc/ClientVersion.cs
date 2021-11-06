@@ -390,6 +390,10 @@ namespace WowPacketParser.Misc
 
         public static ClientVersionBuild Build { get; private set; }
 
+        public static byte ExpansionVersion { get; private set; }
+        public static byte MajorVersion { get; private set; }
+        public static byte MinorVersion { get; private set; }
+
         // Returns the build that will define opcodes/updatefields/handlers for given Build
         public static ClientVersionBuild GetVersionDefiningBuild(ClientVersionBuild build)
         {
@@ -967,6 +971,39 @@ namespace WowPacketParser.Misc
             return ClientBuilds.Last(a => a.Value <= time).Key;
         }
 
+        public static byte GetExpansionVersion()
+        {
+            string str = VersionString;
+            str = str.Replace("V", "");
+            str = str.Substring(0, str.IndexOf("_"));
+            return (byte)UInt32.Parse(str);
+        }
+        private static byte GetMajorPatchVersion()
+        {
+            string str = VersionString;
+            str = str.Substring(str.IndexOf('_') + 1);
+            str = str.Substring(0, str.IndexOf("_"));
+            return (byte)UInt32.Parse(str);
+        }
+        private static byte GetMinorPatchVersion()
+        {
+            string str = VersionString;
+            str = str.Substring(str.IndexOf('_') + 1);
+            str = str.Substring(str.IndexOf('_') + 1);
+            str = str.Substring(0, str.IndexOf("_"));
+
+            // Remove letters after version (3.3.5a)
+            string number = "";
+            foreach (char chr in str)
+            {
+                if (!Char.IsDigit(chr))
+                    break;
+                number += chr;
+            }
+
+            return (byte)UInt32.Parse(number);
+        }
+
         public static void SetVersion(ClientVersionBuild version)
         {
             if (Build == version)
@@ -974,6 +1011,9 @@ namespace WowPacketParser.Misc
 
             ClientVersionBuild prevBuild = Build;
             Build = version;
+            ExpansionVersion = GetExpansionVersion();
+            MajorVersion = GetMajorPatchVersion();
+            MinorVersion = GetMinorPatchVersion();
 
             Opcodes.InitializeOpcodeDictionary();
 
@@ -1056,6 +1096,17 @@ namespace WowPacketParser.Misc
         public static bool IsUndefined()
         {
             return Build == ClientVersionBuild.Zero;
+        }
+
+        public static bool AddedInVersion(byte retailExpansion, byte retailMajor, byte retailMinor, byte classicExpansion, byte classicMajor, byte classicMinor, byte tbcExpansion, byte tbcMajor, byte tbcMinor)
+        {
+            if (IsClassicVanillaClientVersionBuild(Build) || IsClassicSeasonOfMasteryClientVersionBuild(Build))
+                return classicExpansion >= ExpansionVersion && classicMajor >= MajorVersion && classicMinor >= MinorVersion;
+
+            if (IsBurningCrusadeClassicClientVersionBuild(Build))
+                return tbcExpansion >= ExpansionVersion && tbcMajor >= MajorVersion && tbcMinor >= MinorVersion;
+
+            return retailExpansion >= ExpansionVersion && retailMajor >= MajorVersion && retailMinor >= MinorVersion;
         }
 
         public static bool IsClassicClientVersionBuild(ClientVersionBuild build)
@@ -1360,11 +1411,33 @@ namespace WowPacketParser.Misc
                     return 7;
                 if (ClientVersion.RemovedInVersion(ClientVersionBuild.V6_0_2_19033))
                     return 5;
-                if (ClientVersion.RemovedInVersion(ClientVersionBuild.V9_1_0_40120)) // should be 9.1.5
+                if (ClientVersion.RemovedInVersion(ClientVersionBuild.V9_1_5_40772))
                     return 6;
 
                 return 7;
             }
+        }
+
+        public static int GetAccountDataTimesCount()
+        {
+            if (IsClassicSeasonOfMasteryClientVersionBuild(Build))
+            {
+                if (AddedInVersion(ClientVersionBuild.V1_14_1_40688))
+                    return 13;
+                else
+                    return 10;
+            }
+            else if (IsBurningCrusadeClassicClientVersionBuild(Build))
+            {
+
+            }
+            else
+            {
+                if (AddedInVersion(ClientVersionBuild.V9_1_5_40772))
+                    return 12;
+            }
+
+            return 8;
         }
 
         public static bool HasAurasInUpdateFields()

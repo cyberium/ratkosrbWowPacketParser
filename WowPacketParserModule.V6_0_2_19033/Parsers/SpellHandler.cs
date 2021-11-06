@@ -1143,5 +1143,24 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         {
             packet.ReadPackedGuid128("TargetGUID");
         }
+
+        [Parser(Opcode.CMSG_UPDATE_MISSILE_TRAJECTORY)]
+        public static void HandleUpdateMissileTrajectory(Packet packet)
+        {
+            packet.ReadPackedGuid128("Guid");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_1_5_40772))
+                packet.ReadPackedGuid128("CastID");
+            packet.ReadUInt16("MoveMsgID");
+            packet.ReadInt32("SpellID");
+            packet.ReadSingle("Pitch");
+            packet.ReadSingle("Speed");
+            packet.ReadVector3("FirePos");
+            packet.ReadVector3("ImpactPos");
+
+            packet.ResetBitReader();
+            var hasStatus = packet.ReadBit("HasStatus");
+            if (hasStatus)
+                MovementHandler.ReadMovementStats(packet, "Status");
+        }
     }
 }

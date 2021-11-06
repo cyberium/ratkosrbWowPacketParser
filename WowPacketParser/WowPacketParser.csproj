@@ -241,6 +241,7 @@
     <Compile Include="Enums\LootError.cs" />
     <Compile Include="Enums\QuestFlagsEx.cs" />
     <Compile Include="Enums\QuestFlagsEx2.cs" />
+    <Compile Include="Enums\QuestPushReason.cs" />
     <Compile Include="Enums\QuestRequirementType.cs" />
     <Compile Include="Enums\CreatureFamily.cs" />
     <Compile Include="Enums\CreatureRank.cs" />
@@ -674,9 +675,11 @@
     <Compile Include="Store\Objects\FactionStandingUpdate.cs" />
     <Compile Include="Store\Objects\Guilds.cs" />
     <Compile Include="Store\Objects\ItemInstance.cs" />
+    <Compile Include="Store\Objects\LocalesQuestObjective.cs" />
     <Compile Include="Store\Objects\LootTemplate.cs" />
     <Compile Include="Store\Objects\MailTemplate.cs" />
     <Compile Include="Store\Objects\ObjectCreate.cs" />
+    <Compile Include="Store\Objects\PlayerGuidLookupData.cs" />
     <Compile Include="Store\Objects\SceneObject.cs" />
     <Compile Include="Store\Objects\Sounds.cs" />
     <Compile Include="Store\Objects\SpellCastData.cs" />
