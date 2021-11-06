@@ -129,6 +129,9 @@ namespace WowPacketParser.SQL
                               (ClientVersion.Expansion == ClientType.Classic &&
                                Settings.TargetedDbExpansion == TargetedDbExpansion.Classic)
                                ||
+                              (ClientVersion.Expansion == ClientType.Classic &&
+                              (Settings.TargetedDbExpansion == TargetedDbExpansion.Classic || Settings.TargetedDbExpansion == TargetedDbExpansion.BurningCrusadeClassic))
+                               ||
                               (ClientVersion.Expansion == ClientType.BurningCrusadeClassic &&
                                Settings.TargetedDbExpansion == TargetedDbExpansion.BurningCrusadeClassic)))
                         {

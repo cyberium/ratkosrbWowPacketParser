@@ -657,6 +657,7 @@ namespace WowPacketParser.SQL.Builders
             // Update fields system changed in BfA.
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_1_0_28724) &&
                 ClientVersion.Expansion != ClientType.Classic &&
+                ClientVersion.Expansion != ClientType.ClassicSoM &&
                 ClientVersion.Expansion != ClientType.BurningCrusadeClassic)
                 return string.Empty;
 

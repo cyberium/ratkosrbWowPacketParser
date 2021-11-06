@@ -821,10 +821,24 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V2_5_2_40203:
                 case ClientVersionBuild.V2_5_2_40260:
                 case ClientVersionBuild.V2_5_2_40422:
+                case ClientVersionBuild.V2_5_2_40617:
+                case ClientVersionBuild.V2_5_2_40892:
+                case ClientVersionBuild.V1_14_0_39802:
+                case ClientVersionBuild.V1_14_0_39958:
+                case ClientVersionBuild.V1_14_0_40140:
+                case ClientVersionBuild.V1_14_0_40179:
+                case ClientVersionBuild.V1_14_0_40237:
+                case ClientVersionBuild.V1_14_0_40347:
                 case ClientVersionBuild.V1_14_0_40441:
-                case ClientVersionBuild.V1_14_1_40688:
-                case ClientVersionBuild.V1_14_1_40818:
+                case ClientVersionBuild.V1_14_0_40618:
                     return ClientVersionBuild.V2_5_1_38707;
+                case ClientVersionBuild.V1_14_1_40487:
+                case ClientVersionBuild.V1_14_1_40594:
+                case ClientVersionBuild.V1_14_1_40666:
+                case ClientVersionBuild.V1_14_1_40688:
+                case ClientVersionBuild.V1_14_1_40800:
+                case ClientVersionBuild.V1_14_1_40818:
+                    return ClientVersionBuild.V1_14_1_40487;
                 case ClientVersionBuild.BattleNetV37165:
                     return ClientVersionBuild.BattleNetV37165;
                 case ClientVersionBuild.Zero:
@@ -848,6 +862,8 @@ namespace WowPacketParser.Misc
             {
                 case ClientVersionBuild.V1_13_2_31446:
                     return ClientVersionBuild.V8_0_1_27101;
+                case ClientVersionBuild.V1_14_1_40487:
+                    return ClientVersionBuild.V9_0_1_36216;
                 case ClientVersionBuild.V2_5_1_38707:
                     return ClientVersionBuild.V9_0_1_36216;
                 case ClientVersionBuild.V7_0_3_22248:
@@ -873,6 +889,8 @@ namespace WowPacketParser.Misc
         {
             if (IsClassicVanillaClientVersionBuild(build))
                 return ClientType.Classic;
+            if (IsClassicSeasonOfMasteryClientVersionBuild(build))
+                return ClientType.ClassicSoM;
             if (IsBurningCrusadeClassicClientVersionBuild(build))
                 return ClientType.BurningCrusadeClassic;
             if (build >= ClientVersionBuild.V9_0_1_36216)
@@ -996,7 +1014,9 @@ namespace WowPacketParser.Misc
 
         public static bool IsClassicClientVersionBuild(ClientVersionBuild build)
         {
-            return IsClassicVanillaClientVersionBuild(build) || IsBurningCrusadeClassicClientVersionBuild(build);
+            return IsClassicVanillaClientVersionBuild(build) ||
+                   IsClassicSeasonOfMasteryClientVersionBuild(build) ||
+                   IsBurningCrusadeClassicClientVersionBuild(build);
         }
 
         public static bool IsClassicVanillaClientVersionBuild(ClientVersionBuild build)
@@ -1058,6 +1078,32 @@ namespace WowPacketParser.Misc
             }
         }
 
+        public static bool IsClassicSeasonOfMasteryClientVersionBuild(ClientVersionBuild build)
+        {
+            switch (build)
+            {
+                case ClientVersionBuild.V1_14_0_39802:
+                case ClientVersionBuild.V1_14_0_39958:
+                case ClientVersionBuild.V1_14_0_40140:
+                case ClientVersionBuild.V1_14_0_40179:
+                case ClientVersionBuild.V1_14_0_40237:
+                case ClientVersionBuild.V1_14_0_40347:
+                case ClientVersionBuild.V1_14_0_40441:
+                case ClientVersionBuild.V1_14_0_40618:
+                case ClientVersionBuild.V1_14_1_40487:
+                case ClientVersionBuild.V1_14_1_40594:
+                case ClientVersionBuild.V1_14_1_40666:
+                case ClientVersionBuild.V1_14_1_40688:
+                case ClientVersionBuild.V1_14_1_40800:
+                case ClientVersionBuild.V1_14_1_40818:
+                {
+                    return true;
+                }
+                default:
+                    return false;
+            }
+        }
+
         public static bool IsBurningCrusadeClassicClientVersionBuild(ClientVersionBuild build)
         {
             switch (build)
@@ -1083,9 +1129,8 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V2_5_2_40203:
                 case ClientVersionBuild.V2_5_2_40260:
                 case ClientVersionBuild.V2_5_2_40422:
-                case ClientVersionBuild.V1_14_0_40441:
-                case ClientVersionBuild.V1_14_1_40688:
-                case ClientVersionBuild.V1_14_1_40818:
+                case ClientVersionBuild.V2_5_2_40617:
+                case ClientVersionBuild.V2_5_2_40892:
                 {
                     return true;
                 }

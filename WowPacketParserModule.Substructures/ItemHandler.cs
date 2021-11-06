@@ -145,9 +145,12 @@ namespace WowPacketParserModule.Substructures
 
         public static ItemInstance ReadItemInstance(Packet packet, params object[] indexes)
         {
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_5_1_38835) && ClientVersion.IsBurningCrusadeClassicClientVersionBuild(ClientVersion.Build))
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_5_1_38835) && 
+               (ClientVersion.IsBurningCrusadeClassicClientVersionBuild(ClientVersion.Build) ||
+                ClientVersion.IsClassicSeasonOfMasteryClientVersionBuild(ClientVersion.Build)))
                 return ReadItemInstance251(packet, indexes);
-            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V8_1_5_29683) || ClientVersion.IsClassicVanillaClientVersionBuild(ClientVersion.Build))
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V8_1_5_29683) ||
+                ClientVersion.IsClassicVanillaClientVersionBuild(ClientVersion.Build))
                 return ReadItemInstance602(packet, indexes);
             if (ClientVersion.AddedInVersion(ClientType.Shadowlands))
                 return ReadItemInstance901(packet, indexes);
