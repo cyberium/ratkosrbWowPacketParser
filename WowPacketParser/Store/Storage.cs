@@ -14,6 +14,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<SniffData> SniffData = new DataBag<SniffData>(Settings.SqlTables.SniffData || Settings.SqlTables.SniffDataOpcodes);
 
         /* Key: Guid */
+        public static uint CurrentTaxiNode = 0;
         public static WowGuid CurrentActivePlayer = null;
         public static void SetCurrentActivePlayer(WowGuid guid, DateTime time)
         {
@@ -1128,6 +1129,9 @@ namespace WowPacketParser.Store
 
         public static void ClearContainers()
         {
+            CurrentTaxiNode = 0;
+            CurrentActivePlayer = null;
+
             SniffData.Clear();
 
             Objects.Clear();

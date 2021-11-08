@@ -384,3 +384,6 @@ COMMENT='cooldowns that were already present when the creature became charmed\r\
 COLLATE='utf8_unicode_ci'
 ENGINE=InnoDB
 ;
+
+ALTER TABLE `sniff_data`
+	CHANGE COLUMN `object_type` `object_type` ENUM('None','Spell','Map','LFGDungeon','Battleground','Unit','GameObject','CreatureDifficulty','Item','Quest','Opcode','PageText','NpcText','BroadcastText','Gossip','Zone','Area','AreaTrigger','Phase','Player','Achievement','CreatureFamily','Criteria','Currency','Difficulty','Faction','QuestGreeting','QuestObjective','Sound','Taxi') NOT NULL DEFAULT 'None' AFTER `sniff_id`;

@@ -33,6 +33,7 @@ namespace WowPacketParser.Enums
         QuestGreeting       = 27,
         QuestObjective      = 28,
         Sound               = 29,
+        Taxi                = 30,
     }
 
     public static class StoreName

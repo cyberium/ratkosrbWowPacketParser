@@ -1,5 +1,6 @@
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
+using WowPacketParser.Store;
 
 namespace WowPacketParser.Parsing.Parsers
 {
@@ -27,7 +28,7 @@ namespace WowPacketParser.Parsing.Parsers
             if (u != 0)
             {
                 packet.ReadGuid("GUID");
-                packet.ReadUInt32("Node ID");
+                Storage.CurrentTaxiNode = packet.ReadUInt32("Node ID");
             }
             var i = 0;
             while (packet.CanRead())
@@ -44,7 +45,7 @@ namespace WowPacketParser.Parsing.Parsers
             if (u != 0)
             {
                 packet.ReadGuid("GUID");
-                packet.ReadUInt32("Node ID");
+                Storage.CurrentTaxiNode = packet.ReadUInt32("Node ID");
             }
 
             var count = packet.ReadInt32("Count");
@@ -55,12 +56,14 @@ namespace WowPacketParser.Parsing.Parsers
             NpcHandler.TempGossipOptionPOI.Reset();
         }
 
+        [HasSniffData]
         [Parser(Opcode.CMSG_ACTIVATE_TAXI)]
         public static void HandleActivateTaxi(Packet packet)
         {
-            packet.ReadGuid("GUID");
-            packet.ReadUInt32("Node 1 ID");
-            packet.ReadUInt32("Node 2 ID");
+            WowGuid guid = packet.ReadGuid("GUID");
+            uint startNode = packet.ReadUInt32("StartNode");
+            uint destNode = packet.ReadUInt32("DestNode");
+            packet.AddSniffData(StoreNameType.Taxi, (int)guid.GetEntry(), startNode.ToString() + "-" + destNode.ToString());
         }
 
         [Parser(Opcode.SMSG_ACTIVATE_TAXI_REPLY)]

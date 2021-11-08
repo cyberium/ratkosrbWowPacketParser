@@ -333,17 +333,19 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             packet.ReadBitsE<TaxiError>("Result", 4);
         }
 
+        [HasSniffData]
         [Parser(Opcode.CMSG_ACTIVATE_TAXI)]
         public static void HandleActivateTaxi(Packet packet)
         {
-            packet.ReadUInt32("Node 2 ID");
-            packet.ReadUInt32("Node 1y ID");
+            uint destNode = packet.ReadUInt32("DestNode");
+            uint startNode = packet.ReadUInt32("StartNode");
             var guid = new byte[8];
             packet.StartBitStream(guid, 4, 0, 1, 2, 5, 6, 7, 3);
             packet.ReadXORBytes(guid, 1, 0, 6, 5, 2, 4, 3, 7);
-            packet.WriteGuid("Guid", guid);
-
+            WowGuid npcGuid = packet.WriteGuid("Guid", guid);
+            packet.AddSniffData(StoreNameType.Taxi, (int)npcGuid.GetEntry(), startNode.ToString() + "-" + destNode.ToString());
         }
+
         [Parser(Opcode.CMSG_TAXI_QUERY_AVAILABLE_NODES)]
         public static void HandleTaxiStatusQuery(Packet packet)
         {
@@ -359,7 +361,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             var guid = packet.StartBitStream(3, 0, 4, 2, 1, 7, 6, 5);
             var count = packet.ReadBits("Count", 24);
             packet.ParseBitStream(guid, 0, 3);
-            packet.ReadUInt32("Current Node ID");
+            Storage.CurrentTaxiNode = packet.ReadUInt32("Current Node ID");
             packet.ParseBitStream(guid, 5, 2, 6, 1, 7, 4);
 
             for (int i = 0; i < count; ++i)

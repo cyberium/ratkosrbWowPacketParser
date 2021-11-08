@@ -1,25 +1,31 @@
 ﻿using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
 using CoreParsers = WowPacketParser.Parsing.Parsers;
 
 namespace WowPacketParserModule.V6_0_2_19033.Parsers
 {
     public static class TaxiHandler
     {
+        [HasSniffData]
         [Parser(Opcode.CMSG_ACTIVATE_TAXI, ClientVersionBuild.V6_0_2_19033, ClientVersionBuild.V6_1_0_19678)]
         public static void HandleActivateTaxi60x(Packet packet)
         {
-            packet.ReadPackedGuid128("Vendor");
-            packet.ReadUInt32("StartNode");
-            packet.ReadUInt32("DestNode");
+            WowGuid guid = packet.ReadPackedGuid128("GUID");
+            uint startNode = packet.ReadUInt32("StartNode");
+            uint destNode = packet.ReadUInt32("DestNode");
+            packet.AddSniffData(StoreNameType.Taxi, (int)guid.GetEntry(), startNode.ToString() + "-" + destNode.ToString());
         }
 
+        [HasSniffData]
         [Parser(Opcode.CMSG_ACTIVATE_TAXI, ClientVersionBuild.V6_1_0_19678)]
         public static void HandleActivateTaxi61x(Packet packet)
         {
-            packet.ReadPackedGuid128("Vendor");
-            packet.ReadUInt32("Node");
+            WowGuid guid = packet.ReadPackedGuid128("GUID");
+            uint startNode = Storage.CurrentTaxiNode;
+            uint destNode = packet.ReadUInt32("DestNode");
+            packet.AddSniffData(StoreNameType.Taxi, (int)guid.GetEntry(), startNode.ToString() + "-" + destNode.ToString());
         }
 
         [Parser(Opcode.CMSG_ACTIVATE_TAXI_EXPRESS)]
@@ -47,7 +53,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             if (bit56)
             {
                 packet.ReadPackedGuid128("UnitGUID");
-                packet.ReadUInt32("CurrentNode");
+                Storage.CurrentTaxiNode = packet.ReadUInt32("CurrentNode");
             }
 
             for (int i = 0; i < int16; ++i)
