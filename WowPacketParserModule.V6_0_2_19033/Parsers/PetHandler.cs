@@ -87,6 +87,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             ReadPetFlags(packet, "PetModeAndOrders");
 
             CreaturePetActions petActions = new CreaturePetActions();
+            petActions.CasterGUID = petGuid;
             petActions.CasterID = petGuid.GetEntry();
             const int maxCreatureSpells = 10;
             for (var i = 0; i < maxCreatureSpells; i++) // Read pet / vehicle spell ids

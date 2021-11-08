@@ -384,5 +384,7 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("slot", 10)]
         public uint[] SpellID = new uint[10];
+
+        public WowGuid CasterGUID;
     }
 }

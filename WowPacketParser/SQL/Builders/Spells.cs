@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
@@ -264,10 +265,20 @@ namespace WowPacketParser.SQL.Builders
 
             string sql = "";
 
+            List<WowGuid> exportedGuids = new List<WowGuid>();
             foreach (var row in Storage.CreaturePetActions)
             {
+                if (row.Item1.CasterGUID != null)
+                {
+                    if (exportedGuids.Contains(row.Item1.CasterGUID))
+                        continue;
+
+                    exportedGuids.Add(row.Item1.CasterGUID);
+                }
+
                 if (!string.IsNullOrEmpty(sql))
                     sql += ",\n";
+
                 sql += "(" + row.Item1.CasterID.ToString();
                 foreach (var spellId in row.Item1.SpellID)
                     sql += ", " + spellId.ToString();
