@@ -14,11 +14,11 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
         public static void ReadGossipQuestTextData(Packet packet, params object[] idx)
         {
             packet.ReadInt32("QuestID", idx);
-            if (ClientVersion.AddedInVersion(ClientType.Shadowlands) && !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+            if (ClientVersion.AddedInVersion(ClientType.Shadowlands))
                 packet.ReadInt32("ContentTuningID", idx);
 
             packet.ReadInt32("QuestType", idx);
-            if (ClientVersion.RemovedInVersion(ClientType.Shadowlands))
+            if (ClientVersion.RemovedInVersion(ClientType.Shadowlands) || ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
             {
                 packet.ReadInt32("QuestLevel", idx);
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V7_3_5_25848))
