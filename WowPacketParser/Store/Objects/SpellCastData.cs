@@ -354,6 +354,28 @@ namespace WowPacketParser.Store.Objects
         public float? ModRate;
     }
 
+    [DBTableName("creature_pet_remaining_cooldown")]
+    public sealed class CreaturePetRemainingCooldown : IDataModel
+    {
+        [DBFieldName("entry", true)]
+        public uint? CasterID;
+
+        [DBFieldName("spell_id", true)]
+        public uint? SpellID;
+
+        [DBFieldName("cooldown", true)]
+        public uint? Cooldown;
+
+        [DBFieldName("category", true)]
+        public uint? Category;
+
+        [DBFieldName("category_cooldown", true)]
+        public uint? CategoryCooldown;
+
+        [DBFieldName("mod_rate")]
+        public float? ModRate;
+    }
+
     [DBTableName("creature_pet_actions")]
     public sealed class CreaturePetActions : IDataModel
     {

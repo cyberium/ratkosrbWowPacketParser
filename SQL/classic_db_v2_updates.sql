@@ -371,3 +371,16 @@ ENGINE=InnoDB
 ALTER TABLE `creature_threat_remove`
 	DROP PRIMARY KEY,
 	ADD PRIMARY KEY (`unixtimems`, `guid`, `target_guid`, `target_id`, `target_type`);
+
+CREATE TABLE `creature_pet_remaining_cooldown` (
+	`entry` INT UNSIGNED NOT NULL DEFAULT '0',
+	`spell_id` INT UNSIGNED NOT NULL DEFAULT '0',
+	`cooldown` INT UNSIGNED NOT NULL DEFAULT '0',
+	`category` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+	`category_cooldown` INT UNSIGNED NOT NULL DEFAULT '0',
+	`mod_rate` FLOAT UNSIGNED NOT NULL DEFAULT '1'
+)
+COMMENT='cooldowns that were already present when the creature became charmed\r\nfrom SMSG_PET_SPELLS_MESSAGE'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;

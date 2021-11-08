@@ -20,13 +20,13 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.AddValue("Flag", flag, idx);
         }
 
-        public static void ReadPetSpellCooldownData(Packet packet, params object[] idx)
+        public static void ReadPetSpellCooldownData(Packet packet, CreaturePetRemainingCooldown cooldown, params object[] idx)
         {
-            packet.ReadInt32("SpellID", idx);
-            packet.ReadInt32("Duration", idx);
-            packet.ReadInt32("CategoryDuration", idx);
-            packet.ReadSingle("ModRate", idx);
-            packet.ReadInt16("Category", idx);
+            cooldown.SpellID = (uint)packet.ReadInt32("SpellID", idx);
+            cooldown.Cooldown = (uint)packet.ReadInt32("Duration", idx);
+            cooldown.CategoryCooldown = (uint)packet.ReadInt32("CategoryDuration", idx);
+            cooldown.ModRate = (uint)packet.ReadSingle("ModRate", idx);
+            cooldown.Category = (uint)packet.ReadInt16("Category", idx);
         }
 
         public static void ReadPetSpellHistoryData(Packet packet, params object[] idx)
@@ -62,12 +62,21 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             for (int i = 0; i < actionsCount; i++)
                 V6_0_2_19033.Parsers.PetHandler.ReadPetAction(packet, i, "Actions");
 
-            for (int i = 0; i < cooldownsCount; i++)
+            if (cooldownsCount > 0)
             {
-                if (ClientVersion.AddedInVersion(ClientVersionBuild.V7_1_0_22900))
-                    ReadPetSpellCooldownData(packet, i, "PetSpellCooldown");
-                else
-                    V6_0_2_19033.Parsers.PetHandler.ReadPetSpellCooldownData(packet, i, "PetSpellCooldown");
+                CreaturePetRemainingCooldown cooldown = new CreaturePetRemainingCooldown();
+                cooldown.CasterID = petGuid.GetEntry();
+
+                for (int i = 0; i < cooldownsCount; i++)
+                {
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V7_1_0_22900))
+                        ReadPetSpellCooldownData(packet, cooldown, i, "PetSpellCooldown");
+                    else
+                        V6_0_2_19033.Parsers.PetHandler.ReadPetSpellCooldownData(packet, cooldown, i, "PetSpellCooldown");
+                }
+
+                if (petGuid.GetHighType() == HighGuidType.Creature)
+                    Storage.CreaturePetRemainingCooldown.Add(cooldown);
             }
 
             for (int i = 0; i < spellHistoryCount; i++)

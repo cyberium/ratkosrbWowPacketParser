@@ -203,6 +203,7 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_loot = Conf.GetBoolean("creature_loot", false);
             public static readonly bool creature_pet_actions = Conf.GetBoolean("creature_pet_actions", false);
             public static readonly bool creature_pet_cooldown = Conf.GetBoolean("creature_pet_cooldown", false);
+            public static readonly bool creature_pet_remaining_cooldown = Conf.GetBoolean("creature_pet_remaining_cooldown", false);
             public static readonly bool creature_stats = Conf.GetBoolean("creature_stats", false);
             public static readonly bool creature_template = Conf.GetBoolean("creature_template", false);
             public static readonly bool creature_template_addon = Conf.GetBoolean("creature_template_addon", false);

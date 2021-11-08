@@ -1079,6 +1079,7 @@ namespace WowPacketParser.Store
             storage.Add(castData, packet.TimeSpan);
         }
         public static readonly DataBag<CreaturePetCooldown> CreaturePetCooldown = new DataBag<CreaturePetCooldown>(Settings.SqlTables.creature_pet_cooldown);
+        public static readonly DataBag<CreaturePetRemainingCooldown> CreaturePetRemainingCooldown = new DataBag<CreaturePetRemainingCooldown>(Settings.SqlTables.creature_pet_remaining_cooldown);
         public static readonly DataBag<CreaturePetActions> CreaturePetActions = new DataBag<CreaturePetActions>(Settings.SqlTables.creature_pet_actions);
         public static readonly DataBag<SpellTargetPosition> SpellTargetPositions = new DataBag<SpellTargetPosition>(Settings.SqlTables.spell_target_position);
 

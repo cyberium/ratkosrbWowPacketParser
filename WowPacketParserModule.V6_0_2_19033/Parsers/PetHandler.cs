@@ -62,12 +62,12 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.AddValue("Flag", flag, indexes);
         }
 
-        public static void ReadPetSpellCooldownData(Packet packet, params object[] idx)
+        public static void ReadPetSpellCooldownData(Packet packet, CreaturePetRemainingCooldown cooldown, params object[] idx)
         {
-            packet.ReadInt32("SpellID", idx);
-            packet.ReadInt32("Duration", idx);
-            packet.ReadInt32("CategoryDuration", idx);
-            packet.ReadInt16("Category", idx);
+            cooldown.SpellID = (uint)packet.ReadInt32("SpellID", idx);
+            cooldown.Cooldown = (uint)packet.ReadInt32("Duration", idx);
+            cooldown.CategoryCooldown = (uint)packet.ReadInt32("CategoryDuration", idx);
+            cooldown.Category = (uint)packet.ReadInt16("Category", idx);
         }
 
         public static void ReadPetSpellHistoryData(Packet packet, params object[] idx)
@@ -101,8 +101,17 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             for (int i = 0; i < actionsCount; i++)
                 ReadPetAction(packet, i, "Actions");
 
-            for (int i = 0; i < cooldownsCount; i++)
-                ReadPetSpellCooldownData(packet, i, "PetSpellCooldown");
+            if (cooldownsCount > 0)
+            {
+                CreaturePetRemainingCooldown cooldown = new CreaturePetRemainingCooldown();
+                cooldown.CasterID = petGuid.GetEntry();
+
+                for (int i = 0; i < cooldownsCount; i++)
+                    ReadPetSpellCooldownData(packet, cooldown, i, "PetSpellCooldown");
+
+                if (petGuid.GetHighType() == HighGuidType.Creature)
+                    Storage.CreaturePetRemainingCooldown.Add(cooldown);
+            }
 
             for (int i = 0; i < spellHistoryCount; i++)
                 ReadPetSpellHistoryData(packet, i, "PetSpellHistory");

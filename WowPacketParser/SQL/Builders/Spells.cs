@@ -242,6 +242,18 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod(false)]
+        public static string CreaturePetRemainingCooldown()
+        {
+            if (!Settings.SqlTables.creature_pet_remaining_cooldown)
+                return string.Empty;
+
+            if (Storage.CreaturePetRemainingCooldown.IsEmpty())
+                return string.Empty;
+
+            return SQLUtil.Compare(Storage.CreaturePetRemainingCooldown, null, StoreNameType.None);
+        }
+
+        [BuilderMethod(false)]
         public static string CreaturePetActions()
         {
             if (!Settings.SqlTables.creature_pet_actions)

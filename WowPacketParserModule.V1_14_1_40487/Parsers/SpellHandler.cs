@@ -43,7 +43,7 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
             V7_0_3_22248.Parsers.SpellHandler.ReadSpellTargetData(temp2, packet, spellId, idx, "Target");
 
             if (hasMoveUpdate)
-                MovementHandler.ReadMovementStats(packet, idx, "MoveUpdate");
+                V7_0_3_22248.Parsers.MovementHandler.ReadMovementStats(packet, idx, "MoveUpdate");
 
             for (var i = 0; i < weightCount; ++i)
                 V6_0_2_19033.Parsers.SpellHandler.ReadSpellWeight(packet, idx, "Weight", i);

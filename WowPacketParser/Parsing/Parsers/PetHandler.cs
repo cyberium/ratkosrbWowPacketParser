@@ -81,14 +81,20 @@ namespace WowPacketParser.Parsing.Parsers
             byte cdCount = packet.ReadByte("Cooldown count");
             for (int i = 0; i < cdCount; i++)
             {
-                if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_0_9767))
-                    packet.ReadUInt32<SpellId>("Spell", i);
-                else
-                    packet.ReadUInt16<SpellId>("Spell", i);
+                CreaturePetRemainingCooldown cooldown = new CreaturePetRemainingCooldown();
+                cooldown.CasterID = guid.GetEntry();
 
-                packet.ReadUInt16("Category", i);
-                packet.ReadUInt32("Cooldown", i);
-                packet.ReadUInt32("Category Cooldown", i);
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_0_9767))
+                    cooldown.SpellID = packet.ReadUInt32<SpellId>("Spell", i);
+                else
+                    cooldown.SpellID = packet.ReadUInt16<SpellId>("Spell", i);
+
+                cooldown.Category = packet.ReadUInt16("Category", i);
+                cooldown.Cooldown = packet.ReadUInt32("Cooldown", i);
+                cooldown.CategoryCooldown = packet.ReadUInt32("Category Cooldown", i);
+
+                if (isMinion)
+                    Storage.CreaturePetRemainingCooldown.Add(cooldown);
             }
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V5_1_0_16309))

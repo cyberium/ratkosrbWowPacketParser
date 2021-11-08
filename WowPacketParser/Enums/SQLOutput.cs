@@ -111,6 +111,7 @@
         creature_loot,
         creature_pet_actions,
         creature_pet_cooldown,
+        creature_pet_remaining_cooldown,
         creature_stats,
         creature_template,
         creature_template_addon,

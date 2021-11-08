@@ -353,11 +353,6 @@
       <Name>WowPacketParserModule.V6_0_2_19033</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\WowPacketParserModule.V1_14_1_40487\WowPacketParserModule.V1_14_1_40487.csproj">
-      <Project>{2C70C623-16EA-4532-A0D1-BE62080162AD}</Project>
-      <Name>WowPacketParserModule.V1_14_1_40487</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\WowPacketParser\WowPacketParser.csproj">
       <Project>{0bf6f270-0b6f-4705-8e1a-f57db76db407}</Project>
       <Name>WowPacketParser</Name>
