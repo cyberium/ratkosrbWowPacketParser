@@ -1530,5 +1530,71 @@ namespace WowPacketParser.SQL.Builders
 
             return new SQLInsert<NpcSpellClick>(rows, false).Build();
         }
+
+        [BuilderMethod]
+        public static string CreatureSpellTimers()
+        {
+            if (!Settings.SqlTables.creature_spell_timers)
+                return string.Empty;
+
+            if (Storage.CreatureInitialSpellTimers.Count == 0 &&
+                Storage.CreatureRepeatSpellTimers.Count == 0)
+                return string.Empty;
+
+            Dictionary<Tuple<uint, uint>, CreatureSpellTimers> spellTimersDict = new Dictionary<Tuple<uint, uint>, CreatureSpellTimers>(); 
+            Func<Tuple<uint, uint>, CreatureSpellTimers> GetDataForSpell = delegate (Tuple<uint, uint> creatureSpellPair)
+            {
+                if (spellTimersDict.ContainsKey(creatureSpellPair))
+                {
+                    return spellTimersDict[creatureSpellPair];
+                }
+
+                CreatureSpellTimers spellTimerData = new CreatureSpellTimers();
+                spellTimerData.CasterID = creatureSpellPair.Item1;
+                spellTimerData.SpellID = creatureSpellPair.Item2;
+                spellTimersDict.Add(creatureSpellPair, spellTimerData);
+                return spellTimerData;
+            };
+
+            foreach (var creatureData in Storage.CreatureInitialSpellTimers)
+            {
+                foreach (var spellData in creatureData.Value)
+                {
+                    Tuple<uint, uint> creatureSpellPair = new Tuple<uint, uint>(creatureData.Key, spellData.Key);
+                    CreatureSpellTimers spellTimerData = GetDataForSpell(creatureSpellPair);
+
+                    spellTimerData.InitialCastsCount = (uint)spellData.Value.Count;
+                    spellTimerData.InitialDelayMin = (uint)spellData.Value.Min();
+                    spellTimerData.InitialDelayAverage = (uint)spellData.Value.Average();
+                    spellTimerData.InitialDelayMax = (uint)spellData.Value.Max();
+                }
+                
+            }
+
+            foreach (var creatureData in Storage.CreatureRepeatSpellTimers)
+            {
+                foreach (var spellData in creatureData.Value)
+                {
+                    Tuple<uint, uint> creatureSpellPair = new Tuple<uint, uint>(creatureData.Key, spellData.Key);
+                    CreatureSpellTimers spellTimerData = GetDataForSpell(creatureSpellPair);
+
+                    spellTimerData.RepeatCastsCount = (uint)spellData.Value.Count;
+                    spellTimerData.RepeatDelayMin = (uint)spellData.Value.Min();
+                    spellTimerData.RepeatDelayAverage = (uint)spellData.Value.Average();
+                    spellTimerData.RepeatDelayMax = (uint)spellData.Value.Max();
+                }
+            }
+
+            var rows = new RowList<CreatureSpellTimers>();
+
+            foreach (var item in spellTimersDict)
+            {
+                var row = new Row<CreatureSpellTimers>();
+                row.Data = item.Value;
+                rows.Add(row);
+            }
+
+            return new SQLInsert<CreatureSpellTimers>(rows, false).Build();
+        }
     }
 }

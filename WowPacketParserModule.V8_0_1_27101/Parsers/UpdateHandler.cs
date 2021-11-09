@@ -272,6 +272,20 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     }
                     if (oldUnitData.Flags != unit.UnitData.Flags)
                     {
+                        if (((oldUnitData.Flags & (uint)UnitFlags.IsInCombat) == 0) && // was not in combat
+                            ((unit.UnitData.Flags & (uint)UnitFlags.IsInCombat) != 0)) // is in combat
+                        {
+                            // on enter combat
+                            unit.EnterCombatTime = packet.Time;
+                        }
+                        else if (((oldUnitData.Flags & (uint)UnitFlags.IsInCombat) != 0) && // was in combat
+                                 ((unit.UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0)) // is not in combat
+                        {
+                            // on leave combat
+                            unit.EnterCombatTime = null;
+                            unit.DontSaveCombatSpellTimers = false;
+                        }
+
                         hasData = true;
                         creatureUpdate.UnitFlag = unit.UnitData.Flags;
                     }
@@ -298,10 +312,19 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                         hasData = true;
                         creatureUpdate.MaxHealth = (uint)unit.UnitData.MaxHealth;
                     }
-                    if (oldUnitData.Mana != unit.UnitData.Mana && Settings.SaveManaUpdates)
+                    if (oldUnitData.Mana != unit.UnitData.Mana)
                     {
-                        hasData = true;
-                        creatureUpdate.CurrentMana = (uint)unit.UnitData.Mana;
+                        // don't calculate spell timers if mob is out of mana
+                        if (oldUnitData.Mana > unit.UnitData.Mana && // mana decreasing
+                            unit.IsInCombat() && unit.UnitData.MaxMana > 0 &&
+                            ((float)unit.UnitData.Mana / unit.UnitData.MaxMana) < 0.1) // less than 10%
+                            unit.DontSaveCombatSpellTimers = true;
+
+                        if (Settings.SaveManaUpdates)
+                        {
+                            hasData = true;
+                            creatureUpdate.CurrentMana = (uint)unit.UnitData.Mana;
+                        }
                     }
                     if (oldUnitData.MaxMana != unit.UnitData.MaxMana && Settings.SaveManaUpdates)
                     {

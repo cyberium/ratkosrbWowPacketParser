@@ -512,6 +512,20 @@ namespace WowPacketParser.Parsing.Parsers
                             var obj = Storage.Objects[guid].Item1 as Unit;
                             if (obj.UnitData.Flags != update.Value.UInt32Value)
                             {
+                                if (((obj.UnitData.Flags & (uint)UnitFlags.IsInCombat) == 0) && // was not in combat
+                                    ((update.Value.UInt32Value & (uint)UnitFlags.IsInCombat) != 0)) // is in combat
+                                {
+                                    // on enter combat
+                                    obj.EnterCombatTime = packet.Time;
+                                }
+                                else if(((obj.UnitData.Flags & (uint)UnitFlags.IsInCombat) != 0) && // was in combat
+                                    ((update.Value.UInt32Value & (uint)UnitFlags.IsInCombat) == 0)) // is not in combat
+                                {
+                                    // on leave combat
+                                    obj.EnterCombatTime = null;
+                                    obj.DontSaveCombatSpellTimers = false;
+                                }
+
                                 hasData = true;
                                 creatureUpdate.UnitFlag = update.Value.UInt32Value;
                             }
@@ -574,17 +588,25 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
-                    else if ((update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER) ||
-                             update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER1)) &&
-                             Settings.SaveManaUpdates)
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER) ||
+                             update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER1))
                     {
                         if (Storage.Objects.ContainsKey(guid))
                         {
                             var obj = Storage.Objects[guid].Item1 as Unit;
                             if (obj.UnitData.Mana != update.Value.UInt32Value)
                             {
-                                hasData = true;
-                                creatureUpdate.CurrentMana = update.Value.UInt32Value;
+                                // don't calculate spell timers if mob is out of mana
+                                if (obj.UnitData.Mana > update.Value.UInt32Value && // mana decreasing
+                                    obj.IsInCombat() && obj.UnitData.MaxMana > 0 &&
+                                    ((float)update.Value.UInt32Value / obj.UnitData.MaxMana) < 0.1) // less than 10%
+                                    obj.DontSaveCombatSpellTimers = true;
+
+                                if (Settings.SaveManaUpdates)
+                                {
+                                    hasData = true;
+                                    creatureUpdate.CurrentMana = update.Value.UInt32Value;
+                                }
                             }
                         }
                     }

@@ -396,4 +396,41 @@ namespace WowPacketParser.Store.Objects
 
         public WowGuid CasterGUID;
     }
+
+    [DBTableName("creature_spell_timers")]
+    public sealed class CreatureSpellTimers : IDataModel
+    {
+        [DBFieldName("entry", true)]
+        public uint? CasterID;
+
+        [DBFieldName("spell_id", true)]
+        public uint? SpellID;
+
+        [DBFieldName("initial_casts_count")]
+        public uint InitialCastsCount;
+
+        [DBFieldName("initial_delay_min")]
+        public uint InitialDelayMin;
+
+        [DBFieldName("initial_delay_average")]
+        public uint InitialDelayAverage;
+
+        [DBFieldName("initial_delay_max")]
+        public uint InitialDelayMax;
+
+        [DBFieldName("repeat_casts_count")]
+        public uint RepeatCastsCount;
+
+        [DBFieldName("repeat_delay_min")]
+        public uint RepeatDelayMin;
+
+        [DBFieldName("repeat_delay_average")]
+        public uint RepeatDelayAverage;
+
+        [DBFieldName("repeat_delay_max")]
+        public uint RepeatDelayMax;
+
+        [DBFieldName("sniff_build", true)]
+        public int? SniffBuild = ClientVersion.BuildInt;
+    }
 }

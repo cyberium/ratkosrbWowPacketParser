@@ -728,6 +728,25 @@ CREATE TABLE IF NOT EXISTS `creature_speed_update` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_spell_timers
+DROP TABLE IF EXISTS `creature_spell_timers`;
+CREATE TABLE IF NOT EXISTS `creature_spell_timers` (
+  `entry` int(10) unsigned NOT NULL DEFAULT '0',
+  `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `initial_casts_count` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `initial_delay_min` int(10) unsigned NOT NULL DEFAULT '0',
+  `initial_delay_average` int(10) unsigned NOT NULL DEFAULT '0',
+  `initial_delay_max` int(10) unsigned NOT NULL DEFAULT '0',
+  `repeat_casts_count` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `repeat_delay_min` int(10) unsigned NOT NULL DEFAULT '0',
+  `repeat_delay_average` int(10) unsigned NOT NULL DEFAULT '0',
+  `repeat_delay_max` int(10) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` smallint(5) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='calculated time between casts for creatures';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_stats
 DROP TABLE IF EXISTS `creature_stats`;
 CREATE TABLE IF NOT EXISTS `creature_stats` (

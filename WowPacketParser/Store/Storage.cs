@@ -67,6 +67,11 @@ namespace WowPacketParser.Store
             obj.SourceSniffBuild = ClientVersion.BuildInt;
             obj.FirstCreateTime = packet.Time;
             obj.FirstCreateType = type;
+
+            Unit creature = obj as Unit;
+            if (creature != null && creature.IsInCombat())
+                creature.EnterCombatTime = packet.Time;
+
             Storage.Objects.Add(guid, obj, packet.TimeSpan);
         }
         public static string GetObjectDbGuid(WowGuid guid)
@@ -197,6 +202,9 @@ namespace WowPacketParser.Store
                 guid.GetObjectType() != ObjectType.Player &&
                 guid.GetObjectType() != ObjectType.ActivePlayer)
                 return;
+
+            if (Storage.Objects.ContainsKey(guid))
+                Storage.Objects[guid].Item1.LastDestroyTime = time;
 
             if (guid.GetObjectType() == ObjectType.Unit && !Settings.SqlTables.creature_destroy_time)
                 return;
@@ -338,6 +346,13 @@ namespace WowPacketParser.Store
                     }
                     else
                         unit.ApplyAuraUpdates(auras);
+
+                    if (Settings.SqlTables.creature_spell_timers &&
+                        guid.GetObjectType() == ObjectType.Unit &&
+                        unit.HasAuraMatchingCriteria(HardcodedData.IsCrowdControlAura))
+                    {
+                        unit.DontSaveCombatSpellTimers = true;
+                    }
                 }
             }
 
@@ -600,7 +615,8 @@ namespace WowPacketParser.Store
         public static readonly Dictionary<WowGuid, Dictionary<uint, DateTime>> LastCreatureCastGo = new Dictionary<WowGuid, Dictionary<uint, DateTime>>();
         public static void StoreCreatureCastGoTime(WowGuid guid, uint spellId, DateTime time)
         {
-            if (!Settings.SqlTables.creature_pet_remaining_cooldown)
+            if (!Settings.SqlTables.creature_pet_remaining_cooldown &&
+                !Settings.SqlTables.creature_spell_timers)
                 return;
 
             if (LastCreatureCastGo.ContainsKey(guid))
@@ -1617,10 +1633,114 @@ namespace WowPacketParser.Store
         public static readonly DataBag<SpellCastData> SpellCastStart = new DataBag<SpellCastData>(Settings.SqlTables.spell_cast_start);
         public static readonly DataBag<SpellCastData> SpellCastGo = new DataBag<SpellCastData>(Settings.SqlTables.spell_cast_go);
         public static readonly DataBag<SpellUniqueCaster> SpellUniqueCasters = new DataBag<SpellUniqueCaster>(Settings.SqlTables.spell_unique_caster);
+
+        public static readonly Dictionary<uint /*creature*/, Dictionary<uint /*spell*/, List<double /*delay*/>>> CreatureInitialSpellTimers = new Dictionary<uint, Dictionary<uint, List<double>>>();
+        private static void StoreCreatureInitialSpellTimer(uint creatureId, uint spellId, uint delay)
+        {
+            if (CreatureInitialSpellTimers.ContainsKey(creatureId))
+            {
+                if (CreatureInitialSpellTimers[creatureId].ContainsKey(spellId))
+                {
+                    CreatureInitialSpellTimers[creatureId][spellId].Add(delay);
+                }
+                else
+                {
+                    List<double> delayList = new List<double>();
+                    delayList.Add(delay);
+                    CreatureInitialSpellTimers[creatureId].Add(spellId, delayList);
+                }
+            }
+            else
+            {
+                Dictionary<uint, List<double>> spellDict = new Dictionary<uint, List<double>>();
+                List<double> delayList = new List<double>();
+                delayList.Add(delay);
+                spellDict.Add(spellId, delayList);
+                CreatureInitialSpellTimers.Add(creatureId, spellDict);
+            }
+        }
+        public static readonly Dictionary<uint /*creature*/, Dictionary<uint /*spell*/, List<double /*delay*/>>> CreatureRepeatSpellTimers = new Dictionary<uint, Dictionary<uint, List<double>>>();
+        private static void StoreCreatureRepeatSpellTimer(uint creatureId, uint spellId, uint delay)
+        {
+            if (CreatureRepeatSpellTimers.ContainsKey(creatureId))
+            {
+                if (CreatureRepeatSpellTimers[creatureId].ContainsKey(spellId))
+                {
+                    CreatureRepeatSpellTimers[creatureId][spellId].Add(delay);
+                }
+                else
+                {
+                    List<double> delayList = new List<double>();
+                    delayList.Add(delay);
+                    CreatureRepeatSpellTimers[creatureId].Add(spellId, delayList);
+                }
+            }
+            else
+            {
+                Dictionary<uint, List<double>> spellDict = new Dictionary<uint, List<double>>();
+                List<double> delayList = new List<double>();
+                delayList.Add(delay);
+                spellDict.Add(spellId, delayList);
+                CreatureRepeatSpellTimers.Add(creatureId, spellDict);
+            }
+        }
+        public static void CalculateCreatureSpellTimer(SpellCastData castData, DateTime castTime)
+        {
+            if (!Settings.SqlTables.creature_spell_timers)
+                return;
+
+            if (!Storage.Objects.ContainsKey(castData.CasterGuid))
+                return;
+
+            Unit creature = Storage.Objects[castData.CasterGuid].Item1 as Unit;
+            if (creature == null || creature.EnterCombatTime == null ||
+               !creature.IsInCombat() || creature.DontSaveCombatSpellTimers)
+                return;
+
+            // If creature was already in combat when we saw it, and it didn't just spawn,
+            // we should not save it as initial, cause there could be casts we missed.
+            bool isRepeatCast = creature.FirstCreateTime == creature.EnterCombatTime &&
+                                creature.FirstCreateType != ObjectCreateType.Create2;
+
+            // We lost sight of the creature at some point. Don't save as initial.
+            if (creature.LastDestroyTime != null &&
+                creature.EnterCombatTime < creature.LastDestroyTime)
+                isRepeatCast = true;
+
+            DateTime? lastCastTime = Storage.GetLastCastGoTimeForCreature(castData.CasterGuid, castData.SpellID);
+            
+            // No casts for the spell in the current combat session.
+            if (lastCastTime != null && lastCastTime < creature.EnterCombatTime)
+                lastCastTime = null;
+
+            // We lost sight of the creature some time between last cast and now. Abort.
+            if (lastCastTime != null &&
+                creature.LastDestroyTime != null &&
+                lastCastTime < creature.LastDestroyTime)
+                return;
+
+            if (lastCastTime != null)
+                isRepeatCast = true;
+
+            uint delayMs = isRepeatCast ?
+                           Utilities.GetTimeDiffInMs(lastCastTime, castTime) :
+                           Utilities.GetTimeDiffInMs(creature.EnterCombatTime, castTime);
+
+            if (isRepeatCast && delayMs == 0)
+                return;
+
+            if (isRepeatCast)
+                Storage.StoreCreatureRepeatSpellTimer((uint)creature.ObjectData.EntryID, castData.SpellID, delayMs);
+            else
+                Storage.StoreCreatureInitialSpellTimer((uint)creature.ObjectData.EntryID, castData.SpellID, delayMs);
+        }
         public static void StoreSpellCastData(SpellCastData castData, CastDataType type, Packet packet)
         {
             if (type == CastDataType.Go && castData.CasterGuid.GetHighType() == HighGuidType.Creature)
+            {
+                Storage.CalculateCreatureSpellTimer(castData, packet.Time);
                 Storage.StoreCreatureCastGoTime(castData.CasterGuid, castData.SpellID, packet.Time);
+            }
 
             if (Settings.SqlTables.spell_unique_caster &&
                 (castData.CasterGuid.GetObjectType() == ObjectType.Unit ||
@@ -1750,6 +1870,8 @@ namespace WowPacketParser.Store
             CreatureTemplateScalings.Clear();
             CreatureTemplateModels.Clear();
             LastCreatureCastGo.Clear();
+            CreatureInitialSpellTimers.Clear();
+            CreatureRepeatSpellTimers.Clear();
             CreatureThreatUpdates.Clear();
             CreatureThreatClears.Clear();
             CreatureThreatRemoves.Clear();

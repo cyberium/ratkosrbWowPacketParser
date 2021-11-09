@@ -21,6 +21,10 @@ namespace WowPacketParser.Store.Objects
         public List<ServerSideMovementSpline> WaypointSplines;
         public List<ServerSideMovementSpline> CombatMovementSplines;
 
+        // Spell timer calculation
+        public DateTime? EnterCombatTime;
+        public bool DontSaveCombatSpellTimers;
+
         public ushort? AIAnimKit;
         public ushort? MovementAnimKit;
         public ushort? MeleeAnimKit;
@@ -46,6 +50,9 @@ namespace WowPacketParser.Store.Objects
                 DbGuid = ++UnitGuidCounter;
                 Waypoints = new List<ServerSideMovement>();
                 WaypointSplines = new List<ServerSideMovementSpline>();
+
+                EnterCombatTime = null;
+                DontSaveCombatSpellTimers = false;
             }   
         }
 
@@ -57,6 +64,11 @@ namespace WowPacketParser.Store.Objects
             // If our unit got any of the following update fields set,
             // it's probably a temporary spawn
             return !UnitData.SummonedBy.IsEmpty() || !UnitData.CreatedBy.IsEmpty() || UnitData.CreatedBySpell != 0;
+        }
+
+        public bool IsInCombat()
+        {
+            return ((UnitData.Flags & (uint)UnitFlags.IsInCombat) != 0);
         }
 
         public override void LoadValuesFromUpdateFields()

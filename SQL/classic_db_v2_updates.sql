@@ -390,3 +390,21 @@ ALTER TABLE `sniff_data`
 
 ALTER TABLE `creature_pet_remaining_cooldown`
 	ADD COLUMN `time_since_cast` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'milliseconds since last SMSG_SPELL_GO for this spell' AFTER `mod_rate`;
+
+CREATE TABLE `creature_spell_timers` (
+	`entry` INT UNSIGNED NOT NULL DEFAULT '0',
+	`spell_id` INT UNSIGNED NOT NULL DEFAULT '0',
+	`initial_casts_count` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+	`initial_delay_min` INT UNSIGNED NOT NULL DEFAULT '0',
+	`initial_delay_average` INT UNSIGNED NOT NULL DEFAULT '0',
+	`initial_delay_max` INT UNSIGNED NOT NULL DEFAULT '0',
+	`repeat_casts_count` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+	`repeat_delay_min` INT UNSIGNED NOT NULL DEFAULT '0',
+	`repeat_delay_average` INT UNSIGNED NOT NULL DEFAULT '0',
+	`repeat_delay_max` INT UNSIGNED NOT NULL DEFAULT '0',
+	`sniff_build` SMALLINT UNSIGNED NOT NULL DEFAULT '0'
+)
+COMMENT='calculated time between casts for creatures'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;
