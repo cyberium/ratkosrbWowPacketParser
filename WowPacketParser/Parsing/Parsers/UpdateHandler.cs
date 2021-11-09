@@ -155,7 +155,10 @@ namespace WowPacketParser.Parsing.Parsers
             {
                 bool savePlayerStats = StoreObjectUpdate(packet, guid, updateMaskArray, updates, true);
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
-                if (savePlayerStats)
+
+                if (guid.GetObjectType() == ObjectType.Unit)
+                    Storage.StoreCreatureStats(obj as Unit, updateMaskArray, guid.GetHighType() == HighGuidType.Pet);
+                else if (savePlayerStats)
                     Storage.SavePlayerStats(obj, false);
             }
         }
@@ -187,7 +190,10 @@ namespace WowPacketParser.Parsing.Parsers
                 bool savePlayerStats = StoreObjectUpdate(packet, guid, updateMaskArray, updates, false);
                 var dynamicUpdates = ReadDynamicValuesUpdateBlock(packet, obj.Type, index, false, obj.DynamicUpdateFields);
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
-                if (savePlayerStats)
+
+                if (guid.GetObjectType() == ObjectType.Unit)
+                    Storage.StoreCreatureStats(obj as Unit, updateMaskArray, guid.GetHighType() == HighGuidType.Pet);
+                else if (savePlayerStats)
                     Storage.SavePlayerStats(obj, false);
             }
             else
@@ -310,7 +316,6 @@ namespace WowPacketParser.Parsing.Parsers
                 (guid.GetObjectType() == ObjectType.Player) ||
                 (guid.GetObjectType() == ObjectType.ActivePlayer))
             {
-
                 if (ClientVersion.HasAurasInUpdateFields())
                     ParseAurasFromUpdateFields(packet, guid, updateMaskArray, updates);
 

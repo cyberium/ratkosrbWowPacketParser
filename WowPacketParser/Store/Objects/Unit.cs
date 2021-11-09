@@ -164,6 +164,23 @@ namespace WowPacketParser.Store.Objects
             }
         }
 
+        public bool HasAuraMatchingCriteria(Func<uint,bool> auraCheckFunc)
+        {
+            if (Auras == null)
+                return false;
+
+            foreach (Aura aura in Auras)
+            {
+                if (aura == null || aura.SpellId == 0)
+                    continue;
+
+                if (auraCheckFunc(aura.SpellId))
+                    return true;
+            }
+
+            return false;
+        }
+
         public void AddWaypoint(ServerSideMovement movementData, Vector3 startPosition, DateTime packetTime)
         {
             List<ServerSideMovement> list = null;

@@ -4,6 +4,8 @@ using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Store.Objects;
 using System.Linq;
+using System.Collections;
+using WowPacketParser.Enums.Version;
 
 namespace WowPacketParser.Store
 {
@@ -840,6 +842,532 @@ namespace WowPacketParser.Store
         public static readonly DataBag<CreatureTemplateScaling> CreatureTemplateScalings = new DataBag<CreatureTemplateScaling>(Settings.SqlTables.creature_template_scaling);
         public static readonly DataBag<CreatureTemplateModel> CreatureTemplateModels = new DataBag<CreatureTemplateModel>(Settings.SqlTables.creature_template);
         public static readonly DataBag<CreatureStats> CreatureStats = new DataBag<CreatureStats>(Settings.SqlTables.creature_stats);
+        public static readonly DataBag<CreatureStats> CreatureBadStats = new DataBag<CreatureStats>(Settings.SqlTables.creature_stats);
+
+        public static void StoreCreatureStats(Unit npc, BitArray updateMaskArray, bool isPet)
+        {
+            if (!Settings.SqlTables.creature_stats)
+                return;
+
+            if (npc == null)
+                return;
+
+            uint entry = (uint)npc.ObjectData.EntryID;
+            if (entry == 0)
+                return;   // broken entry
+
+            // Update fields system changed in BfA.
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_1_0_28724) &&
+               !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+                return;
+
+            List<int> statUpdateFields = new List<int>();
+
+            int UNIT_FIELD_MINDAMAGE = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MINDAMAGE);
+            if (UNIT_FIELD_MINDAMAGE > 0)
+                statUpdateFields.Add(UNIT_FIELD_MINDAMAGE);
+
+            int UNIT_FIELD_MAXDAMAGE = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXDAMAGE);
+            if (UNIT_FIELD_MAXDAMAGE > 0)
+                statUpdateFields.Add(UNIT_FIELD_MAXDAMAGE);
+
+            int UNIT_FIELD_MINOFFHANDDAMAGE = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MINOFFHANDDAMAGE);
+            if (UNIT_FIELD_MINOFFHANDDAMAGE > 0)
+                statUpdateFields.Add(UNIT_FIELD_MINOFFHANDDAMAGE);
+
+            int UNIT_FIELD_MAXOFFHANDDAMAGE = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXOFFHANDDAMAGE);
+            if (UNIT_FIELD_MAXOFFHANDDAMAGE > 0)
+                statUpdateFields.Add(UNIT_FIELD_MAXOFFHANDDAMAGE);
+
+            int UNIT_FIELD_MINRANGEDDAMAGE = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MINRANGEDDAMAGE);
+            if (UNIT_FIELD_MINRANGEDDAMAGE > 0)
+                statUpdateFields.Add(UNIT_FIELD_MINRANGEDDAMAGE);
+
+            int UNIT_FIELD_MAXRANGEDDAMAGE = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXRANGEDDAMAGE);
+            if (UNIT_FIELD_MAXRANGEDDAMAGE > 0)
+                statUpdateFields.Add(UNIT_FIELD_MAXRANGEDDAMAGE);
+
+            int UNIT_FIELD_ATTACK_POWER = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_ATTACK_POWER);
+            if (UNIT_FIELD_ATTACK_POWER > 0)
+                statUpdateFields.Add(UNIT_FIELD_ATTACK_POWER);
+
+            int UNIT_FIELD_ATTACK_POWER_MODS = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_ATTACK_POWER_MODS);
+            if (UNIT_FIELD_ATTACK_POWER_MODS > 0)
+                statUpdateFields.Add(UNIT_FIELD_ATTACK_POWER_MODS);
+
+            int UNIT_FIELD_ATTACK_POWER_MOD_POS = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_ATTACK_POWER_MOD_POS);
+            if (UNIT_FIELD_ATTACK_POWER_MOD_POS > 0)
+                statUpdateFields.Add(UNIT_FIELD_ATTACK_POWER_MOD_POS);
+
+            int UNIT_FIELD_ATTACK_POWER_MOD_NEG = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_ATTACK_POWER_MOD_NEG);
+            if (UNIT_FIELD_ATTACK_POWER_MOD_NEG > 0)
+                statUpdateFields.Add(UNIT_FIELD_ATTACK_POWER_MOD_NEG);
+
+            int UNIT_FIELD_ATTACK_POWER_MULTIPLIER = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_ATTACK_POWER_MULTIPLIER);
+            if (UNIT_FIELD_ATTACK_POWER_MULTIPLIER > 0)
+                statUpdateFields.Add(UNIT_FIELD_ATTACK_POWER_MULTIPLIER);
+
+            int UNIT_FIELD_RANGED_ATTACK_POWER = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RANGED_ATTACK_POWER);
+            if (UNIT_FIELD_RANGED_ATTACK_POWER > 0)
+                statUpdateFields.Add(UNIT_FIELD_RANGED_ATTACK_POWER);
+
+            int UNIT_FIELD_RANGED_ATTACK_POWER_MODS = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RANGED_ATTACK_POWER_MODS);
+            if (UNIT_FIELD_RANGED_ATTACK_POWER_MODS > 0)
+                statUpdateFields.Add(UNIT_FIELD_RANGED_ATTACK_POWER_MODS);
+
+            int UNIT_FIELD_RANGED_ATTACK_POWER_MOD_POS = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RANGED_ATTACK_POWER_MOD_POS);
+            if (UNIT_FIELD_RANGED_ATTACK_POWER_MOD_POS > 0)
+                statUpdateFields.Add(UNIT_FIELD_RANGED_ATTACK_POWER_MOD_POS);
+
+            int UNIT_FIELD_RANGED_ATTACK_POWER_MOD_NEG = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RANGED_ATTACK_POWER_MOD_NEG);
+            if (UNIT_FIELD_RANGED_ATTACK_POWER_MOD_NEG > 0)
+                statUpdateFields.Add(UNIT_FIELD_RANGED_ATTACK_POWER_MOD_NEG);
+
+            int UNIT_FIELD_RANGED_ATTACK_POWER_MULTIPLIER = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RANGED_ATTACK_POWER_MULTIPLIER);
+            if (UNIT_FIELD_RANGED_ATTACK_POWER_MULTIPLIER > 0)
+                statUpdateFields.Add(UNIT_FIELD_RANGED_ATTACK_POWER_MULTIPLIER);
+
+            int UNIT_FIELD_BASE_HEALTH = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BASE_HEALTH);
+            if (UNIT_FIELD_BASE_HEALTH > 0)
+                statUpdateFields.Add(UNIT_FIELD_BASE_HEALTH);
+
+            int UNIT_FIELD_BASE_MANA = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BASE_MANA);
+            // public field
+            //if (UNIT_FIELD_BASE_MANA > 0)
+            //    statUpdateFields.Add(UNIT_FIELD_BASE_MANA);
+
+            int UNIT_FIELD_STAT = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT);
+            if (UNIT_FIELD_STAT <= 0)
+                UNIT_FIELD_STAT = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_STAT0);
+            if (UNIT_FIELD_STAT > 0)
+                statUpdateFields.Add(UNIT_FIELD_STAT);
+
+            int UNIT_FIELD_POSSTAT = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POSSTAT);
+            if (UNIT_FIELD_POSSTAT <= 0)
+                UNIT_FIELD_POSSTAT = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POSSTAT0);
+            if (UNIT_FIELD_POSSTAT > 0)
+                statUpdateFields.Add(UNIT_FIELD_POSSTAT);
+
+            int UNIT_FIELD_NEGSTAT = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_NEGSTAT);
+            if (UNIT_FIELD_NEGSTAT <= 0)
+                UNIT_FIELD_NEGSTAT = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_NEGSTAT0);
+            if (UNIT_FIELD_NEGSTAT > 0)
+                statUpdateFields.Add(UNIT_FIELD_NEGSTAT);
+
+            int UNIT_FIELD_RESISTANCES = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES);
+            if (UNIT_FIELD_RESISTANCES <= 0)
+                UNIT_FIELD_RESISTANCES = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCES_ARMOR);
+            if (UNIT_FIELD_RESISTANCES > 0)
+                statUpdateFields.Add(UNIT_FIELD_RESISTANCES);
+
+            int UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE);
+            if (UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE <= 0)
+                UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE_ARMOR);
+            if (UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE <= 0)
+                UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BONUS_RESISTANCE_MODS);
+            if (UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE > 0)
+                statUpdateFields.Add(UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE);
+
+            int UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE);
+            if (UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE <= 0)
+                UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE_ARMOR);
+            if (UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE <= 0)
+                UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BONUS_RESISTANCE_MODS);
+            if (UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE > 0)
+                statUpdateFields.Add(UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE);
+
+            if (statUpdateFields.Count == 0)
+                return;
+
+            bool hasStatUpdate = updateMaskArray == null; // continue anyway if no mask array
+            if (!hasStatUpdate)
+            {
+                foreach (int uf in statUpdateFields)
+                {
+                    if (updateMaskArray[uf])
+                    {
+                        hasStatUpdate = true;
+                        break;
+                    }
+                }
+
+                if (!hasStatUpdate)
+                    return;
+            }
+
+            bool hasModStatsAura = npc.HasAuraMatchingCriteria(HardcodedData.IsModStatAura);
+            bool hasModMainHandDamageAura = npc.HasAuraMatchingCriteria(HardcodedData.IsModMainHandDamageAura);
+            bool hasModOffHandDamageAura = npc.HasAuraMatchingCriteria(HardcodedData.IsModOffHandDamageAura);
+            bool hasModRangedDamageAura = npc.HasAuraMatchingCriteria(HardcodedData.IsModRangedDamageAura);
+            bool hasModMeleeAttackPowerAura = npc.HasAuraMatchingCriteria(HardcodedData.IsModMeleeAttackPowerAura);
+            bool hasModRangedAttackPowerAura = npc.HasAuraMatchingCriteria(HardcodedData.IsModRangedAttackPowerAura);
+            bool hasModResistAura = npc.HasAuraMatchingCriteria(HardcodedData.IsModResistAura);
+            bool hasAnyBadAuras = hasModStatsAura || hasModMainHandDamageAura || hasModOffHandDamageAura ||
+                                  hasModRangedDamageAura || hasModMeleeAttackPowerAura || hasModRangedAttackPowerAura ||
+                                  hasModResistAura;
+            bool hasData = false;
+            CreatureStats creatureStats = new CreatureStats();
+            UpdateField value;
+
+            if (!hasModMainHandDamageAura)
+            {
+                if (npc.UpdateFields.TryGetValue(UNIT_FIELD_MINDAMAGE, out value))
+                {
+                    hasData = true;
+                    creatureStats.DmgMin = value.FloatValue;
+                }
+                if (npc.UpdateFields.TryGetValue(UNIT_FIELD_MAXDAMAGE, out value))
+                {
+                    hasData = true;
+                    creatureStats.DmgMax = value.FloatValue;
+                }
+            }
+
+            if (!hasModOffHandDamageAura)
+            {
+                if (npc.UpdateFields.TryGetValue(UNIT_FIELD_MINOFFHANDDAMAGE, out value))
+                {
+                    hasData = true;
+                    creatureStats.OffhandDmgMin = value.FloatValue;
+                }
+                if (npc.UpdateFields.TryGetValue(UNIT_FIELD_MAXOFFHANDDAMAGE, out value))
+                {
+                    hasData = true;
+                    creatureStats.OffhandDmgMax = value.FloatValue;
+                }
+            }
+            
+            if (!hasModRangedDamageAura)
+            {
+                if (npc.UpdateFields.TryGetValue(UNIT_FIELD_MINRANGEDDAMAGE, out value))
+                {
+                    hasData = true;
+                    creatureStats.RangedDmgMin = value.FloatValue;
+                }
+                if (npc.UpdateFields.TryGetValue(UNIT_FIELD_MAXRANGEDDAMAGE, out value))
+                {
+                    hasData = true;
+                    creatureStats.RangedDmgMax = value.FloatValue;
+                }
+            }
+
+            if (!hasModMeleeAttackPowerAura)
+            {
+                if (npc.UpdateFields.TryGetValue(UNIT_FIELD_ATTACK_POWER, out value))
+                {
+                    hasData = true;
+                    creatureStats.AttackPower = value.Int32Value;
+                }
+                if (npc.UpdateFields.TryGetValue(UNIT_FIELD_ATTACK_POWER_MODS, out value))
+                {
+                    hasData = true;
+                    creatureStats.PositiveAttackPower = (int)(value.UInt32Value & 0x0000FFFF);
+                    creatureStats.NegativeAttackPower = (int)((value.UInt32Value & 0xFFFF0000) >> 16);
+                }
+                else
+                {
+                    if (npc.UpdateFields.TryGetValue(UNIT_FIELD_ATTACK_POWER_MOD_POS, out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveAttackPower = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UNIT_FIELD_ATTACK_POWER_MOD_NEG, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeAttackPower = value.Int32Value;
+                    }
+                }
+                if (npc.UpdateFields.TryGetValue(UNIT_FIELD_ATTACK_POWER_MULTIPLIER, out value))
+                {
+                    hasData = true;
+                    creatureStats.AttackPowerMultiplier = value.FloatValue;
+                }
+            }
+
+            if (!hasModRangedAttackPowerAura)
+            {
+                if (npc.UpdateFields.TryGetValue(UNIT_FIELD_RANGED_ATTACK_POWER, out value))
+                {
+                    hasData = true;
+                    creatureStats.RangedAttackPower = value.Int32Value;
+                }
+                if (npc.UpdateFields.TryGetValue(UNIT_FIELD_RANGED_ATTACK_POWER_MODS, out value))
+                {
+                    hasData = true;
+                    creatureStats.PositiveRangedAttackPower = (int)(value.UInt32Value & 0x0000FFFF);
+                    creatureStats.NegativeRangedAttackPower = (int)((value.UInt32Value & 0xFFFF0000) >> 16);
+                }
+                else
+                {
+                    if (npc.UpdateFields.TryGetValue(UNIT_FIELD_RANGED_ATTACK_POWER_MOD_POS, out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveRangedAttackPower = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(UNIT_FIELD_RANGED_ATTACK_POWER_MOD_NEG, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeRangedAttackPower = value.Int32Value;
+                    }
+                }
+                if (npc.UpdateFields.TryGetValue(UNIT_FIELD_RANGED_ATTACK_POWER_MULTIPLIER, out value))
+                {
+                    hasData = true;
+                    creatureStats.RangedAttackPowerMultiplier = value.FloatValue;
+                }
+            }
+            
+            if (npc.UpdateFields.TryGetValue(UNIT_FIELD_BASE_HEALTH, out value))
+            {
+                hasData = true;
+                creatureStats.BaseHealth = value.UInt32Value;
+            }
+            if (npc.UpdateFields.TryGetValue(UNIT_FIELD_BASE_MANA, out value))
+            {
+                //hasData = true; public field
+                creatureStats.BaseMana = value.UInt32Value;
+            }
+
+            if (!hasModStatsAura)
+            {
+                Func<int, bool> SaveStats = delegate (int field)
+                {
+                    if (npc.UpdateFields.TryGetValue(field, out value))
+                    {
+                        hasData = true;
+                        creatureStats.Strength = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 1, out value))
+                    {
+                        hasData = true;
+                        creatureStats.Agility = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 2, out value))
+                    {
+                        hasData = true;
+                        creatureStats.Stamina = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 3, out value))
+                    {
+                        hasData = true;
+                        creatureStats.Intellect = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 4, out value))
+                    {
+                        hasData = true;
+                        creatureStats.Spirit = value.Int32Value;
+                    }
+                    return true;
+                };
+                if (UNIT_FIELD_STAT > 0)
+                    SaveStats(UNIT_FIELD_STAT);
+
+                Func<int, bool> SavePosStats = delegate (int field)
+                {
+                    if (npc.UpdateFields.TryGetValue(field, out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveStrength = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 1, out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveAgility = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 2, out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveStamina = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 3, out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveIntellect = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 4, out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveSpirit = value.Int32Value;
+                    }
+                    return true;
+                };
+                if (UNIT_FIELD_POSSTAT > 0)
+                    SavePosStats(UNIT_FIELD_POSSTAT);
+
+                Func<int, bool> SaveNegStats = delegate (int field)
+                {
+                    if (npc.UpdateFields.TryGetValue(field, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeStrength = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 1, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeAgility = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 2, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeStamina = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 3, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeIntellect = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 4, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeSpirit = value.Int32Value;
+                    }
+                    return true;
+                };
+                if (UNIT_FIELD_NEGSTAT > 0)
+                    SaveNegStats(UNIT_FIELD_NEGSTAT);
+            }
+
+            if (!hasModResistAura)
+            {
+                Func<int, bool> SaveResistances = delegate (int field)
+                {
+                    if (npc.UpdateFields.TryGetValue(field, out value))
+                    {
+                        hasData = true;
+                        creatureStats.Armor = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 1, out value))
+                    {
+                        hasData = true;
+                        creatureStats.HolyResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 2, out value))
+                    {
+                        hasData = true;
+                        creatureStats.FireResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 3, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NatureResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 4, out value))
+                    {
+                        hasData = true;
+                        creatureStats.FrostResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 5, out value))
+                    {
+                        hasData = true;
+                        creatureStats.ShadowResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 6, out value))
+                    {
+                        hasData = true;
+                        creatureStats.ArcaneResistance = value.Int32Value;
+                    }
+                    return true;
+                };
+                if (UNIT_FIELD_RESISTANCES > 0)
+                    SaveResistances(UNIT_FIELD_RESISTANCES);
+
+                Func<int, bool> SavePositiveResistances = delegate (int field)
+                {
+                    if (npc.UpdateFields.TryGetValue(field, out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveArmor = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 1, out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveHolyResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 2, out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveFireResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 3, out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveNatureResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 4, out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveFrostResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 5, out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveShadowResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 6, out value))
+                    {
+                        hasData = true;
+                        creatureStats.PositiveArcaneResistance = value.Int32Value;
+                    }
+                    return true;
+                };
+                if (UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE > 0)
+                    SavePositiveResistances(UNIT_FIELD_RESISTANCEBUFFMODSPOSITIVE);
+
+                Func<int, bool> SaveNegativeResistances = delegate (int field)
+                {
+                    if (npc.UpdateFields.TryGetValue(field, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeArmor = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 1, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeHolyResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 2, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeFireResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 3, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeNatureResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 4, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeFrostResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 5, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeShadowResistance = value.Int32Value;
+                    }
+                    if (npc.UpdateFields.TryGetValue(field + 6, out value))
+                    {
+                        hasData = true;
+                        creatureStats.NegativeArcaneResistance = value.Int32Value;
+                    }
+                    return true;
+                };
+                if (UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE > 0)
+                    SaveNegativeResistances(UNIT_FIELD_RESISTANCEBUFFMODSNEGATIVE);
+            }
+
+            if (hasData)
+            {
+                creatureStats.Entry = entry;
+                creatureStats.Level = (uint)npc.UnitData.Level;
+                creatureStats.IsPet = isPet;
+
+                if (hasAnyBadAuras)
+                    Storage.CreatureBadStats.Add(creatureStats);
+                else
+                    Storage.CreatureStats.Add(creatureStats);
+            }
+        }
 
         // Vendor & trainer
         public static readonly DataBag<NpcTrainer> NpcTrainers = new DataBag<NpcTrainer>(Settings.SqlTables.npc_trainer); // legacy 3.3.5 support
@@ -1000,7 +1528,6 @@ namespace WowPacketParser.Store
                 return;
 
             var unitData = useInitialData ? player.UnitDataOriginal : player.UnitData;
-
 
             PlayerClassLevelStats classLevelStats = new PlayerClassLevelStats();
             classLevelStats.ClassId = unitData.ClassId;
@@ -1214,6 +1741,7 @@ namespace WowPacketParser.Store
             CreatureClientInteractTimes.Clear();
             CreatureLoot.Clear();
             CreatureStats.Clear();
+            CreatureBadStats.Clear();
 
             CreatureDamageSchools.Clear();
             CreatureTemplates.Clear();
