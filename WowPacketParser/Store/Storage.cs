@@ -1694,7 +1694,8 @@ namespace WowPacketParser.Store
 
             Unit creature = Storage.Objects[castData.CasterGuid].Item1 as Unit;
             if (creature == null || creature.EnterCombatTime == null ||
-               !creature.IsInCombat() || creature.DontSaveCombatSpellTimers)
+               !creature.IsInCombat() || creature.DontSaveCombatSpellTimers ||
+                creature.UnitData.Health == 0)
                 return;
 
             // If creature was already in combat when we saw it, and it didn't just spawn,
