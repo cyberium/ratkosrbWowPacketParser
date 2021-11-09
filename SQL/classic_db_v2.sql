@@ -696,7 +696,8 @@ CREATE TABLE IF NOT EXISTS `creature_pet_remaining_cooldown` (
   `cooldown` int(10) unsigned NOT NULL DEFAULT '0',
   `category` smallint(5) unsigned NOT NULL DEFAULT '0',
   `category_cooldown` int(10) unsigned NOT NULL DEFAULT '0',
-  `mod_rate` float unsigned NOT NULL DEFAULT '1'
+  `mod_rate` float unsigned NOT NULL DEFAULT '1',
+  `time_since_cast` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'milliseconds since last SMSG_SPELL_GO for this spell'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='cooldowns that were already present when the creature became charmed\r\nfrom SMSG_PET_SPELLS_MESSAGE.';
 
 -- Data exporting was unselected.

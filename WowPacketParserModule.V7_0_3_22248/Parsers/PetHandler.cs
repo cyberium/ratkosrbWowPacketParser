@@ -66,8 +66,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             if (cooldownsCount > 0)
             {
                 CreaturePetRemainingCooldown cooldown = new CreaturePetRemainingCooldown();
-                cooldown.CasterID = petGuid.GetEntry();
-
+                
                 for (int i = 0; i < cooldownsCount; i++)
                 {
                     if (ClientVersion.AddedInVersion(ClientVersionBuild.V7_1_0_22900))
@@ -77,7 +76,11 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 }
 
                 if (petGuid.GetHighType() == HighGuidType.Creature)
+                {
+                    cooldown.CasterID = petGuid.GetEntry();
+                    cooldown.TimeSinceCast = Utilities.GetTimeDiffInMs(Storage.GetLastCastGoTimeForCreature(petGuid, (uint)cooldown.SpellID), packet.Time);
                     Storage.CreaturePetRemainingCooldown.Add(cooldown);
+                }
             }
 
             for (int i = 0; i < spellHistoryCount; i++)

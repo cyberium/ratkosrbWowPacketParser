@@ -124,7 +124,7 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
         {
             SpellCastData castData = new SpellCastData();
             ReadSpellCastData(castData, packet, "Cast");
-            Storage.StoreSpellCastData(castData, Storage.SpellCastStart, packet);
+            Storage.StoreSpellCastData(castData, CastDataType.Start, packet);
         }
 
         [Parser(Opcode.SMSG_SPELL_GO)]
@@ -138,7 +138,7 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
             if (hasLog)
                 V8_0_1_27101.Parsers.SpellHandler.ReadSpellCastLogData(packet, "LogData");
 
-            Storage.StoreSpellCastData(castData, Storage.SpellCastGo, packet);
+            Storage.StoreSpellCastData(castData, CastDataType.Go, packet);
         }
 
         [Parser(Opcode.SMSG_CAST_FAILED)]

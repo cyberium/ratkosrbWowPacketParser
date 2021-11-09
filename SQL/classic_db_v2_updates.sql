@@ -387,3 +387,6 @@ ENGINE=InnoDB
 
 ALTER TABLE `sniff_data`
 	CHANGE COLUMN `object_type` `object_type` ENUM('None','Spell','Map','LFGDungeon','Battleground','Unit','GameObject','CreatureDifficulty','Item','Quest','Opcode','PageText','NpcText','BroadcastText','Gossip','Zone','Area','AreaTrigger','Phase','Player','Achievement','CreatureFamily','Criteria','Currency','Difficulty','Faction','QuestGreeting','QuestObjective','Sound','Taxi') NOT NULL DEFAULT 'None' AFTER `sniff_id`;
+
+ALTER TABLE `creature_pet_remaining_cooldown`
+	ADD COLUMN `time_since_cast` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'milliseconds since last SMSG_SPELL_GO for this spell' AFTER `mod_rate`;

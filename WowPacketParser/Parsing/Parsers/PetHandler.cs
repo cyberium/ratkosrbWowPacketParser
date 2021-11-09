@@ -83,7 +83,6 @@ namespace WowPacketParser.Parsing.Parsers
             for (int i = 0; i < cdCount; i++)
             {
                 CreaturePetRemainingCooldown cooldown = new CreaturePetRemainingCooldown();
-                cooldown.CasterID = guid.GetEntry();
 
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_0_9767))
                     cooldown.SpellID = packet.ReadUInt32<SpellId>("Spell", i);
@@ -95,7 +94,11 @@ namespace WowPacketParser.Parsing.Parsers
                 cooldown.CategoryCooldown = packet.ReadUInt32("Category Cooldown", i);
 
                 if (isMinion)
+                {
+                    cooldown.CasterID = guid.GetEntry();
+                    cooldown.TimeSinceCast = Utilities.GetTimeDiffInMs(Storage.GetLastCastGoTimeForCreature(guid, (uint)cooldown.SpellID), packet.Time);
                     Storage.CreaturePetRemainingCooldown.Add(cooldown);
+                }
             }
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V5_1_0_16309))

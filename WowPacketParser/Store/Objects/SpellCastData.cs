@@ -285,6 +285,12 @@ namespace WowPacketParser.Store.Objects
         public float Orientation;
     }
 
+    public enum CastDataType
+    {
+        Start = 0,
+        Go = 1
+    }
+
     public sealed class SpellCastData : IDataModel
     {
         public DateTime Time;
@@ -374,6 +380,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("mod_rate")]
         public float? ModRate;
+
+        [DBFieldName("time_since_cast")]
+        public uint? TimeSinceCast;
     }
 
     [DBTableName("creature_pet_actions")]

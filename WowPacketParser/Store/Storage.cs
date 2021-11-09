@@ -595,6 +595,40 @@ namespace WowPacketParser.Store
                 Storage.Emotes.Add(guid, emotesList);
             }
         }
+        public static readonly Dictionary<WowGuid, Dictionary<uint, DateTime>> LastCreatureCastGo = new Dictionary<WowGuid, Dictionary<uint, DateTime>>();
+        public static void StoreCreatureCastGoTime(WowGuid guid, uint spellId, DateTime time)
+        {
+            if (!Settings.SqlTables.creature_pet_remaining_cooldown)
+                return;
+
+            if (LastCreatureCastGo.ContainsKey(guid))
+            {
+                if (LastCreatureCastGo[guid].ContainsKey(spellId))
+                {
+                    LastCreatureCastGo[guid][spellId] = time;
+                }
+                else
+                {
+                    LastCreatureCastGo[guid].Add(spellId, time);
+                }
+            }
+            else
+            {
+                Dictionary<uint, DateTime> dict = new Dictionary<uint, DateTime>();
+                dict.Add(spellId, time);
+                LastCreatureCastGo.Add(guid, dict);
+            }
+        }
+        public static DateTime? GetLastCastGoTimeForCreature(WowGuid guid, uint spellId)
+        {
+            if (!LastCreatureCastGo.ContainsKey(guid))
+                return null;
+
+            if (!LastCreatureCastGo[guid].ContainsKey(spellId))
+                return null;
+
+            return LastCreatureCastGo[guid][spellId];
+        }
         public static readonly Dictionary<WowGuid, List<CreatureThreatUpdate>> CreatureThreatUpdates = new Dictionary<WowGuid, List<CreatureThreatUpdate>>();
         public static void StoreCreatureThreatUpdate(WowGuid guid, CreatureThreatUpdate update)
         {
@@ -1056,8 +1090,11 @@ namespace WowPacketParser.Store
         public static readonly DataBag<SpellCastData> SpellCastStart = new DataBag<SpellCastData>(Settings.SqlTables.spell_cast_start);
         public static readonly DataBag<SpellCastData> SpellCastGo = new DataBag<SpellCastData>(Settings.SqlTables.spell_cast_go);
         public static readonly DataBag<SpellUniqueCaster> SpellUniqueCasters = new DataBag<SpellUniqueCaster>(Settings.SqlTables.spell_unique_caster);
-        public static void StoreSpellCastData(SpellCastData castData, DataBag<SpellCastData> storage, Packet packet)
+        public static void StoreSpellCastData(SpellCastData castData, CastDataType type, Packet packet)
         {
+            if (type == CastDataType.Go && castData.CasterGuid.GetHighType() == HighGuidType.Creature)
+                Storage.StoreCreatureCastGoTime(castData.CasterGuid, castData.SpellID, packet.Time);
+
             if (Settings.SqlTables.spell_unique_caster &&
                 (castData.CasterGuid.GetObjectType() == ObjectType.Unit ||
                 castData.CasterGuid.GetObjectType() == ObjectType.GameObject))
@@ -1077,6 +1114,7 @@ namespace WowPacketParser.Store
                 return;
 
             castData.Time = packet.Time;
+            DataBag<SpellCastData> storage = type == CastDataType.Start ? Storage.SpellCastStart : Storage.SpellCastGo;
             storage.Add(castData, packet.TimeSpan);
         }
         public static readonly DataBag<CreaturePetCooldown> CreaturePetCooldown = new DataBag<CreaturePetCooldown>(Settings.SqlTables.creature_pet_cooldown);
@@ -1183,7 +1221,10 @@ namespace WowPacketParser.Store
             CreatureTemplateQuestItems.Clear();
             CreatureTemplateScalings.Clear();
             CreatureTemplateModels.Clear();
+            LastCreatureCastGo.Clear();
             CreatureThreatUpdates.Clear();
+            CreatureThreatClears.Clear();
+            CreatureThreatRemoves.Clear();
             UnitAurasUpdates.Clear();
             UnitEquipmentValuesUpdates.Clear();
             UnitGuidValuesUpdates.Clear();

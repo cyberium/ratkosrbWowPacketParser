@@ -105,13 +105,16 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             if (cooldownsCount > 0)
             {
                 CreaturePetRemainingCooldown cooldown = new CreaturePetRemainingCooldown();
-                cooldown.CasterID = petGuid.GetEntry();
 
                 for (int i = 0; i < cooldownsCount; i++)
                     ReadPetSpellCooldownData(packet, cooldown, i, "PetSpellCooldown");
 
                 if (petGuid.GetHighType() == HighGuidType.Creature)
+                {
+                    cooldown.CasterID = petGuid.GetEntry();
+                    cooldown.TimeSinceCast = Utilities.GetTimeDiffInMs(Storage.GetLastCastGoTimeForCreature(petGuid, (uint)cooldown.SpellID), packet.Time);
                     Storage.CreaturePetRemainingCooldown.Add(cooldown);
+                }
             }
 
             for (int i = 0; i < spellHistoryCount; i++)

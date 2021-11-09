@@ -180,7 +180,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
         {
             SpellCastData castData = new SpellCastData();
             ReadSpellCastData(castData, packet, "Cast");
-            Storage.StoreSpellCastData(castData, Storage.SpellCastStart, packet);
+            Storage.StoreSpellCastData(castData, CastDataType.Start, packet);
         }
 
         [Parser(Opcode.SMSG_SPELL_GO)]
@@ -195,7 +195,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             if (unkBit)
                 packet.ReadSByte("UnkSByte");
 
-            Storage.StoreSpellCastData(castData, Storage.SpellCastGo, packet);
+            Storage.StoreSpellCastData(castData, CastDataType.Go, packet);
         }
 
         [HasSniffData]

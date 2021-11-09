@@ -36,6 +36,14 @@ namespace WowPacketParser.Misc
             return ((DateTimeOffset)DateTime.SpecifyKind(time, DateTimeKind.Local)).ToUnixTimeMilliseconds();
         }
 
+        public static uint GetTimeDiffInMs(DateTime? smaller, DateTime bigger)
+        {
+            if (smaller == null)
+                return 0;
+
+            return (uint)(bigger - smaller).Value.TotalMilliseconds;
+        }
+
         public static float GetAngle(float x1, float y1, float x2, float y2)
         {
             float dx = x1 - x2;

@@ -14,7 +14,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
         {
             SpellCastData castData = new SpellCastData();
             ReadSpellCastData(castData, packet, "Cast");
-            Storage.StoreSpellCastData(castData, Storage.SpellCastStart, packet);
+            Storage.StoreSpellCastData(castData, CastDataType.Start, packet);
         }
 
         [Parser(Opcode.SMSG_SPELL_GO)]
@@ -22,7 +22,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
         {
             SpellCastData castData = new SpellCastData();
             ReadSpellCastData(castData, packet, "Cast");
-            Storage.StoreSpellCastData(castData, Storage.SpellCastGo, packet);
+            Storage.StoreSpellCastData(castData, CastDataType.Go, packet);
         }
 
         public static void ReadSpellCastData(SpellCastData dbdata, Packet packet, params object[] idx)

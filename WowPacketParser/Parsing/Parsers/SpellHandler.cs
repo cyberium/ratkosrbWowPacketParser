@@ -835,9 +835,9 @@ namespace WowPacketParser.Parsing.Parsers
             packet.AddSniffData(StoreNameType.Spell, spellId, "CAST");
 
             if (isSpellGo)
-                Storage.StoreSpellCastData(dbdata, Storage.SpellCastGo, packet);
+                Storage.StoreSpellCastData(dbdata, CastDataType.Go, packet);
             else
-                Storage.StoreSpellCastData(dbdata, Storage.SpellCastStart, packet);
+                Storage.StoreSpellCastData(dbdata, CastDataType.Start, packet);
         }
 
         [Parser(Opcode.SMSG_LEARNED_SPELL)]
