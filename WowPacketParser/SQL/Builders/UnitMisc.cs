@@ -771,16 +771,52 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod]
-        public static string CreatureDamageSchools()
+        public static string CreatureMeleeDamage()
         {
-            if (Storage.CreatureDamageSchools.IsEmpty() || !Settings.SqlTables.creature_damage_school)
+            if (!Settings.SqlTables.creature_melee_damage)
                 return string.Empty;
 
-            var result = "";
+            if (Storage.CreatureMeleeAttackDamage.Count == 0 && 
+                Storage.CreatureMeleeAttackSchool.Count == 0)
+                return string.Empty;
 
-            result += SQLUtil.Compare(Storage.CreatureDamageSchools, null, StoreNameType.Unit);
+            Dictionary<uint, CreatureMeleeDamage> meleeStatsDict = new Dictionary<uint, CreatureMeleeDamage>();
+            Func<uint, CreatureMeleeDamage> GetDataForCreature = delegate (uint entry)
+            {
+                if (meleeStatsDict.ContainsKey(entry))
+                    return meleeStatsDict[entry];
 
-            return result;
+                CreatureMeleeDamage meleeStats = new CreatureMeleeDamage();
+                meleeStats.Entry = entry;
+                meleeStatsDict.Add(entry, meleeStats);
+                return meleeStats;
+            };
+
+            foreach (var creatureData in Storage.CreatureMeleeAttackDamage)
+            {
+                CreatureMeleeDamage meleeStats = GetDataForCreature(creatureData.Key);
+                meleeStats.HitsCount = (uint)creatureData.Value.Count;
+                meleeStats.DamageMin = (uint)creatureData.Value.Min();
+                meleeStats.DamageAverage = (uint)creatureData.Value.Average();
+                meleeStats.DamageMax = (uint)creatureData.Value.Max();
+            }
+
+            foreach (var creatureData in Storage.CreatureMeleeAttackSchool)
+            {
+                CreatureMeleeDamage meleeStats = GetDataForCreature(creatureData.Key);
+                meleeStats.TotalSchoolMask = creatureData.Value;
+            }
+
+            var rows = new RowList<CreatureMeleeDamage>();
+
+            foreach (var item in meleeStatsDict)
+            {
+                var row = new Row<CreatureMeleeDamage>();
+                row.Data = item.Value;
+                rows.Add(row);
+            }
+
+            return new SQLInsert<CreatureMeleeDamage>(rows, false).Build();
         }
 
         class CreatureTemplateNonWdbExport

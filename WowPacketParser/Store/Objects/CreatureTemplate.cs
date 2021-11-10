@@ -101,14 +101,29 @@ namespace WowPacketParser.Store.Objects
         public uint Faction;
     }
 
-    [DBTableName("creature_damage_school")]
-    public sealed class CreatureDamageSchool : IDataModel
+    [DBTableName("creature_melee_damage")]
+    public sealed class CreatureMeleeDamage : IDataModel
     {
         [DBFieldName("entry", true)]
         public uint Entry;
 
-        [DBFieldName("total_school_mask", true)]
+        [DBFieldName("hits_count")]
+        public uint HitsCount;
+
+        [DBFieldName("damage_min")]
+        public uint DamageMin;
+
+        [DBFieldName("damage_average")]
+        public uint DamageAverage;
+
+        [DBFieldName("damage_max")]
+        public uint DamageMax;
+
+        [DBFieldName("total_school_mask")]
         public uint TotalSchoolMask;
+
+        [DBFieldName("sniff_build", true)]
+        public int? SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("creature_questitem")]

@@ -362,17 +362,6 @@ CREATE TABLE IF NOT EXISTS `creature_create2_time` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.creature_damage_school
-DROP TABLE IF EXISTS `creature_damage_school`;
-CREATE TABLE IF NOT EXISTS `creature_damage_school` (
-  `entry` mediumint(8) unsigned NOT NULL,
-  `total_school_mask` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`entry`,`total_school_mask`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all schools of damage dealt with melee attacks by a given creature id';
-
--- Data exporting was unselected.
-
-
 -- Dumping structure for table sniffs_new_test.creature_destroy_time
 DROP TABLE IF EXISTS `creature_destroy_time`;
 CREATE TABLE IF NOT EXISTS `creature_destroy_time` (
@@ -531,6 +520,21 @@ CREATE TABLE IF NOT EXISTS `creature_loot_item` (
   `item_id` int(10) unsigned NOT NULL COMMENT 'item template id',
   `count` int(10) unsigned NOT NULL DEFAULT '1' COMMENT 'stack size'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='individual item that is part of a loot instance';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.creature_melee_damage
+DROP TABLE IF EXISTS `creature_melee_damage`;
+CREATE TABLE IF NOT EXISTS `creature_melee_damage` (
+  `entry` int(10) unsigned NOT NULL DEFAULT '0',
+  `hits_count` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `damage_min` int(10) unsigned NOT NULL DEFAULT '0',
+  `damage_average` int(10) unsigned NOT NULL DEFAULT '0',
+  `damage_max` int(10) unsigned NOT NULL DEFAULT '0',
+  `total_school_mask` int(10) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` smallint(5) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='statistics for melee damage per creature id';
 
 -- Data exporting was unselected.
 

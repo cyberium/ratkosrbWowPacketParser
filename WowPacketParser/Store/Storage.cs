@@ -709,25 +709,64 @@ namespace WowPacketParser.Store
                 Storage.CreatureThreatRemoves.Add(guid, threatList);
             }
         }
+        public static readonly Dictionary<uint, List<double>> CreatureMeleeAttackDamage = new Dictionary<uint, List<double>>();
+        private static void StoreCreatureMeleeAttackDamage(uint entry, double damage)
+        {
+            if (CreatureMeleeAttackDamage.ContainsKey(entry))
+            {
+                CreatureMeleeAttackDamage[entry].Add(damage);
+            }
+            else
+            {
+                List<double> damageList = new List<double>();
+                damageList.Add(damage);
+                CreatureMeleeAttackDamage.Add(entry, damageList);
+            }
+        }
+        public static readonly Dictionary<uint, uint> CreatureMeleeAttackSchool = new Dictionary<uint, uint>();
+        private static void StoreCreatureMeleeAttackSchool(uint entry, uint schoolMask)
+        {
+            if (CreatureMeleeAttackSchool.ContainsKey(entry))
+            {
+                CreatureMeleeAttackSchool[entry] |= schoolMask;
+            }
+            else
+            {
+                CreatureMeleeAttackSchool.Add(entry, schoolMask);
+            }
+        }
         public static readonly Dictionary<WowGuid, List<UnitMeleeAttackLog>> UnitAttackLogs = new Dictionary<WowGuid, List<UnitMeleeAttackLog>>();
         public static void StoreUnitAttackLog(UnitMeleeAttackLog attackData)
         {
             WowGuid attackerGuid = attackData.Attacker;
             ObjectType attackerType = attackerGuid.GetObjectType();
 
-            if (attackData.TotalSchoolMask != 0 &&
-                Settings.SqlTables.creature_damage_school &&
-                attackerType == ObjectType.Unit &&
+            if (Settings.SqlTables.creature_melee_damage &&
+                attackerGuid.GetHighType() == HighGuidType.Creature &&
+                attackData.VictimState == (uint)VictimStates.VICTIMSTATE_NORMAL &&
+                attackData.TotalSchoolMask != 0 && attackData.SpellId == 0 &&
+                attackData.Damage != 0 && attackData.OriginalDamage != 0 &&
                 Storage.Objects.ContainsKey(attackerGuid))
             {
+                
                 Unit creature = Storage.Objects[attackerGuid].Item1 as Unit;
-                if (creature != null && creature.ObjectData != null)
+                uint entry = (uint)creature.ObjectData.EntryID;
+
+                uint allowedHitInfoFlags = (uint)(SpellHitInfo.HITINFO_AFFECTS_VICTIM |
+                                                  SpellHitInfo.HITINFO_UNK10 |
+                                                  SpellHitInfo.HITINFO_UNK11 |
+                                                  SpellHitInfo.HITINFO_UNK12);
+
+                if (((attackData.HitInfo & (uint)SpellHitInfo.HITINFO_AFFECTS_VICTIM) != 0) &&
+                    ((attackData.HitInfo & allowedHitInfoFlags) == attackData.HitInfo) &&
+                      attackData.TotalAbsorbedDamage == 0 && attackData.TotalResistedDamage == 0 &&
+                      attackData.BlockedDamage <= 0 && attackData.OverkillDamage <= 0 &&
+                     !creature.HasAuraMatchingCriteria(HardcodedData.IsModMainHandDamageAura))
                 {
-                    CreatureDamageSchool row = new CreatureDamageSchool();
-                    row.Entry = (uint)creature.ObjectData.EntryID;
-                    row.TotalSchoolMask = attackData.TotalSchoolMask;
-                    Storage.CreatureDamageSchools.Add(row);
+                    StoreCreatureMeleeAttackDamage(entry, attackData.OriginalDamage);
                 }
+
+                StoreCreatureMeleeAttackSchool(entry, attackData.TotalSchoolMask);
             }
 
             if (attackerType == ObjectType.Unit)
@@ -862,7 +901,6 @@ namespace WowPacketParser.Store
         public static readonly DataBag<QuestObjective> QuestObjectives = new DataBag<QuestObjective>(Settings.SqlTables.quest_template);
         public static readonly DataBag<QuestVisualEffect> QuestVisualEffects = new DataBag<QuestVisualEffect>(Settings.SqlTables.quest_template);
         public static readonly DataBag<QuestRewardDisplaySpell> QuestRewardDisplaySpells = new DataBag<QuestRewardDisplaySpell>(Settings.SqlTables.quest_template);
-        public static readonly DataBag<CreatureDamageSchool> CreatureDamageSchools = new DataBag<CreatureDamageSchool>(Settings.SqlTables.creature_damage_school);
         public static readonly DataBag<CreatureTemplate> CreatureTemplates = new DataBag<CreatureTemplate>(Settings.SqlTables.creature_template_wdb);
         public static readonly DataBag<CreatureTemplateNonWDB> CreatureTemplatesNonWDB = new DataBag<CreatureTemplateNonWDB>(Settings.SqlTables.creature_template);
         public static readonly DataBag<CreatureTemplateQuestItem> CreatureTemplateQuestItems = new DataBag<CreatureTemplateQuestItem>(Settings.SqlTables.creature_template_wdb);
@@ -1875,7 +1913,8 @@ namespace WowPacketParser.Store
             CreatureStats.Clear();
             CreatureBadStats.Clear();
 
-            CreatureDamageSchools.Clear();
+            CreatureMeleeAttackDamage.Clear();
+            CreatureMeleeAttackSchool.Clear();
             CreatureTemplates.Clear();
             CreatureTemplatesNonWDB.Clear();
             CreatureTemplateQuestItems.Clear();

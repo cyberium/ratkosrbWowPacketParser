@@ -408,3 +408,18 @@ COMMENT='calculated time between casts for creatures'
 COLLATE='utf8_unicode_ci'
 ENGINE=InnoDB
 ;
+
+ALTER TABLE `creature_damage_school`
+	COMMENT='statistics for melee damage per creature id';
+  
+RENAME TABLE `creature_damage_school` TO `creature_melee_damage`;
+
+ALTER TABLE `creature_melee_damage`
+	CHANGE COLUMN `entry` `entry` INT UNSIGNED NOT NULL DEFAULT '0' FIRST,
+	ADD COLUMN `hits_count` SMALLINT UNSIGNED NOT NULL DEFAULT '0' AFTER `entry`,
+	ADD COLUMN `damage_min` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `hits_count`,
+	ADD COLUMN `damage_average` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `damage_min`,
+	ADD COLUMN `damage_max` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `damage_average`,
+	CHANGE COLUMN `total_school_mask` `total_school_mask` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `damage_max`,
+	ADD COLUMN `sniff_build` SMALLINT UNSIGNED NOT NULL DEFAULT '0' AFTER `total_school_mask`,
+	DROP PRIMARY KEY;
