@@ -904,6 +904,8 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("negative_arcane_res", false, false, true)]
         public int? NegativeArcaneResistance;
+
+        public string Auras;
     }
 
     [DBTableName("creature_attack_log")]

@@ -686,6 +686,8 @@ namespace WowPacketParser.SQL.Builders
                     Row<CreatureStats> row = new Row<CreatureStats>();
                     row.Data = stats.Item1;
                     row.Comment = "Has auras that modify stats!";
+                    if (!String.IsNullOrEmpty(stats.Item1.Auras))
+                        row.Comment += " (" + stats.Item1.Auras + ")";
                     rows.Add(row);
                 }
             }

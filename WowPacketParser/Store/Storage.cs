@@ -328,10 +328,11 @@ namespace WowPacketParser.Store
             else if (type == ObjectCreateType.Create2)
                 StoreObjectCreate2Time(guid, map, movement, time);
 
-            if (Storage.Objects.ContainsKey(guid))
+            WoWObject obj;
+            if (Storage.Objects.TryGetValue(guid, out obj))
             {
-                Objects[guid].Item1.LastCreateTime = time;
-                Objects[guid].Item1.LastCreateType = type;
+                obj.LastCreateTime = time;
+                obj.LastCreateType = type;
             }
         }
         public static readonly Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>> UnitAurasUpdates = new Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>>();
@@ -1031,7 +1032,7 @@ namespace WowPacketParser.Store
             CreatureStats creatureStats = new CreatureStats();
             UpdateField value;
 
-            if (!hasModMainHandDamageAura)
+            if (!hasModMainHandDamageAura || isPet)
             {
                 if (npc.UpdateFields.TryGetValue(UNIT_FIELD_MINDAMAGE, out value))
                 {
@@ -1045,7 +1046,7 @@ namespace WowPacketParser.Store
                 }
             }
 
-            if (!hasModOffHandDamageAura)
+            if (!hasModOffHandDamageAura || isPet)
             {
                 if (npc.UpdateFields.TryGetValue(UNIT_FIELD_MINOFFHANDDAMAGE, out value))
                 {
@@ -1059,7 +1060,7 @@ namespace WowPacketParser.Store
                 }
             }
             
-            if (!hasModRangedDamageAura)
+            if (!hasModRangedDamageAura || isPet)
             {
                 if (npc.UpdateFields.TryGetValue(UNIT_FIELD_MINRANGEDDAMAGE, out value))
                 {
@@ -1073,7 +1074,7 @@ namespace WowPacketParser.Store
                 }
             }
 
-            if (!hasModMeleeAttackPowerAura)
+            if (!hasModMeleeAttackPowerAura || isPet)
             {
                 if (npc.UpdateFields.TryGetValue(UNIT_FIELD_ATTACK_POWER, out value))
                 {
@@ -1106,7 +1107,7 @@ namespace WowPacketParser.Store
                 }
             }
 
-            if (!hasModRangedAttackPowerAura)
+            if (!hasModRangedAttackPowerAura || isPet)
             {
                 if (npc.UpdateFields.TryGetValue(UNIT_FIELD_RANGED_ATTACK_POWER, out value))
                 {
@@ -1150,7 +1151,7 @@ namespace WowPacketParser.Store
                 creatureStats.BaseMana = value.UInt32Value;
             }
 
-            if (!hasModStatsAura)
+            if (!hasModStatsAura || isPet)
             {
                 Func<int, bool> SaveStats = delegate (int field)
                 {
@@ -1249,7 +1250,7 @@ namespace WowPacketParser.Store
                     SaveNegStats(UNIT_FIELD_NEGSTAT);
             }
 
-            if (!hasModResistAura)
+            if (!hasModResistAura || isPet)
             {
                 Func<int, bool> SaveResistances = delegate (int field)
                 {
@@ -1385,7 +1386,10 @@ namespace WowPacketParser.Store
                 creatureStats.IsPet = isPet;
 
                 if (hasAnyBadAuras)
+                {
+                    creatureStats.Auras = npc.GetAurasString(false);
                     Storage.CreatureBadStats.Add(creatureStats);
+                }
                 else
                     Storage.CreatureStats.Add(creatureStats);
             }

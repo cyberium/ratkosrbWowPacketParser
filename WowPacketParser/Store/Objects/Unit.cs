@@ -111,12 +111,12 @@ namespace WowPacketParser.Store.Objects
             return null;
         }
 
-        public string GetOriginalAurasString(bool noCaster)
+        private string AurasToString(List<Aura> auraList, bool noCaster)
         {
             string auras = string.Empty;
-            if (AurasOriginal != null && AurasOriginal.Count != 0)
+            if (auraList != null && auraList.Count != 0)
             {
-                foreach (Aura aura in AurasOriginal)
+                foreach (Aura aura in auraList)
                 {
                     if (aura == null)
                         continue;
@@ -134,6 +134,15 @@ namespace WowPacketParser.Store.Objects
             }
 
             return auras;
+        }
+
+        public string GetAurasString(bool noCaster)
+        {
+            return AurasToString(Auras, noCaster);
+        }
+        public string GetOriginalAurasString(bool noCaster)
+        {
+            return AurasToString(AurasOriginal, noCaster);
         }
 
         public void ApplyAuraUpdates(List<Aura> updates)
