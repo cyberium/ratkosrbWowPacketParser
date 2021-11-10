@@ -16,6 +16,7 @@ namespace WowPacketParser.Store.Objects
 
         public List<Aura> Auras;
         public List<Aura> AurasOriginal;
+        public HashSet<uint> TemplateAuras;
         public List<ServerSideMovement> Waypoints;
         public List<ServerSideMovement> CombatMovements;
         public List<ServerSideMovementSpline> WaypointSplines;
@@ -48,6 +49,7 @@ namespace WowPacketParser.Store.Objects
             if (isCreature)
             {
                 DbGuid = ++UnitGuidCounter;
+                TemplateAuras = new HashSet<uint>();
                 Waypoints = new List<ServerSideMovement>();
                 WaypointSplines = new List<ServerSideMovementSpline>();
 
@@ -144,6 +146,10 @@ namespace WowPacketParser.Store.Objects
         {
             return AurasToString(AurasOriginal, noCaster);
         }
+        public string GetTemplateAurasString()
+        {
+            return string.Join(" ", TemplateAuras);
+        }
 
         public void ApplyAuraUpdates(List<Aura> updates)
         {
@@ -200,6 +206,29 @@ namespace WowPacketParser.Store.Objects
             }
 
             return false;
+        }
+
+        public void CheckForTemplateAuras()
+        {
+            if (Auras == null)
+                return;
+
+            foreach (Aura aura in Auras)
+            {
+                if (aura == null)
+                    continue;
+
+                if (ClientVersion.AddedInVersion(ClientType.MistsOfPandaria) ? !aura.AuraFlags.HasAnyFlag(AuraFlagMoP.NoCaster) : !aura.AuraFlags.HasAnyFlag(AuraFlag.NotCaster))
+                    continue;
+
+                if (ClientVersion.AddedInVersion(ClientType.MistsOfPandaria) ? aura.AuraFlags.HasAnyFlag(AuraFlagMoP.Duration) : aura.AuraFlags.HasAnyFlag(AuraFlag.Duration))
+                    continue;
+
+                if (aura.MaxDuration > 0)
+                    continue;
+
+                TemplateAuras.Add(aura.SpellId);
+            }
         }
 
         public void AddWaypoint(ServerSideMovement movementData, Vector3 startPosition, DateTime packetTime)

@@ -354,6 +354,10 @@ namespace WowPacketParser.Store
                     else
                         unit.ApplyAuraUpdates(auras);
 
+                    // All no caster auras get added to a set.
+                    if (guid.GetObjectType() == ObjectType.Unit)
+                        unit.CheckForTemplateAuras();
+
                     if (Settings.SqlTables.creature_spell_timers &&
                         guid.GetObjectType() == ObjectType.Unit &&
                         unit.HasAuraMatchingCriteria(HardcodedData.IsCrowdControlAura))

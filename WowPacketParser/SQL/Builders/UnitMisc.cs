@@ -830,19 +830,7 @@ namespace WowPacketParser.SQL.Builders
                 if (entry == 0)
                     continue;   // broken entry
 
-                var auras = string.Empty;
-                if (npc.AurasOriginal != null && npc.AurasOriginal.Count != 0)
-                {
-                    foreach (var aura in npc.AurasOriginal.Where(aura =>
-                        aura != null &&
-                        (ClientVersion.AddedInVersion(ClientType.MistsOfPandaria) ?
-                            aura.AuraFlags.HasAnyFlag(AuraFlagMoP.NoCaster) :
-                            aura.AuraFlags.HasAnyFlag(AuraFlag.NotCaster))))
-                    {
-                        auras += aura.SpellId + " ";
-                    }
-                    auras = auras.TrimEnd(' ');
-                }
+                var auras = npc.GetTemplateAurasString();
 
                 if (!creatureExportData.ContainsKey(entry))
                 {
