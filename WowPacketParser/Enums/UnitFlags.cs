@@ -39,6 +39,7 @@ namespace WowPacketParser.Enums
         Sheath                           = 0x40000000,
         Unk31                            = 0x80000000,
 
-        IsInCombat                       = PetIsAttackingTarget | AffectingCombat
+        IsInCombat                       = PetIsAttackingTarget | AffectingCombat,
+        IsCrowdControlled                = Silenced | Pacified | Stunned | MainHandDisarmed | Confused | Feared | PossessedByPlayer,
     }
 }

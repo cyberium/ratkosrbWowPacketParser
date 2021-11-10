@@ -526,6 +526,13 @@ namespace WowPacketParser.Parsing.Parsers
                                     obj.DontSaveCombatSpellTimers = false;
                                 }
 
+                                if (((update.Value.UInt32Value & (uint)UnitFlags.IsInCombat) != 0) &&
+                                    ((update.Value.UInt32Value & (uint)UnitFlags.IsCrowdControlled) != 0))
+                                {
+                                    // on crowd control in combat
+                                    obj.DontSaveCombatSpellTimers = true;
+                                }
+
                                 hasData = true;
                                 creatureUpdate.UnitFlag = update.Value.UInt32Value;
                             }

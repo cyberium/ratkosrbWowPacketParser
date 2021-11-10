@@ -62,11 +62,15 @@ namespace WowPacketParser.Store
         {
             obj.OriginalMovement = obj.Movement != null ? obj.Movement.CopyFromMe() : null;
             obj.OriginalUpdateFields = obj.UpdateFields != null ? new Dictionary<int, UpdateField>(obj.UpdateFields) : null;
+
             if (!string.IsNullOrWhiteSpace(Settings.SQLFileName) && Settings.DumpFormatWithSQL())
                 obj.SourceSniffId = Program.sniffFileNames.IndexOf(packet.FileName);
             obj.SourceSniffBuild = ClientVersion.BuildInt;
+
             obj.FirstCreateTime = packet.Time;
             obj.FirstCreateType = type;
+            obj.LastCreateTime = packet.Time;
+            obj.LastCreateType = type;
 
             Unit creature = obj as Unit;
             if (creature != null && creature.IsInCombat())
@@ -203,9 +207,6 @@ namespace WowPacketParser.Store
                 guid.GetObjectType() != ObjectType.ActivePlayer)
                 return;
 
-            if (Storage.Objects.ContainsKey(guid))
-                Storage.Objects[guid].Item1.LastDestroyTime = time;
-
             if (guid.GetObjectType() == ObjectType.Unit && !Settings.SqlTables.creature_destroy_time)
                 return;
 
@@ -327,6 +328,11 @@ namespace WowPacketParser.Store
             else if (type == ObjectCreateType.Create2)
                 StoreObjectCreate2Time(guid, map, movement, time);
 
+            if (Storage.Objects.ContainsKey(guid))
+            {
+                Objects[guid].Item1.LastCreateTime = time;
+                Objects[guid].Item1.LastCreateType = type;
+            }
         }
         public static readonly Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>> UnitAurasUpdates = new Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>>();
         public static void StoreUnitAurasUpdate(WowGuid guid, List<Aura> auras, DateTime time)
@@ -1700,12 +1706,11 @@ namespace WowPacketParser.Store
 
             // If creature was already in combat when we saw it, and it didn't just spawn,
             // we should not save it as initial, cause there could be casts we missed.
-            bool isRepeatCast = creature.FirstCreateTime == creature.EnterCombatTime &&
-                                creature.FirstCreateType != ObjectCreateType.Create2;
+            bool isRepeatCast = creature.LastCreateTime == creature.EnterCombatTime &&
+                                creature.LastCreateType != ObjectCreateType.Create2;
 
             // We lost sight of the creature at some point. Don't save as initial.
-            if (creature.LastDestroyTime != null &&
-                creature.EnterCombatTime < creature.LastDestroyTime)
+            if (creature.EnterCombatTime < creature.LastCreateTime)
                 isRepeatCast = true;
 
             DateTime? lastCastTime = Storage.GetLastCastGoTimeForCreature(castData.CasterGuid, castData.SpellID);
@@ -1715,9 +1720,7 @@ namespace WowPacketParser.Store
                 lastCastTime = null;
 
             // We lost sight of the creature some time between last cast and now. Abort.
-            if (lastCastTime != null &&
-                creature.LastDestroyTime != null &&
-                lastCastTime < creature.LastDestroyTime)
+            if (lastCastTime != null && lastCastTime < creature.LastCreateTime)
                 return;
 
             if (lastCastTime != null)

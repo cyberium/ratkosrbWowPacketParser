@@ -12,7 +12,8 @@ namespace WowPacketParser.Store.Objects
         public ObjectType Type;
         public DateTime FirstCreateTime;
         public ObjectCreateType FirstCreateType;
-        public DateTime? LastDestroyTime;
+        public DateTime LastCreateTime;
+        public ObjectCreateType LastCreateType;
 
         public MovementInfo Movement;
         public MovementInfo OriginalMovement;

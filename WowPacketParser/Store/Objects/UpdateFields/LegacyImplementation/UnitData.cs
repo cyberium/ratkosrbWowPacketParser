@@ -176,9 +176,9 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
             {
                 UnitField manaField;
                 if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER) > 0)
-                    manaField = UnitField.UNIT_FIELD_POWER;
+                    manaField = UnitField.UNIT_FIELD_MAXPOWER;
                 else if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER1) > 0)
-                    manaField = UnitField.UNIT_FIELD_POWER1;
+                    manaField = UnitField.UNIT_FIELD_MAXPOWER1;
                 else
                     return 0;
 
