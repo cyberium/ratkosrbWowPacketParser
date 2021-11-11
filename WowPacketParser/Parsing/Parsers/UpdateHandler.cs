@@ -119,7 +119,7 @@ namespace WowPacketParser.Parsing.Parsers
 
                 // Must be after unit has been added to store.
                 if (ClientVersion.HasAurasInUpdateFields())
-                    ParseAurasFromUpdateFields(packet, guid, updateMaskArray, updates);
+                    ParseAurasFromUpdateFields(packet, guid, updateMaskArray, updates, true);
             }
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))
@@ -317,7 +317,7 @@ namespace WowPacketParser.Parsing.Parsers
                 (guid.GetObjectType() == ObjectType.ActivePlayer))
             {
                 if (ClientVersion.HasAurasInUpdateFields())
-                    ParseAurasFromUpdateFields(packet, guid, updateMaskArray, updates);
+                    ParseAurasFromUpdateFields(packet, guid, updateMaskArray, updates, isCreate);
 
                 bool hasData = false;
                 CreatureValuesUpdate creatureUpdate = new CreatureValuesUpdate();
@@ -1103,7 +1103,7 @@ namespace WowPacketParser.Parsing.Parsers
             return hasPlayerLevelup;
         }
 
-        private static void ParseAurasFromUpdateFields(Packet packet, WowGuid guid, BitArray updateMaskArray, Dictionary<int, UpdateField> updates)
+        private static void ParseAurasFromUpdateFields(Packet packet, WowGuid guid, BitArray updateMaskArray, Dictionary<int, UpdateField> updates, bool isCreate)
         {
             if ((guid.GetObjectType() == ObjectType.Unit) ||
                 (guid.GetObjectType() == ObjectType.Player) ||
@@ -1239,7 +1239,7 @@ namespace WowPacketParser.Parsing.Parsers
                                 auras.RemoveAt(i);
                         }
 
-                        Storage.StoreUnitAurasUpdate(guid, auras, packet.Time);
+                        Storage.StoreUnitAurasUpdate(guid, auras, packet.Time, isCreate);
                     }
                 }
             }

@@ -88,7 +88,7 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
             var guid = new byte[8];
             var powerGUID = new byte[8];
 
-            packet.ReadBit(); // fake bit?
+            bool isFullUpdate = packet.ReadBit(); // fake bit?
 
             packet.StartBitStream(guid, 6, 1, 0);
 
@@ -202,7 +202,7 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
             packet.WriteGuid("Guid", guid);
 
             var GUID = new WowGuid64(BitConverter.ToUInt64(guid, 0));
-            Storage.StoreUnitAurasUpdate(GUID, auras, packet.Time);
+            Storage.StoreUnitAurasUpdate(GUID, auras, packet.Time, isFullUpdate);
         }
 
         [Parser(Opcode.SMSG_SPELL_GO)]

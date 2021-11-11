@@ -183,7 +183,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_AURA_UPDATE)]
         public static void HandleAuraUpdate(Packet packet)
         {
-            packet.ReadBit("UpdateAll");
+            bool isFullUpdate = packet.ReadBit("UpdateAll");
             var guid = packet.ReadPackedGuid128("UnitGUID");
             var count = packet.ReadUInt32("AurasCount");
 
@@ -231,7 +231,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 auras.Add(aura);
             }
 
-            Storage.StoreUnitAurasUpdate(guid, auras, packet.Time);
+            Storage.StoreUnitAurasUpdate(guid, auras, packet.Time, isFullUpdate);
         }
 
         [Parser(Opcode.SMSG_UPDATE_TALENT_DATA)]

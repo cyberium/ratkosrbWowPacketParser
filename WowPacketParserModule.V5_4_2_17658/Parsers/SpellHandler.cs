@@ -25,7 +25,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
 
             var bits0 = packet.ReadBits(24);
 
-            var bit10 = packet.ReadBit();
+            bool isFullUpdate = packet.ReadBit();
 
             var hasAura = new bool[bits0];
             var hasCasterGUID = new bool[bits0];
@@ -101,7 +101,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
             packet.WriteGuid("Guid", guid);
 
             var GUID = new WowGuid64(BitConverter.ToUInt64(guid, 0));
-            Storage.StoreUnitAurasUpdate(GUID, auras, packet.Time);
+            Storage.StoreUnitAurasUpdate(GUID, auras, packet.Time, isFullUpdate);
         }
 
         [Parser(Opcode.SMSG_SEND_KNOWN_SPELLS)]

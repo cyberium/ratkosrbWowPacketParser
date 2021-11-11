@@ -844,7 +844,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             var bits0 = 0;
 
             guid[7] = packet.ReadBit();
-            var bit28 = packet.ReadBit(); // +40
+            bool isFullUpdate = packet.ReadBit(); // +40
             bits0 = (int)packet.ReadBits(24); //+24
             guid[6] = packet.ReadBit();
             guid[1] = packet.ReadBit();
@@ -921,7 +921,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
 
             packet.ParseBitStream(guid, 2, 6, 7, 1, 3, 4, 0, 5);
             var GUID = packet.WriteGuid("Guid", guid);
-            Storage.StoreUnitAurasUpdate(GUID, auras, packet.Time);
+            Storage.StoreUnitAurasUpdate(GUID, auras, packet.Time, isFullUpdate);
         }
 
         [Parser(Opcode.SMSG_SEND_KNOWN_SPELLS)]

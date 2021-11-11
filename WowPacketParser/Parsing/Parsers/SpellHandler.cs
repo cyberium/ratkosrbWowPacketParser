@@ -294,7 +294,7 @@ namespace WowPacketParser.Parsing.Parsers
                 if (aura != null)
                     auras.Add(aura);
             }
-            Storage.StoreUnitAurasUpdate(guid, auras, packet.Time);
+            Storage.StoreUnitAurasUpdate(guid, auras, packet.Time, packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_AURA_UPDATE_ALL, Direction.ServerToClient));
         }
 
         [Parser(Opcode.CMSG_CAST_SPELL)]

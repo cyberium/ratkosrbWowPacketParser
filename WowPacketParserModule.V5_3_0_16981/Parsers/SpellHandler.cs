@@ -54,7 +54,7 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
                 }
             }
             packet.StartBitStream(guid, 2, 3, 7, 4);
-            packet.ReadBit("Is AURA_UPDATE_ALL");
+            bool isFullUpdate = packet.ReadBit("Is AURA_UPDATE_ALL");
             packet.StartBitStream(guid, 0, 5);
             packet.ResetBitReader();
 
@@ -113,7 +113,7 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
             packet.WriteGuid("Guid", guid);
 
             var GUID = new WowGuid64(BitConverter.ToUInt64(guid, 0));
-            Storage.StoreUnitAurasUpdate(GUID, auras, packet.Time);
+            Storage.StoreUnitAurasUpdate(GUID, auras, packet.Time, isFullUpdate);
         }
 
         [Parser(Opcode.CMSG_CAST_SPELL)]

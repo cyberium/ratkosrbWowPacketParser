@@ -273,6 +273,8 @@ namespace WowPacketParser.Loading
                     if (Settings.SQLOutputFlag != 0 || HotfixSettings.Instance.ShouldLog())
                         WriteSQLs();
 
+                    Storage.ClearTemporaryData();
+
                     if (Settings.LogPacketErrors)
                         WritePacketErrors();
 

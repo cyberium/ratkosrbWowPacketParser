@@ -336,17 +336,21 @@ namespace WowPacketParser.Store
             }
         }
         public static readonly Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>> UnitAurasUpdates = new Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>>();
-        public static void StoreUnitAurasUpdate(WowGuid guid, List<Aura> auras, DateTime time)
+        public static void StoreUnitAurasUpdate(WowGuid guid, List<Aura> auras, DateTime time, bool isFullUpdate)
         {
             if (Storage.Objects.ContainsKey(guid))
             {
                 var unit = Storage.Objects[guid].Item1 as Unit;
                 if (unit != null)
                 {
+                    // All previous auras are cleared on full update.
+                    if (isFullUpdate && unit.Auras != null)
+                        unit.Auras = null;
+
                     // If this is the first packet that sends auras
                     // (hopefully at spawn time) add it to the "Auras" field
-                    int maxInitialAurasDelay = ClientVersion.HasAurasInUpdateFields() ? 1 : 3;
-                    if (unit.AurasOriginal == null && unit.FirstCreateTime != null && ((time - unit.FirstCreateTime).TotalSeconds < maxInitialAurasDelay))
+                    if (unit.AurasOriginal == null && (isFullUpdate || unit.FirstCreateType == ObjectCreateType.Create2) && 
+                      !(unit.FirstCreateTime > time) && ((time - unit.FirstCreateTime).TotalSeconds <= 1))
                     {
                         unit.AurasOriginal = auras;
                         unit.Auras = auras.Select(aura => aura.Clone()).ToList();
@@ -1746,8 +1750,8 @@ namespace WowPacketParser.Store
 
             Unit creature = Storage.Objects[castData.CasterGuid].Item1 as Unit;
             if (creature == null || creature.EnterCombatTime == null ||
-               !creature.IsInCombat() || creature.DontSaveCombatSpellTimers ||
-                creature.UnitData.Health == 0)
+                creature.EnterCombatTime > castTime || !creature.IsInCombat() ||
+                creature.DontSaveCombatSpellTimers || creature.UnitData.Health == 0)
                 return;
 
             // If creature was already in combat when we saw it, and it didn't just spawn,
@@ -1862,10 +1866,19 @@ namespace WowPacketParser.Store
         public static readonly DataBag<GuildTemplate> Guild = new DataBag<GuildTemplate>(Settings.SqlTables.guild);
         public static readonly DataBag<GuildRankTemplate> GuildRank = new DataBag<GuildRankTemplate>(Settings.SqlTables.guild_rank);
 
-        public static void ClearContainers()
+        // Called every time processing a sniff file finishes,
+        // and a new one is about to be loaded and parsed.
+        public static void ClearTemporaryData()
         {
             CurrentTaxiNode = 0;
             CurrentActivePlayer = null;
+            LastCreatureCastGo.Clear();
+        }
+
+        // Only called if not in multi sniff sql mode.
+        public static void ClearContainers()
+        {
+            ClearTemporaryData();
 
             SniffData.Clear();
 
@@ -1920,7 +1933,6 @@ namespace WowPacketParser.Store
             CreatureTemplateQuestItems.Clear();
             CreatureTemplateScalings.Clear();
             CreatureTemplateModels.Clear();
-            LastCreatureCastGo.Clear();
             CreatureInitialSpellTimers.Clear();
             CreatureRepeatSpellTimers.Clear();
             CreatureThreatUpdates.Clear();
