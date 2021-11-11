@@ -500,3 +500,9 @@ ALTER TABLE `creature_pet_remaining_cooldown`
 
 ALTER TABLE `creature_stats`
 	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `negative_arcane_res`;
+
+ALTER TABLE `gameobject`
+	CHANGE COLUMN `map` `map` SMALLINT(5) UNSIGNED NULL DEFAULT '0' COMMENT 'Map Identifier' AFTER `id`;
+
+ALTER TABLE `dynamicobject`
+	CHANGE COLUMN `map` `map` SMALLINT(5) UNSIGNED NULL DEFAULT '0' COMMENT 'Map Identifier' AFTER `guid`;

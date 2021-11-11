@@ -1050,7 +1050,7 @@ CREATE TABLE IF NOT EXISTS `creature_values_update` (
 DROP TABLE IF EXISTS `dynamicobject`;
 CREATE TABLE IF NOT EXISTS `dynamicobject` (
   `guid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Global Unique Identifier',
-  `map` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'Map Identifier',
+  `map` smallint(5) unsigned DEFAULT '0' COMMENT 'Map Identifier',
   `position_x` float NOT NULL DEFAULT '0',
   `position_y` float NOT NULL DEFAULT '0',
   `position_z` float NOT NULL DEFAULT '0',
@@ -1142,7 +1142,7 @@ DROP TABLE IF EXISTS `gameobject`;
 CREATE TABLE IF NOT EXISTS `gameobject` (
   `guid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Global Unique Identifier',
   `id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'Gameobject Identifier',
-  `map` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'Map Identifier',
+  `map` smallint(5) unsigned DEFAULT '0' COMMENT 'Map Identifier',
   `zone_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'Zone Identifier',
   `area_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'Area Identifier',
   `position_x` float NOT NULL DEFAULT '0',
