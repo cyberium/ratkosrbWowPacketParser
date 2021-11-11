@@ -50,6 +50,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Data", TargetedDbExpansion.BattleForAzeroth, 34, true, DbType = (TargetedDbType.TRINITY))]
         [DBFieldName("data", TargetedDbExpansion.BurningCrusadeClassic, 34, true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("Data", TargetedDbExpansion.BurningCrusadeClassic, 34, true, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("data", TargetedDbExpansion.Shadowlands, 35, true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("Data", TargetedDbExpansion.Shadowlands, 35, true, DbType = (TargetedDbType.TRINITY))]
         public int?[] Data;
 
         [DBFieldName("quest_items_count", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
