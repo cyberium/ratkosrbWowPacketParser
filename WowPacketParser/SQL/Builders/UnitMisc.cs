@@ -651,7 +651,7 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod(false)]
         public static string CreatureStats()
         {
-            if (Storage.CreatureStats.IsEmpty() && Storage.CreatureBadStats.IsEmpty())
+            if (Storage.CreatureStats.IsEmpty() && Storage.CreatureStatsDirty.IsEmpty())
                 return string.Empty;
 
             if (!Settings.SqlTables.creature_stats)
@@ -677,7 +677,7 @@ namespace WowPacketParser.SQL.Builders
             }
 
             // now include the partial stat data if we dont have clean data
-            foreach (var stats in Storage.CreatureBadStats)
+            foreach (var stats in Storage.CreatureStatsDirty)
             {
                 var entryLevelPair = new Tuple<uint, uint>(stats.Item1.Entry, stats.Item1.Level);
                 if (!mobsWithStats.Contains(entryLevelPair))
@@ -795,10 +795,24 @@ namespace WowPacketParser.SQL.Builders
             foreach (var creatureData in Storage.CreatureMeleeAttackDamage)
             {
                 CreatureMeleeDamage meleeStats = GetDataForCreature(creatureData.Key);
+                meleeStats.IsDirty = false;
                 meleeStats.HitsCount = (uint)creatureData.Value.Count;
                 meleeStats.DamageMin = (uint)creatureData.Value.Min();
                 meleeStats.DamageAverage = (uint)creatureData.Value.Average();
                 meleeStats.DamageMax = (uint)creatureData.Value.Max();
+            }
+
+            foreach (var creatureData in Storage.CreatureMeleeAttackDamageDirty)
+            {
+                if (!Storage.CreatureMeleeAttackDamage.ContainsKey(creatureData.Key))
+                {
+                    CreatureMeleeDamage meleeStats = GetDataForCreature(creatureData.Key);
+                    meleeStats.IsDirty = true;
+                    meleeStats.HitsCount = (uint)creatureData.Value.Count;
+                    meleeStats.DamageMin = (uint)creatureData.Value.Min();
+                    meleeStats.DamageAverage = (uint)creatureData.Value.Average();
+                    meleeStats.DamageMax = (uint)creatureData.Value.Max();
+                }
             }
 
             foreach (var creatureData in Storage.CreatureMeleeAttackSchool)

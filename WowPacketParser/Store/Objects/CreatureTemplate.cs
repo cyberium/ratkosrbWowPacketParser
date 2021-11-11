@@ -107,6 +107,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("entry", true)]
         public uint Entry;
 
+        [DBFieldName("is_dirty", true)]
+        public bool IsDirty;
+
         [DBFieldName("hits_count")]
         public uint HitsCount;
 

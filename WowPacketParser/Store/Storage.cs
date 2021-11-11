@@ -714,17 +714,19 @@ namespace WowPacketParser.Store
             }
         }
         public static readonly Dictionary<uint, List<double>> CreatureMeleeAttackDamage = new Dictionary<uint, List<double>>();
-        private static void StoreCreatureMeleeAttackDamage(uint entry, double damage)
+        public static readonly Dictionary<uint, List<double>> CreatureMeleeAttackDamageDirty = new Dictionary<uint, List<double>>();
+        private static void StoreCreatureMeleeAttackDamage(uint entry, double damage, bool dirty)
         {
-            if (CreatureMeleeAttackDamage.ContainsKey(entry))
+            Dictionary<uint, List<double>> damageDict = dirty ? CreatureMeleeAttackDamageDirty : CreatureMeleeAttackDamage;
+            if (damageDict.ContainsKey(entry))
             {
-                CreatureMeleeAttackDamage[entry].Add(damage);
+                damageDict[entry].Add(damage);
             }
             else
             {
                 List<double> damageList = new List<double>();
                 damageList.Add(damage);
-                CreatureMeleeAttackDamage.Add(entry, damageList);
+                damageDict.Add(entry, damageList);
             }
         }
         public static readonly Dictionary<uint, uint> CreatureMeleeAttackSchool = new Dictionary<uint, uint>();
@@ -765,9 +767,14 @@ namespace WowPacketParser.Store
                     ((attackData.HitInfo & allowedHitInfoFlags) == attackData.HitInfo) &&
                       attackData.TotalAbsorbedDamage == 0 && attackData.TotalResistedDamage == 0 &&
                       attackData.BlockedDamage <= 0 && attackData.OverkillDamage <= 0 &&
+                     (creature.UnitData.Flags & (uint)UnitFlags.MainHandDisarmed) == 0 &&
                      !creature.HasAuraMatchingCriteria(HardcodedData.IsModMainHandDamageAura))
                 {
-                    StoreCreatureMeleeAttackDamage(entry, attackData.OriginalDamage);
+                    StoreCreatureMeleeAttackDamage(entry, attackData.OriginalDamage, false);
+                }
+                else
+                {
+                    StoreCreatureMeleeAttackDamage(entry, attackData.OriginalDamage, true);
                 }
 
                 StoreCreatureMeleeAttackSchool(entry, attackData.TotalSchoolMask);
@@ -911,7 +918,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<CreatureTemplateScaling> CreatureTemplateScalings = new DataBag<CreatureTemplateScaling>(Settings.SqlTables.creature_template_scaling);
         public static readonly DataBag<CreatureTemplateModel> CreatureTemplateModels = new DataBag<CreatureTemplateModel>(Settings.SqlTables.creature_template);
         public static readonly DataBag<CreatureStats> CreatureStats = new DataBag<CreatureStats>(Settings.SqlTables.creature_stats);
-        public static readonly DataBag<CreatureStats> CreatureBadStats = new DataBag<CreatureStats>(Settings.SqlTables.creature_stats);
+        public static readonly DataBag<CreatureStats> CreatureStatsDirty = new DataBag<CreatureStats>(Settings.SqlTables.creature_stats);
 
         public static void StoreCreatureStats(Unit npc, BitArray updateMaskArray, bool isPet)
         {
@@ -1430,11 +1437,12 @@ namespace WowPacketParser.Store
                 creatureStats.Entry = entry;
                 creatureStats.Level = (uint)npc.UnitData.Level;
                 creatureStats.IsPet = isPet;
+                creatureStats.IsDirty = hasAnyBadAuras;
 
                 if (hasAnyBadAuras)
                 {
                     creatureStats.Auras = npc.GetAurasString(false);
-                    Storage.CreatureBadStats.Add(creatureStats);
+                    Storage.CreatureStatsDirty.Add(creatureStats);
                 }
                 else
                     Storage.CreatureStats.Add(creatureStats);
@@ -1924,9 +1932,10 @@ namespace WowPacketParser.Store
             CreatureClientInteractTimes.Clear();
             CreatureLoot.Clear();
             CreatureStats.Clear();
-            CreatureBadStats.Clear();
+            CreatureStatsDirty.Clear();
 
             CreatureMeleeAttackDamage.Clear();
+            CreatureMeleeAttackDamageDirty.Clear();
             CreatureMeleeAttackSchool.Clear();
             CreatureTemplates.Clear();
             CreatureTemplatesNonWDB.Clear();

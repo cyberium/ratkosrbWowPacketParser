@@ -528,12 +528,13 @@ CREATE TABLE IF NOT EXISTS `creature_loot_item` (
 DROP TABLE IF EXISTS `creature_melee_damage`;
 CREATE TABLE IF NOT EXISTS `creature_melee_damage` (
   `entry` int(10) unsigned NOT NULL DEFAULT '0',
+  `is_dirty` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'mob had auras that affect damage or there were no normal hits',
   `hits_count` smallint(5) unsigned NOT NULL DEFAULT '0',
   `damage_min` int(10) unsigned NOT NULL DEFAULT '0',
   `damage_average` int(10) unsigned NOT NULL DEFAULT '0',
   `damage_max` int(10) unsigned NOT NULL DEFAULT '0',
   `total_school_mask` int(10) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` smallint(5) unsigned NOT NULL DEFAULT '0'
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='statistics for melee damage per creature id';
 
 -- Data exporting was unselected.
@@ -661,7 +662,8 @@ CREATE TABLE IF NOT EXISTS `creature_pet_actions` (
   `slot7` int(10) unsigned NOT NULL DEFAULT '0',
   `slot8` int(10) unsigned NOT NULL DEFAULT '0',
   `slot9` int(10) unsigned NOT NULL DEFAULT '0',
-  `slot10` int(10) unsigned NOT NULL DEFAULT '0'
+  `slot10` int(10) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_PET_SPELLS_MESSAGE';
 
 -- Data exporting was unselected.
@@ -675,7 +677,8 @@ CREATE TABLE IF NOT EXISTS `creature_pet_cooldown` (
   `index` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
   `cooldown` int(10) unsigned NOT NULL DEFAULT '0',
-  `mod_rate` float unsigned NOT NULL DEFAULT '1'
+  `mod_rate` float unsigned NOT NULL DEFAULT '1',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_SPELL_COOLDOWN';
 
 -- Data exporting was unselected.
@@ -701,7 +704,8 @@ CREATE TABLE IF NOT EXISTS `creature_pet_remaining_cooldown` (
   `category` smallint(5) unsigned NOT NULL DEFAULT '0',
   `category_cooldown` int(10) unsigned NOT NULL DEFAULT '0',
   `mod_rate` float unsigned NOT NULL DEFAULT '1',
-  `time_since_cast` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'milliseconds since last SMSG_SPELL_GO for this spell'
+  `time_since_cast` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'milliseconds since last SMSG_SPELL_GO for this spell',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='cooldowns that were already present when the creature became charmed\r\nfrom SMSG_PET_SPELLS_MESSAGE.';
 
 -- Data exporting was unselected.
@@ -745,7 +749,7 @@ CREATE TABLE IF NOT EXISTS `creature_spell_timers` (
   `repeat_delay_min` int(10) unsigned NOT NULL DEFAULT '0',
   `repeat_delay_average` int(10) unsigned NOT NULL DEFAULT '0',
   `repeat_delay_max` int(10) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` smallint(5) unsigned NOT NULL DEFAULT '0'
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='calculated time between casts for creatures';
 
 -- Data exporting was unselected.
@@ -757,6 +761,7 @@ CREATE TABLE IF NOT EXISTS `creature_stats` (
   `entry` int(10) unsigned NOT NULL COMMENT 'creature template id',
   `level` int(10) unsigned NOT NULL,
   `is_pet` tinyint(3) unsigned NOT NULL,
+  `is_dirty` tinyint(3) unsigned NOT NULL COMMENT 'mob had auras that affect stats',
   `dmg_min` float DEFAULT NULL,
   `dmg_max` float DEFAULT NULL,
   `offhand_dmg_min` float DEFAULT NULL,
@@ -809,7 +814,8 @@ CREATE TABLE IF NOT EXISTS `creature_stats` (
   `negative_frost_res` int(11) DEFAULT NULL,
   `negative_shadow_res` int(11) DEFAULT NULL,
   `negative_arcane_res` int(11) DEFAULT NULL,
-  PRIMARY KEY (`entry`,`level`,`is_pet`)
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`level`,`is_pet`,`is_dirty`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='stats data from SMSG_UPDATE_OBJECT\r\nserver only sends it to the creature''s charmer, or player who casts beast lore on it';
 
 -- Data exporting was unselected.
@@ -849,7 +855,7 @@ CREATE TABLE IF NOT EXISTS `creature_template_locale` (
   `NameAlt` text,
   `Title` text,
   `TitleAlt` text,
-  `VerifiedBuild` int(11) NOT NULL DEFAULT '0',
+  `VerifiedBuild` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`locale`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1162,8 +1168,8 @@ CREATE TABLE IF NOT EXISTS `gameobject` (
   `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `artkit` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `custom_param` int(10) unsigned NOT NULL DEFAULT '0',
-  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` smallint(5) unsigned DEFAULT '0',
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='the initial state of all individual gameobject spawns seen in the sniff';
 
@@ -1295,7 +1301,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_questitem` (
   `entry` int(10) unsigned NOT NULL DEFAULT '0',
   `id` int(10) unsigned NOT NULL DEFAULT '0',
   `item_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='quest items that drop from a given gameobject id\r\nfrom SMSG_QUERY_GAME_OBJECT_RESPONSE';
 
@@ -2327,7 +2333,7 @@ CREATE TABLE IF NOT EXISTS `quest_details` (
   `EmoteDelay2` int(10) unsigned NOT NULL DEFAULT '0',
   `EmoteDelay3` int(10) unsigned NOT NULL DEFAULT '0',
   `EmoteDelay4` int(10) unsigned NOT NULL DEFAULT '0',
-  `VerifiedBuild` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `VerifiedBuild` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -2354,7 +2360,7 @@ CREATE TABLE IF NOT EXISTS `quest_greeting` (
   `GreetEmoteType` smallint(5) unsigned NOT NULL DEFAULT '0',
   `GreetEmoteDelay` int(10) unsigned NOT NULL DEFAULT '0',
   `Greeting` text,
-  `VerifiedBuild` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `VerifiedBuild` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`,`Type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -2368,7 +2374,7 @@ CREATE TABLE IF NOT EXISTS `quest_greeting_locale` (
   `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `locale` varchar(4) NOT NULL,
   `Greeting` text,
-  `VerifiedBuild` int(10) NOT NULL DEFAULT '0',
+  `VerifiedBuild` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`,`type`,`locale`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -2389,7 +2395,7 @@ CREATE TABLE IF NOT EXISTS `quest_objectives` (
   `Flags2` int(10) unsigned NOT NULL DEFAULT '0',
   `ProgressBarWeight` float NOT NULL DEFAULT '0',
   `Description` text,
-  `VerifiedBuild` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `VerifiedBuild` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -2404,7 +2410,7 @@ CREATE TABLE IF NOT EXISTS `quest_objectives_locale` (
   `QuestId` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `StorageIndex` tinyint(3) NOT NULL DEFAULT '0',
   `Description` text,
-  `VerifiedBuild` int(11) NOT NULL DEFAULT '0',
+  `VerifiedBuild` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`,`locale`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -2424,7 +2430,7 @@ CREATE TABLE IF NOT EXISTS `quest_offer_reward` (
   `EmoteDelay3` int(10) unsigned NOT NULL DEFAULT '0',
   `EmoteDelay4` int(10) unsigned NOT NULL DEFAULT '0',
   `RewardText` text,
-  `VerifiedBuild` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `VerifiedBuild` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -2437,7 +2443,7 @@ CREATE TABLE IF NOT EXISTS `quest_offer_reward_locale` (
   `ID` int(10) unsigned NOT NULL DEFAULT '0',
   `locale` varchar(4) NOT NULL,
   `RewardText` text,
-  `VerifiedBuild` int(10) NOT NULL DEFAULT '0',
+  `VerifiedBuild` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`,`locale`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -2450,7 +2456,7 @@ CREATE TABLE IF NOT EXISTS `quest_request_items` (
   `ID` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `Emote` smallint(5) unsigned DEFAULT NULL,
   `CompletionText` text,
-  `VerifiedBuild` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `VerifiedBuild` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -2463,7 +2469,7 @@ CREATE TABLE IF NOT EXISTS `quest_request_items_locale` (
   `ID` int(10) unsigned NOT NULL DEFAULT '0',
   `locale` varchar(4) NOT NULL,
   `CompletionText` text,
-  `VerifiedBuild` int(10) NOT NULL DEFAULT '0',
+  `VerifiedBuild` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`,`locale`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -2636,7 +2642,7 @@ CREATE TABLE IF NOT EXISTS `quest_template` (
   `PortraitTurnInName` text,
   `AcceptedSoundKitID` int(10) unsigned DEFAULT NULL,
   `CompleteSoundKitID` int(10) unsigned DEFAULT NULL,
-  `VerifiedBuild` smallint(5) unsigned DEFAULT '0',
+  `VerifiedBuild` mediumint(8) unsigned DEFAULT '0',
   PRIMARY KEY (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Quest System';
 
@@ -2657,7 +2663,7 @@ CREATE TABLE IF NOT EXISTS `quest_template_locale` (
   `PortraitTurnInText` text,
   `PortraitTurnInName` text,
   `QuestCompletionLog` text,
-  `VerifiedBuild` int(11) NOT NULL DEFAULT '0',
+  `VerifiedBuild` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`ID`,`locale`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -2876,7 +2882,7 @@ CREATE TABLE IF NOT EXISTS `trainer` (
   `id` int(10) unsigned NOT NULL DEFAULT '0',
   `type` tinyint(2) unsigned NOT NULL DEFAULT '2',
   `greeting` text,
-  `sniff_build` smallint(5) unsigned DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -2895,7 +2901,7 @@ CREATE TABLE IF NOT EXISTS `trainer_spell` (
   `required_ability2` int(10) unsigned NOT NULL DEFAULT '0',
   `required_ability3` int(10) unsigned NOT NULL DEFAULT '0',
   `required_level` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` smallint(5) unsigned DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`trainer_id`,`spell_id`,`money_cost`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

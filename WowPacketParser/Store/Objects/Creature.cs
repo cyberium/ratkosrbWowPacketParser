@@ -749,6 +749,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("is_pet", true)]
         public bool IsPet;
 
+        [DBFieldName("is_dirty", true)]
+        public bool IsDirty;
+
         [DBFieldName("dmg_min", false, false, true)]
         public float? DmgMin;
 
@@ -904,6 +907,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("negative_arcane_res", false, false, true)]
         public int? NegativeArcaneResistance;
+
+        [DBFieldName("sniff_build")]
+        public int? SniffBuild = ClientVersion.BuildInt;
 
         public string Auras;
     }

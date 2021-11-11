@@ -358,6 +358,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("mod_rate")]
         public float? ModRate;
+
+        [DBFieldName("sniff_build")]
+        public int? SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("creature_pet_remaining_cooldown")]
@@ -383,6 +386,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("time_since_cast")]
         public uint? TimeSinceCast;
+
+        [DBFieldName("sniff_build")]
+        public int? SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("creature_pet_actions")]
@@ -393,6 +399,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("slot", 10)]
         public uint[] SpellID = new uint[10];
+
+        [DBFieldName("sniff_build")]
+        public int? SniffBuild = ClientVersion.BuildInt;
 
         public WowGuid CasterGUID;
     }

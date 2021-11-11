@@ -423,3 +423,80 @@ ALTER TABLE `creature_melee_damage`
 	CHANGE COLUMN `total_school_mask` `total_school_mask` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `damage_max`,
 	ADD COLUMN `sniff_build` SMALLINT UNSIGNED NOT NULL DEFAULT '0' AFTER `total_school_mask`,
 	DROP PRIMARY KEY;
+
+ALTER TABLE `creature_melee_damage`
+	ADD COLUMN `is_dirty` TINYINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'mob had auras that affect damage or there were no normal hits' AFTER `entry`;
+
+ALTER TABLE `creature_stats`
+	ADD COLUMN `is_dirty` TINYINT(3) UNSIGNED NOT NULL COMMENT 'mob had auras that affect stats' AFTER `is_pet`,
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`entry`, `level`, `is_pet`, `is_dirty`);
+
+ALTER TABLE `creature_melee_damage`
+	CHANGE COLUMN `sniff_build` `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `total_school_mask`;
+
+ALTER TABLE `creature_spell_timers`
+	CHANGE COLUMN `sniff_build` `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `repeat_delay_max`;
+  
+ALTER TABLE `creature_template_locale`
+	CHANGE COLUMN `VerifiedBuild` `VerifiedBuild` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `TitleAlt`;
+
+ALTER TABLE `gameobject`
+	CHANGE COLUMN `sniff_build` `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `sniff_id`;
+
+ALTER TABLE `gameobject`
+	CHANGE COLUMN `sniff_id` `sniff_id` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table' AFTER `custom_param`;
+
+ALTER TABLE `gameobject_questitem`
+	CHANGE COLUMN `sniff_build` `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `item_id`;
+
+ALTER TABLE `quest_details`
+	CHANGE COLUMN `VerifiedBuild` `VerifiedBuild` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `EmoteDelay4`;
+
+ALTER TABLE `quest_greeting`
+	CHANGE COLUMN `VerifiedBuild` `VerifiedBuild` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `Greeting`;
+
+ALTER TABLE `quest_greeting_locale`
+	CHANGE COLUMN `VerifiedBuild` `VerifiedBuild` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `Greeting`;
+
+ALTER TABLE `quest_objectives`
+	CHANGE COLUMN `VerifiedBuild` `VerifiedBuild` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `Description`;
+
+ALTER TABLE `quest_objectives_locale`
+	CHANGE COLUMN `VerifiedBuild` `VerifiedBuild` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `Description`;
+
+ALTER TABLE `quest_offer_reward`
+	CHANGE COLUMN `VerifiedBuild` `VerifiedBuild` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `RewardText`;
+
+ALTER TABLE `quest_offer_reward_locale`
+	CHANGE COLUMN `VerifiedBuild` `VerifiedBuild` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `RewardText`;
+
+ALTER TABLE `quest_request_items`
+	CHANGE COLUMN `VerifiedBuild` `VerifiedBuild` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `CompletionText`;
+
+ALTER TABLE `quest_request_items_locale`
+	CHANGE COLUMN `VerifiedBuild` `VerifiedBuild` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `CompletionText`;
+
+ALTER TABLE `quest_template`
+	CHANGE COLUMN `VerifiedBuild` `VerifiedBuild` MEDIUMINT UNSIGNED NULL DEFAULT '0' AFTER `CompleteSoundKitID`;
+
+ALTER TABLE `quest_template_locale`
+	CHANGE COLUMN `VerifiedBuild` `VerifiedBuild` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `QuestCompletionLog`;
+
+ALTER TABLE `trainer`
+	CHANGE COLUMN `sniff_build` `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `greeting`;
+
+ALTER TABLE `trainer_spell`
+	CHANGE COLUMN `sniff_build` `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `required_level`;
+
+ALTER TABLE `creature_pet_actions`
+	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `slot10`;
+
+ALTER TABLE `creature_pet_cooldown`
+	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `mod_rate`;
+
+ALTER TABLE `creature_pet_remaining_cooldown`
+	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `time_since_cast`;
+
+ALTER TABLE `creature_stats`
+	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `negative_arcane_res`;

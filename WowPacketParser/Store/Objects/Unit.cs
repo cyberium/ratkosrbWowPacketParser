@@ -120,7 +120,7 @@ namespace WowPacketParser.Store.Objects
             {
                 foreach (Aura aura in auraList)
                 {
-                    if (aura == null)
+                    if (aura == null || aura.SpellId == 0)
                         continue;
 
                     if (noCaster)
