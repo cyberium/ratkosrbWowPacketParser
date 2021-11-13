@@ -47,6 +47,7 @@ namespace WowPacketParser.SQL.Builders
             uint maxDbGuid = 0;
             uint threatTargetsCounter = 1;
             var rows = new RowList<Creature>();
+            var powerValuesRows = new RowList<CreaturePowerValues>();
             var guidValuesRows = new RowList<CreatureGuidValues>();
             var addonRows = new RowList<CreatureAddon>();
             var interactRows = new RowList<CreatureClientInteract>();
@@ -71,6 +72,7 @@ namespace WowPacketParser.SQL.Builders
             var attackStopRows = new RowList<CreatureAttackToggle>();
             var updateEquipmentValuesRows = new RowList<CreatureEquipmentValuesUpdate>();
             var updateGuidValuesRows = new RowList<CreatureGuidValuesUpdate>();
+            var updatePowerValuesRows = new RowList<CreaturePowerValuesUpdate>();
             var emoteRows = new RowList<CreatureEmote>();
             foreach (var unit in units)
             {
@@ -93,15 +95,6 @@ namespace WowPacketParser.SQL.Builders
 
                 if ((unit.Key.GetHighType() == HighGuidType.Pet) && !Settings.SavePets)
                     continue;
-
-                uint movementType = 0;
-                uint spawnDist = 0;
-
-                if (creature.Movement.HasWpsOrRandMov)
-                {
-                    movementType = 1;
-                    spawnDist = 10;
-                }
 
                 Row<Creature> row = new Row<Creature>();
                 row.Data.GUID = "@CGUID+" + creature.DbGuid;
@@ -164,8 +157,9 @@ namespace WowPacketParser.SQL.Builders
                 }
 
                 //row.Data.SpawnTimeSecs = creature.GetDefaultSpawnTime(creature.DifficultyID);
-                row.Data.WanderDistance = spawnDist;
-                row.Data.MovementType = movementType;
+                row.Data.MovementType = creature.Movement.HasWpsOrRandMov ? 1u : 0u;
+                row.Data.WaypointCount = 0;
+                row.Data.WanderDistance = 0;
 
                 // set some defaults
                 Store.Objects.UpdateFields.IUnitData unitData = creature.UnitDataOriginal != null ? creature.UnitDataOriginal : creature.UnitData;
@@ -188,9 +182,22 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.UnitFlag2 = unitData.Flags2;
                 row.Data.DynamicFlags = creature.GetDynamicFlagsOriginal();
                 row.Data.CurHealth = (uint)unitData.Health;
-                row.Data.CurMana = (uint)unitData.Mana;
                 row.Data.MaxHealth = (uint)unitData.MaxHealth;
-                row.Data.MaxMana = (uint)unitData.MaxMana;
+                row.Data.PowerType = unitData.DisplayPower;
+
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_1_0a_14007))
+                {
+                    // power indexes are class specific
+                    row.Data.CurrentPower = (uint)unitData.Mana;
+                    row.Data.MaxPower = (uint)unitData.MaxMana;
+                }
+                else
+                {
+                    row.Data.CurrentPower = (uint)unitData.Power[(int)row.Data.PowerType];
+                    row.Data.MaxPower = (uint)unitData.MaxPower[(int)row.Data.PowerType];
+                }
+                
+                row.Data.CurrentMana = (uint)unitData.Mana;
                 row.Data.AuraState = unitData.AuraState;
                 row.Data.EmoteState = (uint)unitData.EmoteState;
                 row.Data.StandState = unitData.StandState;
@@ -245,6 +252,24 @@ namespace WowPacketParser.SQL.Builders
                         Storage.GetObjectDbGuidEntryType(unitData.Target, out guidsRow.Data.TargetGuid, out guidsRow.Data.TargetId, out guidsRow.Data.TargetType);
                         guidValuesRows.Add(guidsRow);
                     } 
+                }
+
+                if (Settings.SqlTables.creature_power_values)
+                {
+                    var powers = unitData.Power;
+                    var maxPowers = unitData.MaxPower;
+                    for (int i = 0; i < ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build); i++)
+                    {
+                        if (powers[i] != 0 || maxPowers[i] != 0)
+                        {
+                            Row<CreaturePowerValues> powerRow = new Row<CreaturePowerValues>();
+                            powerRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            powerRow.Data.PowerType = (uint)i;
+                            powerRow.Data.CurrentPower = (uint)powers[i];
+                            powerRow.Data.MaxPower = (uint)maxPowers[i];
+                            powerValuesRows.Add(powerRow);
+                        }
+                    }
                 }
 
                 if (Settings.SqlTables.client_creature_interact)
@@ -453,6 +478,20 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
+                if (Settings.SqlTables.creature_power_values_update)
+                {
+                    if (Storage.UnitPowerValuesUpdates.ContainsKey(unit.Key))
+                    {
+                        foreach (var update in Storage.UnitPowerValuesUpdates[unit.Key])
+                        {
+                            var updateRow = new Row<CreaturePowerValuesUpdate>();
+                            updateRow.Data = update;
+                            updateRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                            updatePowerValuesRows.Add(updateRow);
+                        }
+                    }
+                }
+
                 if (Settings.SqlTables.creature_speed_update)
                 {
                     if (Storage.UnitSpeedUpdates.ContainsKey(unit.Key))
@@ -515,11 +554,20 @@ namespace WowPacketParser.SQL.Builders
                         if (waypoint == null)
                             break;
 
+                        bool hasDest = waypoint.EndPositionX != 0 ||
+                                       waypoint.EndPositionY != 0 ||
+                                       waypoint.EndPositionZ != 0;
+
+                        float posX = hasDest ? waypoint.EndPositionX : waypoint.StartPositionX;
+                        float posY = hasDest ? waypoint.EndPositionY : waypoint.StartPositionY;
+                        float posZ = hasDest ? waypoint.EndPositionZ : waypoint.StartPositionZ;
+
                         // Get max wander distance
-                        float distanceFromSpawn = Utilities.GetDistance3D(creature.OriginalMovement.Position.X, creature.OriginalMovement.Position.Y, creature.OriginalMovement.Position.Z, waypoint.StartPositionX, waypoint.StartPositionY, waypoint.StartPositionZ);
+                        float distanceFromSpawn = Utilities.GetDistance3D(creature.OriginalMovement.Position.X, creature.OriginalMovement.Position.Y, creature.OriginalMovement.Position.Z, posX, posY, posZ);
                         if (distanceFromSpawn > maxDistanceFromSpawn)
                             maxDistanceFromSpawn = distanceFromSpawn;
                     }
+                    row.Data.WaypointCount = (uint)creature.Waypoints.Count;
                     row.Data.WanderDistance = maxDistanceFromSpawn;
 
                     // Likely to be waypoints if distance is big
@@ -553,6 +601,10 @@ namespace WowPacketParser.SQL.Builders
                         }
                     }
                 }
+
+                if (row.Data.MovementType == 1 && row.Data.WanderDistance == 0 &&
+                    Settings.TargetedDbType != TargetedDbType.WPP)
+                    row.Data.WanderDistance = 10;
 
                 var addonRow = new Row<CreatureAddon>();
                 if (Settings.SqlTables.creature_addon)
@@ -766,6 +818,15 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
+            if (Settings.SqlTables.creature_power_values && powerValuesRows.Count != 0)
+            {
+                var powerValuesDelete = new SQLDelete<CreatureGuidValues>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                result.Append(powerValuesDelete.Build());
+                var powerValuesSql = new SQLInsert<CreaturePowerValues>(powerValuesRows, false);
+                result.Append(powerValuesSql.Build());
+                result.AppendLine();
+            }
+
             if (Settings.SqlTables.client_creature_interact && interactRows.Count != 0)
             {
                 var interactSql = new SQLInsert<CreatureClientInteract>(interactRows, false);
@@ -829,6 +890,20 @@ namespace WowPacketParser.SQL.Builders
             if (Settings.SqlTables.creature_values_update && updateValuesRows.Count != 0)
             {
                 var updateSql = new SQLInsert<CreatureValuesUpdate>(updateValuesRows, false);
+                result.Append(updateSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.creature_guid_values_update && updateGuidValuesRows.Count != 0)
+            {
+                var updateSql = new SQLInsert<CreatureGuidValuesUpdate>(updateGuidValuesRows, false, false);
+                result.Append(updateSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.creature_power_values_update && updatePowerValuesRows.Count != 0)
+            {
+                var updateSql = new SQLInsert<CreaturePowerValuesUpdate>(updatePowerValuesRows, false, false);
                 result.Append(updateSql.Build());
                 result.AppendLine();
             }
@@ -911,13 +986,6 @@ namespace WowPacketParser.SQL.Builders
             if (Settings.SqlTables.creature_equipment_values_update && updateEquipmentValuesRows.Count != 0)
             {
                 var updateSql = new SQLInsert<CreatureEquipmentValuesUpdate>(updateEquipmentValuesRows, false, false);
-                result.Append(updateSql.Build());
-                result.AppendLine();
-            }
-
-            if (Settings.SqlTables.creature_guid_values_update && updateGuidValuesRows.Count != 0)
-            {
-                var updateSql = new SQLInsert<CreatureGuidValuesUpdate>(updateGuidValuesRows, false, false);
                 result.Append(updateSql.Build());
                 result.AppendLine();
             }

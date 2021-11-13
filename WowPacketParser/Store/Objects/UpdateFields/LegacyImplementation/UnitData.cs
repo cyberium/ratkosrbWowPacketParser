@@ -152,7 +152,60 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public uint HealthPercent => (uint)(((float)Health / (float)MaxHealth) * 100);
 
+        public byte DisplayPower
+        {
+            get
+            {
+                if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_DISPLAY_POWER) > 0)
+                    return (byte)UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_DISPLAY_POWER);
+
+                return (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_0) >> 24) & 0xFF);
+            }
+        }
+
         public int BaseMana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_BASE_MANA);
+
+        public int[] Power
+        {
+            get
+            {
+                UnitField powersBegin;
+                if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER) > 0)
+                    powersBegin = UnitField.UNIT_FIELD_POWER;
+                else if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER1) > 0)
+                    powersBegin = UnitField.UNIT_FIELD_POWER1;
+                else
+                {
+                    int[] powers = new int[ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build)];
+                    return powers;
+                }
+
+                int size = ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build);
+
+                return UpdateFields.GetArray<UnitField, int>(powersBegin, size);
+            }
+        }
+
+        public int[] MaxPower
+        {
+            get
+            {
+                UnitField powersBegin;
+                if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER) > 0)
+                    powersBegin = UnitField.UNIT_FIELD_MAXPOWER;
+                else if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER1) > 0)
+                    powersBegin = UnitField.UNIT_FIELD_MAXPOWER1;
+                else
+                {
+                    int[] powers = new int[ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build)];
+                    return powers;
+                }
+
+                int size = ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build);
+
+                return UpdateFields.GetArray<UnitField, int>(powersBegin, size);
+            }
+        }
 
         public int Mana
         {
@@ -458,7 +511,60 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public uint HealthPercent => (uint)(((float)Health / (float)MaxHealth) * 100);
 
+        public byte DisplayPower
+        {
+            get
+            {
+                if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_DISPLAY_POWER) > 0)
+                    return (byte)UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_DISPLAY_POWER);
+
+                return (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_0) >> 24) & 0xFF);
+            }
+        }
+
         public int BaseMana => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_FIELD_BASE_MANA);
+
+        public int[] Power
+        {
+            get
+            {
+                UnitField powersBegin;
+                if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER) > 0)
+                    powersBegin = UnitField.UNIT_FIELD_POWER;
+                else if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER1) > 0)
+                    powersBegin = UnitField.UNIT_FIELD_POWER1;
+                else
+                {
+                    int[] powers = new int[ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build)];
+                    return powers;
+                }
+
+                int size = ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build);
+
+                return UpdateFields.GetArray<UnitField, int>(powersBegin, size);
+            }
+        }
+
+        public int[] MaxPower
+        {
+            get
+            {
+                UnitField powersBegin;
+                if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER) > 0)
+                    powersBegin = UnitField.UNIT_FIELD_MAXPOWER;
+                else if (Enums.Version.UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER1) > 0)
+                    powersBegin = UnitField.UNIT_FIELD_MAXPOWER1;
+                else
+                {
+                    int[] powers = new int[ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build)];
+                    return powers;
+                }
+
+                int size = ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build);
+
+                return UpdateFields.GetArray<UnitField, int>(powersBegin, size);
+            }
+        }
 
         public int Mana
         {

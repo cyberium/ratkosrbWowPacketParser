@@ -24,7 +24,6 @@ namespace WowPacketParser.Misc
         public static readonly bool SkipOtherPlayers = Conf.GetBoolean("SkipOtherPlayers", false);
         public static readonly bool SavePlayerCasts = Conf.GetBoolean("SavePlayerCasts", false);
         public static readonly bool SaveHealthUpdates = Conf.GetBoolean("SaveHealthUpdates", false);
-        public static readonly bool SaveManaUpdates = Conf.GetBoolean("SaveManaUpdates", false);
         public static readonly bool SaveTempSpawns = Conf.GetBoolean("SaveTempSpawns", false);
         public static readonly bool SavePets = Conf.GetBoolean("SavePets", false);
         public static readonly bool SaveTransports = Conf.GetBoolean("SaveTransports", false);
@@ -124,6 +123,8 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_movement_server = Conf.GetBoolean("creature_movement_server", false);
             public static readonly bool creature_movement_server_combat = Conf.GetBoolean("creature_movement_server_combat", false);
             public static readonly bool creature_pet_name = Conf.GetBoolean("creature_pet_name", false);
+            public static readonly bool creature_power_values = Conf.GetBoolean("creature_power_values", false);
+            public static readonly bool creature_power_values_update = Conf.GetBoolean("creature_power_values_update", false);
             public static readonly bool creature_speed_update = Conf.GetBoolean("creature_speed_update", false);
             public static readonly bool creature_text = Conf.GetBoolean("creature_text", false);
             public static readonly bool creature_text_template = Conf.GetBoolean("creature_text_template", false);
@@ -163,6 +164,8 @@ namespace WowPacketParser.Misc
             public static readonly bool player_guid_values_update = Conf.GetBoolean("player_guid_values_update", false);
             public static readonly bool player_movement_client = Conf.GetBoolean("player_movement_client", false);
             public static readonly bool player_movement_server = Conf.GetBoolean("player_movement_server", false);
+            public static readonly bool player_power_values = Conf.GetBoolean("player_power_values", false);
+            public static readonly bool player_power_values_update = Conf.GetBoolean("player_power_values_update", false);
             public static readonly bool player_speed_update = Conf.GetBoolean("player_speed_update", false);
             public static readonly bool player_values_update = Conf.GetBoolean("player_values_update", false);
             public static readonly bool quest_update_complete = Conf.GetBoolean("quest_update_complete", false);

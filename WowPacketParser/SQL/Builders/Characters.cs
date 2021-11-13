@@ -2551,6 +2551,7 @@ namespace WowPacketParser.SQL.Builders
             var guildMemberRows = new RowList<GuildMember>();
             var playerRows = new RowList<PlayerTemplate>();
             var playerGuidValuesRows = new RowList<CreatureGuidValues>();
+            var playerPowerValuesRows = new RowList<CreaturePowerValues>();
             var playerAttackLogRows = new RowList<UnitMeleeAttackLog>();
             var playerAttackStartRows = new RowList<CreatureAttackToggle>();
             var playerAttackStopRows = new RowList<CreatureAttackToggle>();
@@ -2561,6 +2562,7 @@ namespace WowPacketParser.SQL.Builders
             var playerEmoteRows = new RowList<CreatureEmote>();
             var playerEquipmentValuesUpdateRows = new RowList<CreatureEquipmentValuesUpdate>();
             var playerGuidValuesUpdateRows = new RowList<CreatureGuidValuesUpdate>();
+            var playerPowerValuesUpdateRows = new RowList<CreaturePowerValuesUpdate>();
             var playerValuesUpdateRows = new RowList<CreatureValuesUpdate>();
             var playerSpeedUpdateRows = new RowList<CreatureSpeedUpdate>();
             var playerServerMovementRows = new RowList<ServerSideMovement>();
@@ -2688,8 +2690,18 @@ namespace WowPacketParser.SQL.Builders
                     playerRow.Data.UnitFlags2 = player.UnitDataOriginal.Flags2;
                     playerRow.Data.CurHealth = (uint)player.UnitDataOriginal.Health;
                     playerRow.Data.MaxHealth = (uint)player.UnitDataOriginal.MaxHealth;
-                    playerRow.Data.CurMana = (uint)player.UnitDataOriginal.Mana;
-                    playerRow.Data.MaxMana = (uint)player.UnitDataOriginal.MaxMana;
+                    playerRow.Data.PowerType = player.UnitDataOriginal.DisplayPower;
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_1_0a_14007))
+                    {
+                        // power indexes are class specific
+                        playerRow.Data.CurrentPower = (uint)player.UnitDataOriginal.Mana;
+                        playerRow.Data.MaxPower = (uint)player.UnitDataOriginal.MaxMana;
+                    }
+                    else
+                    {
+                        playerRow.Data.CurrentPower = (uint)player.UnitDataOriginal.Power[(int)playerRow.Data.PowerType];
+                        playerRow.Data.MaxPower = (uint)player.UnitDataOriginal.MaxPower[(int)playerRow.Data.PowerType];
+                    }
                     playerRow.Data.AuraState = player.UnitDataOriginal.AuraState;
                     playerRow.Data.EmoteState = (uint)player.UnitDataOriginal.EmoteState;
                     playerRow.Data.StandState = player.UnitDataOriginal.StandState;
@@ -2741,6 +2753,24 @@ namespace WowPacketParser.SQL.Builders
                         Storage.GetObjectDbGuidEntryType(player.UnitDataOriginal.DemonCreator, out guidsRow.Data.DemonCreatorGuid, out guidsRow.Data.DemonCreatorId, out guidsRow.Data.DemonCreatorType);
                         Storage.GetObjectDbGuidEntryType(player.UnitDataOriginal.Target, out guidsRow.Data.TargetGuid, out guidsRow.Data.TargetId, out guidsRow.Data.TargetType);
                         playerGuidValuesRows.Add(guidsRow);
+                    }
+                }
+
+                if (Settings.SqlTables.player_power_values)
+                {
+                    var powers = player.UnitDataOriginal.Power;
+                    var maxPowers = player.UnitDataOriginal.MaxPower;
+                    for (int i = 0; i < ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build); i++)
+                    {
+                        if (powers[i] != 0 || maxPowers[i] != 0)
+                        {
+                            Row<CreaturePowerValues> powerRow = new Row<CreaturePowerValues>();
+                            powerRow.Data.GUID = "@PGUID+" + row.Data.Guid;
+                            powerRow.Data.PowerType = (uint)i;
+                            powerRow.Data.CurrentPower = (uint)powers[i];
+                            powerRow.Data.MaxPower = (uint)maxPowers[i];
+                            playerPowerValuesRows.Add(powerRow);
+                        }
                     }
                 }
 
@@ -2919,6 +2949,20 @@ namespace WowPacketParser.SQL.Builders
                             Storage.GetObjectDbGuidEntryType(update.guid, out updateRow.Data.ObjectGuid, out updateRow.Data.ObjectId, out updateRow.Data.ObjectType);
                             updateRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(update.time);
                             playerGuidValuesUpdateRows.Add(updateRow);
+                        }
+                    }
+                }
+
+                if (Settings.SqlTables.player_power_values_update)
+                {
+                    if (Storage.UnitPowerValuesUpdates.ContainsKey(objPair.Key))
+                    {
+                        foreach (var update in Storage.UnitPowerValuesUpdates[objPair.Key])
+                        {
+                            var updateRow = new Row<CreaturePowerValuesUpdate>();
+                            updateRow.Data = update;
+                            updateRow.Data.GUID = row.Data.Guid;
+                            playerPowerValuesUpdateRows.Add(updateRow);
                         }
                     }
                 }
@@ -3189,6 +3233,15 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
+            if (Settings.SqlTables.player_power_values && playerPowerValuesRows.Count != 0)
+            {
+                var powerValuesDelete = new SQLDelete<CreatureGuidValues>(Tuple.Create("@PGUID+0", "@PGUID+" + maxDbGuid));
+                result.Append(powerValuesDelete.Build());
+                var powerValuesSql = new SQLInsert<CreaturePowerValues>(playerPowerValuesRows, false, false, "player_power_values");
+                result.Append(powerValuesSql.Build());
+                result.AppendLine();
+            }
+
             if (Settings.SqlTables.player_active_player && Storage.PlayerActiveCreateTime.Count != 0)
             {
                 var activePlayersRows = new RowList<CharacterActivePlayer>();
@@ -3324,13 +3377,6 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.player_guid_values_update && playerGuidValuesUpdateRows.Count != 0)
-            {
-                var guidsUpdateSql = new SQLInsert<CreatureGuidValuesUpdate>(playerGuidValuesUpdateRows, false, false, "player_guid_values_update");
-                result.Append(guidsUpdateSql.Build());
-                result.AppendLine();
-            }
-
             if (Settings.SqlTables.player_auras_update && playerAurasUpdateRows.Count != 0)
             {
                 var aurasUpdateSql = new SQLInsert<CreatureAurasUpdate>(playerAurasUpdateRows, false, false, "player_auras_update");
@@ -3342,6 +3388,20 @@ namespace WowPacketParser.SQL.Builders
             {
                 var valuesUpdateSql = new SQLInsert<CreatureValuesUpdate>(playerValuesUpdateRows, false, false, "player_values_update");
                 result.Append(valuesUpdateSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.player_guid_values_update && playerGuidValuesUpdateRows.Count != 0)
+            {
+                var guidsUpdateSql = new SQLInsert<CreatureGuidValuesUpdate>(playerGuidValuesUpdateRows, false, false, "player_guid_values_update");
+                result.Append(guidsUpdateSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.player_power_values_update && playerPowerValuesUpdateRows.Count != 0)
+            {
+                var updateSql = new SQLInsert<CreaturePowerValuesUpdate>(playerPowerValuesUpdateRows, false, false, "player_power_values_update");
+                result.Append(updateSql.Build());
                 result.AppendLine();
             }
 

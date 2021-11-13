@@ -1110,7 +1110,7 @@ namespace WowPacketParser.Misc
             }
         }
 
-        public static bool IsClassicVersionWithUpdatedMovementInfo(ClientVersionBuild build)
+        public static bool IsClassicSeasonOfMasteryPhase1ClientVersionBuild(ClientVersionBuild build)
         {
             switch (build)
             {
@@ -1129,6 +1129,11 @@ namespace WowPacketParser.Misc
                 default:
                     return false;
             }
+        }
+
+        public static bool IsClassicVersionWithUpdatedMovementInfo(ClientVersionBuild build)
+        {
+            return IsClassicSeasonOfMasteryPhase1ClientVersionBuild(build);
         }
 
         public static bool IsBurningCrusadeClassicClientVersionBuild(ClientVersionBuild build)
@@ -1163,6 +1168,30 @@ namespace WowPacketParser.Misc
                 }
                 default:
                     return false;
+            }
+        }
+
+        public static int GetPowerCountForClientVersion(ClientVersionBuild build)
+        {
+            if (IsClassicClientVersionBuild(build))
+            {
+                if (IsClassicSeasonOfMasteryPhase1ClientVersionBuild(build))
+                    return 7;
+
+                return 6;
+            }
+            else
+            {
+                if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056))
+                    return 5;
+                if (ClientVersion.RemovedInVersion(ClientVersionBuild.V4_0_6_13596))
+                    return 7;
+                if (ClientVersion.RemovedInVersion(ClientVersionBuild.V6_0_2_19033))
+                    return 5;
+                if (ClientVersion.RemovedInVersion(ClientVersionBuild.V9_1_0_40120)) // should be 9.1.5
+                    return 6;
+
+                return 7;
             }
         }
 

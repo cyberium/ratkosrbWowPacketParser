@@ -155,11 +155,14 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("max_health")]
         public uint? MaxHealth;
 
-        [DBFieldName("current_mana")]
-        public uint? CurMana;
+        [DBFieldName("power_type")]
+        public uint? PowerType;
 
-        [DBFieldName("max_mana")]
-        public uint? MaxMana;
+        [DBFieldName("current_power")]
+        public uint? CurrentPower;
+
+        [DBFieldName("max_power")]
+        public uint? MaxPower;
 
         [DBFieldName("aura_state")]
         public uint? AuraState;

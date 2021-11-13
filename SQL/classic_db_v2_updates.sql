@@ -506,3 +506,77 @@ ALTER TABLE `gameobject`
 
 ALTER TABLE `dynamicobject`
 	CHANGE COLUMN `map` `map` SMALLINT(5) UNSIGNED NULL DEFAULT '0' COMMENT 'Map Identifier' AFTER `guid`;
+
+ALTER TABLE `creature`
+	ADD COLUMN `waypoint_count` SMALLINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'number of out of combat movement packets seen' AFTER `wander_distance`;
+
+ALTER TABLE `creature`
+	ADD COLUMN `power_type` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `max_health`;
+
+ALTER TABLE `creature`
+	CHANGE COLUMN `current_mana` `current_power` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `power_type`,
+	CHANGE COLUMN `max_mana` `max_power` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `current_power`;
+
+ALTER TABLE `player`
+	ADD COLUMN `power_type` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `max_health`;
+
+ALTER TABLE `player`
+	CHANGE COLUMN `current_mana` `current_power` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `power_type`,
+	CHANGE COLUMN `max_mana` `max_power` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `current_power`;
+
+CREATE TABLE `creature_power_values` (
+	`guid` INT UNSIGNED NOT NULL,
+	`power_type` TINYINT UNSIGNED NOT NULL,
+	`current_power` INT UNSIGNED NOT NULL DEFAULT '0',
+	`max_power` INT UNSIGNED NOT NULL DEFAULT '0',
+	PRIMARY KEY (`guid`, `power_type`)
+)
+COMMENT='initial value of power update fields'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;
+
+CREATE TABLE `player_power_values` (
+	`guid` INT UNSIGNED NOT NULL,
+	`power_type` TINYINT UNSIGNED NOT NULL,
+	`current_power` INT UNSIGNED NOT NULL DEFAULT '0',
+	`max_power` INT UNSIGNED NOT NULL DEFAULT '0',
+	PRIMARY KEY (`guid`, `power_type`)
+)
+COMMENT='initial value of power update fields'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;
+
+CREATE TABLE `creature_power_values_update` (
+	`unixtimems` BIGINT UNSIGNED NOT NULL,
+	`guid` INT UNSIGNED NOT NULL,
+	`power_type` TINYINT UNSIGNED NOT NULL,
+	`current_power` INT UNSIGNED NULL,
+	`max_power` INT UNSIGNED NULL
+)
+COMMENT='changes to power update fields'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;
+
+CREATE TABLE `player_power_values_update` (
+	`unixtimems` BIGINT UNSIGNED NOT NULL,
+	`guid` INT UNSIGNED NOT NULL,
+	`power_type` TINYINT UNSIGNED NOT NULL,
+	`current_power` INT UNSIGNED NULL,
+	`max_power` INT UNSIGNED NULL
+)
+COMMENT='changes to power update fields'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;
+
+ALTER TABLE `creature_values_update`
+	CHANGE COLUMN `current_mana` `power_type` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `max_health`,
+	DROP COLUMN `max_mana`;
+
+ALTER TABLE `player_values_update`
+	CHANGE COLUMN `current_mana` `power_type` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `max_health`,
+	DROP COLUMN `max_mana`;
+

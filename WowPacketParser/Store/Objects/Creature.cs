@@ -62,6 +62,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("wander_distance", DbType = (TargetedDbType.WPP | TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
         public float? WanderDistance;
 
+        [DBFieldName("waypoint_count", DbType = TargetedDbType.WPP)]
+        public uint? WaypointCount;
+
         [DBFieldName("movement_type", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         [DBFieldName("MovementType", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
         public uint? MovementType;
@@ -127,12 +130,17 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("max_health", DbType = (TargetedDbType.WPP))]
         public uint? MaxHealth;
 
-        [DBFieldName("current_mana", DbType = (TargetedDbType.WPP))]
-        [DBFieldName("curmana", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
-        public uint? CurMana;
+        [DBFieldName("power_type", DbType = (TargetedDbType.WPP))]
+        public uint? PowerType;
 
-        [DBFieldName("max_mana", DbType = (TargetedDbType.WPP))]
-        public uint? MaxMana;
+        [DBFieldName("curmana", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
+        public uint? CurrentMana;
+
+        [DBFieldName("current_power", DbType = (TargetedDbType.WPP))]
+        public uint? CurrentPower;
+
+        [DBFieldName("max_power", DbType = (TargetedDbType.WPP))]
+        public uint? MaxPower;
 
         [DBFieldName("aura_state", DbType = (TargetedDbType.WPP))]
         public uint? AuraState;
@@ -224,6 +232,41 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
         [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
         public int? SniffBuild = ClientVersion.BuildInt;
+    }
+
+    [DBTableName("creature_power_values")]
+    public sealed class CreaturePowerValues : IDataModel
+    {
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("power_type", true)]
+        public uint PowerType;
+
+        [DBFieldName("current_power")]
+        public uint CurrentPower;
+
+        [DBFieldName("max_power")]
+        public uint MaxPower;
+    }
+
+    [DBTableName("creature_power_values_update")]
+    public sealed class CreaturePowerValuesUpdate : IDataModel
+    {
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("power_type", true)]
+        public uint PowerType;
+
+        [DBFieldName("current_power", true, false, true)]
+        public uint? CurrentPower;
+
+        [DBFieldName("max_power", true, false, true)]
+        public uint? MaxPower;
     }
 
     [DBTableName("creature_guid_values")]
@@ -636,11 +679,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("max_health", true, false, true)]
         public uint? MaxHealth;
 
-        [DBFieldName("current_mana", true, false, true)]
-        public uint? CurrentMana;
-
-        [DBFieldName("max_mana", true, false, true)]
-        public uint? MaxMana;
+        [DBFieldName("power_type", true, false, true)]
+        public uint? PowerType;
 
         [DBFieldName("aura_state", true, false, true)]
         public uint? AuraState;

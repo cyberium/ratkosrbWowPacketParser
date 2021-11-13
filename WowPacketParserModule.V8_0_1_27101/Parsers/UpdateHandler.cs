@@ -161,9 +161,10 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
 
         public static void StoreObjectUpdate(Packet packet, WowGuid guid, WoWObject obj, IObjectData oldObjectData, IGameObjectData oldGameObjectData, IUnitData oldUnitData, IPlayerData oldPlayerData, bool isCreate)
         {
-            if ((guid.GetObjectType() == ObjectType.Unit) ||
-                (guid.GetObjectType() == ObjectType.Player) ||
-                (guid.GetObjectType() == ObjectType.ActivePlayer))
+            ObjectType objectType = guid.GetObjectType();
+            if ((objectType == ObjectType.Unit) ||
+                (objectType == ObjectType.Player) ||
+                (objectType == ObjectType.ActivePlayer))
             {
                 Unit unit = obj as Unit;
                 bool hasData = false;
@@ -205,7 +206,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     }
                     if (oldUnitData.Level != unit.UnitData.Level)
                     {
-                        if (guid.GetObjectType() == ObjectType.ActivePlayer)
+                        if (objectType == ObjectType.ActivePlayer)
                             Storage.SavePlayerStats(obj, false);
 
                         hasData = true;
@@ -297,7 +298,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     if (oldUnitData.Health != unit.UnitData.Health)
                     {
                         if (!isCreate && unit.UnitData.Health == 0 &&
-                            guid.GetObjectType() == ObjectType.Unit &&
+                            objectType == ObjectType.Unit &&
                             guid.GetHighType() != HighGuidType.Pet)
                             packet.AddSniffData(StoreNameType.Unit, (int)guid.GetEntry(), "DEATH");
 
@@ -312,24 +313,42 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                         hasData = true;
                         creatureUpdate.MaxHealth = (uint)unit.UnitData.MaxHealth;
                     }
-                    if (oldUnitData.Mana != unit.UnitData.Mana)
-                    {
-                        // don't calculate spell timers if mob is out of mana
-                        if (oldUnitData.Mana > unit.UnitData.Mana && // mana decreasing
-                            unit.IsInCombat() && unit.UnitData.MaxMana > 0 &&
-                            ((float)unit.UnitData.Mana / unit.UnitData.MaxMana) < 0.1) // less than 10%
-                            unit.DontSaveCombatSpellTimers = true;
-
-                        if (Settings.SaveManaUpdates)
-                        {
-                            hasData = true;
-                            creatureUpdate.CurrentMana = (uint)unit.UnitData.Mana;
-                        }
-                    }
-                    if (oldUnitData.MaxMana != unit.UnitData.MaxMana && Settings.SaveManaUpdates)
+                    if (oldUnitData.DisplayPower != unit.UnitData.DisplayPower)
                     {
                         hasData = true;
-                        creatureUpdate.MaxMana = (uint)unit.UnitData.MaxMana;
+                        creatureUpdate.PowerType = unit.UnitData.DisplayPower;
+                    }
+                    if (objectType == ObjectType.Unit && Settings.SqlTables.creature_power_values_update ||
+                        objectType != ObjectType.Unit && Settings.SqlTables.player_power_values_update)
+                    {
+                        int powersCount = ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build);
+                        for (int powerType = 0; powerType < powersCount; powerType++)
+                        {
+                            if (oldUnitData.Power[powerType] != unit.UnitData.Power[powerType] ||
+                                oldUnitData.MaxPower[powerType] != unit.UnitData.MaxPower[powerType])
+                            {
+                                CreaturePowerValuesUpdate powerUpdate = new CreaturePowerValuesUpdate();
+                                powerUpdate.PowerType = (uint)powerType;
+                                powerUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+
+                                if (oldUnitData.Power[powerType] != unit.UnitData.Power[powerType])
+                                {
+                                    // don't calculate spell timers if mob is out of mana
+                                    if (powerType == (int)PowerType.Mana &&
+                                        oldUnitData.Mana > unit.UnitData.Mana && // mana decreasing
+                                        unit.IsInCombat() && unit.UnitData.MaxMana > 0 &&
+                                        ((float)unit.UnitData.Mana / unit.UnitData.MaxMana) < 0.1) // less than 10%
+                                        unit.DontSaveCombatSpellTimers = true;
+
+                                    powerUpdate.CurrentPower = (uint)unit.UnitData.Power[powerType];
+                                }
+                                if (oldUnitData.MaxPower[powerType] != unit.UnitData.MaxPower[powerType])
+                                {
+                                    powerUpdate.MaxPower = (uint)unit.UnitData.MaxPower[powerType];
+                                }
+                                Storage.StoreUnitPowerValuesUpdate(guid, powerUpdate);
+                            }
+                        }
                     }
                     if (oldUnitData.BoundingRadius != unit.UnitData.BoundingRadius)
                     {
@@ -459,7 +478,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     Storage.StoreUnitValuesUpdate(guid, creatureUpdate);
                 }
             }
-            else if (guid.GetObjectType() == ObjectType.GameObject && oldGameObjectData != null)
+            else if (objectType == ObjectType.GameObject && oldGameObjectData != null)
             {
                 GameObject go = obj as GameObject;
                 bool hasData = false;

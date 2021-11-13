@@ -480,6 +480,34 @@ namespace WowPacketParser.Store
                 Storage.UnitValuesUpdates.Add(guid, updateList);
             }
         }
+        public static readonly Dictionary<WowGuid, List<CreaturePowerValuesUpdate>> UnitPowerValuesUpdates = new Dictionary<WowGuid, List<CreaturePowerValuesUpdate>>();
+        public static void StoreUnitPowerValuesUpdate(WowGuid guid, CreaturePowerValuesUpdate update)
+        {
+            if (guid.GetObjectType() == ObjectType.Unit)
+            {
+                if (!Settings.SqlTables.creature_power_values_update)
+                    return;
+            }
+            else if (guid.GetObjectType() == ObjectType.Player ||
+                     guid.GetObjectType() == ObjectType.ActivePlayer)
+            {
+                if (!Settings.SqlTables.player_power_values_update)
+                    return;
+            }
+            else
+                return;
+
+            if (Storage.UnitPowerValuesUpdates.ContainsKey(guid))
+            {
+                Storage.UnitPowerValuesUpdates[guid].Add(update);
+            }
+            else
+            {
+                List<CreaturePowerValuesUpdate> updateList = new List<CreaturePowerValuesUpdate>();
+                updateList.Add(update);
+                Storage.UnitPowerValuesUpdates.Add(guid, updateList);
+            }
+        }
         public static readonly Dictionary<WowGuid, List<CreatureSpeedUpdate>> UnitSpeedUpdates = new Dictionary<WowGuid, List<CreatureSpeedUpdate>>();
         public static void StoreUnitSpeedUpdate(WowGuid guid, CreatureSpeedUpdate update)
         {
@@ -1951,6 +1979,7 @@ namespace WowPacketParser.Store
             UnitEquipmentValuesUpdates.Clear();
             UnitGuidValuesUpdates.Clear();
             UnitValuesUpdates.Clear();
+            UnitPowerValuesUpdates.Clear();
             UnitSpeedUpdates.Clear();
 
             NpcTrainers.Clear();

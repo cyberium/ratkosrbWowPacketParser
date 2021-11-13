@@ -312,15 +312,29 @@ namespace WowPacketParser.Parsing.Parsers
         public static bool StoreObjectUpdate(Packet packet, WowGuid guid, BitArray updateMaskArray, Dictionary<int, UpdateField> updates, bool isCreate)
         {
             bool hasPlayerLevelup = false;
-            if ((guid.GetObjectType() == ObjectType.Unit) ||
-                (guid.GetObjectType() == ObjectType.Player) ||
-                (guid.GetObjectType() == ObjectType.ActivePlayer))
+            ObjectType objectType = guid.GetObjectType();
+            if ((objectType == ObjectType.Unit) ||
+                (objectType == ObjectType.Player) ||
+                (objectType == ObjectType.ActivePlayer))
             {
                 if (ClientVersion.HasAurasInUpdateFields())
                     ParseAurasFromUpdateFields(packet, guid, updateMaskArray, updates, isCreate);
 
+                int UNIT_FIELD_POWER = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER);
+                if (UNIT_FIELD_POWER <= 0)
+                    UNIT_FIELD_POWER = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER1);
+                int UNIT_FIELD_MAXPOWER = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER);
+                if (UNIT_FIELD_MAXPOWER <= 0)
+                    UNIT_FIELD_MAXPOWER = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER1);
+                int powersCount = ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build);
+
                 bool hasData = false;
                 CreatureValuesUpdate creatureUpdate = new CreatureValuesUpdate();
+                CreaturePowerValuesUpdate[] creaturePowerUpdates =
+                    (objectType == ObjectType.Unit && Settings.SqlTables.creature_power_values_update ||
+                     objectType != ObjectType.Unit && Settings.SqlTables.player_power_values_update) ?
+                     new CreaturePowerValuesUpdate[powersCount] : null ;
+
                 foreach (var update in updates)
                 {
                     if (updateMaskArray != null && !updateMaskArray[update.Key])
@@ -432,6 +446,19 @@ namespace WowPacketParser.Parsing.Parsers
                             {
                                 hasData = true;
                                 creatureUpdate.EmoteState = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_BYTES_0) &&
+                             UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_DISPLAY_POWER) <= 0)
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            if (obj.UnitData.DisplayPower != ((update.Value.UInt32Value >> 24) & 0xFF))
+                            {
+                                hasData = true;
+                                creatureUpdate.PowerType = ((update.Value.UInt32Value >> 24) & 0xFF);
                             }
                         }
                     }
@@ -570,7 +597,7 @@ namespace WowPacketParser.Parsing.Parsers
                             if (obj.UnitData.Health != update.Value.UInt32Value)
                             {
                                 if (!isCreate && update.Value.UInt32Value == 0 &&
-                                    guid.GetObjectType() == ObjectType.Unit &&
+                                    objectType == ObjectType.Unit &&
                                     guid.GetHighType() != HighGuidType.Pet)
                                     packet.AddSniffData(StoreNameType.Unit, (int)guid.GetEntry(), "DEATH");
 
@@ -595,39 +622,62 @@ namespace WowPacketParser.Parsing.Parsers
                             }
                         }
                     }
-                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER) ||
-                             update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_POWER1))
+                    else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_DISPLAY_POWER))
                     {
                         if (Storage.Objects.ContainsKey(guid))
                         {
                             var obj = Storage.Objects[guid].Item1 as Unit;
-                            if (obj.UnitData.Mana != update.Value.UInt32Value)
+                            if (obj.UnitData.DisplayPower != update.Value.UInt32Value)
+                            {
+                                hasData = true;
+                                creatureUpdate.PowerType = update.Value.UInt32Value;
+                            }
+                        }
+                    }
+                    else if (UNIT_FIELD_POWER > 0 && update.Key >= UNIT_FIELD_POWER && update.Key < (UNIT_FIELD_POWER + powersCount))
+                    {
+                        if (Storage.Objects.ContainsKey(guid))
+                        {
+                            var obj = Storage.Objects[guid].Item1 as Unit;
+                            int powerType = update.Key - UNIT_FIELD_POWER;
+
+                            if (obj.UnitData.Power[powerType] != update.Value.UInt32Value)
                             {
                                 // don't calculate spell timers if mob is out of mana
-                                if (obj.UnitData.Mana > update.Value.UInt32Value && // mana decreasing
+                                if (powerType == (int)PowerType.Mana &&
+                                    obj.UnitData.Mana > update.Value.UInt32Value && // mana decreasing
                                     obj.IsInCombat() && obj.UnitData.MaxMana > 0 &&
                                     ((float)update.Value.UInt32Value / obj.UnitData.MaxMana) < 0.1) // less than 10%
                                     obj.DontSaveCombatSpellTimers = true;
 
-                                if (Settings.SaveManaUpdates)
+                                if (creaturePowerUpdates != null)
                                 {
-                                    hasData = true;
-                                    creatureUpdate.CurrentMana = update.Value.UInt32Value;
+                                    if (creaturePowerUpdates[powerType] == null)
+                                        creaturePowerUpdates[powerType] = new CreaturePowerValuesUpdate();
+
+                                    CreaturePowerValuesUpdate powerUpdate = creaturePowerUpdates[powerType];
+                                    powerUpdate.CurrentPower = update.Value.UInt32Value;
                                 }
                             }
                         }
                     }
-                    else if ((update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER) ||
-                             update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER1)) &&
-                             Settings.SaveManaUpdates)
+                    else if (UNIT_FIELD_MAXPOWER > 0 && update.Key >= UNIT_FIELD_MAXPOWER && update.Key < (UNIT_FIELD_MAXPOWER + powersCount))
                     {
                         if (Storage.Objects.ContainsKey(guid))
                         {
                             var obj = Storage.Objects[guid].Item1 as Unit;
-                            if (obj.UnitData.MaxMana != update.Value.UInt32Value)
+                            int powerType = update.Key - UNIT_FIELD_MAXPOWER;
+
+                            if (obj.UnitData.MaxPower[powerType] != update.Value.UInt32Value)
                             {
-                                hasData = true;
-                                creatureUpdate.MaxMana = update.Value.UInt32Value;
+                                if (creaturePowerUpdates != null)
+                                {
+                                    if (creaturePowerUpdates[powerType] == null)
+                                        creaturePowerUpdates[powerType] = new CreaturePowerValuesUpdate();
+
+                                    CreaturePowerValuesUpdate powerUpdate = creaturePowerUpdates[powerType];
+                                    powerUpdate.MaxPower = update.Value.UInt32Value;
+                                }
                             }
                         }
                     }
@@ -957,8 +1007,21 @@ namespace WowPacketParser.Parsing.Parsers
                     creatureUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
                     Storage.StoreUnitValuesUpdate(guid, creatureUpdate);
                 }
+                if (creaturePowerUpdates != null)
+                {
+                    for (int powerType = 0; powerType < powersCount; powerType++)
+                    {
+                        CreaturePowerValuesUpdate powerUpdate = creaturePowerUpdates[powerType];
+                        if (powerUpdate == null)
+                            continue;
+
+                        powerUpdate.PowerType = (uint)powerType;
+                        powerUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+                        Storage.StoreUnitPowerValuesUpdate(guid, powerUpdate);
+                    }
+                }
             }
-            else if (guid.GetObjectType() == ObjectType.GameObject)
+            else if (objectType == ObjectType.GameObject)
             {
                 bool hasData = false;
                 GameObjectUpdate goUpdate = new GameObjectUpdate();
