@@ -187,8 +187,8 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `current_health` int(10) unsigned NOT NULL DEFAULT '0',
   `max_health` int(10) unsigned NOT NULL DEFAULT '0',
   `power_type` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `current_mana` int(10) unsigned NOT NULL DEFAULT '0',
-  `max_mana` int(10) unsigned NOT NULL DEFAULT '0',
+  `current_power` int(10) unsigned NOT NULL DEFAULT '0',
+  `max_power` int(10) unsigned NOT NULL DEFAULT '0',
   `aura_state` int(10) unsigned NOT NULL DEFAULT '0',
   `emote_state` int(10) unsigned NOT NULL DEFAULT '0',
   `stand_state` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1',
@@ -713,6 +713,32 @@ CREATE TABLE IF NOT EXISTS `creature_pet_remaining_cooldown` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_power_values
+DROP TABLE IF EXISTS `creature_power_values`;
+CREATE TABLE IF NOT EXISTS `creature_power_values` (
+  `guid` int(10) unsigned NOT NULL,
+  `power_type` tinyint(3) unsigned NOT NULL,
+  `current_power` int(10) unsigned NOT NULL DEFAULT '0',
+  `max_power` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`guid`,`power_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='initial value of power update fields';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.creature_power_values_update
+DROP TABLE IF EXISTS `creature_power_values_update`;
+CREATE TABLE IF NOT EXISTS `creature_power_values_update` (
+  `unixtimems` bigint(20) unsigned NOT NULL,
+  `guid` int(10) unsigned NOT NULL,
+  `power_type` tinyint(3) unsigned NOT NULL,
+  `current_power` int(10) unsigned DEFAULT NULL,
+  `max_power` int(10) unsigned DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='changes to power update fields';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_questitem
 DROP TABLE IF EXISTS `creature_questitem`;
 CREATE TABLE IF NOT EXISTS `creature_questitem` (
@@ -1027,8 +1053,7 @@ CREATE TABLE IF NOT EXISTS `creature_values_update` (
   `dynamic_flags` int(10) unsigned DEFAULT NULL,
   `current_health` int(10) unsigned DEFAULT NULL,
   `max_health` int(10) unsigned DEFAULT NULL,
-  `current_mana` int(10) unsigned DEFAULT NULL,
-  `max_mana` int(10) unsigned DEFAULT NULL,
+  `power_type` int(10) unsigned DEFAULT NULL,
   `aura_state` int(10) unsigned DEFAULT NULL,
   `emote_state` int(10) unsigned DEFAULT NULL,
   `stand_state` int(10) unsigned DEFAULT NULL,
@@ -1777,8 +1802,9 @@ CREATE TABLE IF NOT EXISTS `player` (
   `unit_flags2` int(10) unsigned NOT NULL DEFAULT '0',
   `current_health` int(10) unsigned NOT NULL DEFAULT '0',
   `max_health` int(10) unsigned NOT NULL DEFAULT '0',
-  `current_mana` int(10) unsigned NOT NULL DEFAULT '0',
-  `max_mana` int(10) unsigned NOT NULL DEFAULT '0',
+  `power_type` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `current_power` int(10) unsigned NOT NULL DEFAULT '0',
+  `max_power` int(10) unsigned NOT NULL DEFAULT '0',
   `aura_state` int(10) unsigned NOT NULL DEFAULT '0',
   `emote_state` int(10) unsigned NOT NULL DEFAULT '0',
   `stand_state` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1',
@@ -2215,6 +2241,32 @@ CREATE TABLE IF NOT EXISTS `player_movement_server_spline` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.player_power_values
+DROP TABLE IF EXISTS `player_power_values`;
+CREATE TABLE IF NOT EXISTS `player_power_values` (
+  `guid` int(10) unsigned NOT NULL,
+  `power_type` tinyint(3) unsigned NOT NULL,
+  `current_power` int(10) unsigned NOT NULL DEFAULT '0',
+  `max_power` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`guid`,`power_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='initial value of power update fields';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_power_values_update
+DROP TABLE IF EXISTS `player_power_values_update`;
+CREATE TABLE IF NOT EXISTS `player_power_values_update` (
+  `unixtimems` bigint(20) unsigned NOT NULL,
+  `guid` int(10) unsigned NOT NULL,
+  `power_type` tinyint(3) unsigned NOT NULL,
+  `current_power` int(10) unsigned DEFAULT NULL,
+  `max_power` int(10) unsigned DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='changes to power update fields';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.player_speed_update
 DROP TABLE IF EXISTS `player_speed_update`;
 CREATE TABLE IF NOT EXISTS `player_speed_update` (
@@ -2244,8 +2296,7 @@ CREATE TABLE IF NOT EXISTS `player_values_update` (
   `dynamic_flags` int(10) unsigned DEFAULT NULL,
   `current_health` int(10) unsigned DEFAULT NULL,
   `max_health` int(10) unsigned DEFAULT NULL,
-  `current_mana` int(10) unsigned DEFAULT NULL,
-  `max_mana` int(10) unsigned DEFAULT NULL,
+  `power_type` int(10) unsigned DEFAULT NULL,
   `aura_state` int(10) unsigned DEFAULT NULL,
   `emote_state` int(10) unsigned DEFAULT NULL,
   `stand_state` int(10) unsigned DEFAULT NULL,
