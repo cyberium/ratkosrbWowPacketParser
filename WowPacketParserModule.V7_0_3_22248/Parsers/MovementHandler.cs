@@ -195,7 +195,9 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             WowGuid transportGuid = packet.ReadPackedGuid128("TransportGUID", indexes);
             if (savedata != null)
                 savedata.TransportGuid = transportGuid;
-            packet.ReadSByte("VehicleSeat", indexes);
+            sbyte seat = packet.ReadSByte("VehicleSeat", indexes);
+            if (savedata != null)
+                savedata.TransportSeat = seat;
 
             packet.ResetBitReader();
 

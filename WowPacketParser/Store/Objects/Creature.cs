@@ -12,6 +12,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string GUID;
 
+        [DBFieldName("original_id")]
+        public uint? OriginalID;
+
         [DBFieldName("id")]
         public uint? ID;
 
@@ -80,6 +83,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("is_pet", DbType = (TargetedDbType.WPP))]
         public byte? IsPet;
+
+        [DBFieldName("is_vehicle", DbType = (TargetedDbType.WPP))]
+        public byte? IsVehicle;
 
         [DBFieldName("summon_spell", DbType = (TargetedDbType.WPP))]
         public uint? SummonSpell;
@@ -412,6 +418,15 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("transport_guid", false, true, OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
         public string TransportGUID = "0";
 
+        [DBFieldName("transport_id", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
+        public uint TransportId;
+
+        [DBFieldName("transport_type", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
+        public string TransportType = "";
+
+        [DBFieldName("transport_seat", OnlyWhenSavingTransports = true, DbType = (TargetedDbType.WPP))]
+        public sbyte TransportSeat;
+
         public WowGuid TransportGuid = WowGuid64.Empty;
         public List<Vector3> SplinePoints = null;
     }
@@ -440,21 +455,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("orientation")]
         public float? Orientation;
 
-        [DBFieldName("transport_guid", false, true, OnlyWhenSavingTransports = true)]
-        public string TransportGuid = "0";
-
-        [DBFieldName("transport_x", OnlyWhenSavingTransports = true)]
-        public float TransportPositionX;
-
-        [DBFieldName("transport_y", OnlyWhenSavingTransports = true)]
-        public float TransportPositionY;
-
-        [DBFieldName("transport_z", OnlyWhenSavingTransports = true)]
-        public float TransportPositionZ;
-
-        [DBFieldName("transport_o", OnlyWhenSavingTransports = true)]
-        public float TransportOrientation;
-
         [DBFieldName("move_time")]
         public uint MoveTime;
 
@@ -484,6 +484,39 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("spline_elevation")]
         public float SplineElevation;
+
+        [DBFieldName("vehicle_id", OnlyWhenSavingTransports = true)]
+        public uint VehicleId;
+
+        [DBFieldName("vehicle_orientation", OnlyWhenSavingTransports = true)]
+        public float VehicleOrientation;
+
+        [DBFieldName("transport_guid", false, true, OnlyWhenSavingTransports = true)]
+        public string TransportGuid = "0";
+
+        [DBFieldName("transport_id", OnlyWhenSavingTransports = true)]
+        public uint TransportId;
+
+        [DBFieldName("transport_type", OnlyWhenSavingTransports = true)]
+        public string TransportType = "";
+
+        [DBFieldName("transport_x", OnlyWhenSavingTransports = true)]
+        public float TransportPositionX;
+
+        [DBFieldName("transport_y", OnlyWhenSavingTransports = true)]
+        public float TransportPositionY;
+
+        [DBFieldName("transport_z", OnlyWhenSavingTransports = true)]
+        public float TransportPositionZ;
+
+        [DBFieldName("transport_o", OnlyWhenSavingTransports = true)]
+        public float TransportOrientation;
+
+        [DBFieldName("transport_time", OnlyWhenSavingTransports = true)]
+        public uint TransportTime;
+
+        [DBFieldName("transport_seat", OnlyWhenSavingTransports = true)]
+        public sbyte TransportSeat;
     }
 
     [DBTableName("creature_create2_time")]
@@ -510,21 +543,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("orientation")]
         public float? Orientation;
 
-        [DBFieldName("transport_guid", false, true, OnlyWhenSavingTransports = true)]
-        public string TransportGuid = "0";
-
-        [DBFieldName("transport_x", OnlyWhenSavingTransports = true)]
-        public float TransportPositionX;
-
-        [DBFieldName("transport_y", OnlyWhenSavingTransports = true)]
-        public float TransportPositionY;
-
-        [DBFieldName("transport_z", OnlyWhenSavingTransports = true)]
-        public float TransportPositionZ;
-
-        [DBFieldName("transport_o", OnlyWhenSavingTransports = true)]
-        public float TransportOrientation;
-
         [DBFieldName("move_time")]
         public uint MoveTime;
 
@@ -554,6 +572,39 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("spline_elevation")]
         public float SplineElevation;
+
+        [DBFieldName("vehicle_id", OnlyWhenSavingTransports = true)]
+        public uint VehicleId;
+
+        [DBFieldName("vehicle_orientation", OnlyWhenSavingTransports = true)]
+        public float VehicleOrientation;
+
+        [DBFieldName("transport_guid", false, true, OnlyWhenSavingTransports = true)]
+        public string TransportGuid = "0";
+
+        [DBFieldName("transport_id", OnlyWhenSavingTransports = true)]
+        public uint TransportId;
+
+        [DBFieldName("transport_type", OnlyWhenSavingTransports = true)]
+        public string TransportType = "";
+
+        [DBFieldName("transport_x", OnlyWhenSavingTransports = true)]
+        public float TransportPositionX;
+
+        [DBFieldName("transport_y", OnlyWhenSavingTransports = true)]
+        public float TransportPositionY;
+
+        [DBFieldName("transport_z", OnlyWhenSavingTransports = true)]
+        public float TransportPositionZ;
+
+        [DBFieldName("transport_o", OnlyWhenSavingTransports = true)]
+        public float TransportOrientation;
+
+        [DBFieldName("transport_time", OnlyWhenSavingTransports = true)]
+        public uint TransportTime;
+
+        [DBFieldName("transport_seat", OnlyWhenSavingTransports = true)]
+        public sbyte TransportSeat;
     }
 
     [DBTableName("creature_destroy_time")]

@@ -580,3 +580,189 @@ ALTER TABLE `player_values_update`
 	CHANGE COLUMN `current_mana` `power_type` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `max_health`,
 	DROP COLUMN `max_mana`;
 
+ALTER TABLE `creature`
+	ADD COLUMN `is_vehicle` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `is_pet`;
+
+ALTER TABLE `creature_create1_time`
+	ADD COLUMN `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	ADD COLUMN `transport_type` VARCHAR(16) NOT NULL DEFAULT '' AFTER `transport_id`;
+
+ALTER TABLE `creature_create2_time`
+	ADD COLUMN `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	ADD COLUMN `transport_type` VARCHAR(16) NOT NULL DEFAULT '' AFTER `transport_id`;
+
+ALTER TABLE `player_create1_time`
+	ADD COLUMN `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	ADD COLUMN `transport_type` VARCHAR(16) NOT NULL DEFAULT '' AFTER `transport_id`;
+
+ALTER TABLE `player_create2_time`
+	ADD COLUMN `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	ADD COLUMN `transport_type` VARCHAR(16) NOT NULL DEFAULT '' AFTER `transport_id`;
+
+ALTER TABLE `gameobject_create1_time`
+	ADD COLUMN `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	ADD COLUMN `transport_type` VARCHAR(16) NOT NULL DEFAULT '' AFTER `transport_id`;
+
+ALTER TABLE `gameobject_create2_time`
+	ADD COLUMN `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	ADD COLUMN `transport_type` VARCHAR(16) NOT NULL DEFAULT '' AFTER `transport_id`;
+
+ALTER TABLE `dynamicobject_create1_time`
+	ADD COLUMN `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	ADD COLUMN `transport_type` VARCHAR(16) NOT NULL DEFAULT '' AFTER `transport_id`;
+
+ALTER TABLE `dynamicobject_create2_time`
+	ADD COLUMN `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	ADD COLUMN `transport_type` VARCHAR(16) NOT NULL DEFAULT '' AFTER `transport_id`;
+
+ALTER TABLE `creature_movement_client`
+	ADD COLUMN `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	ADD COLUMN `transport_type` VARCHAR(16) NOT NULL DEFAULT '' AFTER `transport_id`;
+
+ALTER TABLE `player_movement_client`
+	ADD COLUMN `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	ADD COLUMN `transport_type` VARCHAR(16) NOT NULL DEFAULT '' AFTER `transport_id`;
+
+ALTER TABLE `creature_movement_server`
+	ADD COLUMN `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	ADD COLUMN `transport_type` VARCHAR(16) NOT NULL DEFAULT '' AFTER `transport_id`;
+
+ALTER TABLE `creature_movement_server_combat`
+	ADD COLUMN `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	ADD COLUMN `transport_type` VARCHAR(16) NOT NULL DEFAULT '' AFTER `transport_id`;
+
+ALTER TABLE `player_movement_server`
+	ADD COLUMN `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	ADD COLUMN `transport_type` VARCHAR(16) NOT NULL DEFAULT '' AFTER `transport_id`;
+
+ALTER TABLE `player_create1_time`
+	CHANGE COLUMN `transport_guid` `transport_guid` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `spline_elevation`,
+	CHANGE COLUMN `transport_id` `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	CHANGE COLUMN `transport_type` `transport_type` VARCHAR(16) NOT NULL DEFAULT '' COLLATE 'utf8_unicode_ci' AFTER `transport_id`,
+	CHANGE COLUMN `transport_x` `transport_x` FLOAT NOT NULL DEFAULT '0' AFTER `transport_type`,
+	CHANGE COLUMN `transport_y` `transport_y` FLOAT NOT NULL DEFAULT '0' AFTER `transport_x`,
+	CHANGE COLUMN `transport_z` `transport_z` FLOAT NOT NULL DEFAULT '0' AFTER `transport_y`,
+	CHANGE COLUMN `transport_o` `transport_o` FLOAT NOT NULL DEFAULT '0' AFTER `transport_z`;
+
+ALTER TABLE `player_create1_time`
+	ADD COLUMN `vehicle_id` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `spline_elevation`,
+	ADD COLUMN `vehicle_orientation` FLOAT NOT NULL DEFAULT '0' AFTER `vehicle_id`;
+
+ALTER TABLE `player_create2_time`
+	CHANGE COLUMN `transport_guid` `transport_guid` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `spline_elevation`,
+	CHANGE COLUMN `transport_id` `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	CHANGE COLUMN `transport_type` `transport_type` VARCHAR(16) NOT NULL DEFAULT '' COLLATE 'utf8_unicode_ci' AFTER `transport_id`,
+	CHANGE COLUMN `transport_x` `transport_x` FLOAT NOT NULL DEFAULT '0' AFTER `transport_type`,
+	CHANGE COLUMN `transport_y` `transport_y` FLOAT NOT NULL DEFAULT '0' AFTER `transport_x`,
+	CHANGE COLUMN `transport_z` `transport_z` FLOAT NOT NULL DEFAULT '0' AFTER `transport_y`,
+	CHANGE COLUMN `transport_o` `transport_o` FLOAT NOT NULL DEFAULT '0' AFTER `transport_z`;
+
+ALTER TABLE `player_create2_time`
+	ADD COLUMN `vehicle_id` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `spline_elevation`,
+	ADD COLUMN `vehicle_orientation` FLOAT NOT NULL DEFAULT '0' AFTER `vehicle_id`;
+
+ALTER TABLE `creature_create1_time`
+	CHANGE COLUMN `transport_guid` `transport_guid` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `spline_elevation`,
+	CHANGE COLUMN `transport_id` `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	CHANGE COLUMN `transport_type` `transport_type` VARCHAR(16) NOT NULL DEFAULT '' COLLATE 'utf8_unicode_ci' AFTER `transport_id`,
+	CHANGE COLUMN `transport_x` `transport_x` FLOAT NOT NULL DEFAULT '0' AFTER `transport_type`,
+	CHANGE COLUMN `transport_y` `transport_y` FLOAT NOT NULL DEFAULT '0' AFTER `transport_x`,
+	CHANGE COLUMN `transport_z` `transport_z` FLOAT NOT NULL DEFAULT '0' AFTER `transport_y`,
+	CHANGE COLUMN `transport_o` `transport_o` FLOAT NOT NULL DEFAULT '0' AFTER `transport_z`;
+
+ALTER TABLE `creature_create1_time`
+	ADD COLUMN `vehicle_id` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `spline_elevation`,
+	ADD COLUMN `vehicle_orientation` FLOAT NOT NULL DEFAULT '0' AFTER `vehicle_id`;
+
+ALTER TABLE `creature_create2_time`
+	CHANGE COLUMN `transport_guid` `transport_guid` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `spline_elevation`,
+	CHANGE COLUMN `transport_id` `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	CHANGE COLUMN `transport_type` `transport_type` VARCHAR(16) NOT NULL DEFAULT '' COLLATE 'utf8_unicode_ci' AFTER `transport_id`,
+	CHANGE COLUMN `transport_x` `transport_x` FLOAT NOT NULL DEFAULT '0' AFTER `transport_type`,
+	CHANGE COLUMN `transport_y` `transport_y` FLOAT NOT NULL DEFAULT '0' AFTER `transport_x`,
+	CHANGE COLUMN `transport_z` `transport_z` FLOAT NOT NULL DEFAULT '0' AFTER `transport_y`,
+	CHANGE COLUMN `transport_o` `transport_o` FLOAT NOT NULL DEFAULT '0' AFTER `transport_z`;
+
+ALTER TABLE `creature_create2_time`
+	ADD COLUMN `vehicle_id` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `spline_elevation`,
+	ADD COLUMN `vehicle_orientation` FLOAT NOT NULL DEFAULT '0' AFTER `vehicle_id`;
+
+ALTER TABLE `gameobject`
+	ADD COLUMN `is_transport` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `is_spawn`;
+
+ALTER TABLE `creature`
+	CHANGE COLUMN `is_pet` `is_pet` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `is_hovering`,
+	CHANGE COLUMN `is_vehicle` `is_vehicle` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `is_pet`;
+
+ALTER TABLE `creature`
+	ADD COLUMN `original_id` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'entry from guid' AFTER `guid`,
+	CHANGE COLUMN `id` `id` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'entry from update fields' AFTER `original_id`,
+	DROP INDEX `idx_map`,
+	DROP INDEX `idx_id`;
+
+ALTER TABLE `gameobject`
+	ADD COLUMN `original_id` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'entry from guid' AFTER `guid`,
+	CHANGE COLUMN `id` `id` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'entry from update fields' AFTER `original_id`;
+
+ALTER TABLE `creature_create1_time`
+	ADD COLUMN `transport_time` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_o`,
+	ADD COLUMN `transport_seat` TINYINT NOT NULL DEFAULT '0' AFTER `transport_time`;
+
+ALTER TABLE `creature_create2_time`
+	ADD COLUMN `transport_time` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_o`,
+	ADD COLUMN `transport_seat` TINYINT NOT NULL DEFAULT '0' AFTER `transport_time`;
+
+ALTER TABLE `player_create1_time`
+	ADD COLUMN `transport_time` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_o`,
+	ADD COLUMN `transport_seat` TINYINT NOT NULL DEFAULT '0' AFTER `transport_time`;
+
+ALTER TABLE `player_create2_time`
+	ADD COLUMN `transport_time` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_o`,
+	ADD COLUMN `transport_seat` TINYINT NOT NULL DEFAULT '0' AFTER `transport_time`;
+
+ALTER TABLE `creature_movement_server`
+	ADD COLUMN `transport_seat` TINYINT NOT NULL DEFAULT '0' AFTER `transport_type`;
+
+ALTER TABLE `creature_movement_server_combat`
+	ADD COLUMN `transport_seat` TINYINT NOT NULL DEFAULT '0' AFTER `transport_type`;
+
+ALTER TABLE `player_movement_server`
+	ADD COLUMN `transport_seat` TINYINT NOT NULL DEFAULT '0' AFTER `transport_type`;
+
+ALTER TABLE `creature_movement_client`
+	CHANGE COLUMN `transport_guid` `transport_guid` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `spline_elevation`,
+	CHANGE COLUMN `transport_id` `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	CHANGE COLUMN `transport_type` `transport_type` VARCHAR(16) NOT NULL DEFAULT '' COLLATE 'utf8_unicode_ci' AFTER `transport_id`,
+	CHANGE COLUMN `transport_x` `transport_x` FLOAT NOT NULL DEFAULT '0' AFTER `transport_type`,
+	CHANGE COLUMN `transport_y` `transport_y` FLOAT NOT NULL DEFAULT '0' AFTER `transport_x`,
+	CHANGE COLUMN `transport_z` `transport_z` FLOAT NOT NULL DEFAULT '0' AFTER `transport_y`,
+	CHANGE COLUMN `transport_o` `transport_o` FLOAT NOT NULL DEFAULT '0' AFTER `transport_z`;
+
+ALTER TABLE `creature_movement_client`
+	ADD COLUMN `transport_time` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_o`,
+	ADD COLUMN `transport_seat` TINYINT NOT NULL DEFAULT '0' AFTER `transport_time`;
+
+ALTER TABLE `player_movement_client`
+	CHANGE COLUMN `transport_guid` `transport_guid` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `spline_elevation`,
+	CHANGE COLUMN `transport_id` `transport_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_guid`,
+	CHANGE COLUMN `transport_type` `transport_type` VARCHAR(16) NOT NULL DEFAULT '' COLLATE 'utf8_unicode_ci' AFTER `transport_id`,
+	CHANGE COLUMN `transport_x` `transport_x` FLOAT NOT NULL DEFAULT '0' AFTER `transport_type`,
+	CHANGE COLUMN `transport_y` `transport_y` FLOAT NOT NULL DEFAULT '0' AFTER `transport_x`,
+	CHANGE COLUMN `transport_z` `transport_z` FLOAT NOT NULL DEFAULT '0' AFTER `transport_y`,
+	CHANGE COLUMN `transport_o` `transport_o` FLOAT NOT NULL DEFAULT '0' AFTER `transport_z`;
+
+ALTER TABLE `player_movement_client`
+	ADD COLUMN `transport_time` INT UNSIGNED NOT NULL DEFAULT '0' AFTER `transport_o`,
+	ADD COLUMN `transport_seat` TINYINT NOT NULL DEFAULT '0' AFTER `transport_time`;
+
+ALTER TABLE `gameobject`
+	ADD COLUMN `anim_progress` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `artkit`;
+
+ALTER TABLE `gameobject_values_update`
+	ADD COLUMN `anim_progress` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `artkit`;
+
+ALTER TABLE `gameobject`
+	CHANGE COLUMN `artkit` `art_kit` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `type`;
+
+ALTER TABLE `gameobject_values_update`
+	CHANGE COLUMN `artkit` `art_kit` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `state`;

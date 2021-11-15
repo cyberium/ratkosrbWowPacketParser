@@ -156,7 +156,8 @@ CREATE TABLE IF NOT EXISTS `client_release_spirit` (
 DROP TABLE IF EXISTS `creature`;
 CREATE TABLE IF NOT EXISTS `creature` (
   `guid` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'Creature Identifier',
+  `original_id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'entry from guid',
+  `id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'entry from update fields',
   `map` smallint(5) unsigned DEFAULT '0' COMMENT 'Map Identifier',
   `zone_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'Zone Identifier',
   `area_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'Area Identifier',
@@ -169,8 +170,9 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `movement_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'guessed movement generator',
   `is_spawn` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'create object type 2',
   `is_hovering` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `is_temporary` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `is_pet` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `is_vehicle` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `is_temporary` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `summon_spell` int(10) unsigned NOT NULL DEFAULT '0',
   `scale` float NOT NULL DEFAULT '0',
   `display_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -216,9 +218,7 @@ CREATE TABLE IF NOT EXISTS `creature` (
   `auras` text,
   `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`guid`),
-  KEY `idx_map` (`map`),
-  KEY `idx_id` (`id`)
+  PRIMARY KEY (`guid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='the initial state of all individual creature spawns seen in the sniff';
 
 -- Data exporting was unselected.
@@ -312,11 +312,6 @@ CREATE TABLE IF NOT EXISTS `creature_create1_time` (
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
-  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `transport_x` float NOT NULL DEFAULT '0',
-  `transport_y` float NOT NULL DEFAULT '0',
-  `transport_z` float NOT NULL DEFAULT '0',
-  `transport_o` float NOT NULL DEFAULT '0',
   `move_time` int(10) unsigned NOT NULL DEFAULT '0',
   `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `move_flags2` int(10) unsigned NOT NULL DEFAULT '0',
@@ -327,6 +322,17 @@ CREATE TABLE IF NOT EXISTS `creature_create1_time` (
   `jump_cos_angle` float NOT NULL DEFAULT '0',
   `jump_sin_angle` float NOT NULL DEFAULT '0',
   `spline_elevation` float NOT NULL DEFAULT '0',
+  `vehicle_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `vehicle_orientation` float NOT NULL DEFAULT '0',
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
+  `transport_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_seat` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the object became visible to the client';
 
@@ -343,11 +349,6 @@ CREATE TABLE IF NOT EXISTS `creature_create2_time` (
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
-  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `transport_x` float NOT NULL DEFAULT '0',
-  `transport_y` float NOT NULL DEFAULT '0',
-  `transport_z` float NOT NULL DEFAULT '0',
-  `transport_o` float NOT NULL DEFAULT '0',
   `move_time` int(10) unsigned NOT NULL DEFAULT '0',
   `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `move_flags2` int(10) unsigned NOT NULL DEFAULT '0',
@@ -358,6 +359,17 @@ CREATE TABLE IF NOT EXISTS `creature_create2_time` (
   `jump_cos_angle` float NOT NULL DEFAULT '0',
   `jump_sin_angle` float NOT NULL DEFAULT '0',
   `spline_elevation` float NOT NULL DEFAULT '0',
+  `vehicle_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `vehicle_orientation` float NOT NULL DEFAULT '0',
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
+  `transport_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_seat` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='the time at which the object spawned';
 
@@ -557,11 +569,6 @@ CREATE TABLE IF NOT EXISTS `creature_movement_client` (
   `position_y` float NOT NULL DEFAULT '0',
   `position_z` float NOT NULL DEFAULT '0',
   `orientation` float NOT NULL DEFAULT '0',
-  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `transport_x` float NOT NULL DEFAULT '0',
-  `transport_y` float NOT NULL DEFAULT '0',
-  `transport_z` float NOT NULL DEFAULT '0',
-  `transport_o` float NOT NULL DEFAULT '0',
   `swim_pitch` float NOT NULL DEFAULT '0',
   `fall_time` int(11) unsigned NOT NULL DEFAULT '0',
   `jump_horizontal_speed` float NOT NULL DEFAULT '0',
@@ -569,6 +576,15 @@ CREATE TABLE IF NOT EXISTS `creature_movement_client` (
   `jump_cos_angle` float NOT NULL DEFAULT '0',
   `jump_sin_angle` float NOT NULL DEFAULT '0',
   `spline_elevation` float NOT NULL DEFAULT '0',
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
+  `transport_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_seat` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`packet_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='client side movement';
 
@@ -592,6 +608,9 @@ CREATE TABLE IF NOT EXISTS `creature_movement_server` (
   `end_position_z` float NOT NULL,
   `orientation` float NOT NULL COMMENT 'final orientation',
   `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `transport_seat` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`point`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='out of combat movement points from SMSG_ON_MONSTER_MOVE';
 
@@ -615,6 +634,9 @@ CREATE TABLE IF NOT EXISTS `creature_movement_server_combat` (
   `end_position_z` float NOT NULL,
   `orientation` float NOT NULL COMMENT 'final orientation',
   `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `transport_seat` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`point`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='in combat movement points from SMSG_ON_MONSTER_MOVE';
 
@@ -1107,6 +1129,8 @@ CREATE TABLE IF NOT EXISTS `dynamicobject_create1_time` (
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
   `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `transport_x` float NOT NULL DEFAULT '0',
   `transport_y` float NOT NULL DEFAULT '0',
   `transport_z` float NOT NULL DEFAULT '0',
@@ -1128,6 +1152,8 @@ CREATE TABLE IF NOT EXISTS `dynamicobject_create2_time` (
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
   `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `transport_x` float NOT NULL DEFAULT '0',
   `transport_y` float NOT NULL DEFAULT '0',
   `transport_z` float NOT NULL DEFAULT '0',
@@ -1168,7 +1194,8 @@ CREATE TABLE IF NOT EXISTS `faction_standing_update` (
 DROP TABLE IF EXISTS `gameobject`;
 CREATE TABLE IF NOT EXISTS `gameobject` (
   `guid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Global Unique Identifier',
-  `id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'Gameobject Identifier',
+  `original_id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'entry from guid',
+  `id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'entry from update fields',
   `map` smallint(5) unsigned DEFAULT '0' COMMENT 'Map Identifier',
   `zone_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'Zone Identifier',
   `area_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'Area Identifier',
@@ -1181,6 +1208,7 @@ CREATE TABLE IF NOT EXISTS `gameobject` (
   `rotation2` float NOT NULL DEFAULT '0',
   `rotation3` float NOT NULL DEFAULT '0',
   `is_spawn` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'create object type 2',
+  `is_transport` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `is_temporary` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `creator_guid` int(11) unsigned NOT NULL DEFAULT '0',
   `creator_id` int(11) unsigned NOT NULL DEFAULT '0',
@@ -1193,7 +1221,8 @@ CREATE TABLE IF NOT EXISTS `gameobject` (
   `path_progress` int(10) unsigned NOT NULL DEFAULT '0',
   `state` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `artkit` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `art_kit` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `anim_progress` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `custom_param` int(10) unsigned NOT NULL DEFAULT '0',
   `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
@@ -1230,6 +1259,8 @@ CREATE TABLE IF NOT EXISTS `gameobject_create1_time` (
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
   `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `transport_x` float NOT NULL DEFAULT '0',
   `transport_y` float NOT NULL DEFAULT '0',
   `transport_z` float NOT NULL DEFAULT '0',
@@ -1252,6 +1283,8 @@ CREATE TABLE IF NOT EXISTS `gameobject_create2_time` (
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
   `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `transport_x` float NOT NULL DEFAULT '0',
   `transport_y` float NOT NULL DEFAULT '0',
   `transport_z` float NOT NULL DEFAULT '0',
@@ -1411,7 +1444,8 @@ CREATE TABLE IF NOT EXISTS `gameobject_values_update` (
   `dynamic_flags` int(10) unsigned DEFAULT NULL,
   `path_progress` int(10) unsigned DEFAULT NULL,
   `state` int(10) unsigned DEFAULT NULL,
-  `artkit` int(10) unsigned DEFAULT NULL,
+  `art_kit` int(10) unsigned DEFAULT NULL,
+  `anim_progress` int(10) unsigned DEFAULT NULL,
   `custom_param` int(10) unsigned DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='values updates from SMSG_UPDATE_OBJECT';
 
@@ -1994,11 +2028,6 @@ CREATE TABLE IF NOT EXISTS `player_create1_time` (
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
-  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `transport_x` float NOT NULL DEFAULT '0',
-  `transport_y` float NOT NULL DEFAULT '0',
-  `transport_z` float NOT NULL DEFAULT '0',
-  `transport_o` float NOT NULL DEFAULT '0',
   `move_time` int(10) unsigned NOT NULL DEFAULT '0',
   `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `move_flags2` int(10) unsigned NOT NULL DEFAULT '0',
@@ -2009,6 +2038,17 @@ CREATE TABLE IF NOT EXISTS `player_create1_time` (
   `jump_cos_angle` float NOT NULL DEFAULT '0',
   `jump_sin_angle` float NOT NULL DEFAULT '0',
   `spline_elevation` float NOT NULL DEFAULT '0',
+  `vehicle_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `vehicle_orientation` float NOT NULL DEFAULT '0',
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
+  `transport_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_seat` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the object became visible to the client';
 
@@ -2025,11 +2065,6 @@ CREATE TABLE IF NOT EXISTS `player_create2_time` (
   `position_y` float NOT NULL,
   `position_z` float NOT NULL,
   `orientation` float NOT NULL,
-  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `transport_x` float NOT NULL DEFAULT '0',
-  `transport_y` float NOT NULL DEFAULT '0',
-  `transport_z` float NOT NULL DEFAULT '0',
-  `transport_o` float NOT NULL DEFAULT '0',
   `move_time` int(10) unsigned NOT NULL DEFAULT '0',
   `move_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `move_flags2` int(10) unsigned NOT NULL DEFAULT '0',
@@ -2040,6 +2075,17 @@ CREATE TABLE IF NOT EXISTS `player_create2_time` (
   `jump_cos_angle` float NOT NULL DEFAULT '0',
   `jump_sin_angle` float NOT NULL DEFAULT '0',
   `spline_elevation` float NOT NULL DEFAULT '0',
+  `vehicle_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `vehicle_orientation` float NOT NULL DEFAULT '0',
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
+  `transport_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_seat` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='the time at which the object spawned';
 
@@ -2185,11 +2231,6 @@ CREATE TABLE IF NOT EXISTS `player_movement_client` (
   `position_y` float NOT NULL DEFAULT '0',
   `position_z` float NOT NULL DEFAULT '0',
   `orientation` float NOT NULL DEFAULT '0',
-  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
-  `transport_x` float NOT NULL DEFAULT '0',
-  `transport_y` float NOT NULL DEFAULT '0',
-  `transport_z` float NOT NULL DEFAULT '0',
-  `transport_o` float NOT NULL DEFAULT '0',
   `swim_pitch` float NOT NULL DEFAULT '0',
   `fall_time` int(11) unsigned NOT NULL DEFAULT '0',
   `jump_horizontal_speed` float NOT NULL DEFAULT '0',
@@ -2197,6 +2238,15 @@ CREATE TABLE IF NOT EXISTS `player_movement_client` (
   `jump_cos_angle` float NOT NULL DEFAULT '0',
   `jump_sin_angle` float NOT NULL DEFAULT '0',
   `spline_elevation` float NOT NULL DEFAULT '0',
+  `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `transport_x` float NOT NULL DEFAULT '0',
+  `transport_y` float NOT NULL DEFAULT '0',
+  `transport_z` float NOT NULL DEFAULT '0',
+  `transport_o` float NOT NULL DEFAULT '0',
+  `transport_time` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_seat` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`packet_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='client side movement';
 
@@ -2220,6 +2270,9 @@ CREATE TABLE IF NOT EXISTS `player_movement_server` (
   `end_position_z` float NOT NULL,
   `orientation` float NOT NULL COMMENT 'final orientation',
   `transport_guid` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `transport_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `transport_seat` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`point`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='movement points from SMSG_ON_MONSTER_MOVE';
 

@@ -289,8 +289,8 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             {
                 moveInfo.TransportGuid = packet.ReadPackedGuid128("TransportGUID", index);
                 moveInfo.TransportOffset = packet.ReadVector4("TransportPosition", index);
-                var seat = packet.ReadByte("VehicleSeatIndex", index);
-                packet.ReadUInt32("MoveTime", index);
+                moveInfo.TransportSeat = packet.ReadSByte("VehicleSeatIndex", index);
+                moveInfo.TransportTime = packet.ReadUInt32("MoveTime", index);
 
                 packet.ResetBitReader();
 
@@ -310,7 +310,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                     {
                         Entry = moveInfo.TransportGuid.GetEntry(),
                         AccessoryEntry = guid.GetEntry(),
-                        SeatId = seat
+                        SeatId = moveInfo.TransportSeat
                     };
                     Storage.VehicleTemplateAccessories.Add(vehicleAccessory, packet.TimeSpan);
                 }
@@ -334,7 +334,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             if (hasVehicleCreate) // 528
             {
                 moveInfo.VehicleId = packet.ReadUInt32("RecID", index);
-                packet.ReadSingle("InitialRawFacing", index);
+                moveInfo.VehicleOrientation = packet.ReadSingle("InitialRawFacing", index);
             }
 
             if (hasAnimKitCreate) // 538
@@ -506,8 +506,8 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             {
                 moveInfo.TransportGuid = packet.ReadPackedGuid128("Transport Guid", index);
                 moveInfo.TransportOffset = packet.ReadVector4("Transport Position", index);
-                packet.ReadSByte("Transport Seat", index);
-                packet.ReadInt32("Transport Time", index);
+                moveInfo.TransportSeat = packet.ReadSByte("Transport Seat", index);
+                moveInfo.TransportTime = packet.ReadUInt32("Transport Time", index);
 
                 packet.ResetBitReader();
 

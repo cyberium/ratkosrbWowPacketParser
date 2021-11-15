@@ -109,20 +109,38 @@ namespace WowPacketParser.Store
             if (guid.IsEmpty())
                 return "";
 
-            if (guid.GetObjectType() == ObjectType.Unit)
+            ObjectType objectType = guid.GetObjectType();
+
+            if (objectType == ObjectType.Unit)
             {
-                if (guid.GetHighType() == HighGuidType.Pet)
-                    return "Pet";
-                else
-                    return "Creature";
+                switch (guid.GetHighType())
+                {
+                    case HighGuidType.Vehicle:
+                    case HighGuidType.Creature:
+                    case HighGuidType.Pet:
+                        return guid.GetHighType().ToString();
+                    default: // vanilla or tbc sniff with broken high types
+                        return "Creature";
+                }
             }
-            else if (guid.GetObjectType() == ObjectType.Player ||
-                     guid.GetObjectType() == ObjectType.ActivePlayer)
+            else if (objectType == ObjectType.Player ||
+                     objectType == ObjectType.ActivePlayer)
             {
                 return "Player";
             }
+            else if (objectType == ObjectType.GameObject)
+            {
+                switch (guid.GetHighType())
+                {
+                    case HighGuidType.GameObject:
+                    case HighGuidType.Transport:
+                        return guid.GetHighType().ToString();
+                    default: // vanilla or tbc sniff with broken high types
+                        return "GameObject";
+                }
+            }
 
-            return guid.GetObjectType().ToString();
+            return objectType.ToString();
         }
         public static void GetObjectDbGuidEntryType(WowGuid guid, out string objectGuid, out uint objectEntry, out string objectType)
         {

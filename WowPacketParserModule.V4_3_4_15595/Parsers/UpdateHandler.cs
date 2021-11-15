@@ -429,7 +429,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
 
             if (hasVehicleData)
             {
-                packet.ReadSingle("Vehicle Orientation", index);
+                moveInfo.VehicleOrientation = packet.ReadSingle("Vehicle Orientation", index);
                 moveInfo.VehicleId = packet.ReadUInt32("Vehicle Id", index);
             }
 

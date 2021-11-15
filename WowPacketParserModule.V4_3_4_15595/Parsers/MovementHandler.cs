@@ -42,7 +42,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
                 if (movementData != null)
                     movementData.TransportGuid = transportGuid;
 
-                packet.ReadSByte("VehicleSeat");
+                movementData.TransportSeat = packet.ReadSByte("VehicleSeat");
             }
 
             packet.ReadSByte("VehicleExitVoluntary");

@@ -67,8 +67,8 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         {
             moveData.TransportGuid = packet.ReadPackedGuid128("TransportGuid", idx);
             moveData.TransportOffset = packet.ReadVector4("TransportPosition", idx);
-            packet.ReadByte("TransportSeat", idx);
-            packet.ReadInt32("TransportMoveTime", idx);
+            moveData.TransportSeat = packet.ReadSByte("TransportSeat", idx);
+            moveData.TransportTime = packet.ReadUInt32("TransportMoveTime", idx);
 
             packet.ResetBitReader();
 
@@ -295,8 +295,9 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             WowGuid transportGuid = packet.ReadPackedGuid128("TransportGUID", indexes);
             if (savedata != null)
                 savedata.TransportGuid = transportGuid;
-            packet.ReadSByte("VehicleSeat", indexes);
-
+            sbyte seat = packet.ReadSByte("VehicleSeat", indexes);
+            if (savedata != null)
+                savedata.TransportSeat = seat;
             var packedDeltasCount = packet.ReadInt32("PackedDeltasCount", indexes);
 
 

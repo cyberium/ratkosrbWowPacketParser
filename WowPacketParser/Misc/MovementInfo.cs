@@ -45,6 +45,10 @@ namespace WowPacketParser.Misc
 
         public Vector4 TransportOffset;
 
+        public uint TransportTime;
+
+        public sbyte TransportSeat;
+
         public Quaternion Rotation;
 
         public float WalkSpeed;
@@ -66,6 +70,8 @@ namespace WowPacketParser.Misc
         public float PitchRate;
 
         public bool Hover;
+
+        public float VehicleOrientation;
 
         public uint VehicleId; // Not exactly related to movement but it is read in ReadMovementUpdateBlock
 
@@ -90,6 +96,8 @@ namespace WowPacketParser.Misc
             copy.Orientation = this.Orientation;
             copy.TransportGuid = this.TransportGuid;
             copy.TransportOffset = this.TransportOffset;
+            copy.TransportTime = this.TransportTime;
+            copy.TransportSeat = this.TransportSeat;
             copy.Rotation = this.Rotation;
             copy.WalkSpeed = this.WalkSpeed;
             copy.RunSpeed = this.RunSpeed;
@@ -102,6 +110,7 @@ namespace WowPacketParser.Misc
             copy.PitchRate = this.PitchRate;
             copy.Hover = this.Hover;
             copy.VehicleId = this.VehicleId;
+            copy.VehicleOrientation = this.VehicleOrientation;
             copy.TransportPathTimer = this.TransportPathTimer;
             copy.HasWpsOrRandMov = this.HasWpsOrRandMov;
             return copy;

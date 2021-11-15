@@ -10,6 +10,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("guid", true, true)]
         public string GUID;
 
+        [DBFieldName("original_id")]
+        public uint? OriginalID;
+
         [DBFieldName("id")]
         public uint? ID;
 
@@ -65,6 +68,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("is_temporary", DbType = (TargetedDbType.WPP))]
         public byte? TemporarySpawn;
 
+        [DBFieldName("is_transport", DbType = (TargetedDbType.WPP))]
+        public byte? IsTransport;
+
         [DBFieldName("creator_guid", false, true, DbType = (TargetedDbType.WPP))]
         public string CreatedByGuid;
 
@@ -98,10 +104,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("type", DbType = (TargetedDbType.WPP))]
         public uint? Type;
 
-        [DBFieldName("artkit", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("art_kit", DbType = (TargetedDbType.WPP))]
         public uint? ArtKit;
 
-        [DBFieldName("animprogress", TargetedDbExpansion.Zero)]
+        [DBFieldName("anim_progress", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("animprogress", DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS | TargetedDbType.TRINITY))]
         public uint? AnimProgress;
 
         [DBFieldName("custom_param", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
@@ -233,10 +240,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("state", true, false, true)]
         public uint? State;
 
-        [DBFieldName("artkit", true, false, true)]
+        [DBFieldName("art_kit", true, false, true)]
         public uint? ArtKit;
 
-        [DBFieldName("animprogress", TargetedDbExpansion.Zero, true, false, true)]
+        [DBFieldName("anim_progress", true, false, true)]
         public uint? AnimProgress;
 
         [DBFieldName("custom_param", true, false, true)]

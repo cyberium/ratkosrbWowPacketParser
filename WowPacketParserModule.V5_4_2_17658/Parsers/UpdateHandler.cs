@@ -479,7 +479,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                     packet.ReadXORByte(transportGuid, 1);
                     moveInfo.TransportOffset.Y = packet.ReadSingle();
                     packet.ReadXORByte(transportGuid, 2);
-                    packet.ReadUInt32("Transport Time", index);
+                    moveInfo.TransportTime = packet.ReadUInt32("Transport Time", index);
                     moveInfo.TransportOffset.Z = packet.ReadSingle();
                     packet.ReadXORByte(transportGuid, 7);
                     if (hasTransportTime2)
@@ -488,7 +488,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                     packet.ReadXORBytes(transportGuid, 6, 4);
                     moveInfo.TransportOffset.X = packet.ReadSingle();
                     packet.ReadXORByte(transportGuid, 3);
-                    var seat = packet.ReadSByte("Transport Seat", index);
+                    moveInfo.TransportSeat = packet.ReadSByte("Transport Seat", index);
                     if (hasTransportTime3)
                         packet.ReadUInt32("Transport Time 3", index);
 
@@ -503,7 +503,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                         {
                             Entry = moveInfo.TransportGuid.GetEntry(),
                             AccessoryEntry = guid.GetEntry(),
-                            SeatId = seat
+                            SeatId = moveInfo.TransportSeat
                         };
                         Storage.VehicleTemplateAccessories.Add(vehicleAccessory, packet.TimeSpan);
                     }
@@ -889,7 +889,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
             if (hasVehicleData)
             {
                 moveInfo.VehicleId = packet.ReadUInt32("Vehicle Id", index);
-                packet.ReadSingle("Vehicle Orientation", index);
+                moveInfo.VehicleOrientation = packet.ReadSingle("Vehicle Orientation", index);
             }
 
             if (bit32A)

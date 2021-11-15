@@ -166,10 +166,10 @@ namespace WowPacketParser.Parsing.Parsers
                     info.TransportGuid = packet.ReadGuid("Transport GUID", index);
 
                 info.TransportOffset = packet.ReadVector4("Transport Position", index);
-                packet.ReadInt32("Transport Time", index);
+                info.TransportTime = packet.ReadUInt32("Transport Time", index);
 
                 if (ClientVersion.AddedInVersion(ClientType.WrathOfTheLichKing))
-                    packet.ReadByte("Transport Seat", index);
+                    info.TransportSeat = packet.ReadSByte("Transport Seat", index);
 
                 if (info.FlagsExtra.HasAnyFlag(MovementFlagExtra.InterpolateMove))
                     packet.ReadInt32("Transport Time", index);
@@ -255,8 +255,8 @@ namespace WowPacketParser.Parsing.Parsers
             {
                 info.TransportGuid = packet.ReadGuid("Transport GUID", index);
                 info.TransportOffset = packet.ReadVector4("Transport Position", index);
-                packet.ReadByte("Transport Seat", index);
-                packet.ReadInt32("Transport Time", index);
+                info.TransportSeat = packet.ReadSByte("Transport Seat", index);
+                info.TransportTime = packet.ReadUInt32("Transport Time", index);
                 if (hasInterpolatedMovement)
                     packet.ReadInt32("Transport Time 2", index);
                 if (time3)
@@ -307,9 +307,8 @@ namespace WowPacketParser.Parsing.Parsers
                 if (movementData != null)
                     movementData.TransportGuid = transportGuid;
 
-                int seat = -1;
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_0_9767)) // no idea when this was added exactly
-                    seat = packet.ReadByte("Transport Seat");
+                    movementData.TransportSeat = packet.ReadSByte("Transport Seat");
 
                 if (transportGuid.HasEntry() && transportGuid.GetHighType() == HighGuidType.Vehicle &&
                     guid.HasEntry() && guid.GetHighType() == HighGuidType.Creature)
@@ -318,7 +317,7 @@ namespace WowPacketParser.Parsing.Parsers
                     {
                         Entry = transportGuid.GetEntry(),
                         AccessoryEntry = guid.GetEntry(),
-                        SeatId = seat
+                        SeatId = movementData.TransportSeat
                     };
                     Storage.VehicleTemplateAccessories.Add(vehicleAccessory, packet.TimeSpan);
                 }

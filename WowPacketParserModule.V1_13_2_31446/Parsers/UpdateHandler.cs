@@ -355,7 +355,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             if (hasVehicleCreate)
             {
                 moveInfo.VehicleId = packet.ReadUInt32("RecID", index);
-                packet.ReadSingle("InitialRawFacing", index);
+                moveInfo.VehicleOrientation = packet.ReadSingle("InitialRawFacing", index);
             }
 
             if (hasAnimKitCreate)
@@ -376,8 +376,8 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 packet.ResetBitReader();
                 moveInfo.TransportGuid = packet.ReadPackedGuid128("TransportGUID", index);
                 moveInfo.TransportOffset = packet.ReadVector4("TransportPosition", index);
-                var seat = packet.ReadByte("VehicleSeatIndex", index);
-                packet.ReadUInt32("MoveTime", index);
+                moveInfo.TransportSeat = packet.ReadSByte("VehicleSeatIndex", index);
+                moveInfo.TransportTime = packet.ReadUInt32("MoveTime", index);
 
                 var hasPrevMoveTime = packet.ReadBit("HasPrevMoveTime", index);
                 var hasVehicleRecID = packet.ReadBit("HasVehicleRecID", index);
@@ -395,7 +395,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                     {
                         Entry = moveInfo.TransportGuid.GetEntry(),
                         AccessoryEntry = guid.GetEntry(),
-                        SeatId = seat
+                        SeatId = moveInfo.TransportSeat
                     };
                     Storage.VehicleTemplateAccessories.Add(vehicleAccessory, packet.TimeSpan);
                 }
