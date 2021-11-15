@@ -766,3 +766,6 @@ ALTER TABLE `gameobject`
 
 ALTER TABLE `gameobject_values_update`
 	CHANGE COLUMN `artkit` `art_kit` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `state`;
+
+ALTER TABLE `creature_melee_damage`
+	ADD COLUMN `level` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `entry`;

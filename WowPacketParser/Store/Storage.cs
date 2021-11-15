@@ -759,20 +759,31 @@ namespace WowPacketParser.Store
                 Storage.CreatureThreatRemoves.Add(guid, threatList);
             }
         }
-        public static readonly Dictionary<uint, List<double>> CreatureMeleeAttackDamage = new Dictionary<uint, List<double>>();
-        public static readonly Dictionary<uint, List<double>> CreatureMeleeAttackDamageDirty = new Dictionary<uint, List<double>>();
-        private static void StoreCreatureMeleeAttackDamage(uint entry, double damage, bool dirty)
+        public static readonly Dictionary<uint, Dictionary<uint, List<double>>> CreatureMeleeAttackDamage = new Dictionary<uint, Dictionary<uint, List<double>>>();
+        public static readonly Dictionary<uint, Dictionary<uint, List<double>>> CreatureMeleeAttackDamageDirty = new Dictionary<uint, Dictionary<uint, List<double>>>();
+        private static void StoreCreatureMeleeAttackDamage(uint entry, uint level, double damage, bool dirty)
         {
-            Dictionary<uint, List<double>> damageDict = dirty ? CreatureMeleeAttackDamageDirty : CreatureMeleeAttackDamage;
+            Dictionary<uint, Dictionary<uint, List<double>>> damageDict = dirty ? CreatureMeleeAttackDamageDirty : CreatureMeleeAttackDamage;
             if (damageDict.ContainsKey(entry))
             {
-                damageDict[entry].Add(damage);
+                if (damageDict[entry].ContainsKey(level))
+                {
+                    damageDict[entry][level].Add(damage);
+                }
+                else
+                {
+                    List<double> damageList = new List<double>();
+                    damageList.Add(damage);
+                    damageDict[entry].Add(level, damageList);
+                }
             }
             else
             {
+                Dictionary<uint, List<double>> levelDict = new Dictionary<uint, List<double>>();
                 List<double> damageList = new List<double>();
                 damageList.Add(damage);
-                damageDict.Add(entry, damageList);
+                levelDict.Add(level, damageList);
+                damageDict.Add(entry, levelDict);
             }
         }
         public static readonly Dictionary<uint, uint> CreatureMeleeAttackSchool = new Dictionary<uint, uint>();
@@ -803,6 +814,7 @@ namespace WowPacketParser.Store
                 
                 Unit creature = Storage.Objects[attackerGuid].Item1 as Unit;
                 uint entry = (uint)creature.ObjectData.EntryID;
+                uint level = (uint)creature.UnitData.Level;
 
                 uint allowedHitInfoFlags = (uint)(SpellHitInfo.HITINFO_AFFECTS_VICTIM |
                                                   SpellHitInfo.HITINFO_UNK10 |
@@ -816,11 +828,11 @@ namespace WowPacketParser.Store
                      (creature.UnitData.Flags & (uint)UnitFlags.MainHandDisarmed) == 0 &&
                      !creature.HasAuraMatchingCriteria(HardcodedData.IsModMainHandDamageAura))
                 {
-                    StoreCreatureMeleeAttackDamage(entry, attackData.OriginalDamage, false);
+                    StoreCreatureMeleeAttackDamage(entry, level, attackData.OriginalDamage, false);
                 }
                 else
                 {
-                    StoreCreatureMeleeAttackDamage(entry, attackData.OriginalDamage, true);
+                    StoreCreatureMeleeAttackDamage(entry, level, attackData.OriginalDamage, true);
                 }
 
                 StoreCreatureMeleeAttackSchool(entry, attackData.TotalSchoolMask);

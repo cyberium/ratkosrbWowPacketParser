@@ -542,6 +542,7 @@ CREATE TABLE IF NOT EXISTS `creature_loot_item` (
 DROP TABLE IF EXISTS `creature_melee_damage`;
 CREATE TABLE IF NOT EXISTS `creature_melee_damage` (
   `entry` int(10) unsigned NOT NULL DEFAULT '0',
+  `level` int(10) unsigned NOT NULL DEFAULT '0',
   `is_dirty` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'mob had auras that affect damage or there were no normal hits',
   `hits_count` smallint(5) unsigned NOT NULL DEFAULT '0',
   `damage_min` int(10) unsigned NOT NULL DEFAULT '0',

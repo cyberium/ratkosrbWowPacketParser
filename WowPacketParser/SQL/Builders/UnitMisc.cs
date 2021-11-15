@@ -777,48 +777,57 @@ namespace WowPacketParser.SQL.Builders
                 return string.Empty;
 
             if (Storage.CreatureMeleeAttackDamage.Count == 0 && 
-                Storage.CreatureMeleeAttackSchool.Count == 0)
+                Storage.CreatureMeleeAttackDamageDirty.Count == 0)
                 return string.Empty;
 
-            Dictionary<uint, CreatureMeleeDamage> meleeStatsDict = new Dictionary<uint, CreatureMeleeDamage>();
-            Func<uint, CreatureMeleeDamage> GetDataForCreature = delegate (uint entry)
+            Dictionary<Tuple<uint, uint>, CreatureMeleeDamage> meleeStatsDict = new Dictionary<Tuple<uint, uint>, CreatureMeleeDamage>();
+            Func<Tuple<uint, uint>, CreatureMeleeDamage> GetDataForCreature = delegate (Tuple<uint, uint> entryLevelPair)
             {
-                if (meleeStatsDict.ContainsKey(entry))
-                    return meleeStatsDict[entry];
+                if (meleeStatsDict.ContainsKey(entryLevelPair))
+                    return meleeStatsDict[entryLevelPair];
 
                 CreatureMeleeDamage meleeStats = new CreatureMeleeDamage();
-                meleeStats.Entry = entry;
-                meleeStatsDict.Add(entry, meleeStats);
+                meleeStats.Entry = entryLevelPair.Item1;
+                meleeStats.Level = entryLevelPair.Item2;
+                meleeStatsDict.Add(entryLevelPair, meleeStats);
                 return meleeStats;
             };
 
+            HashSet<Tuple<uint, uint>> mobsWithDamageData = new HashSet<Tuple<uint, uint>>();
             foreach (var creatureData in Storage.CreatureMeleeAttackDamage)
             {
-                CreatureMeleeDamage meleeStats = GetDataForCreature(creatureData.Key);
-                meleeStats.IsDirty = false;
-                meleeStats.HitsCount = (uint)creatureData.Value.Count;
-                meleeStats.DamageMin = (uint)creatureData.Value.Min();
-                meleeStats.DamageAverage = (uint)creatureData.Value.Average();
-                meleeStats.DamageMax = (uint)creatureData.Value.Max();
+                foreach (var damageForLevel in creatureData.Value)
+                {
+                    Tuple<uint, uint> entryLevelPair = new Tuple<uint, uint>(creatureData.Key, damageForLevel.Key);
+                    CreatureMeleeDamage meleeStats = GetDataForCreature(entryLevelPair);
+                    meleeStats.IsDirty = false;
+                    meleeStats.HitsCount = (uint)damageForLevel.Value.Count;
+                    meleeStats.DamageMin = (uint)damageForLevel.Value.Min();
+                    meleeStats.DamageAverage = (uint)damageForLevel.Value.Average();
+                    meleeStats.DamageMax = (uint)damageForLevel.Value.Max();
+                    Storage.CreatureMeleeAttackSchool.TryGetValue(creatureData.Key, out meleeStats.TotalSchoolMask);
+                    mobsWithDamageData.Add(entryLevelPair);
+                }
+                
             }
 
             foreach (var creatureData in Storage.CreatureMeleeAttackDamageDirty)
             {
-                if (!Storage.CreatureMeleeAttackDamage.ContainsKey(creatureData.Key))
+                foreach (var damageForLevel in creatureData.Value)
                 {
-                    CreatureMeleeDamage meleeStats = GetDataForCreature(creatureData.Key);
-                    meleeStats.IsDirty = true;
-                    meleeStats.HitsCount = (uint)creatureData.Value.Count;
-                    meleeStats.DamageMin = (uint)creatureData.Value.Min();
-                    meleeStats.DamageAverage = (uint)creatureData.Value.Average();
-                    meleeStats.DamageMax = (uint)creatureData.Value.Max();
+                    Tuple<uint, uint> entryLevelPair = new Tuple<uint, uint>(creatureData.Key, damageForLevel.Key);
+                    if (!mobsWithDamageData.Contains(entryLevelPair))
+                    {
+                        CreatureMeleeDamage meleeStats = GetDataForCreature(entryLevelPair);
+                        meleeStats.IsDirty = true;
+                        meleeStats.HitsCount = (uint)damageForLevel.Value.Count;
+                        meleeStats.DamageMin = (uint)damageForLevel.Value.Min();
+                        meleeStats.DamageAverage = (uint)damageForLevel.Value.Average();
+                        meleeStats.DamageMax = (uint)damageForLevel.Value.Max();
+                        Storage.CreatureMeleeAttackSchool.TryGetValue(creatureData.Key, out meleeStats.TotalSchoolMask);
+                        mobsWithDamageData.Add(entryLevelPair);
+                    }
                 }
-            }
-
-            foreach (var creatureData in Storage.CreatureMeleeAttackSchool)
-            {
-                CreatureMeleeDamage meleeStats = GetDataForCreature(creatureData.Key);
-                meleeStats.TotalSchoolMask = creatureData.Value;
             }
 
             var rows = new RowList<CreatureMeleeDamage>();

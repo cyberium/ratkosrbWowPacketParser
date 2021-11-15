@@ -107,6 +107,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("entry", true)]
         public uint Entry;
 
+        [DBFieldName("level", true)]
+        public uint Level;
+
         [DBFieldName("is_dirty", true)]
         public bool IsDirty;
 
