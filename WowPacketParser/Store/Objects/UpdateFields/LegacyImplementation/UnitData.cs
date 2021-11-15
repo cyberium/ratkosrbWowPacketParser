@@ -333,19 +333,32 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public byte PetTalentPoints => (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) >> 8) & 0xFF);
 
-        public byte VisFlags => (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) >> 16) & 0xFF);
+        public byte VisFlags => (byte)(ClientVersion.AddedInVersion(ClientVersionBuild.V2_4_0_8089)
+                ? (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) >> 16) & 0xFF)
+                : (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) >> 24) & 0xFF));
 
-        public byte AnimTier => (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) >> 24) & 0xFF);
+        public byte AnimTier => (byte)(ClientVersion.AddedInVersion(ClientVersionBuild.V2_4_0_8089)
+                ? (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) >> 24) & 0xFF)
+                : 0);
 
         public int CreatedBySpell => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_CREATED_BY_SPELL);
 
         public byte SheatheState => (byte)(UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_2) & 0xFF);
 
-        public byte PvpFlags => (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_2) >> 8) & 0xFF);
+        public byte DebuffLimit => (byte)(ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180) &&
+                                          ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056)
+                ? (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_2) >> 8) & 0xFF)
+                : 0);
+
+        public byte PvpFlags => (byte)(ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056)
+                ? (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_2) >> 8) & 0xFF)
+                : 0);
 
         public byte PetFlags => (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_2) >> 16) & 0xFF);
 
-        public byte ShapeshiftForm => (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_2) >> 24) & 0xFF);
+        public byte ShapeshiftForm => (byte)(ClientVersion.AddedInVersion(ClientVersionBuild.V2_4_0_8089)
+                ? (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_2) >> 24) & 0xFF)
+                : (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) >> 16) & 0xFF));
 
         public float HoverHeight => UpdateFields.GetValue<UnitField, float?>(UnitField.UNIT_FIELD_HOVERHEIGHT).GetValueOrDefault(1.0f);
 
@@ -692,19 +705,32 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public byte PetTalentPoints => (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) >> 8) & 0xFF);
 
-        public byte VisFlags => (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) >> 16) & 0xFF);
+        public byte VisFlags => (byte)(ClientVersion.AddedInVersion(ClientVersionBuild.V2_4_0_8089)
+                ? (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) >> 16) & 0xFF)
+                : (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) >> 24) & 0xFF));
 
-        public byte AnimTier => (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) >> 24) & 0xFF);
+        public byte AnimTier => (byte)(ClientVersion.AddedInVersion(ClientVersionBuild.V2_4_0_8089)
+                ? (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) >> 24) & 0xFF)
+                : 0);
 
         public int CreatedBySpell => UpdateFields.GetValue<UnitField, int>(UnitField.UNIT_CREATED_BY_SPELL);
 
         public byte SheatheState => (byte)(UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_2) & 0xFF);
 
-        public byte PvpFlags => (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_2) >> 8) & 0xFF);
+        public byte DebuffLimit => (byte)(ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180) &&
+                                          ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056)
+                ? (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_2) >> 8) & 0xFF)
+                : 0);
+
+        public byte PvpFlags => (byte)(ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056)
+                ? (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_2) >> 8) & 0xFF)
+                : 0);
 
         public byte PetFlags => (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_2) >> 16) & 0xFF);
 
-        public byte ShapeshiftForm => (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_2) >> 24) & 0xFF);
+        public byte ShapeshiftForm => (byte)(ClientVersion.AddedInVersion(ClientVersionBuild.V2_4_0_8089)
+                ? (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_2) >> 24) & 0xFF)
+                : (byte)((UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_FIELD_BYTES_1) >> 16) & 0xFF));
 
         public float HoverHeight => UpdateFields.GetValue<UnitField, float?>(UnitField.UNIT_FIELD_HOVERHEIGHT).GetValueOrDefault(1.0f);
 

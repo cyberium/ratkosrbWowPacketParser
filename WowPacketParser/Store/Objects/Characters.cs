@@ -179,8 +179,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("vis_flags")]
         public uint? VisFlags;
 
-        //[DBFieldName("anim_tier")]
-        //public uint? AnimTier;
+        [DBFieldName("anim_tier", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("anim_tier", TargetedDbExpansion.WrathOfTheLichKing, DbType = (TargetedDbType.WPP))]
+        public uint? AnimTier;
 
         [DBFieldName("sheath_state")]
         public uint? SheatheState;

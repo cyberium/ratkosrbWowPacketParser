@@ -163,6 +163,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("vis_flags", DbType = (TargetedDbType.WPP))]
         public uint? VisFlags;
 
+        [DBFieldName("anim_tier", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, DbType = (TargetedDbType.WPP))]
         [DBFieldName("anim_tier", TargetedDbExpansion.WrathOfTheLichKing, DbType = (TargetedDbType.WPP))]
         public uint? AnimTier;
 
@@ -748,6 +749,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("vis_flags", true, false, true)]
         public uint? VisFlags;
 
+        [DBFieldName("anim_tier", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, true, false, true)]
         [DBFieldName("anim_tier", TargetedDbExpansion.WrathOfTheLichKing, true, false, true)]
         public uint? AnimTier;
 

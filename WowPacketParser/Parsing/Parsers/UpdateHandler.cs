@@ -479,15 +479,31 @@ namespace WowPacketParser.Parsing.Parsers
                                 creatureUpdate.PetTalentPoints = ((update.Value.UInt32Value >> 8) & 0xFF);
                             }
                             */
-                            if (obj.UnitData.VisFlags != ((update.Value.UInt32Value >> 16) & 0xFF))
+                            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_4_0_8089))
                             {
-                                hasData = true;
-                                creatureUpdate.VisFlags = ((update.Value.UInt32Value >> 16) & 0xFF);
+                                if (obj.UnitData.VisFlags != ((update.Value.UInt32Value >> 16) & 0xFF))
+                                {
+                                    hasData = true;
+                                    creatureUpdate.VisFlags = ((update.Value.UInt32Value >> 16) & 0xFF);
+                                }
+                                if (obj.UnitData.AnimTier != ((update.Value.UInt32Value >> 24) & 0xFF))
+                                {
+                                    hasData = true;
+                                    creatureUpdate.AnimTier = ((update.Value.UInt32Value >> 24) & 0xFF);
+                                }
                             }
-                            if (obj.UnitData.AnimTier != ((update.Value.UInt32Value >> 24) & 0xFF))
+                            else
                             {
-                                hasData = true;
-                                creatureUpdate.AnimTier = ((update.Value.UInt32Value >> 24) & 0xFF);
+                                if (obj.UnitData.ShapeshiftForm != ((update.Value.UInt32Value >> 16) & 0xFF))
+                                {
+                                    hasData = true;
+                                    creatureUpdate.ShapeshiftForm = ((update.Value.UInt32Value >> 16) & 0xFF);
+                                }
+                                if (obj.UnitData.VisFlags != ((update.Value.UInt32Value >> 24) & 0xFF))
+                                {
+                                    hasData = true;
+                                    creatureUpdate.VisFlags = ((update.Value.UInt32Value >> 24) & 0xFF);
+                                }
                             }
                         }
                     }
@@ -501,10 +517,13 @@ namespace WowPacketParser.Parsing.Parsers
                                 hasData = true;
                                 creatureUpdate.SheathState = (update.Value.UInt32Value & 0xFF);
                             }
-                            if (obj.UnitData.PvpFlags != ((update.Value.UInt32Value >> 8) & 0xFF))
+                            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
                             {
-                                hasData = true;
-                                creatureUpdate.PvpFlags = ((update.Value.UInt32Value >> 8) & 0xFF);
+                                if (obj.UnitData.PvpFlags != ((update.Value.UInt32Value >> 8) & 0xFF))
+                                {
+                                    hasData = true;
+                                    creatureUpdate.PvpFlags = ((update.Value.UInt32Value >> 8) & 0xFF);
+                                }
                             }
                             /*
                             if (obj.UnitData.PetFlags != ((update.Value.UInt32Value >> 16) & 0xFF))
@@ -513,11 +532,14 @@ namespace WowPacketParser.Parsing.Parsers
                                 creatureUpdate.PetFlags = ((update.Value.UInt32Value >> 16) & 0xFF);
                             }
                             */
-                            if (obj.UnitData.ShapeshiftForm != ((update.Value.UInt32Value >> 24) & 0xFF))
+                            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_4_0_8089))
                             {
-                                hasData = true;
-                                creatureUpdate.ShapeshiftForm = ((update.Value.UInt32Value >> 24) & 0xFF);
-                            }
+                                if (obj.UnitData.ShapeshiftForm != ((update.Value.UInt32Value >> 24) & 0xFF))
+                                {
+                                    hasData = true;
+                                    creatureUpdate.ShapeshiftForm = ((update.Value.UInt32Value >> 24) & 0xFF);
+                                }
+                            } 
                         }
                     }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_NPC_FLAGS))

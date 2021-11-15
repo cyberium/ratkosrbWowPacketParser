@@ -2707,7 +2707,7 @@ namespace WowPacketParser.SQL.Builders
                     playerRow.Data.StandState = player.UnitDataOriginal.StandState;
                     //playerRow.Data.PetTalentPoints = player.UnitDataOriginal.PetTalentPoints;
                     playerRow.Data.VisFlags = player.UnitDataOriginal.VisFlags;
-                    //playerRow.Data.AnimTier = player.UnitDataOriginal.AnimTier;
+                    playerRow.Data.AnimTier = player.UnitDataOriginal.AnimTier;
                     playerRow.Data.SheatheState = player.UnitDataOriginal.SheatheState;
                     playerRow.Data.PvpFlags = player.UnitDataOriginal.PvpFlags;
                     //playerRow.Data.PetFlags = player.UnitDataOriginal.PetFlags;

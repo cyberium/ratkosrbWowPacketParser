@@ -769,3 +769,15 @@ ALTER TABLE `gameobject_values_update`
 
 ALTER TABLE `creature_melee_damage`
 	ADD COLUMN `level` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `entry`;
+
+ALTER TABLE `creature`
+	ADD COLUMN `anim_tier` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1' AFTER `vis_flags`;
+
+ALTER TABLE `creature_values_update`
+	ADD COLUMN `anim_tier` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `vis_flags`;
+
+ALTER TABLE `player`
+	ADD COLUMN `anim_tier` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'from UNIT_FIELD_BYTES_1' AFTER `vis_flags`;
+
+ALTER TABLE `player_values_update`
+	ADD COLUMN `anim_tier` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `vis_flags`;
