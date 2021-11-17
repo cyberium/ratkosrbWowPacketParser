@@ -182,6 +182,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
             var bit414 = packet.ReadBit();
             var hasAnimKits = packet.ReadBit("Has Anim Kits", index);
 
+            ServerSideMovement monsterMove = null;
             if (isLiving)
             {
                 guid1[5] = packet.ReadBit();
@@ -212,12 +213,18 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                 moveInfo.HasSplineData = packet.ReadBit();
                 if (moveInfo.HasSplineData)
                 {
+                    monsterMove = new ServerSideMovement();
+                    monsterMove.Orientation = 100;
+                    monsterMove.SplineCount = 1;
+                    monsterMove.SplinePoints = new List<Vector3>();
+
                     hasFullSpline = packet.ReadBit();
                     if (hasFullSpline)
                     {
-                        packet.ReadBitsE<SplineFlag434>("Spline flags", 25, index);
+                        monsterMove.SplineFlags = (uint)packet.ReadBitsE<SplineFlag434>("Spline flags", 25, index);
                         hasSplineStartTime = packet.ReadBit("Has Spline Start Time", index);
                         splineCount = packet.ReadBits("SplineWaypointsCount", 20, index);
+                        monsterMove.SplineCount = splineCount + 1;
                         bit130 = packet.ReadBit();
                         if (bit130)
                         {
@@ -448,7 +455,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
 
             if (hasGameObjectPosition)
             {
-                packet.ReadSByte("GO Transport Seat", index);
+                moveInfo.TransportSeat = packet.ReadSByte("GO Transport Seat", index);
                 if (hasGOTransportTime2)
                     packet.ReadUInt32("GO Transport Time 2", index);
 
@@ -459,7 +466,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                 packet.ReadXORBytes(goTransportGuid, 7, 6, 5, 0);
                 moveInfo.TransportOffset.Z = packet.ReadSingle();
                 moveInfo.TransportOffset.X = packet.ReadSingle();
-                packet.ReadUInt32("GO Transport Time", index);
+                moveInfo.TransportTime = packet.ReadUInt32("GO Transport Time", index);
                 moveInfo.TransportOffset.O = packet.ReadSingle();
                 packet.ReadXORByte(goTransportGuid, 1);
                 moveInfo.TransportOffset.Y = packet.ReadSingle();
@@ -533,6 +540,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                                 X = packet.ReadSingle()
                             };
 
+                            monsterMove.SplinePoints.Add(wp);
                             packet.AddValue("Spline Waypoint", wp, index, i);
                         }
 
@@ -555,7 +563,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                         }
 
                         if (splineType == SplineType.FacingAngle)
-                            packet.ReadSingle("Facing Angle", index);
+                            monsterMove.Orientation = packet.ReadSingle("Facing Angle", index);
 
                         packet.ReadSingle("Spline Duration Multiplier", index); // if need swap with "Spline Duration Multiplier Next"
                         if (hasSplineStartTime)
@@ -576,13 +584,19 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                             packet.AddValue("Facing Spot", point, index);
                         }
 
-                        packet.ReadInt32("Spline Full Time", index);
+                        monsterMove.MoveTime = (uint)packet.ReadInt32("Spline Full Time", index);
                     }
 
                     packet.ReadInt32("Spline Id", index);
-                    moveInfo.Position.Y = packet.ReadSingle();
-                    moveInfo.Position.Z = packet.ReadSingle();
-                    moveInfo.Position.X = packet.ReadSingle();
+
+                    var endPoint = new Vector3
+                    {
+                        Y = packet.ReadSingle(),
+                        Z = packet.ReadSingle(),
+                        X = packet.ReadSingle(),
+                    };
+                    monsterMove.SplinePoints.Add(endPoint);
+                    packet.AddValue("Spline Endpoint", endPoint, index);
                 }
 
                 moveInfo.Position.Y = packet.ReadSingle();
@@ -653,6 +667,20 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                 packet.WriteGuid("GUID1", guid1, index);
                 packet.AddValue("Position", moveInfo.Position, index);
                 packet.AddValue("Orientation", moveInfo.Orientation, index);
+
+                if (monsterMove != null)
+                {
+                    if (moveInfo.TransportGuid != null)
+                        monsterMove.TransportGuid = moveInfo.TransportGuid;
+                    monsterMove.TransportSeat = moveInfo.TransportSeat;
+
+                    if ((Settings.SaveTransports || moveInfo.TransportGuid.IsEmpty()) &&
+                        Storage.Objects.ContainsKey(guid))
+                    {
+                        Unit unit = Storage.Objects[guid].Item1 as Unit;
+                        unit.AddWaypoint(monsterMove, moveInfo.Position, packet.Time);
+                    }
+                }
             }
 
             if (hasSceneObjectData)
@@ -805,7 +833,8 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
             if (hasAttackingTarget)
             {
                 packet.ParseBitStream(attackingTargetGuid, 1, 3, 5, 4, 7, 6, 2, 0);
-                packet.WriteGuid("Attacking GUID", attackingTargetGuid, index);
+                WowGuid victimGuid = packet.WriteGuid("Attacking GUID", attackingTargetGuid, index);
+                Storage.StoreUnitAttackToggle(guid, victimGuid, packet.Time, true);
             }
 
             if (bit29C)

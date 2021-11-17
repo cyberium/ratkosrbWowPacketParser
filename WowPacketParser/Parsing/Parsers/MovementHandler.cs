@@ -217,10 +217,9 @@ namespace WowPacketParser.Parsing.Parsers
         {
             var info = new MovementInfo
             {
-                Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30, index)
+                Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30, index),
+                FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12, index)
             };
-
-            packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12, index);
 
             var onTransport = packet.ReadBit("OnTransport", index);
             var hasInterpolatedMovement = false;
@@ -289,7 +288,7 @@ namespace WowPacketParser.Parsing.Parsers
         {
             WowGuid guid = packet.ReadPackedGuid("GUID");
             Unit obj = null;
-            ServerSideMovement movementData = null;
+            ServerSideMovement monsterMove = null;
             if (Storage.Objects != null && Storage.Objects.ContainsKey(guid))
             {
                 obj = Storage.Objects[guid].Item1 as Unit;
@@ -297,18 +296,21 @@ namespace WowPacketParser.Parsing.Parsers
                 {
                     obj.Movement.HasWpsOrRandMov = true;
                     if (Settings.SaveTransports || packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_ON_MONSTER_MOVE, Direction.ServerToClient))
-                        movementData = new ServerSideMovement();
+                        monsterMove = new ServerSideMovement();
                 }   
             }
 
             if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_MONSTER_MOVE_TRANSPORT, Direction.ServerToClient))
             {
                 WowGuid transportGuid = packet.ReadPackedGuid("Transport GUID");
-                if (movementData != null)
-                    movementData.TransportGuid = transportGuid;
+                if (monsterMove != null)
+                    monsterMove.TransportGuid = transportGuid;
 
+                sbyte seat = 0;
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_0_9767)) // no idea when this was added exactly
-                    movementData.TransportSeat = packet.ReadSByte("Transport Seat");
+                    seat = packet.ReadSByte("Transport Seat");
+                if (monsterMove != null)
+                    monsterMove.TransportSeat = seat;
 
                 if (transportGuid.HasEntry() && transportGuid.GetHighType() == HighGuidType.Vehicle &&
                     guid.HasEntry() && guid.GetHighType() == HighGuidType.Creature)
@@ -317,7 +319,7 @@ namespace WowPacketParser.Parsing.Parsers
                     {
                         Entry = transportGuid.GetEntry(),
                         AccessoryEntry = guid.GetEntry(),
-                        SeatId = movementData.TransportSeat
+                        SeatId = seat
                     };
                     Storage.VehicleTemplateAccessories.Add(vehicleAccessory, packet.TimeSpan);
                 }
@@ -354,26 +356,30 @@ namespace WowPacketParser.Parsing.Parsers
                 case SplineType.Stop:
                     return;
             }
-            if (movementData != null)
-                movementData.Orientation = orientation;
+            if (monsterMove != null)
+                monsterMove.Orientation = orientation;
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V5_1_0_16309))
             {
                 // Not the best way
-                ReadSplineMovement510(packet, pos);
+                ReadSplineMovement510(monsterMove, packet, pos);
+                if (monsterMove != null)
+                    obj.AddWaypoint(monsterMove, pos, packet.Time);
                 return;
             }
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_2_2_14545))
             {
                 // Not the best way
-                ReadSplineMovement422(packet, pos);
+                ReadSplineMovement422(monsterMove, packet, pos);
+                if (monsterMove != null)
+                    obj.AddWaypoint(monsterMove, pos, packet.Time);
                 return;
             }
 
             var flags = packet.ReadInt32E<SplineFlag>("Spline Flags");
-            if (movementData != null)
-                movementData.SplineFlags = (uint)flags;
+            if (monsterMove != null)
+                monsterMove.SplineFlags = (uint)flags;
 
             if (flags.HasAnyFlag(SplineFlag.AnimationTier))
             {
@@ -381,9 +387,9 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadInt32("Async-time in ms");
             }
 
-            int movetime = packet.ReadInt32("Move Time");
-            if (movementData != null)
-                movementData.MoveTime = (uint)movetime;
+            int moveTime = packet.ReadInt32("Move Time");
+            if (monsterMove != null)
+                monsterMove.MoveTime = (uint)moveTime;
 
             if (flags.HasAnyFlag(SplineFlag.Trajectory))
             {
@@ -392,11 +398,11 @@ namespace WowPacketParser.Parsing.Parsers
             }
 
             var waypoints = packet.ReadInt32("Waypoints");
-            if (movementData != null)
+            if (monsterMove != null)
             {
-                movementData.SplineCount = (uint)waypoints;
+                monsterMove.SplineCount = (uint)waypoints;
                 if (waypoints > 0)
-                    movementData.SplinePoints = new List<Vector3>();
+                    monsterMove.SplinePoints = new List<Vector3>();
             }
 
             if (flags.HasAnyFlag(SplineFlag.Flying | SplineFlag.CatmullRom))
@@ -404,8 +410,8 @@ namespace WowPacketParser.Parsing.Parsers
                 for (var i = 0; i < waypoints; i++)
                 {
                     Vector3 vec = packet.ReadVector3("Waypoint", i);
-                    if (movementData != null)
-                        movementData.SplinePoints.Add(vec);
+                    if (monsterMove != null)
+                        monsterMove.SplinePoints.Add(vec);
                 }
             }
             else
@@ -423,23 +429,25 @@ namespace WowPacketParser.Parsing.Parsers
                     else
                         vec = newpos - vec;
 
-                    if (movementData != null)
-                        movementData.SplinePoints.Add(vec);
+                    if (monsterMove != null)
+                        monsterMove.SplinePoints.Add(vec);
 
                     packet.AddValue("Waypoint", vec, i);
                 }
 
-                if (movementData != null)
-                    movementData.SplinePoints.Add(newpos);
+                if (monsterMove != null && monsterMove.SplinePoints != null)
+                    monsterMove.SplinePoints.Add(newpos);
             }
 
-            if (movementData != null)
-                obj.AddWaypoint(movementData, pos, packet.Time);
+            if (monsterMove != null)
+                obj.AddWaypoint(monsterMove, pos, packet.Time);
         }
 
-        private static void ReadSplineMovement510(Packet packet, Vector3 pos)
+        private static void ReadSplineMovement510(ServerSideMovement monsterMove, Packet packet, Vector3 pos)
         {
             var flags = packet.ReadInt32E<SplineFlag434>("Spline Flags");
+            if (monsterMove != null)
+                monsterMove.SplineFlags = (uint)flags;
 
             if (flags.HasAnyFlag(SplineFlag434.Animation))
             {
@@ -447,7 +455,9 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadInt32("Asynctime in ms"); // Async-time in ms
             }
 
-            packet.ReadInt32("Move Time");
+            int moveTime = packet.ReadInt32("Move Time");
+            if (monsterMove != null)
+                monsterMove.MoveTime = (uint)moveTime;
 
             if (flags.HasAnyFlag(SplineFlag434.Parabolic))
             {
@@ -456,11 +466,21 @@ namespace WowPacketParser.Parsing.Parsers
             }
 
             var waypoints = packet.ReadInt32("Waypoints");
+            if (monsterMove != null)
+            {
+                monsterMove.SplineCount = (uint)waypoints;
+                if (waypoints > 0)
+                    monsterMove.SplinePoints = new List<Vector3>();
+            }
 
             if (flags.HasAnyFlag(SplineFlag434.UncompressedPath))
             {
                 for (var i = 0; i < waypoints; i++)
-                    packet.ReadVector3("Waypoint", i);
+                {
+                    Vector3 point = packet.ReadVector3("Waypoint", i);
+                    if (monsterMove != null)
+                        monsterMove.SplinePoints.Add(point);
+                }
             }
             else
             {
@@ -480,6 +500,8 @@ namespace WowPacketParser.Parsing.Parsers
                     vec.Y += mid.Y;
                     vec.Z += mid.Z;
                     packet.AddValue("Waypoint: ", vec, 0);
+                    if (monsterMove != null)
+                        monsterMove.SplinePoints.Add(vec);
 
                     if (waypoints > 2)
                     {
@@ -491,9 +513,14 @@ namespace WowPacketParser.Parsing.Parsers
                             vec.Z += mid.Z;
 
                             packet.AddValue("Waypoint", vec, i);
+                            if (monsterMove != null)
+                                monsterMove.SplinePoints.Add(vec);
                         }
                     }
                 }
+
+                if (monsterMove != null && monsterMove.SplinePoints != null)
+                    monsterMove.SplinePoints.Add(newpos);
             }
 
             var unkLoopCounter = packet.ReadUInt16("Unk UInt16");
@@ -513,9 +540,11 @@ namespace WowPacketParser.Parsing.Parsers
             }
         }
 
-        private static void ReadSplineMovement422(Packet packet, Vector3 pos)
+        private static void ReadSplineMovement422(ServerSideMovement monsterMove, Packet packet, Vector3 pos)
         {
             var flags = packet.ReadInt32E<SplineFlag422>("Spline Flags");
+            if (monsterMove != null)
+                monsterMove.SplineFlags = (uint)flags;
 
             if (flags.HasAnyFlag(SplineFlag422.AnimationTier))
             {
@@ -523,7 +552,9 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadInt32("Asynctime in ms"); // Async-time in ms
             }
 
-            packet.ReadInt32("Move Time");
+            int moveTime = packet.ReadInt32("Move Time");
+            if (monsterMove != null)
+                monsterMove.MoveTime = (uint)moveTime;
 
             if (flags.HasAnyFlag(SplineFlag422.Trajectory))
             {
@@ -532,11 +563,21 @@ namespace WowPacketParser.Parsing.Parsers
             }
 
             var waypoints = packet.ReadInt32("Waypoints");
+            if (monsterMove != null)
+            {
+                monsterMove.SplineCount = (uint)waypoints;
+                if (waypoints > 0)
+                    monsterMove.SplinePoints = new List<Vector3>();
+            }
 
             if (flags.HasAnyFlag(SplineFlag422.UsePathSmoothing))
             {
                 for (var i = 0; i < waypoints; i++)
-                    packet.ReadVector3("Waypoint", i);
+                {
+                    Vector3 point = packet.ReadVector3("Waypoint", i);
+                    if (monsterMove != null)
+                        monsterMove.SplinePoints.Add(point);
+                }
             }
             else
             {
@@ -556,8 +597,13 @@ namespace WowPacketParser.Parsing.Parsers
                     vec.Y += mid.Y;
                     vec.Z += mid.Z;
 
+                    if (monsterMove != null)
+                        monsterMove.SplinePoints.Add(vec);
                     packet.AddValue("Waypoint", vec);
                 }
+
+                if (monsterMove != null && monsterMove.SplinePoints != null)
+                    monsterMove.SplinePoints.Add(newpos);
             }
         }
 
@@ -600,10 +646,10 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleLoginSetTimeSpeed(Packet packet)
         {
             packet.ReadPackedTime("Game Time");
-            packet.ReadSingle("Game Speed");
+            packet.ReadSingle("New Speed");
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_2_9901))
-                packet.ReadInt32("Unk Int32");
+                packet.ReadInt32("Game Time Holiday Offset");
         }
 
         [Parser(Opcode.SMSG_BIND_POINT_UPDATE)]
@@ -673,7 +719,8 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.MSG_MOVE_HEARTBEAT, ClientVersionBuild.V4_2_2_14545, ClientVersionBuild.V4_3_0_15005)]
         public static void HandleMovementHeartbeat422(Packet packet)
         {
-            packet.ReadBitsE<MovementFlag>("Movement flags", 30);
+            MovementInfo info = new MovementInfo();
+            info.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement flags", 30);
 
             packet.ReadBit("HasSplineData");
 
@@ -686,7 +733,7 @@ namespace WowPacketParser.Parsing.Parsers
             guidBytes[4] = packet.ReadBit();
             guidBytes[3] = packet.ReadBit();
 
-            packet.ReadBitsE<MovementFlagExtra>("Movement flags extra", 12);
+            info.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Movement flags extra", 12);
 
             guidBytes[5] = packet.ReadBit();
             var splineElevation = packet.ReadBit("SplineElevation"); // OR Swimming
@@ -708,14 +755,15 @@ namespace WowPacketParser.Parsing.Parsers
             if (interPolatedTurning)
                 jumping = packet.ReadBit("Jumping");
 
-            packet.ReadUInt32("Time");
-            packet.ReadVector4("Position");
+            info.MoveTime = packet.ReadUInt32("Time");
+            info.Position = packet.ReadVector3("Position");
+            info.Orientation = packet.ReadSingle("Orientation");
 
             packet.ReadXORByte(guidBytes, 7);
             packet.ReadXORByte(guidBytes, 5);
 
             if (splineElevation)
-                packet.ReadSingle("Spline Elevation");
+                info.SplineElevation = packet.ReadSingle("Spline Elevation");
 
             packet.ReadXORByte(guidBytes, 1);
             packet.ReadXORByte(guidBytes, 6);
@@ -724,10 +772,13 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (onTransport)
             {
-                packet.ReadByte("Transport Seat");
-                packet.ReadSingle("Transport Orientation");
-                packet.ReadVector3("Transport Position");
-                packet.ReadInt32("Transport Time");
+                info.TransportSeat = packet.ReadSByte("Transport Seat");
+                info.TransportOffset.O = packet.ReadSingle("Transport Orientation");
+                Vector3 transportPos = packet.ReadVector3("Transport Position");
+                info.TransportOffset.X = transportPos.X;
+                info.TransportOffset.Y = transportPos.Y;
+                info.TransportOffset.Z = transportPos.Z;
+                info.TransportTime = (uint)packet.ReadInt32("Transport Time");
                 if (hasInterpolatedMovement)
                     packet.ReadInt32("Transport Time 2");
 
@@ -744,35 +795,36 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadXORByte(transportBytes, 0);
                 packet.ReadXORByte(transportBytes, 4);
 
-                packet.WriteGuid("Transport Guid", transportBytes);
+                info.TransportGuid = packet.WriteGuid("Transport Guid", transportBytes);
             }
 
             if (swimming)
-                packet.ReadSingle("Swim Pitch");
+                info.SwimPitch = packet.ReadSingle("Swim Pitch");
 
             if (interPolatedTurning)
             {
-                packet.ReadInt32("Jump Fall Time");
-                packet.ReadSingle("Fall Vertical Speed");
+                info.FallTime = (uint)packet.ReadInt32("Jump Fall Time");
+                info.JumpVerticalSpeed = packet.ReadSingle("Fall Vertical Speed");
                 if (jumping)
                 {
-                    packet.ReadSingle("Jump Horizontal Speed");
-                    packet.ReadSingle("Jump Cos Angle");
-                    packet.ReadSingle("Jump Sin Angle");
-
+                    info.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed");
+                    info.JumpCosAngle = packet.ReadSingle("Jump Cos Angle");
+                    info.JumpSinAngle = packet.ReadSingle("Jump Sin Angle");
                 }
             }
 
             packet.ReadXORByte(guidBytes, 2);
             packet.ReadXORByte(guidBytes, 0);
 
-            packet.WriteGuid("Guid", guidBytes);
+            WowGuid moverGuid = packet.WriteGuid("Guid", guidBytes);
+            Storage.StorePlayerMovement(moverGuid, info, packet);
         }
 
         [Parser(Opcode.MSG_MOVE_HEARTBEAT, ClientVersionBuild.V4_3_3_15354, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleMovementHeartbeat433(Packet packet)
         {
-            packet.ReadBitsE<MovementFlag>("Movement flags", 30);
+            MovementInfo info = new MovementInfo();
+            info.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement flags", 30);
 
             packet.ReadBit("HasSplineData");
 
@@ -785,7 +837,7 @@ namespace WowPacketParser.Parsing.Parsers
             guidBytes[4] = packet.ReadBit();
             guidBytes[3] = packet.ReadBit();
 
-            packet.ReadBitsE<MovementFlagExtra>("Movement flags extra", 12);
+            info.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Movement flags extra", 12);
 
             guidBytes[5] = packet.ReadBit();
             var splineElevation = packet.ReadBit("SplineElevation"); // OR Swimming
@@ -807,14 +859,15 @@ namespace WowPacketParser.Parsing.Parsers
             if (interPolatedTurning)
                 jumping = packet.ReadBit("Jumping");
 
-            packet.ReadUInt32("Time");
-            packet.ReadVector4("Position");
+            info.MoveTime = packet.ReadUInt32("Time");
+            info.Position = packet.ReadVector3("Position");
+            info.Orientation = packet.ReadSingle("Orientation");
 
             packet.ReadXORByte(guidBytes, 7);
             packet.ReadXORByte(guidBytes, 5);
 
             if (splineElevation)
-                packet.ReadSingle("Spline Elevation");
+                info.SplineElevation = packet.ReadSingle("Spline Elevation");
 
             packet.ReadXORByte(guidBytes, 1);
             packet.ReadXORByte(guidBytes, 6);
@@ -823,10 +876,13 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (onTransport)
             {
-                packet.ReadByte("Transport Seat");
-                packet.ReadSingle("Transport Orientation");
-                packet.ReadVector3("Transport Position");
-                packet.ReadInt32("Transport Time");
+                info.TransportSeat = packet.ReadSByte("Transport Seat");
+                info.TransportOffset.O = packet.ReadSingle("Transport Orientation");
+                Vector3 transportPos = packet.ReadVector3("Transport Position");
+                info.TransportOffset.X = transportPos.X;
+                info.TransportOffset.Y = transportPos.Y;
+                info.TransportOffset.Z = transportPos.Z;
+                info.TransportTime = (uint)packet.ReadInt32("Transport Time");
                 if (hasInterpolatedMovement)
                     packet.ReadInt32("Transport Time 2");
 
@@ -843,22 +899,21 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadXORByte(transportBytes, 0);
                 packet.ReadXORByte(transportBytes, 4);
 
-                packet.WriteGuid("Transport Guid", transportBytes);
+                info.TransportGuid = packet.WriteGuid("Transport Guid", transportBytes);
             }
 
             if (swimming)
-                packet.ReadSingle("Swim Pitch");
+                info.SwimPitch = packet.ReadSingle("Swim Pitch");
 
             if (interPolatedTurning)
             {
-                packet.ReadInt32("Jump Fall Time");
-                packet.ReadSingle("Jump Vertical SPeed");
+                info.FallTime = (uint)packet.ReadInt32("Jump Fall Time");
+                info.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical SPeed");
                 if (jumping)
                 {
-                    packet.ReadSingle("Jump Horizontal Speed");
-                    packet.ReadSingle("Jump Cos Angle");
-                    packet.ReadSingle("Jump Sin Angle");
-
+                    info.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed");
+                    info.JumpCosAngle = packet.ReadSingle("Jump Cos Angle");
+                    info.JumpSinAngle = packet.ReadSingle("Jump Sin Angle");
                 }
             }
 
@@ -866,7 +921,8 @@ namespace WowPacketParser.Parsing.Parsers
 
             packet.ReadXORByte(guidBytes, 0);
 
-            packet.WriteGuid("Guid", guidBytes);
+            WowGuid moverGuid = packet.WriteGuid("Guid", guidBytes);
+            Storage.StorePlayerMovement(moverGuid, info, packet);
         }
 
         [Parser(Opcode.MSG_MOVE_SET_PITCH, ClientVersionBuild.V4_2_2_14545, ClientVersionBuild.V4_3_0_15005)]
@@ -878,7 +934,8 @@ namespace WowPacketParser.Parsing.Parsers
             guidBytes[7] = packet.ReadBit();
             guidBytes[3] = packet.ReadBit();
 
-            packet.ReadBitsE<MovementFlag>("Movement flags", 30);
+            MovementInfo info = new MovementInfo();
+            info.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement flags", 30);
 
             guidBytes[5] = packet.ReadBit();
             guidBytes[2] = packet.ReadBit();
@@ -888,7 +945,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             guidBytes[4] = packet.ReadBit();
 
-            packet.ReadBitsE<MovementFlagExtra>("Movement flags extra", 12);
+            info.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Movement flags extra", 12);
 
             var splineElevation = packet.ReadBit("SplineElevation"); // OR Swimming
             var onTransport = packet.ReadBit("OnTransport");
@@ -909,22 +966,25 @@ namespace WowPacketParser.Parsing.Parsers
             if (interPolatedTurning)
                 jumping = packet.ReadBit("HasFallDirection");
 
-            packet.ReadVector3("Position");
-            packet.ReadUInt32("Time");
-            packet.ReadSingle("Orientation");
+            info.Position = packet.ReadVector3("Position");
+            info.MoveTime = packet.ReadUInt32("Time");
+            info.Orientation = packet.ReadSingle("Orientation");
 
             packet.ReadXORByte(guidBytes, 1);
             packet.ReadXORByte(guidBytes, 4);
 
             if (splineElevation)
-                packet.ReadSingle("Spline Elevation");
+                info.SplineElevation = packet.ReadSingle("Spline Elevation");
 
             if (onTransport)
             {
-                packet.ReadByte("Transport Seat");
-                packet.ReadSingle("Transport Orientation");
-                packet.ReadVector3("Transport Position");
-                packet.ReadInt32("Transport Time");
+                info.TransportSeat = packet.ReadSByte("Transport Seat");
+                info.TransportOffset.O = packet.ReadSingle("Transport Orientation");
+                Vector3 transportPos = packet.ReadVector3("Transport Position");
+                info.TransportOffset.X = transportPos.X;
+                info.TransportOffset.Y = transportPos.Y;
+                info.TransportOffset.Z = transportPos.Z;
+                info.TransportTime = (uint)packet.ReadInt32("Transport Time");
                 if (hasInterpolatedMovement)
                     packet.ReadInt32("Transport Time 2");
 
@@ -941,24 +1001,23 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadXORByte(transportBytes, 0);
                 packet.ReadXORByte(transportBytes, 4);
 
-                packet.WriteGuid("Transport Guid", transportBytes);
+                info.TransportGuid = packet.WriteGuid("Transport Guid", transportBytes);
             }
 
             if (swimming)
-                packet.ReadSingle("Swim Pitch");
+                info.SwimPitch = packet.ReadSingle("Swim Pitch");
 
             packet.ReadXORByte(guidBytes, 5);
 
             if (interPolatedTurning)
             {
-                packet.ReadInt32("Jump Fall Time");
-                packet.ReadSingle("Jump Vertical Speed");
+                info.FallTime = (uint)packet.ReadInt32("Jump Fall Time");
+                info.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed");
                 if (jumping)
                 {
-                    packet.ReadSingle("Jump Horizontal Speed");
-                    packet.ReadSingle("Jump Sin Angle");
-                    packet.ReadSingle("Jump Cos Angle");
-
+                    info.JumpHorizontalSpeed = packet.ReadSingle("Jump Horizontal Speed");
+                    info.JumpSinAngle = packet.ReadSingle("Jump Sin Angle");
+                    info.JumpCosAngle = packet.ReadSingle("Jump Cos Angle");
                 }
             }
 
@@ -968,7 +1027,8 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadXORByte(guidBytes, 7);
             packet.ReadXORByte(guidBytes, 2);
 
-            packet.WriteGuid("Guid", guidBytes);
+            WowGuid moverGuid = packet.WriteGuid("Guid", guidBytes);
+            Storage.StorePlayerMovement(moverGuid, info, packet);
         }
 
         [Parser(Opcode.MSG_MOVE_SET_FACING, ClientVersionBuild.V4_2_2_14545, ClientVersionBuild.V4_3_0_15005)]
@@ -988,7 +1048,7 @@ namespace WowPacketParser.Parsing.Parsers
             guidBytes[3] = packet.ReadBit();
             guidBytes[5] = packet.ReadBit();
 
-            packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12);
+            info.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12);
 
             guidBytes[0] = packet.ReadBit();
             guidBytes[7] = packet.ReadBit();
@@ -1025,7 +1085,7 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ParseBitStream(guidBytes, 7, 5);
 
             if (splineElevation)
-                packet.ReadSingle("Spline Elevation");
+                info.SplineElevation = packet.ReadSingle("Spline Elevation");
 
             packet.ParseBitStream(guidBytes, 4, 1, 2);
 
@@ -1049,11 +1109,13 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (haveTransportData)
             {
-                packet.ReadByte("Transport Seat");
-                packet.ReadSingle("Transport Orientation");
-                packet.ReadVector3("Transport Position");
-
-                packet.ReadUInt32("Transport Time");
+                info.TransportSeat = packet.ReadSByte("Transport Seat");
+                info.TransportOffset.O = packet.ReadSingle("Transport Orientation");
+                Vector3 transportPos = packet.ReadVector3("Transport Position");
+                info.TransportOffset.X = transportPos.X;
+                info.TransportOffset.Y = transportPos.Y;
+                info.TransportOffset.Z = transportPos.Z;
+                info.TransportTime = packet.ReadUInt32("Transport Time");
 
                 if (haveTransportTime2)
                     packet.ReadUInt32("Transport Time 2");
@@ -1068,8 +1130,9 @@ namespace WowPacketParser.Parsing.Parsers
 
             packet.ParseBitStream(guidBytes, 3);
 
-            packet.WriteGuid("Guid", guidBytes);
-            packet.WriteGuid("Transport Guid", transportGuidBytes);
+            WowGuid moverGuid = packet.WriteGuid("Guid", guidBytes);
+            info.TransportGuid = packet.WriteGuid("Transport Guid", transportGuidBytes);
+            Storage.StorePlayerMovement(moverGuid, info, packet);
         }
 
         [Parser(Opcode.MSG_MOVE_TELEPORT, ClientVersionBuild.V4_2_2_14545, ClientVersionBuild.V4_3_4_15595)]
@@ -1081,13 +1144,14 @@ namespace WowPacketParser.Parsing.Parsers
 
             var unk2 = packet.ReadBit("Unk Bit Boolean 2");
 
-            packet.ReadVector3("Destination Position");
+            MovementInfo info = new MovementInfo();
+            info.Position = packet.ReadVector3("Destination Position");
 
             packet.ReadXORByte(guid, 5);
             packet.ReadXORByte(guid, 4);
 
             if (onTransport)
-                packet.ReadGuid("Transport Guid");
+                info.TransportGuid = packet.ReadGuid("Transport Guid");
 
             packet.ReadXORByte(guid, 2);
             packet.ReadXORByte(guid, 7);
@@ -1102,8 +1166,9 @@ namespace WowPacketParser.Parsing.Parsers
             if (unk2)
                 packet.ReadByte("Unk 2");
 
-            packet.ReadSingle("Arrive Orientation");
-            packet.WriteGuid("Guid", guid);
+            info.Orientation = packet.ReadSingle("Arrive Orientation");
+            WowGuid moverGuid = packet.WriteGuid("Guid", guid);
+            Storage.StorePlayerMovement(moverGuid, info, packet);
         }
 
         [Parser(Opcode.MSG_MOVE_TELEPORT, ClientVersionBuild.V5_1_0_16309)]
@@ -1112,13 +1177,17 @@ namespace WowPacketParser.Parsing.Parsers
             var guid = new byte[8];
             var transGuid = new byte[8];
             var pos = new Vector4();
+            MovementInfo info = new MovementInfo();
 
             packet.ReadUInt32("Unk");
 
-            pos.X = packet.ReadSingle();
-            pos.Y = packet.ReadSingle();
-            pos.Z = packet.ReadSingle();
-            pos.O = packet.ReadSingle();
+            info.Position = new Vector3
+            {
+                X = pos.X = packet.ReadSingle(),
+                Y = pos.Y = packet.ReadSingle(),
+                Z = pos.Z = packet.ReadSingle()
+            };
+            info.Orientation = pos.O = packet.ReadSingle();
             packet.AddValue("Destination", pos);
 
             guid[3] = packet.ReadBit();
@@ -1148,7 +1217,7 @@ namespace WowPacketParser.Parsing.Parsers
             if (onTransport)
             {
                 packet.ParseBitStream(transGuid, 1, 5, 7, 0, 3, 4, 6, 2);
-                packet.WriteGuid("Transport Guid", transGuid);
+                info.TransportGuid = packet.WriteGuid("Transport Guid", transGuid);
             }
 
             packet.ReadXORByte(guid, 3);
@@ -1164,7 +1233,8 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadXORByte(guid, 4);
             packet.ReadXORByte(guid, 0);
 
-            packet.WriteGuid("Guid", guid);
+            WowGuid moverGuid = packet.WriteGuid("Guid", guid);
+            Storage.StorePlayerMovement(moverGuid, info, packet);
         }
 
         [Parser(Opcode.MSG_MOVE_STOP, ClientVersionBuild.V4_2_2_14545, ClientVersionBuild.V4_3_0_15005)]
@@ -1187,7 +1257,7 @@ namespace WowPacketParser.Parsing.Parsers
             guidBytes[5] = packet.ReadBit();
             guidBytes[7] = packet.ReadBit();
 
-            packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12);
+            info.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12);
 
             guidBytes[1] = packet.ReadBit();
 
@@ -1243,11 +1313,13 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (haveTransportData)
             {
-                packet.ReadByte("Transport Seat");
-                packet.ReadSingle("Transport Orientation");
-                packet.ReadVector3("Transport Position");
-
-                packet.ReadUInt32("Transport Time");
+                info.TransportSeat = packet.ReadSByte("Transport Seat");
+                info.TransportOffset.O = packet.ReadSingle("Transport Orientation");
+                Vector3 transportPos = packet.ReadVector3("Transport Position");
+                info.TransportOffset.X = transportPos.X;
+                info.TransportOffset.Y = transportPos.Y;
+                info.TransportOffset.Z = transportPos.Z;
+                info.TransportTime = packet.ReadUInt32("Transport Time");
 
                 if (haveTransportTime2)
                     packet.ReadUInt32("Transport Time 2");
@@ -1264,13 +1336,14 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadXORByte(guidBytes, 0);
 
             if (splineElevation)
-                packet.ReadSingle("Spline Elevation");
+                info.SplineElevation = packet.ReadSingle("Spline Elevation");
 
             packet.ReadXORByte(guidBytes, 6);
             packet.ReadXORByte(guidBytes, 4);
 
-            packet.WriteGuid("Guid", guidBytes);
-            packet.WriteGuid("Transport Guid", transportGuidBytes);
+            WowGuid moverGuid = packet.WriteGuid("Guid", guidBytes);
+            info.TransportGuid = packet.WriteGuid("Transport Guid", transportGuidBytes);
+            Storage.StorePlayerMovement(moverGuid, info, packet);
         }
 
         [Parser(Opcode.SMSG_MOVE_UPDATE, ClientVersionBuild.V4_2_2_14545, ClientVersionBuild.V4_3_0_15005)]
@@ -1308,7 +1381,7 @@ namespace WowPacketParser.Parsing.Parsers
             info.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30);
             var havePitch = packet.ReadBit("HavePitch");
             guidBytes[2] = packet.ReadBit();
-            packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12);
+            info.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12);
             guidBytes[6] = packet.ReadBit();
 
             var haveFallData = packet.ReadBit("HaveFallData");
@@ -1327,17 +1400,20 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadXORByte(guidBytes, 7);
 
             if (splineElevation)
-                packet.ReadSingle("Spline Elevation");
+                info.SplineElevation = packet.ReadSingle("Spline Elevation");
 
             if (haveTransportData)
             {
                 packet.ReadXORByte(transportGuidBytes, 4);
                 packet.ReadXORByte(transportGuidBytes, 2);
-                packet.ReadSingle("Transport Orientation");
-                packet.ReadUInt32("Transport Time");
-                packet.ReadByte("Transport Seat");
+                info.TransportOffset.O = packet.ReadSingle("Transport Orientation");
+                info.TransportTime = packet.ReadUInt32("Transport Time");
+                info.TransportSeat = packet.ReadSByte("Transport Seat");
                 packet.ReadXORByte(transportGuidBytes, 3);
-                packet.ReadVector3("Transport Position");
+                Vector3 transportPos = packet.ReadVector3("Transport Position");
+                info.TransportOffset.X = transportPos.X;
+                info.TransportOffset.Y = transportPos.Y;
+                info.TransportOffset.Z = transportPos.Z;
                 packet.ReadXORByte(transportGuidBytes, 1);
 
                 if (haveTransportTime2)
@@ -1377,8 +1453,9 @@ namespace WowPacketParser.Parsing.Parsers
                 info.FallTime = packet.ReadUInt32("Jump Fall Time");
             }
 
-            packet.WriteGuid("Guid", guidBytes);
-            packet.WriteGuid("Transport Guid", transportGuidBytes);
+            WowGuid moverGuid = packet.WriteGuid("Guid", guidBytes);
+            info.TransportGuid = packet.WriteGuid("Transport Guid", transportGuidBytes);
+            Storage.StorePlayerMovement(moverGuid, info, packet);
         }
 
         [Parser(Opcode.SMSG_MOVE_UPDATE, ClientVersionBuild.Zero, ClientVersionBuild.V4_2_2_14545)]
@@ -1430,26 +1507,16 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.CMSG_DISMISS_CONTROLLED_VEHICLE, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleMovementMessages(Packet packet)
         {
-            WowGuid guid;
+            WowGuid moverGuid;
             if ((ClientVersion.AddedInVersion(ClientVersionBuild.V3_2_0_10192) ||
                 packet.Direction == Direction.ServerToClient) && ClientVersion.Build != ClientVersionBuild.V4_2_2_14545)
-                guid = packet.ReadPackedGuid("Guid");
+                moverGuid = packet.ReadPackedGuid("Guid");
             else
-                guid = Storage.CurrentActivePlayer != null ? Storage.CurrentActivePlayer : WowGuid64.Empty;
+                moverGuid = Storage.CurrentActivePlayer != null ? Storage.CurrentActivePlayer : WowGuid64.Empty;
 
-            MovementInfo movementInfo = ReadMovementInfo(packet, guid);
+            MovementInfo moveInfo = ReadMovementInfo(packet, moverGuid);
 
-            if (Settings.SqlTables.player_movement_client || Settings.SqlTables.creature_movement_client)
-            {
-                PlayerMovement moveData = new PlayerMovement();
-                moveData.Guid = guid;
-                moveData.Map = WowPacketParser.Parsing.Parsers.MovementHandler.CurrentMapId;
-                moveData.MoveInfo = movementInfo;
-                moveData.Opcode = packet.Opcode;
-                moveData.OpcodeDirection = packet.Direction;
-                moveData.Time = packet.Time;
-                Storage.PlayerMovements.Add(moveData);
-            }
+            Storage.StorePlayerMovement(moverGuid, moveInfo, packet);
 
             if (packet.Opcode != Opcodes.GetOpcode(Opcode.MSG_MOVE_KNOCK_BACK, Direction.Bidirectional))
                 return;
@@ -1465,9 +1532,9 @@ namespace WowPacketParser.Parsing.Parsers
         {
             var guid = ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056) ? packet.ReadPackedGuid("Guid") : Storage.CurrentActivePlayer;
             ReadMovementInfo(packet, guid);
-            packet.ReadInt32("Movement Counter"); // Possibly
+            packet.ReadInt32("Move Ticks"); // Possibly
             if (ClientVersion.RemovedInVersion(ClientVersionBuild.V2_0_1_6180))
-                packet.ReadSingle("Unk");
+                packet.ReadSingle("Spline Type");
         }
 
         [Parser(Opcode.SMSG_MOVE_SPLINE_SET_RUN_SPEED, ClientVersionBuild.V4_2_2_14545, ClientVersionBuild.V4_3_0_15005)]
@@ -1475,8 +1542,12 @@ namespace WowPacketParser.Parsing.Parsers
         {
             var guid = packet.StartBitStream(7, 2, 1, 3, 5, 6, 4, 0);
             packet.ParseBitStream(guid, 6, 7, 4, 3, 2, 5, 0, 1);
-            packet.ReadSingle("Speed");
-            packet.WriteGuid("Guid", guid);
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+            speedUpdate.SpeedType = SpeedType.Run;
+            speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_RUN_SPEED;
+            WowGuid moverGuid = packet.WriteGuid("Guid", guid);
+            speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+            Storage.StoreUnitSpeedUpdate(moverGuid, speedUpdate);
         }
 
         [Parser(Opcode.SMSG_MOVE_SPLINE_SET_RUN_SPEED, ClientVersionBuild.V4_3_0_15005, ClientVersionBuild.V4_3_4_15595)]
@@ -1484,20 +1555,28 @@ namespace WowPacketParser.Parsing.Parsers
         {
             var guid = packet.StartBitStream(2, 6, 4, 1, 3, 0, 7, 5);
             packet.ParseBitStream(guid, 2, 4, 3);
-            packet.ReadSingle("Speed");
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+            speedUpdate.SpeedType = SpeedType.Run;
+            speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_RUN_SPEED;
             packet.ParseBitStream(guid, 0, 6, 5, 1, 7);
-            packet.WriteGuid("Guid", guid);
+            WowGuid moverGuid = packet.WriteGuid("Guid", guid);
+            speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+            Storage.StoreUnitSpeedUpdate(moverGuid, speedUpdate);
         }
 
         [Parser(Opcode.SMSG_MOVE_SET_RUN_SPEED, ClientVersionBuild.V5_1_0_16309)]
         public static void HandleMoveSetRunSpeed510(Packet packet)
         {
             var guid = packet.StartBitStream(0, 4, 1, 6, 3, 5, 7, 2);
-            packet.ReadSingle("Speed");
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+            speedUpdate.SpeedType = SpeedType.Run;
+            speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_RUN_SPEED;
             packet.ReadXORByte(guid, 7);
             packet.ReadInt32("Unk Int32");
             packet.ParseBitStream(guid, 3, 6, 0, 4, 1, 5, 2);
-            packet.WriteGuid("Guid", guid);
+            WowGuid moverGuid = packet.WriteGuid("Guid", guid);
+            speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+            Storage.StoreUnitSpeedUpdate(moverGuid, speedUpdate);
         }
 
         [Parser(Opcode.MSG_MOVE_SET_RUN_SPEED, ClientVersionBuild.V4_2_2_14545)]
@@ -1505,18 +1584,22 @@ namespace WowPacketParser.Parsing.Parsers
         {
             var guid = packet.StartBitStream(1, 0, 7, 5, 2, 4, 3, 6);
             packet.ParseBitStream(guid, 1);
-            packet.ReadSingle("Speed");
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
+            speedUpdate.SpeedType = SpeedType.Run;
+            speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_RUN_SPEED;
             packet.ParseBitStream(guid, 6, 2, 3, 7, 4, 0, 5);
             packet.ReadUInt32("Move Event");
-            packet.WriteGuid("Guid", guid);
+            WowGuid moverGuid = packet.WriteGuid("Guid", guid);
+            speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+            Storage.StoreUnitSpeedUpdate(moverGuid, speedUpdate);
         }
 
         [Parser(Opcode.MSG_MOVE_SET_WALK_SPEED)]
         public static void HandleMovementSetWalkSpeed(Packet packet)
         {
             var guid = packet.ReadPackedGuid("GUID");
-            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             speedUpdate.SpeedType = SpeedType.Walk;
             speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_WALK_SPEED;
             speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
@@ -1526,8 +1609,8 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleMovementSetRunSpeed(Packet packet)
         {
             var guid = packet.ReadPackedGuid("GUID");
-            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             speedUpdate.SpeedType = SpeedType.Run;
             speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_RUN_SPEED;
             speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
@@ -1537,8 +1620,8 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleMovementSetRunBackSpeed(Packet packet)
         {
             var guid = packet.ReadPackedGuid("GUID");
-            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             speedUpdate.SpeedType = SpeedType.RunBack;
             speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_RUN_BACK_SPEED;
             speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
@@ -1548,8 +1631,8 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleMovementSetSwimSpeed(Packet packet)
         {
             var guid = packet.ReadPackedGuid("GUID");
-            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             speedUpdate.SpeedType = SpeedType.Swim;
             speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_SWIM_SPEED;
             speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
@@ -1559,8 +1642,8 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleMovementSetSwimBackSpeed(Packet packet)
         {
             var guid = packet.ReadPackedGuid("GUID");
-            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             speedUpdate.SpeedType = SpeedType.SwimBack;
             speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_SWIM_BACK_SPEED;
             speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
@@ -1570,8 +1653,8 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleMovementSetTurnRate(Packet packet)
         {
             var guid = packet.ReadPackedGuid("GUID");
-            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             speedUpdate.SpeedType = SpeedType.Turn;
             speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_TURN_RATE;
             speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
@@ -1581,8 +1664,8 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleMovementSetFlightSpeed(Packet packet)
         {
             var guid = packet.ReadPackedGuid("GUID");
-            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             speedUpdate.SpeedType = SpeedType.Fly;
             speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_FLY_SPEED;
             speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
@@ -1592,8 +1675,8 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleMovementSetFlightBackSpeed(Packet packet)
         {
             var guid = packet.ReadPackedGuid("GUID");
-            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             speedUpdate.SpeedType = SpeedType.FlyBack;
             speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_FLY_BACK_SPEED;
             speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
@@ -1603,8 +1686,8 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleMovementSetPitchRate(Packet packet)
         {
             var guid = packet.ReadPackedGuid("GUID");
-            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             ReadMovementInfo(packet, guid);
+            CreatureSpeedUpdate speedUpdate = new CreatureSpeedUpdate();
             speedUpdate.SpeedType = SpeedType.Pitch;
             speedUpdate.SpeedRate = packet.ReadSingle("Speed") / MovementInfo.DEFAULT_PITCH_RATE;
             speedUpdate.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);

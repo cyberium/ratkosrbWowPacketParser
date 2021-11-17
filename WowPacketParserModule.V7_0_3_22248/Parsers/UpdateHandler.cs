@@ -275,10 +275,10 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                     {
                         packet.ResetBitReader();
 
-                        ServerSideMovement movementData = new ServerSideMovement();
-                        movementData.SplineFlags = (uint)packet.ReadUInt32E<SplineFlag>("SplineFlags", index);
+                        ServerSideMovement monsterMove = new ServerSideMovement();
+                        monsterMove.SplineFlags = (uint)packet.ReadUInt32E<SplineFlag>("SplineFlags", index);
                         packet.ReadUInt32("Elapsed", index);
-                        movementData.MoveTime = packet.ReadUInt32("Duration", index);
+                        monsterMove.MoveTime = packet.ReadUInt32("Duration", index);
                         packet.ReadSingle("DurationModifier", index);
                         packet.ReadSingle("NextDurationModifier", index);
 
@@ -288,9 +288,9 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                         var hasSpecialTime = packet.ReadBit("HasSpecialTime", index);
 
                         var pointsCount = packet.ReadBits("PointsCount", 16, index);
-                        movementData.SplineCount = pointsCount;
+                        monsterMove.SplineCount = pointsCount;
                         if (pointsCount > 0)
-                            movementData.SplinePoints = new List<Vector3>();
+                            monsterMove.SplinePoints = new List<Vector3>();
 
                         packet.ReadBitsE<SplineMode>("Mode", 2, index);
 
@@ -326,7 +326,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                             default:
                                 break;
                         }
-                        movementData.Orientation = orientation;
+                        monsterMove.Orientation = orientation;
 
                         if (hasJumpGravity)
                             packet.ReadSingle("JumpGravity", index);
@@ -337,7 +337,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                         for (var i = 0; i < pointsCount; ++i)
                         {
                             var spot = packet.ReadVector3("Points", index, i);
-                            movementData.SplinePoints.Add(spot);
+                            monsterMove.SplinePoints.Add(spot);
                         }
 
                         if (hasSpellEffectExtraData)
@@ -351,11 +351,12 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                         if (pointsCount > 0 && (Settings.SaveTransports || (moveInfo.TransportGuid == null || moveInfo.TransportGuid.IsEmpty())))
                         {
                             if (moveInfo.TransportGuid != null)
-                                movementData.TransportGuid = moveInfo.TransportGuid;
+                                monsterMove.TransportGuid = moveInfo.TransportGuid;
+                            monsterMove.TransportSeat = moveInfo.TransportSeat;
 
                             Unit unit = obj as Unit;
                             if (unit != null)
-                                unit.AddWaypoint(movementData, moveInfo.Position, packet.Time);
+                                unit.AddWaypoint(monsterMove, moveInfo.Position, packet.Time);
                         }
                     }
                 }
@@ -373,7 +374,10 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             }
 
             if (hasCombatVictim)
-                packet.ReadPackedGuid128("CombatVictim Guid", index);
+            {
+                WowGuid victimGuid = packet.ReadPackedGuid128("CombatVictim Guid", index);
+                Storage.StoreUnitAttackToggle(guid, victimGuid, packet.Time, true);
+            }
 
             if (hasServerTime)
                 moveInfo.TransportPathTimer = packet.ReadUInt32("ServerTime", index);

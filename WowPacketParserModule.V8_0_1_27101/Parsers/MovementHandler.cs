@@ -48,20 +48,20 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             packet.ReadUInt32("Duration", indexes);
         }
 
-        public static void ReadMovementSpline(ServerSideMovement savedata, Packet packet, Vector3 pos, params object[] indexes)
+        public static void ReadMovementSpline(ServerSideMovement monsterMove, Packet packet, Vector3 pos, params object[] indexes)
         {
-            uint splineflags = (uint)packet.ReadUInt32E<SplineFlag>("Flags", indexes);
-            if (savedata != null)
-                savedata.SplineFlags = splineflags;
+            uint splineFlags = (uint)packet.ReadUInt32E<SplineFlag>("Flags", indexes);
+            if (monsterMove != null)
+                monsterMove.SplineFlags = splineFlags;
             if (ClientVersion.RemovedInVersion(ClientType.Shadowlands))
             {
                 packet.ReadByte("AnimTier", indexes);
                 packet.ReadUInt32("TierTransStartTime", indexes);
             }
             packet.ReadInt32("Elapsed", indexes);
-            uint movetime = packet.ReadUInt32("MoveTime", indexes);
-            if (savedata != null)
-                savedata.MoveTime = movetime;
+            uint moveTime = packet.ReadUInt32("MoveTime", indexes);
+            if (monsterMove != null)
+                monsterMove.MoveTime = moveTime;
             packet.ReadUInt32("FadeObjectTime", indexes);
 
             packet.ReadByte("Mode", indexes);
@@ -69,11 +69,11 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 packet.ReadByte("VehicleExitVoluntary", indexes);
 
             WowGuid transportGuid = packet.ReadPackedGuid128("TransportGUID", indexes);
-            if (savedata != null)
-                savedata.TransportGuid = transportGuid;
+            if (monsterMove != null)
+                monsterMove.TransportGuid = transportGuid;
             sbyte seat = packet.ReadSByte("VehicleSeat", indexes);
-            if (savedata != null)
-                savedata.TransportSeat = seat;
+            if (monsterMove != null)
+                monsterMove.TransportSeat = seat;
 
             packet.ResetBitReader();
 
@@ -118,16 +118,16 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     break;
             }
 
-            if (savedata != null)
+            if (monsterMove != null)
             {
-                savedata.Orientation = orientation;
-                savedata.SplineCount = totalPointsCount;
+                monsterMove.Orientation = orientation;
+                monsterMove.SplineCount = totalPointsCount;
                 if (totalPointsCount > 0)
-                    savedata.SplinePoints = new List<Vector3>();
+                    monsterMove.SplinePoints = new List<Vector3>();
             }
 
             Vector3 endpos = new Vector3();
-            List<Vector3> pointsList = (savedata != null) ? new List<Vector3>() : null;
+            List<Vector3> pointsList = (monsterMove != null) ? new List<Vector3>() : null;
             for (int i = 0; i < pointsCount; i++)
             {
                 var spot = packet.ReadVector3();
@@ -136,7 +136,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 if (i == 0)
                     endpos = spot;
 
-                if (savedata != null)
+                if (monsterMove != null)
                     pointsList.Add(spot);
 
                 packet.AddValue("Points", spot, indexes, i);
@@ -193,22 +193,22 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     Z = mid.Z - waypoints[i].Z
                 };
 
-                if (savedata != null)
-                    savedata.SplinePoints.Add(vec);
+                if (monsterMove != null)
+                    monsterMove.SplinePoints.Add(vec);
 
                 packet.AddValue("WayPoints", vec, indexes, i);
             }
 
-            if (savedata != null)
+            if (monsterMove != null)
             {
                 foreach (var point in pointsList)
                 {
-                    savedata.SplinePoints.Add(point);
+                    monsterMove.SplinePoints.Add(point);
                 }
             }
         }
 
-        public static void ReadMovementMonsterSpline(ServerSideMovement savedata, Packet packet, Vector3 pos, params object[] indexes)
+        public static void ReadMovementMonsterSpline(ServerSideMovement monsterMove, Packet packet, Vector3 pos, params object[] indexes)
         {
             packet.ReadUInt32("Id", indexes);
             packet.ReadVector3("Destination", indexes);
@@ -218,7 +218,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             packet.ReadBit("CrzTeleport", indexes);
             packet.ReadBits("StopDistanceTolerance", 3, indexes);
 
-            ReadMovementSpline(savedata, packet, pos, indexes, "MovementSpline");
+            ReadMovementSpline(monsterMove, packet, pos, indexes, "MovementSpline");
         }
 
         [Parser(Opcode.SMSG_ON_MONSTER_MOVE)]
@@ -228,18 +228,18 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             var pos = packet.ReadVector3("Position");
 
             Unit obj = null;
-            ServerSideMovement movementData = null;
+            ServerSideMovement monsterMove = null;
             if (Storage.Objects != null && Storage.Objects.ContainsKey(guid))
             {
                 obj = Storage.Objects[guid].Item1 as Unit;
                 obj.Movement.HasWpsOrRandMov = true;
-                movementData = new ServerSideMovement();
+                monsterMove = new ServerSideMovement();
             }
 
-            ReadMovementMonsterSpline(movementData, packet, pos, "MovementMonsterSpline");
+            ReadMovementMonsterSpline(monsterMove, packet, pos, "MovementMonsterSpline");
 
-            if (movementData != null && (Settings.SaveTransports || (movementData.TransportGuid == null || movementData.TransportGuid.IsEmpty())))
-                obj.AddWaypoint(movementData, pos, packet.Time);
+            if (monsterMove != null && (Settings.SaveTransports || (monsterMove.TransportGuid == null || monsterMove.TransportGuid.IsEmpty())))
+                obj.AddWaypoint(monsterMove, pos, packet.Time);
         }
 
         [Parser(Opcode.SMSG_PHASE_SHIFT_CHANGE)]

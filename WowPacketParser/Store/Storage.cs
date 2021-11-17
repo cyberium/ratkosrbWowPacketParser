@@ -950,6 +950,21 @@ namespace WowPacketParser.Store
         }
 
         public static readonly List<PlayerMovement> PlayerMovements = new List<PlayerMovement>();
+        public static void StorePlayerMovement(WowGuid moverGuid, MovementInfo moveInfo, Packet packet)
+        {
+            if (!Settings.SqlTables.player_movement_client &&
+                !Settings.SqlTables.creature_movement_client)
+                return;
+
+            PlayerMovement moveData = new PlayerMovement();
+            moveData.Guid = moverGuid;
+            moveData.MoveInfo = moveInfo;
+            moveData.Map = WowPacketParser.Parsing.Parsers.MovementHandler.CurrentMapId;
+            moveData.Opcode = packet.Opcode;
+            moveData.OpcodeDirection = packet.Direction;
+            moveData.Time = packet.Time;
+            Storage.PlayerMovements.Add(moveData);
+        }
         public static readonly List<ActivePlayerCreateTime> PlayerActiveCreateTime = new List<ActivePlayerCreateTime>();
 
         /* Key: Entry */
