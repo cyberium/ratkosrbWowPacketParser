@@ -118,9 +118,10 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
             packet.ParseBitStream(guid, 7, 0, 5, 4, 3, 1, 2, 6);
 
             var sound = packet.ReadUInt32("Sound Id");
-            packet.WriteGuid("Guid", guid);
+            WowGuid objectGuid = packet.WriteGuid("Guid", guid);
 
-            //Storage.Sounds.Add(sound, packet.TimeSpan);
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, objectGuid));
+            packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_SOUND");
         }
 
         [Parser(Opcode.SMSG_WORLD_SERVER_INFO)]

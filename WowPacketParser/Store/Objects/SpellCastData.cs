@@ -359,6 +359,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("mod_rate")]
         public float? ModRate;
 
+        [DBFieldName("sniff_id", false, true, false, true)]
+        public string SniffId;
+
         [DBFieldName("sniff_build")]
         public int? SniffBuild = ClientVersion.BuildInt;
     }
@@ -387,6 +390,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("time_since_cast")]
         public uint? TimeSinceCast;
 
+        [DBFieldName("sniff_id", false, true, false, true)]
+        public string SniffId;
+
         [DBFieldName("sniff_build")]
         public int? SniffBuild = ClientVersion.BuildInt;
     }
@@ -399,6 +405,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("slot", 10)]
         public uint[] SpellID = new uint[10];
+
+        [DBFieldName("sniff_id", false, true, false, true)]
+        public string SniffId;
 
         [DBFieldName("sniff_build")]
         public int? SniffBuild = ClientVersion.BuildInt;

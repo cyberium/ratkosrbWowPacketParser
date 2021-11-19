@@ -416,34 +416,46 @@ namespace WowPacketParser.Parsing.Parsers
         }
 
         [Parser(Opcode.SMSG_PLAY_SOUND)]
-        [Parser(Opcode.SMSG_PLAY_MUSIC)]
-        [Parser(Opcode.SMSG_PLAY_OBJECT_SOUND)]
-        public static void HandleSoundMessages(Packet packet)
+        public static void HandlePlaySound(Packet packet)
         {
             uint sound = packet.ReadUInt32("Sound Id");
 
-            WowGuid guid1 = WowGuid64.Empty;
+            WowGuid sourceGuid = WowGuid64.Empty;
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_3_0_15005))
-                guid1 = packet.ReadGuid("GUID");
+                sourceGuid = packet.ReadGuid("Source GUID");
 
-            if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_PLAY_SOUND, Direction.ServerToClient))
-                Storage.Sounds.Add(new ObjectSound(sound, packet.Time, guid1));
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, sourceGuid));
+            packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_SOUND");
+        }
 
-            if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_PLAY_OBJECT_SOUND, Direction.ServerToClient))
+        [Parser(Opcode.SMSG_PLAY_OBJECT_SOUND)]
+        public static void HandlePlayObjectSound(Packet packet)
+        {
+            uint sound = packet.ReadUInt32("Sound Id");
+
+            WowGuid sourceGuid = packet.ReadGuid("Source GUID");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_3_0_15005))
+                packet.ReadGuid("Target GUID");
+
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, sourceGuid));
+            packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_OBJECT_SOUND");
+        }
+
+        [Parser(Opcode.SMSG_PLAY_MUSIC)]
+        public static void HandlePlayMusic(Packet packet)
+        {
+            uint sound = packet.ReadUInt32("Music Id");
+
+            WowGuid sourceGuid = WowGuid64.Empty;
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_3_0_15005))
+                sourceGuid = packet.ReadGuid("Source GUID");
+
+            PlayMusic musicEntry = new PlayMusic
             {
-                WowGuid guid2 = packet.ReadGuid("GUID 2");
-                Storage.Sounds.Add(new ObjectSound(sound, packet.Time, guid2));
-            }
-
-            if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_PLAY_MUSIC, Direction.ServerToClient))
-            {
-                PlayMusic musicEntry = new PlayMusic
-                {
-                    Music = sound,
-                    UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
-                };
-                Storage.Music.Add(musicEntry, packet.TimeSpan);
-            }
+                Music = sound,
+                UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
+            };
+            Storage.Music.Add(musicEntry, packet.TimeSpan);
         }
 
         [Parser(Opcode.SMSG_WEATHER)]

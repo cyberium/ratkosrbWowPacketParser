@@ -53,6 +53,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             const int maxCreatureSpells = 10;
             for (var i = 0; i < maxCreatureSpells; i++) // Read pet / vehicle spell ids
                 petActions.SpellID[i] = V6_0_2_19033.Parsers.PetHandler.ReadPetAction(packet, "ActionButtons", i);
+            petActions.SniffId = packet.SniffIdString;
             if (petGuid.GetHighType() == HighGuidType.Creature)
                 Storage.CreaturePetActions.Add(petActions);
 
@@ -79,6 +80,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 {
                     cooldown.CasterID = petGuid.GetEntry();
                     cooldown.TimeSinceCast = Utilities.GetTimeDiffInMs(Storage.GetLastCastGoTimeForCreature(petGuid, (uint)cooldown.SpellID), packet.Time);
+                    cooldown.SniffId = packet.SniffIdString;
                     Storage.CreaturePetRemainingCooldown.Add(cooldown);
                 }
             }

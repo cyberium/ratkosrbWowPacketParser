@@ -1,5 +1,7 @@
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParser.Parsing.Parsers
 {
@@ -99,7 +101,7 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_LOOT_RESPONSE)]
         public static void HandleLootResponse(Packet packet)
         {
-            packet.ReadGuid("GUID");
+            WowGuid lootOwner = packet.ReadGuid("GUID");
             var lootType = packet.ReadByteE<LootType>("AcquireReason");
             if (lootType == LootType.None)
             {
@@ -107,8 +109,12 @@ namespace WowPacketParser.Parsing.Parsers
                 return;
             }
 
-            packet.ReadUInt32("Coins");
+            LootEntry loot = new LootEntry();
+            loot.Entry = lootOwner.GetEntry();
+            loot.Money = packet.ReadUInt32("Coins");
+
             var itemsCount = packet.ReadByte("Drop Count");
+            loot.ItemsCount = itemsCount;
 
             byte currenciesCount = 0;
             if (ClientVersion.AddedInVersion(ClientType.Cataclysm))
@@ -116,13 +122,15 @@ namespace WowPacketParser.Parsing.Parsers
 
             for (var i = 0; i < itemsCount; ++i)
             {
+                LootItem lootItem = new LootItem();
                 packet.ReadByte("LootListID", i);
-                packet.ReadUInt32<ItemId>("ItemID", i);
-                packet.ReadUInt32("Quantity", i);
+                lootItem.ItemId = packet.ReadUInt32<ItemId>("ItemID", i);
+                lootItem.Count = packet.ReadUInt32("Quantity", i);
                 packet.ReadUInt32("DisplayID", i);
                 packet.ReadInt32("RandomPropertiesSeed", i);
                 packet.ReadInt32("RandomPropertiesID", i);
                 packet.ReadByteE<LootSlotType>("UIType", i);
+                loot.ItemsList.Add(lootItem);
             }
 
             for (int i = 0; i < currenciesCount; ++i)
@@ -131,6 +139,9 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadInt32("CurrencyID", i);
                 packet.ReadInt32("Quantity", i);
             }
+
+            loot.SniffId = packet.SniffIdString;
+            Storage.StoreLoot(loot, lootOwner, lootOwner);
         }
 
         [Parser(Opcode.CMSG_LOOT_ROLL)]

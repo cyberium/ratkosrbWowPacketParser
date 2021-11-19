@@ -57,6 +57,7 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.AddValue("Spell", StoreGetters.GetName(StoreNameType.Spell, spellId), i);
 
                 petActions.SpellID[i] = (uint)spellId;
+                petActions.SniffId = packet.SniffIdString;
                 if (isMinion)
                     Storage.CreaturePetActions.Add(petActions);
 
@@ -97,6 +98,7 @@ namespace WowPacketParser.Parsing.Parsers
                 {
                     cooldown.CasterID = guid.GetEntry();
                     cooldown.TimeSinceCast = Utilities.GetTimeDiffInMs(Storage.GetLastCastGoTimeForCreature(guid, (uint)cooldown.SpellID), packet.Time);
+                    cooldown.SniffId = packet.SniffIdString;
                     Storage.CreaturePetRemainingCooldown.Add(cooldown);
                 }
             }

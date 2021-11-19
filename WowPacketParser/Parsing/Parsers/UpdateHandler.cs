@@ -157,7 +157,7 @@ namespace WowPacketParser.Parsing.Parsers
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
 
                 if (guid.GetObjectType() == ObjectType.Unit)
-                    Storage.StoreCreatureStats(obj as Unit, updateMaskArray, guid.GetHighType() == HighGuidType.Pet);
+                    Storage.StoreCreatureStats(obj as Unit, updateMaskArray, guid.GetHighType() == HighGuidType.Pet, packet);
                 else if (savePlayerStats)
                     Storage.SavePlayerStats(obj, false);
             }
@@ -192,7 +192,7 @@ namespace WowPacketParser.Parsing.Parsers
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
 
                 if (guid.GetObjectType() == ObjectType.Unit)
-                    Storage.StoreCreatureStats(obj as Unit, updateMaskArray, guid.GetHighType() == HighGuidType.Pet);
+                    Storage.StoreCreatureStats(obj as Unit, updateMaskArray, guid.GetHighType() == HighGuidType.Pet, packet);
                 else if (savePlayerStats)
                     Storage.SavePlayerStats(obj, false);
             }

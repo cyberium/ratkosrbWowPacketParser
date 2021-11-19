@@ -46,7 +46,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             if (hasMapID)
                 mapID = (ushort)packet.ReadInt32("MapID", idx);
 
-            if (dbdata.DstPosition != null && mapID != -1 && HardcodedData.DbCoordinateSpells.Contains(spellID))
+            if (dbdata.DstPosition != null && mapID != -1 && packet.Direction == Direction.ServerToClient && HardcodedData.DbCoordinateSpells.Contains(spellID))
             {
                 string effectHelper = $"Spell: { StoreGetters.GetName(StoreNameType.Spell, (int)spellID) } Efffect: { 0 } ({ (SpellEffects)0 })";
 
@@ -98,6 +98,37 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             */
 
             packet.ReadWoWString("Name", nameLength, idx);
+        }
+
+        public static void ReadSpellCastRequest(Packet packet, params object[] idx)
+        {
+            packet.ReadPackedGuid128("CastID", idx);
+
+            for (var i = 0; i < 2; i++)
+                packet.ReadInt32("Misc", idx, i);
+
+            var spellId = packet.ReadUInt32<SpellId>("SpellID", idx);
+            packet.ReadInt32("SpellXSpellVisualID", idx);
+
+            V6_0_2_19033.Parsers.SpellHandler.ReadMissileTrajectoryRequest(packet, idx, "MissileTrajectory");
+
+            packet.ReadPackedGuid128("Guid", idx);
+
+            packet.ResetBitReader();
+
+            packet.ReadBits("SendCastFlags", 5, idx);
+            var hasMoveUpdate = packet.ReadBit("HasMoveUpdate", idx);
+
+            var weightCount = packet.ReadBits("WeightCount", 2, idx);
+
+            SpellCastData temp = new SpellCastData();
+            ReadSpellTargetData(temp, packet, spellId, idx, "Target");
+            
+            if (hasMoveUpdate)
+                V7_0_3_22248.Parsers.MovementHandler.ReadMovementStats(packet, idx, "MoveUpdate");
+
+            for (var i = 0; i < weightCount; ++i)
+                V6_0_2_19033.Parsers.SpellHandler.ReadSpellWeight(packet, idx, "Weight", i);
         }
 
         public static void ReadSpellCastData(SpellCastData dbdata, Packet packet, params object[] idx)
@@ -193,6 +224,19 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 packet.ReadSByte("UnkSByte");
 
             Storage.StoreSpellCastData(castData, CastDataType.Go, packet);
+        }
+
+        [Parser(Opcode.CMSG_CAST_SPELL)]
+        public static void HandleCastSpell(Packet packet)
+        {
+            ReadSpellCastRequest(packet, "Cast");
+        }
+
+        [Parser(Opcode.CMSG_PET_CAST_SPELL)]
+        public static void HandlePetCastSpell(Packet packet)
+        {
+            packet.ReadPackedGuid128("PetGUID");
+            ReadSpellCastRequest(packet, "Cast");
         }
 
         [HasSniffData]

@@ -781,3 +781,23 @@ ALTER TABLE `player`
 
 ALTER TABLE `player_values_update`
 	ADD COLUMN `anim_tier` INT(10) UNSIGNED NULL DEFAULT NULL AFTER `vis_flags`;
+  
+ALTER TABLE `creature_stats`
+	ADD COLUMN `sniff_id` SMALLINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table' AFTER `negative_arcane_res`;
+
+ALTER TABLE `creature_pet_actions`
+	ADD COLUMN `sniff_id` SMALLINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table' AFTER `slot10`;
+
+ALTER TABLE `creature_pet_cooldown`
+	ADD COLUMN `sniff_id` SMALLINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table' AFTER `mod_rate`;
+
+ALTER TABLE `creature_pet_remaining_cooldown`
+	ADD COLUMN `sniff_id` SMALLINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table' AFTER `time_since_cast`;
+
+ALTER TABLE `creature_loot`
+	ADD COLUMN `sniff_id` SMALLINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table' AFTER `items_count`,
+	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `sniff_id`;
+
+ALTER TABLE `gameobject_loot`
+	ADD COLUMN `sniff_id` SMALLINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table' AFTER `items_count`,
+	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `sniff_id`;

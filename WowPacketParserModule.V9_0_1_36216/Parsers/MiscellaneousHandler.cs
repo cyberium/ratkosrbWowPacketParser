@@ -182,6 +182,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ReadInt32("BroadcastTextID");
 
             Storage.Sounds.Add(new ObjectSound(sound, packet.Time, guid));
+            packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_OBJECT_SOUND");
         }
 
         [Parser(Opcode.SMSG_WORLD_SERVER_INFO)]

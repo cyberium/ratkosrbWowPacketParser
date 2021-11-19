@@ -282,9 +282,10 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             uint sound = packet.ReadUInt32("Sound Id");
 
             packet.ParseBitStream(guid, 3, 2, 4, 7, 5, 0, 6, 1);
-            packet.WriteGuid("Guid", guid);
+            WowGuid objectGuid = packet.WriteGuid("Guid", guid);
 
-            //Storage.Sounds.Add(sound, packet.TimeSpan);
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, objectGuid));
+            packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_SOUND");
         }
 
         [Parser(Opcode.SMSG_PLAY_OBJECT_SOUND)]
@@ -322,9 +323,10 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             packet.ReadXORByte(guid1, 0);
 
             packet.WriteGuid("Guid 1", guid1);
-            packet.WriteGuid("Guid 2", guid2);
+            WowGuid objectGuid = packet.WriteGuid("Guid 2", guid2);
 
-            //Storage.Sounds.Add(sound, packet.TimeSpan);
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, objectGuid));
+            packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_OBJECT_SOUND");
         }
 
         [Parser(Opcode.SMSG_ACTIVATE_TAXI_REPLY)]

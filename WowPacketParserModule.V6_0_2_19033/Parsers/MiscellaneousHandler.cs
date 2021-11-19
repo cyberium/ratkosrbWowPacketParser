@@ -470,6 +470,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             WowGuid guid = packet.ReadPackedGuid128("SourceObjectGUID");
 
             Storage.Sounds.Add(new ObjectSound(sound, packet.Time, guid));
+            packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_SOUND");
         }
 
         [Parser(Opcode.SMSG_PLAY_MUSIC)]
@@ -739,6 +740,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadVector3("Position");
 
             Storage.Sounds.Add(new ObjectSound(sound, packet.Time, guid));
+            packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_OBJECT_SOUND");
         }
 
         [Parser(Opcode.SMSG_PLAY_SPEAKERBOT_SOUND)]

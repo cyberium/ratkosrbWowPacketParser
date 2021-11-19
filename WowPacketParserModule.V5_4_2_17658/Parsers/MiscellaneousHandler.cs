@@ -86,9 +86,10 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
             packet.ReadXORByte(guid, 3);
             packet.ReadXORByte(guid, 0);
 
-            packet.WriteGuid("Guid", guid);
+            WowGuid objectGuid = packet.WriteGuid("Guid", guid);
 
-            //Storage.Sounds.Add(sound, packet.TimeSpan);
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, objectGuid));
+            packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_SOUND");
         }
 
         [Parser(Opcode.SMSG_WORLD_SERVER_INFO)]

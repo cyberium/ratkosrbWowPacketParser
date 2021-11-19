@@ -151,5 +151,15 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             if (hasTemplateSet)
                 packet.ReadInt32("TemplateSetID");
         }
+
+        [Parser(Opcode.CMSG_PLAYER_LOGIN)]
+        public static void HandlePlayerLogin(Packet packet)
+        {
+            packet.ReadPackedGuid128("PlayerGUID");
+            packet.ReadSingle("FarClip");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V1_13_7_38363))
+                packet.ReadBit("UnkBit");
+        }
     }
 }

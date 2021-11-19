@@ -19,7 +19,13 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             packet.ReadUInt32("TwitterPostThrottleLimit");
             packet.ReadUInt32("TwitterPostThrottleCooldown");
             packet.ReadUInt32("TokenPollTimeSeconds");
-            packet.ReadUInt32E<ConsumableTokenRedeem>("TokenRedeemIndex");
+
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V1_13_4_33598))
+                packet.ReadUInt32E<ConsumableTokenRedeem>("TokenRedeemIndex");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V1_13_3_32790))
+                packet.ReadUInt32("KioskSessionMinutes");
+
             packet.ReadInt64("TokenBalanceAmount");
             packet.ReadUInt32("BpayStoreProductDeliveryDelay");
             packet.ReadUInt32("ClubsPresenceUpdateTimer");
@@ -116,7 +122,10 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             packet.ReadBit("IsExpansionPreorderInStore");
             packet.ReadBit("KioskModeEnabled");
             packet.ReadBit("IsCompetitiveModeEnabled");
-            packet.ReadBit("NoHandler"); // not accessed in handler
+
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V1_13_4_33598))
+                packet.ReadBit("NoHandler"); // not accessed in handler
+
             packet.ReadBit("TrialBoostEnabled");
             packet.ReadBit("TokenBalanceEnabled");
             packet.ReadBit("LiveRegionCharacterListEnabled");
@@ -126,12 +135,18 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             var hasLaunchETA = packet.ReadBit("HasLaunchETA");
 
             packet.ReadUInt32("TokenPollTimeSeconds");
-            packet.ReadUInt32E<ConsumableTokenRedeem>("TokenRedeemIndex");
+
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V1_13_4_33598))
+                packet.ReadUInt32E<ConsumableTokenRedeem>("TokenRedeemIndex");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V1_13_3_32790))
+                packet.ReadUInt32("KioskSessionMinutes");
+
             packet.ReadInt64("TokenBalanceAmount");
             packet.ReadInt32("MaxCharactersPerRealm");
 
             var liveRegionCopyCount = 0;
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V1_13_3_32790)) // no idea when this was added exactly
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V1_13_4_33598))
                 liveRegionCopyCount = packet.ReadInt32("LiveRegionCopySourceRegionCount");
 
             packet.ReadUInt32("BpayStoreProductDeliveryDelay");

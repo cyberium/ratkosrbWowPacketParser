@@ -1001,6 +1001,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("negative_arcane_res", false, false, true)]
         public int? NegativeArcaneResistance;
 
+        [DBFieldName("sniff_id", false, true, false, true)]
+        public string SniffId;
+
         [DBFieldName("sniff_build")]
         public int? SniffBuild = ClientVersion.BuildInt;
 

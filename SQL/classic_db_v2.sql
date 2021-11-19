@@ -522,6 +522,8 @@ CREATE TABLE IF NOT EXISTS `creature_loot` (
   `loot_id` int(10) unsigned NOT NULL COMMENT 'counter',
   `money` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'copper',
   `items_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'number of items dropped',
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`loot_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='each row represents a separate loot instance\r\nmight not contain all the items or gold that dropped if somebody else looted them first';
 
@@ -689,6 +691,7 @@ CREATE TABLE IF NOT EXISTS `creature_pet_actions` (
   `slot8` int(10) unsigned NOT NULL DEFAULT '0',
   `slot9` int(10) unsigned NOT NULL DEFAULT '0',
   `slot10` int(10) unsigned NOT NULL DEFAULT '0',
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_PET_SPELLS_MESSAGE';
 
@@ -704,6 +707,7 @@ CREATE TABLE IF NOT EXISTS `creature_pet_cooldown` (
   `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
   `cooldown` int(10) unsigned NOT NULL DEFAULT '0',
   `mod_rate` float unsigned NOT NULL DEFAULT '1',
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='from SMSG_SPELL_COOLDOWN';
 
@@ -731,6 +735,7 @@ CREATE TABLE IF NOT EXISTS `creature_pet_remaining_cooldown` (
   `category_cooldown` int(10) unsigned NOT NULL DEFAULT '0',
   `mod_rate` float unsigned NOT NULL DEFAULT '1',
   `time_since_cast` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'milliseconds since last SMSG_SPELL_GO for this spell',
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='cooldowns that were already present when the creature became charmed\r\nfrom SMSG_PET_SPELLS_MESSAGE.';
 
@@ -866,6 +871,7 @@ CREATE TABLE IF NOT EXISTS `creature_stats` (
   `negative_frost_res` int(11) DEFAULT NULL,
   `negative_shadow_res` int(11) DEFAULT NULL,
   `negative_arcane_res` int(11) DEFAULT NULL,
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`level`,`is_pet`,`is_dirty`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='stats data from SMSG_UPDATE_OBJECT\r\nserver only sends it to the creature''s charmer, or player who casts beast lore on it';
@@ -1341,6 +1347,8 @@ CREATE TABLE IF NOT EXISTS `gameobject_loot` (
   `loot_id` int(10) unsigned NOT NULL COMMENT 'counter',
   `money` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'copper',
   `items_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'number of items dropped',
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`loot_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='each row represents a separate loot instance\r\nmight not contain all the items or gold that dropped if somebody else looted them first';
 

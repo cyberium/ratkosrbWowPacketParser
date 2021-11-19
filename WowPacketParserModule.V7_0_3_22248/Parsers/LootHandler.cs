@@ -61,6 +61,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             for (var i = 0; i < currencyCount; ++i)
                 V6_0_2_19033.Parsers.LootHandler.ReadCurrenciesData(packet, i, "Currencies");
 
+            loot.SniffId = packet.SniffIdString;
             Storage.StoreLoot(loot, lootOwner, lootObject);
         }
 

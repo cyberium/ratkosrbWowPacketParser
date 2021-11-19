@@ -22,6 +22,12 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("items_count")]
         public uint ItemsCount;
 
+        [DBFieldName("sniff_id", false, true, false, true)]
+        public string SniffId;
+
+        [DBFieldName("sniff_build")]
+        public int? SniffBuild = ClientVersion.BuildInt;
+
         public static uint LootIdCounter = 0;
 
         public List<LootItem> ItemsList = new List<LootItem>();

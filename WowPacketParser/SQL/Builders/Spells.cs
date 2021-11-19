@@ -283,10 +283,10 @@ namespace WowPacketParser.SQL.Builders
                 foreach (var spellId in row.Item1.SpellID)
                     sql += ", " + spellId.ToString();
 
-                sql += ", " + row.Item1.SniffBuild;
+                sql += ", " + row.Item1.SniffId + ", " + row.Item1.SniffBuild;
                 sql += ")";
             }
-            sql = "REPLACE INTO `creature_pet_actions` (`entry`, `slot1`, `slot2`, `slot3`, `slot4`, `slot5`, `slot6`, `slot7`, `slot8`, `slot9`, `slot10`, `sniff_build`) VALUES\n" + sql + ";\n";
+            sql = "REPLACE INTO `creature_pet_actions` (`entry`, `slot1`, `slot2`, `slot3`, `slot4`, `slot5`, `slot6`, `slot7`, `slot8`, `slot9`, `slot10`, `sniff_id`, `sniff_build`) VALUES\n" + sql + ";\n";
 
             return sql;
         }

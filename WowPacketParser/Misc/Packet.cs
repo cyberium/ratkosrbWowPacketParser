@@ -64,6 +64,8 @@ namespace WowPacketParser.Misc
         public int Number { get; }
         public StringBuilder Writer { get; private set; }
         public string FileName { get; }
+        public int SniffId => Program.sniffFileNames.IndexOf(FileName);
+        public string SniffIdString => ("@SNIFFID+" + SniffId);
         public ParsedStatus Status { get; set; }
         public bool WriteToFile { get; private set; }
         public int ConnectionIndex { get; set; }
@@ -85,7 +87,7 @@ namespace WowPacketParser.Misc
 
             SniffData item = new SniffData
             {
-                SniffId = "@SNIFFID+" + Program.sniffFileNames.IndexOf(FileName),
+                SniffId = SniffIdString,
                 ObjectType = type,
                 Id = id,
                 Data = data

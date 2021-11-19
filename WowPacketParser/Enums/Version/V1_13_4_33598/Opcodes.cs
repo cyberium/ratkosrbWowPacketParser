@@ -1687,6 +1687,8 @@ namespace WowPacketParser.Enums.Version.V1_13_4_33598
             {Opcode.SMSG_VAS_PURCHASE_STATE_UPDATE, 0x2832},
             {Opcode.SMSG_VENDOR_INVENTORY, 0x25CA},
             {Opcode.SMSG_VIGNETTE_UPDATE, 0x27B7},
+            {Opcode.SMSG_VOICE_CHANNEL_INFO_RESPONSE, 0x2868},
+            {Opcode.SMSG_VOICE_LOGIN_RESPONSE, 0x2867},
             {Opcode.SMSG_VOID_ITEM_SWAP_RESPONSE, 0x25DF},
             {Opcode.SMSG_VOID_STORAGE_CONTENTS, 0x25DC},
             {Opcode.SMSG_VOID_STORAGE_FAILED, 0x25DB},

@@ -64,7 +64,7 @@ namespace WowPacketParser.Store
             obj.OriginalUpdateFields = obj.UpdateFields != null ? new Dictionary<int, UpdateField>(obj.UpdateFields) : null;
 
             if (!string.IsNullOrWhiteSpace(Settings.SQLFileName) && Settings.DumpFormatWithSQL())
-                obj.SourceSniffId = Program.sniffFileNames.IndexOf(packet.FileName);
+                obj.SourceSniffId = packet.SniffId;
             obj.SourceSniffBuild = ClientVersion.BuildInt;
 
             obj.FirstCreateTime = packet.Time;
@@ -993,7 +993,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<CreatureStats> CreatureStats = new DataBag<CreatureStats>(Settings.SqlTables.creature_stats);
         public static readonly DataBag<CreatureStats> CreatureStatsDirty = new DataBag<CreatureStats>(Settings.SqlTables.creature_stats);
 
-        public static void StoreCreatureStats(Unit npc, BitArray updateMaskArray, bool isPet)
+        public static void StoreCreatureStats(Unit npc, BitArray updateMaskArray, bool isPet, Packet packet)
         {
             if (!Settings.SqlTables.creature_stats)
                 return;
@@ -1511,6 +1511,7 @@ namespace WowPacketParser.Store
                 creatureStats.Level = (uint)npc.UnitData.Level;
                 creatureStats.IsPet = isPet;
                 creatureStats.IsDirty = hasAnyBadAuras;
+                creatureStats.SniffId = packet.SniffIdString;
 
                 if (hasAnyBadAuras)
                 {

@@ -857,6 +857,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                     petCooldown.Flags = flags;
                     petCooldown.Index = (byte)i;
                     petCooldown.ModRate = 1;
+                    petCooldown.SniffId = packet.SniffIdString;
                     Storage.CreaturePetCooldown.Add(petCooldown);
                 }
             }
