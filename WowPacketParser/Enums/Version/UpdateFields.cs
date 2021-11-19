@@ -690,7 +690,9 @@ namespace WowPacketParser.Enums.Version
                 case ClientVersionBuild.V1_13_3_32887:
                 case ClientVersionBuild.V1_13_3_33155:
                 case ClientVersionBuild.V1_13_3_33302:
+                case ClientVersionBuild.V1_13_3_33485:
                 case ClientVersionBuild.V1_13_3_33526:
+                case ClientVersionBuild.V1_13_4_33491:
                 case ClientVersionBuild.V1_13_4_33598:
                 case ClientVersionBuild.V1_13_4_33645:
                 case ClientVersionBuild.V1_13_4_33728:
@@ -704,18 +706,28 @@ namespace WowPacketParser.Enums.Version
                 case ClientVersionBuild.v1_13_5_35000:
                 case ClientVersionBuild.v1_13_5_35186:
                 case ClientVersionBuild.v1_13_5_35395:
+                case ClientVersionBuild.v1_13_5_35663:
+                case ClientVersionBuild.v1_13_5_35705:
                 case ClientVersionBuild.v1_13_5_35753:
                 case ClientVersionBuild.v1_13_5_36035:
                 case ClientVersionBuild.v1_13_5_36307:
                 case ClientVersionBuild.v1_13_5_36325:
+                case ClientVersionBuild.v1_13_6_36149:
                 case ClientVersionBuild.v1_13_6_36231:
-                case ClientVersionBuild.V1_13_6_36497:
+                case ClientVersionBuild.v1_13_6_36310:
                 case ClientVersionBuild.V1_13_6_36324:
+                case ClientVersionBuild.V1_13_6_36497:
                 case ClientVersionBuild.V1_13_6_36524:
                 case ClientVersionBuild.V1_13_6_36611:
+                case ClientVersionBuild.V1_13_6_36670:
                 case ClientVersionBuild.V1_13_6_36714:
                 case ClientVersionBuild.V1_13_6_36935:
                 case ClientVersionBuild.V1_13_6_37497:
+                case ClientVersionBuild.V1_13_7_37279:
+                case ClientVersionBuild.V1_13_7_37429:
+                case ClientVersionBuild.V1_13_7_37892:
+                case ClientVersionBuild.V1_13_7_38178:
+                case ClientVersionBuild.V1_13_7_38296:
                 case ClientVersionBuild.V1_13_7_38363:
                 case ClientVersionBuild.V1_13_7_38386:
                 case ClientVersionBuild.V1_13_7_38475:
