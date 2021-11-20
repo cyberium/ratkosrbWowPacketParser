@@ -801,3 +801,18 @@ ALTER TABLE `creature_loot`
 ALTER TABLE `gameobject_loot`
 	ADD COLUMN `sniff_id` SMALLINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table' AFTER `items_count`,
 	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `sniff_id`;
+
+CREATE TABLE `creature_armor` (
+	`entry` INT UNSIGNED NOT NULL DEFAULT '0',
+	`level` INT UNSIGNED NOT NULL DEFAULT '0',
+	`hits_count` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+	`armor` INT UNSIGNED NOT NULL DEFAULT '0',
+	`damage_reduction` FLOAT NOT NULL DEFAULT '0',
+	`sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0'
+)
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;
+
+ALTER TABLE `creature_armor`
+	COMMENT='estimated armor of creatures from damage taken';

@@ -107,6 +107,7 @@
         conversation_line_template,
         conversation_template,
         creature_addon,
+        creature_armor,
         creature_display_info_addon,
         creature_equip_template,
         creature_faction,

@@ -770,6 +770,46 @@ namespace WowPacketParser.SQL.Builders
             return result.ToString();
         }
 
+        public static double GetArmor(double damage, double originalDamage, float level)
+        {
+            return (85.0 * level + 400.0) * (originalDamage - damage) / damage;
+        }
+
+        [BuilderMethod]
+        public static string CreatureArmor()
+        {
+            if (!Settings.SqlTables.creature_armor)
+                return string.Empty;
+
+            if (Storage.CreatureMeleeDamageTaken.Count == 0)
+                return string.Empty;
+
+            var rows = new RowList<CreatureArmor>();
+            foreach (var creatureData in Storage.CreatureMeleeDamageTaken)
+            {
+                foreach (var damagePerLevel in creatureData.Value)
+                {
+                    var row = new Row<CreatureArmor>();
+                    row.Data.Entry = creatureData.Key;
+                    row.Data.Level = damagePerLevel.Key;
+                    row.Data.HitsCount = (uint)damagePerLevel.Value.Count;
+
+                    double totalArmor = 0;
+                    double totalDamageReduction = 0;
+                    foreach (var damageData in damagePerLevel.Value)
+                    {
+                        totalArmor += GetArmor(damageData.damage, damageData.originalDamage, damageData.attackerLevel);
+                        totalDamageReduction += 1.0 - damageData.damage / damageData.originalDamage;
+                    }
+                    row.Data.Armor = (uint)(totalArmor / damagePerLevel.Value.Count);
+                    row.Data.DamageReduction = (float)(totalDamageReduction / damagePerLevel.Value.Count);
+                    rows.Add(row);
+                }
+            }
+
+            return new SQLInsert<CreatureArmor>(rows, false).Build();
+        }
+
         [BuilderMethod]
         public static string CreatureMeleeDamage()
         {

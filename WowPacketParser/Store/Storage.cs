@@ -759,6 +759,31 @@ namespace WowPacketParser.Store
                 Storage.CreatureThreatRemoves.Add(guid, threatList);
             }
         }
+        public static readonly Dictionary<uint, Dictionary<uint, List<CreatureDamageTaken>>> CreatureMeleeDamageTaken = new Dictionary<uint, Dictionary<uint, List<CreatureDamageTaken>>>();
+        private static void StoreCreatureMeleeDamageTaken(uint entry, uint level, CreatureDamageTaken damage)
+        {
+            if (CreatureMeleeDamageTaken.ContainsKey(entry))
+            {
+                if (CreatureMeleeDamageTaken[entry].ContainsKey(level))
+                {
+                    CreatureMeleeDamageTaken[entry][level].Add(damage);
+                }
+                else
+                {
+                    List<CreatureDamageTaken> damageList = new List<CreatureDamageTaken>();
+                    damageList.Add(damage);
+                    CreatureMeleeDamageTaken[entry].Add(level, damageList);
+                }
+            }
+            else
+            {
+                Dictionary<uint, List<CreatureDamageTaken>> levelDict = new Dictionary<uint, List<CreatureDamageTaken>>();
+                List<CreatureDamageTaken> damageList = new List<CreatureDamageTaken>();
+                damageList.Add(damage);
+                levelDict.Add(level, damageList);
+                CreatureMeleeDamageTaken.Add(entry, levelDict);
+            }
+        }
         public static readonly Dictionary<uint, Dictionary<uint, List<double>>> CreatureMeleeAttackDamage = new Dictionary<uint, Dictionary<uint, List<double>>>();
         public static readonly Dictionary<uint, Dictionary<uint, List<double>>> CreatureMeleeAttackDamageDirty = new Dictionary<uint, Dictionary<uint, List<double>>>();
         private static void StoreCreatureMeleeAttackDamage(uint entry, uint level, double damage, bool dirty)
@@ -801,42 +826,66 @@ namespace WowPacketParser.Store
         public static readonly Dictionary<WowGuid, List<UnitMeleeAttackLog>> UnitAttackLogs = new Dictionary<WowGuid, List<UnitMeleeAttackLog>>();
         public static void StoreUnitAttackLog(UnitMeleeAttackLog attackData)
         {
-            WowGuid attackerGuid = attackData.Attacker;
-            ObjectType attackerType = attackerGuid.GetObjectType();
+            bool saveCreatureArmor = Settings.SqlTables.creature_armor &&
+                                      attackData.Victim.GetHighType() == HighGuidType.Creature;
+            bool saveCreatureDamage = Settings.SqlTables.creature_melee_damage &&
+                                      attackData.Attacker.GetHighType() == HighGuidType.Creature;
 
-            if (Settings.SqlTables.creature_melee_damage &&
-                attackerGuid.GetHighType() == HighGuidType.Creature &&
+            if ((saveCreatureArmor || saveCreatureDamage) &&
                 attackData.VictimState == (uint)VictimStates.VICTIMSTATE_NORMAL &&
                 attackData.TotalSchoolMask != 0 && attackData.SpellId == 0 &&
                 attackData.Damage != 0 && attackData.OriginalDamage != 0 &&
-                Storage.Objects.ContainsKey(attackerGuid))
+                Storage.Objects.ContainsKey(attackData.Attacker))
             {
-                
-                Unit creature = Storage.Objects[attackerGuid].Item1 as Unit;
-                uint entry = (uint)creature.ObjectData.EntryID;
-                uint level = (uint)creature.UnitData.Level;
+                Unit attacker = Storage.Objects[attackData.Attacker].Item1 as Unit;
 
                 uint allowedHitInfoFlags = (uint)(SpellHitInfo.HITINFO_AFFECTS_VICTIM |
-                                                  SpellHitInfo.HITINFO_UNK10 |
-                                                  SpellHitInfo.HITINFO_UNK11 |
-                                                  SpellHitInfo.HITINFO_UNK12);
+                                                      SpellHitInfo.HITINFO_UNK10 |
+                                                      SpellHitInfo.HITINFO_UNK11 |
+                                                      SpellHitInfo.HITINFO_UNK12);
 
-                if (((attackData.HitInfo & (uint)SpellHitInfo.HITINFO_AFFECTS_VICTIM) != 0) &&
-                    ((attackData.HitInfo & allowedHitInfoFlags) == attackData.HitInfo) &&
-                      attackData.TotalAbsorbedDamage == 0 && attackData.TotalResistedDamage == 0 &&
-                      attackData.BlockedDamage <= 0 && attackData.OverkillDamage <= 0 &&
-                     (creature.UnitData.Flags & (uint)UnitFlags.MainHandDisarmed) == 0 &&
-                     !creature.HasAuraMatchingCriteria(HardcodedData.IsModMainHandDamageAura))
+                bool isNormalHit = ((attackData.HitInfo & (uint)SpellHitInfo.HITINFO_AFFECTS_VICTIM) != 0) &&
+                                   ((attackData.HitInfo & allowedHitInfoFlags) == attackData.HitInfo) &&
+                                     attackData.TotalAbsorbedDamage == 0 && attackData.TotalResistedDamage == 0 &&
+                                     attackData.BlockedDamage <= 0 && attackData.OverkillDamage <= 0 &&
+                                    (attacker.UnitData.Flags & (uint)UnitFlags.MainHandDisarmed) == 0;
+
+                if (saveCreatureDamage)
                 {
-                    StoreCreatureMeleeAttackDamage(entry, level, attackData.OriginalDamage, false);
-                }
-                else
-                {
-                    StoreCreatureMeleeAttackDamage(entry, level, attackData.OriginalDamage, true);
+                    uint entry = (uint)attacker.ObjectData.EntryID;
+                    uint level = (uint)attacker.UnitData.Level;
+
+                    if (isNormalHit && !attacker.HasAuraMatchingCriteria(HardcodedData.IsModMainHandDamageAura))
+                    {
+                        StoreCreatureMeleeAttackDamage(entry, level, attackData.OriginalDamage, false);
+                    }
+                    else
+                    {
+                        StoreCreatureMeleeAttackDamage(entry, level, attackData.OriginalDamage, true);
+                    }
+
+                    StoreCreatureMeleeAttackSchool(entry, attackData.TotalSchoolMask);
                 }
 
-                StoreCreatureMeleeAttackSchool(entry, attackData.TotalSchoolMask);
+                if (saveCreatureArmor &&
+                    attackData.Damage < attackData.OriginalDamage &&
+                    Storage.Objects.ContainsKey(attackData.Victim))
+                {
+                    Unit victim = Storage.Objects[attackData.Victim].Item1 as Unit;
+                    uint victimEntry = (uint)victim.ObjectData.EntryID;
+                    int victimLevel = victim.UnitData.Level;
+                    int attackerLevel = attacker.UnitData.Level;
+
+                    if (isNormalHit && Math.Abs(victimLevel - attackerLevel) < 10 &
+                        !victim.HasAuraMatchingCriteria(HardcodedData.IsModResistAura) &&
+                        !victim.HasAuraMatchingCriteria(HardcodedData.IsModPhysicalDamageTakenAura))
+                    {
+                        StoreCreatureMeleeDamageTaken(victimEntry, (uint)victimLevel, new CreatureDamageTaken((uint)attackerLevel, attackData.Damage, attackData.OriginalDamage));
+                    }
+                }
             }
+
+            ObjectType attackerType = attackData.Attacker.GetObjectType();
 
             if (attackerType == ObjectType.Unit)
             {
@@ -852,15 +901,15 @@ namespace WowPacketParser.Store
             else
                 return;
 
-            if (Storage.UnitAttackLogs.ContainsKey(attackerGuid))
+            if (Storage.UnitAttackLogs.ContainsKey(attackData.Attacker))
             {
-                Storage.UnitAttackLogs[attackerGuid].Add(attackData);
+                Storage.UnitAttackLogs[attackData.Attacker].Add(attackData);
             }
             else
             {
                 List<UnitMeleeAttackLog> attacksList = new List<UnitMeleeAttackLog>();
                 attacksList.Add(attackData);
-                Storage.UnitAttackLogs.Add(attackerGuid, attacksList);
+                Storage.UnitAttackLogs.Add(attackData.Attacker, attacksList);
             }
         }
         public static readonly Dictionary<WowGuid, List<CreatureAttackData>> UnitAttackStartTimes = new Dictionary<WowGuid, List<CreatureAttackData>>();

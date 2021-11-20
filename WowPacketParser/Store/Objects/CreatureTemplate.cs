@@ -132,6 +132,41 @@ namespace WowPacketParser.Store.Objects
         public int? SniffBuild = ClientVersion.BuildInt;
     }
 
+    public sealed class CreatureDamageTaken
+    {
+        public uint attackerLevel;
+        public double damage;
+        public double originalDamage;
+        public CreatureDamageTaken(uint attackerLevel, double damage, double originalDamage)
+        {
+            this.attackerLevel = attackerLevel;
+            this.damage = damage;
+            this.originalDamage = originalDamage;
+        }
+    }
+
+    [DBTableName("creature_armor")]
+    public sealed class CreatureArmor : IDataModel
+    {
+        [DBFieldName("entry", true)]
+        public uint Entry;
+
+        [DBFieldName("level", true)]
+        public uint Level;
+
+        [DBFieldName("hits_count")]
+        public uint HitsCount;
+
+        [DBFieldName("armor")]
+        public uint Armor;
+
+        [DBFieldName("damage_reduction")]
+        public float DamageReduction;
+
+        [DBFieldName("sniff_build", true)]
+        public int? SniffBuild = ClientVersion.BuildInt;
+    }
+
     [DBTableName("creature_questitem")]
     public sealed class CreatureTemplateQuestItem : IDataModel
     {

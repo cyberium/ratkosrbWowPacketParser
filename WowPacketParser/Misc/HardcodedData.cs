@@ -101,7 +101,7 @@ namespace WowPacketParser.Misc
         public static readonly HashSet<uint> ModSpeedAlwaysSpells = new HashSet<uint> { 1557, 1834, 1906, 2313, 23218 };
 #endregion
 
-#region ModDamageAuras
+#region ModDamageDoneAuras
         public static bool IsModMainHandDamageAura(uint spellId)
         {
             return ModPhysicalDamageDoneSpells.Contains(spellId) ||
@@ -170,6 +170,32 @@ namespace WowPacketParser.Misc
 
         // Spells with SPELL_AURA_MOD_MELEE_HASTE
         public static readonly HashSet<uint> ModMeleeHasteSpells = new HashSet<uint> { 65, 89, 246, 379, 553, 605, 642, 839, 1018, 1020, 1098, 1139, 3130, 3136, 3151, 3229, 3258, 3269, 3335, 3416, 3442, 3443, 3490, 3510, 3547, 3631, 3826, 4063, 4154, 4240, 4514, 4955, 4962, 5115, 5171, 5213, 5220, 5271, 5337, 5515, 5628, 5888, 5915, 6136, 6146, 6343, 6434, 6436, 6468, 6742, 6774, 6814, 6907, 7102, 7103, 7127, 7217, 7279, 7321, 7357, 7396, 7645, 7965, 7992, 7998, 8078, 8147, 8198, 8204, 8205, 8255, 8269, 8599, 8602, 8699, 8815, 10348, 10371, 10732, 10855, 10911, 10912, 11436, 11443, 11580, 11581, 11725, 11726, 12021, 12255, 12531, 12686, 12795, 12888, 12966, 12967, 12968, 12969, 12970, 13168, 13494, 13532, 13533, 13589, 13679, 13680, 13681, 13682, 13747, 13874, 13877, 13928, 14534, 14822, 14872, 14897, 15061, 15167, 15471, 15548, 15588, 15656, 15716, 15850, 15859, 16050, 16053, 16076, 16170, 16257, 16277, 16278, 16279, 16280, 16528, 16597, 16601, 16609, 16789, 16791, 16914, 16927, 17134, 17331, 17401, 17402, 17687, 18065, 18101, 18116, 18501, 18546, 18810, 18972, 18977, 19137, 19365, 19451, 19516, 19615, 19779, 19812, 19953, 20005, 20553, 20716, 20717, 20812, 20882, 21049, 21079, 21090, 21098, 21165, 21340, 21793, 22247, 22290, 22356, 22428, 22479, 22559, 22640, 22642, 22660, 22735, 22839, 22841, 22909, 22988, 23021, 23060, 23128, 23175, 23187, 23189, 23342, 23537, 23733, 23931, 23951, 24002, 24003, 24088, 24110, 24169, 24178, 24185, 24318, 24327, 24415, 24672, 24689, 25022, 25164, 25516, 25773, 25790, 25801, 25806, 26034, 26036, 26041, 26051, 26064, 26068, 26079, 26083, 26099, 26195, 26197, 26198, 26258, 26259, 26331, 26527, 26615, 26629, 26635, 26662, 27530, 27545, 27648, 27689, 27995, 28131, 28134, 28371, 28701, 28747, 28798, 28866, 29212 };
+#endregion
+
+#region ModDamageTakenAuras
+        public static bool IsModPhysicalDamageTakenAura(uint spellId)
+        {
+            return ModPhysicalDamageTakenSpells.Contains(spellId) ||
+                   ModPhysicalDamageTakenPercentSpells.Contains(spellId) ||
+                   ModRangedDamageTakenSpells.Contains(spellId) ||
+                   ModMeleeDamageTakenSpells.Contains(spellId) ||
+                   ModMeleeDamageTakenPercentSpells.Contains(spellId);
+        }
+
+        // Spells with SPELL_AURA_MOD_DAMAGE_TAKEN and MiscValue & 1
+        public static readonly HashSet<uint> ModPhysicalDamageTakenSpells = new HashSet<uint> { 463, 464, 634, 638, 644, 1184, 3247, 3264, 3387, 3427, 3436, 3439, 4154, 4166, 4244, 4805, 4932, 5102, 5810, 6922, 7139, 7140, 7367, 8282, 11374, 12245, 12279, 12545, 15042, 15595, 16098, 16128, 16511, 17230, 17347, 17348, 20204, 20590, 20911, 20912, 20913, 20914, 23120, 24339, 24673, 25685, 25794, 25795, 25796, 25797, 25798, 25799, 25899, 27857, 29306, 30080, 30081, 30113 };
+
+        // Spells with SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN and MiscValue & 1
+        public static readonly HashSet<uint> ModPhysicalDamageTakenPercentSpells = new HashSet<uint> { 408, 871, 1719, 7376, 7381, 8064, 8137, 8223, 8643, 12248, 12738, 12942, 14532, 15062, 15473, 17135, 18159, 22839, 23014, 23270, 23397, 23505, 23760, 23841, 23842, 23843, 23844, 24378, 25994, 26064, 26156, 27543, 29061, 29125 };
+
+        // Spells with SPELL_AURA_MOD_RANGED_DAMAGE_TAKEN
+        public static readonly HashSet<uint> ModRangedDamageTakenSpells = new HashSet<uint> { 2651, 15108, 15109, 15110, 19289, 19291, 19292, 19293 };
+
+        // Spells with SPELL_AURA_MOD_MELEE_DAMAGE_TAKEN
+        public static readonly HashSet<uint> ModMeleeDamageTakenSpells = new HashSet<uint> { 8072, 8156, 8157, 10403, 10404, 10405 };
+
+        // Spells with SPELL_AURA_MOD_MELEE_DAMAGE_TAKEN_PCT
+        public static readonly HashSet<uint> ModMeleeDamageTakenPercentSpells = new HashSet<uint> { 16337, 16592, 22917 };
 #endregion
 
 #region ModResistAuras

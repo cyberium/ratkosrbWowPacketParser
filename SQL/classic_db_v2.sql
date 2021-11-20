@@ -225,6 +225,20 @@ CREATE TABLE IF NOT EXISTS `creature` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_armor
+DROP TABLE IF EXISTS `creature_armor`;
+CREATE TABLE IF NOT EXISTS `creature_armor` (
+  `entry` int(10) unsigned NOT NULL DEFAULT '0',
+  `level` int(10) unsigned NOT NULL DEFAULT '0',
+  `hits_count` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `armor` int(10) unsigned NOT NULL DEFAULT '0',
+  `damage_reduction` float NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='estimated armor of creatures from damage taken';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_attack_log
 DROP TABLE IF EXISTS `creature_attack_log`;
 CREATE TABLE IF NOT EXISTS `creature_attack_log` (
