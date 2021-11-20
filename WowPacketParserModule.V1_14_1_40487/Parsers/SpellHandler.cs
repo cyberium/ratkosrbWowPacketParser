@@ -95,6 +95,7 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
             {
                 WowGuid hitTarget = packet.ReadPackedGuid128("HitTarget", idx, i);
                 dbdata.AddHitTarget(hitTarget);
+                Storage.StoreSpellScriptTarget(dbdata.SpellID, hitTarget);
             }
 
             for (var i = 0; i < missTargetsCount; ++i)

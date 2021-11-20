@@ -206,7 +206,7 @@ namespace WowPacketParser.Store
         }
         public static uint GetObjectEntry(WowGuid guid)
         {
-            if (guid.HasEntry())
+            if (guid.HasEntry() && guid.GetHighType() != HighGuidType.Pet)
                 return guid.GetEntry();
 
             if (Objects.ContainsKey(guid))
@@ -1953,6 +1953,91 @@ namespace WowPacketParser.Store
         public static readonly DataBag<CreaturePetRemainingCooldown> CreaturePetRemainingCooldown = new DataBag<CreaturePetRemainingCooldown>(Settings.SqlTables.creature_pet_remaining_cooldown);
         public static readonly DataBag<CreaturePetActions> CreaturePetActions = new DataBag<CreaturePetActions>(Settings.SqlTables.creature_pet_actions);
         public static readonly DataBag<SpellTargetPosition> SpellTargetPositions = new DataBag<SpellTargetPosition>(Settings.SqlTables.spell_target_position);
+        public static void StoreSpellTargetPosition(uint spellID, int mapID, Vector3 dstPosition, float orientation)
+        {
+            if (!Settings.SqlTables.spell_target_position)
+                return;
+
+            if (Settings.UseDBC)
+            {
+                for (uint i = 0; i < 32; i++)
+                {
+                    var tuple = Tuple.Create(spellID, i);
+                    if (DBC.DBC.SpellEffectStores.ContainsKey(tuple))
+                    {
+                        var effect = DBC.DBC.SpellEffectStores[tuple];
+                        if ((Targets)effect.ImplicitTarget[0] == Targets.TARGET_DEST_DB || (Targets)effect.ImplicitTarget[1] == Targets.TARGET_DEST_DB)
+                        {
+                            string effectHelper = $"Spell: { StoreGetters.GetName(StoreNameType.Spell, (int)spellID) } Efffect: { effect.Effect } ({ (SpellEffects)effect.Effect })";
+
+                            var spellTargetPosition = new SpellTargetPosition
+                            {
+                                ID = spellID,
+                                EffectIndex = (byte)i,
+                                PositionX = dstPosition.X,
+                                PositionY = dstPosition.Y,
+                                PositionZ = dstPosition.Z,
+                                MapID = (ushort)mapID,
+                                EffectHelper = effectHelper
+                            };
+
+                            if (!Storage.SpellTargetPositions.ContainsKey(spellTargetPosition))
+                                Storage.SpellTargetPositions.Add(spellTargetPosition);
+                        }
+                    }
+                }
+            }
+            else if (HardcodedData.DbCoordinateSpells.Contains(spellID))
+            {
+                string effectHelper = $"Spell: { StoreGetters.GetName(StoreNameType.Spell, (int)spellID) } Efffect: { 0 } ({ (SpellEffects)0 })";
+
+                var spellTargetPosition = new SpellTargetPosition
+                {
+                    ID = spellID,
+                    EffectIndex = (byte)0,
+                    PositionX = dstPosition.X,
+                    PositionY = dstPosition.Y,
+                    PositionZ = dstPosition.Z,
+                    Orientation = orientation,
+                    MapID = (ushort)mapID,
+                    EffectHelper = effectHelper
+                };
+
+                if (!Storage.SpellTargetPositions.ContainsKey(spellTargetPosition))
+                    Storage.SpellTargetPositions.Add(spellTargetPosition);
+            }
+        }
+        public static readonly DataBag<SpellScriptTarget> SpellScriptTargets = new DataBag<SpellScriptTarget>(Settings.SqlTables.spell_script_target);
+
+        public static void StoreSpellScriptTarget(uint spellId, WowGuid hitTarget)
+        {
+            if (Settings.SqlTables.spell_script_target &&
+                HardcodedData.DbTargetSpells.Contains(spellId))
+            {
+                ObjectType targetType = hitTarget.GetObjectType();
+                uint targetDbType = 255;
+                switch (targetType)
+                {
+                    case ObjectType.GameObject:
+                        targetDbType = 0;
+                        break;
+                    case ObjectType.Unit:
+                        targetDbType = 1;
+                        break;
+                    default:
+                        if (Settings.TargetedDbType != TargetedDbType.WPP)
+                            return;
+                        break;
+                }
+
+                SpellScriptTarget targetData = new SpellScriptTarget();
+                targetData.SpellId = spellId;
+                targetData.Type = targetDbType;
+                targetData.TargetId = Storage.GetObjectEntry(hitTarget);
+                targetData.TargetType = hitTarget.GetHighType().ToString();
+                Storage.SpellScriptTargets.Add(targetData);
+            }
+        }
 
         // World state
         public static readonly DataBag<WorldStateInit> WorldStateInits = new DataBag<WorldStateInit>(Settings.SqlTables.world_state_init);
@@ -2057,6 +2142,7 @@ namespace WowPacketParser.Store
             CreatureStats.Clear();
             CreatureStatsDirty.Clear();
 
+            CreatureMeleeDamageTaken.Clear();
             CreatureMeleeAttackDamage.Clear();
             CreatureMeleeAttackDamageDirty.Clear();
             CreatureMeleeAttackSchool.Clear();
@@ -2150,6 +2236,7 @@ namespace WowPacketParser.Store
             CreaturePetActions.Clear();
             CreaturePetCooldown.Clear();
             SpellTargetPositions.Clear();
+            SpellScriptTargets.Clear();
 
             LocalesCreatures.Clear();
             LocalesQuests.Clear();

@@ -55,6 +55,9 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             if (hasOrient)
                 dbdata.Orientation = packet.ReadSingle("Orientation", idx);
 
+            if (dbdata.DstPosition != null && packet.Direction == Direction.ServerToClient)
+                Storage.StoreSpellTargetPosition(dbdata.SpellID, (int)WowPacketParser.Parsing.Parsers.MovementHandler.CurrentMapId, dbdata.DstPosition.Value, dbdata.Orientation);
+
             packet.ReadWoWString("Name", nameLength, idx);
         }
 
@@ -383,6 +386,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             {
                 WowGuid hitTarget = packet.ReadPackedGuid128("HitTarget", idx, i);
                 dbdata.AddHitTarget(hitTarget);
+                Storage.StoreSpellScriptTarget(dbdata.SpellID, hitTarget);
             }
 
             for (var i = 0; i < missTargetsCount; ++i)

@@ -11,7 +11,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("id", true, DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public uint? ID;
 
-        [DBFieldName("effect_index", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("EffectIndex", true, DbType = (TargetedDbType.TRINITY))]
         public byte? EffectIndex;
 

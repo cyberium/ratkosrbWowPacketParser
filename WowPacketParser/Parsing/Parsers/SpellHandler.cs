@@ -681,6 +681,7 @@ namespace WowPacketParser.Parsing.Parsers
                 {
                     WowGuid hitTarget = packet.ReadGuid("Hit GUID", i);
                     dbdata.AddHitTarget(hitTarget);
+                    Storage.StoreSpellScriptTarget(dbdata.SpellID, hitTarget);
                 }
 
                 var missCount = packet.ReadByte("Miss Count");
@@ -720,6 +721,9 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.ReadPackedGuid("Destination Transport GUID");
 
                 dbdata.DstPosition = packet.ReadVector3("Destination Position");
+
+                if (isSpellGo)
+                    Storage.StoreSpellTargetPosition(dbdata.SpellID, (int)MovementHandler.CurrentMapId, dbdata.DstPosition.Value, 0);
             }
 
             if (targetFlags.HasAnyFlag(TargetFlag.NameString))

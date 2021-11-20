@@ -46,56 +46,8 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             if (hasMapID)
                 mapID = (ushort)packet.ReadInt32("MapID", idx);
 
-            if (dbdata.DstPosition != null && mapID != -1 && packet.Direction == Direction.ServerToClient && HardcodedData.DbCoordinateSpells.Contains(spellID))
-            {
-                string effectHelper = $"Spell: { StoreGetters.GetName(StoreNameType.Spell, (int)spellID) } Efffect: { 0 } ({ (SpellEffects)0 })";
-
-                var spellTargetPosition = new SpellTargetPosition
-                {
-                    ID = spellID,
-                    EffectIndex = (byte)0,
-                    PositionX = dbdata.DstPosition.X,
-                    PositionY = dbdata.DstPosition.Y,
-                    PositionZ = dbdata.DstPosition.Z,
-                    Orientation = orientation,
-                    MapID = (ushort)mapID,
-                    EffectHelper = effectHelper
-                };
-
-                if (!Storage.SpellTargetPositions.ContainsKey(spellTargetPosition))
-                    Storage.SpellTargetPositions.Add(spellTargetPosition);
-            }
-            /*
-            if (Settings.UseDBC && dbdata.DstPosition != null && mapID != -1)
-            {
-                for (uint i = 0; i < 32; i++)
-                {
-                    var tuple = Tuple.Create(spellID, i);
-                    if (DBC.SpellEffectStores.ContainsKey(tuple))
-                    {
-                        var effect = DBC.SpellEffectStores[tuple];
-                        if ((Targets)effect.ImplicitTarget[0] == Targets.TARGET_DEST_DB || (Targets)effect.ImplicitTarget[1] == Targets.TARGET_DEST_DB)
-                        {
-                            string effectHelper = $"Spell: { StoreGetters.GetName(StoreNameType.Spell, (int)spellID) } Efffect: { effect.Effect } ({ (SpellEffects)effect.Effect })";
-
-                            var spellTargetPosition = new SpellTargetPosition
-                            {
-                                ID = spellID,
-                                EffectIndex = (byte)i,
-                                PositionX = dbdata.DstPosition.X,
-                                PositionY = dbdata.DstPosition.Y,
-                                PositionZ = dbdata.DstPosition.Z,
-                                MapID = (ushort)mapID,
-                                EffectHelper = effectHelper
-                            };
-
-                            if (!Storage.SpellTargetPositions.ContainsKey(spellTargetPosition))
-                                Storage.SpellTargetPositions.Add(spellTargetPosition);
-                        }
-                    }
-                }
-            }
-            */
+            if (dbdata.DstPosition != null && mapID != -1 && packet.Direction == Direction.ServerToClient)
+                Storage.StoreSpellTargetPosition(spellID, mapID, dbdata.DstPosition.Value, orientation);
 
             packet.ReadWoWString("Name", nameLength, idx);
         }
@@ -177,6 +129,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             {
                 WowGuid hitTarget = packet.ReadPackedGuid128("HitTarget", idx, i);
                 dbdata.AddHitTarget(hitTarget);
+                Storage.StoreSpellScriptTarget(dbdata.SpellID, hitTarget);
             }
 
             for (var i = 0; i < missTargetsCount; ++i)

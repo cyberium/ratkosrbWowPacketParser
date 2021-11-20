@@ -46,6 +46,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
                 {
                     WowGuid hitTarget = packet.ReadGuid("HitTarget", idx, i);
                     dbdata.AddHitTarget(hitTarget);
+                    Storage.StoreSpellScriptTarget(dbdata.SpellID, hitTarget);
                 }
 
                 var missTargetsCount = packet.ReadByte("MissStatusCount", idx);
@@ -201,6 +202,9 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
 
             if (targetFlags.HasAnyFlag(TargetFlag.DestinationLocation))
                 dbdata.DstPosition = ReadLocation(packet, "DstLocation");
+
+            if (dbdata.DstPosition != null && packet.Direction == Direction.ServerToClient)
+                Storage.StoreSpellTargetPosition(dbdata.SpellID, (int)WowPacketParser.Parsing.Parsers.MovementHandler.CurrentMapId, dbdata.DstPosition.Value, 0);
 
             if (targetFlags.HasAnyFlag(TargetFlag.NameString))
                 packet.ReadCString("Name", idx);

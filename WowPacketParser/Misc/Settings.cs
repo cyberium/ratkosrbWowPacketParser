@@ -248,6 +248,7 @@ namespace WowPacketParser.Misc
             public static readonly bool spell_areatrigger = Conf.GetBoolean("spell_areatrigger", false);
             public static readonly bool spell_areatrigger_splines = Conf.GetBoolean("spell_areatrigger_splines", false);
             public static readonly bool spell_areatrigger_vertices = Conf.GetBoolean("spell_areatrigger_vertices", false);
+            public static readonly bool spell_script_target = Conf.GetBoolean("spell_script_target", false);
             public static readonly bool spell_target_position = Conf.GetBoolean("spell_target_position", false);
             public static readonly bool spell_unique_caster = Conf.GetBoolean("spell_unique_caster", false);
             public static readonly bool trainer = Conf.GetBoolean("trainer", false);

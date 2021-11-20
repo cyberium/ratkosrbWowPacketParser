@@ -816,3 +816,16 @@ ENGINE=InnoDB
 
 ALTER TABLE `creature_armor`
 	COMMENT='estimated armor of creatures from damage taken';
+
+ALTER TABLE `spell_target_position`
+	DROP COLUMN `effect_index`;
+
+CREATE TABLE `spell_script_targets` (
+	`spell_id` INT UNSIGNED NOT NULL,
+	`target_type` VARCHAR(16) NOT NULL,
+	`target_id` INT UNSIGNED NOT NULL,
+	PRIMARY KEY (`spell_id`, `target_type`, `target_id`)
+)
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;

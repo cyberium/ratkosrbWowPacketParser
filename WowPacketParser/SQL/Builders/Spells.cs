@@ -11,6 +11,18 @@ namespace WowPacketParser.SQL.Builders
     public static class Spells
     {
         [BuilderMethod]
+        public static string SpellScriptTarget()
+        {
+            if (Storage.SpellScriptTargets.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.spell_script_target)
+                return string.Empty;
+
+            return SQLUtil.Compare(Storage.SpellScriptTargets, SQLDatabase.Get(Storage.SpellScriptTargets), StoreNameType.None);
+        }
+
+        [BuilderMethod]
         public static string SpellTargetPosition()
         {
             if (Storage.SpellTargetPositions.IsEmpty())
@@ -130,28 +142,28 @@ namespace WowPacketParser.SQL.Builders
                     row.Data.MissTargetsListId = 0;
 
                 if (cast_pair.Item1.SrcPosition != null &&
-                   (cast_pair.Item1.SrcPosition.X != 0 || cast_pair.Item1.SrcPosition.Y != 0 || cast_pair.Item1.SrcPosition.Z != 0))
+                   (cast_pair.Item1.SrcPosition.Value.X != 0 || cast_pair.Item1.SrcPosition.Value.Y != 0 || cast_pair.Item1.SrcPosition.Value.Z != 0))
                 {
                     row.Data.SrcPositionId = ++maxPositionId;
                     Row<SpellCastGoPosition> positionRow = new Row<SpellCastGoPosition>();
                     positionRow.Data.Id = row.Data.SrcPositionId;
-                    positionRow.Data.PositionX = cast_pair.Item1.SrcPosition.X;
-                    positionRow.Data.PositionY = cast_pair.Item1.SrcPosition.Y;
-                    positionRow.Data.PositionZ = cast_pair.Item1.SrcPosition.Z;
+                    positionRow.Data.PositionX = cast_pair.Item1.SrcPosition.Value.X;
+                    positionRow.Data.PositionY = cast_pair.Item1.SrcPosition.Value.Y;
+                    positionRow.Data.PositionZ = cast_pair.Item1.SrcPosition.Value.Z;
                     spellPositionRows.Add(positionRow);
                 }
                 else
                     row.Data.SrcPositionId = 0;
 
                 if (cast_pair.Item1.DstPosition != null &&
-                   (cast_pair.Item1.DstPosition.X != 0 || cast_pair.Item1.DstPosition.Y != 0 || cast_pair.Item1.DstPosition.Z != 0))
+                   (cast_pair.Item1.DstPosition.Value.X != 0 || cast_pair.Item1.DstPosition.Value.Y != 0 || cast_pair.Item1.DstPosition.Value.Z != 0))
                 {
                     row.Data.DstPositionId = ++maxPositionId;
                     Row<SpellCastGoPosition> positionRow = new Row<SpellCastGoPosition>();
                     positionRow.Data.Id = row.Data.DstPositionId;
-                    positionRow.Data.PositionX = cast_pair.Item1.DstPosition.X;
-                    positionRow.Data.PositionY = cast_pair.Item1.DstPosition.Y;
-                    positionRow.Data.PositionZ = cast_pair.Item1.DstPosition.Z;
+                    positionRow.Data.PositionX = cast_pair.Item1.DstPosition.Value.X;
+                    positionRow.Data.PositionY = cast_pair.Item1.DstPosition.Value.Y;
+                    positionRow.Data.PositionZ = cast_pair.Item1.DstPosition.Value.Z;
                     spellPositionRows.Add(positionRow);
                 }
                 else

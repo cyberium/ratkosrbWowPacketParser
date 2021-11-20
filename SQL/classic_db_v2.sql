@@ -2980,18 +2980,29 @@ CREATE TABLE IF NOT EXISTS `spell_channel_update` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.spell_script_targets
+DROP TABLE IF EXISTS `spell_script_targets`;
+CREATE TABLE IF NOT EXISTS `spell_script_targets` (
+  `spell_id` int(10) unsigned NOT NULL,
+  `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
+  `target_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`spell_id`,`target_type`,`target_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.spell_target_position
 DROP TABLE IF EXISTS `spell_target_position`;
 CREATE TABLE IF NOT EXISTS `spell_target_position` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'Identifier',
-  `effect_index` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `map` smallint(5) unsigned NOT NULL DEFAULT '0',
   `position_x` float NOT NULL DEFAULT '0',
   `position_y` float NOT NULL DEFAULT '0',
   `position_z` float NOT NULL DEFAULT '0',
   `orientation` float NOT NULL DEFAULT '0',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`entry`,`effect_index`)
+  PRIMARY KEY (`entry`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='target coordinates for spells which need them defined in the database';
 
 -- Data exporting was unselected.

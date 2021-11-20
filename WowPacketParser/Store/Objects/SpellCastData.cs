@@ -112,6 +112,27 @@ namespace WowPacketParser.Store.Objects
         public DateTime Time;
     }
 
+    [DBTableName("spell_script_target")]
+    public sealed class SpellScriptTarget : IDataModel
+    {
+        [DBFieldName("spell_id", true, DbType = TargetedDbType.WPP)]
+        [DBFieldName("entry", true, DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        public uint SpellId;
+
+        [DBFieldName("type", true, DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        public uint Type;
+
+        [DBFieldName("target_type", true, DbType = TargetedDbType.WPP)]
+        public string TargetType;
+
+        [DBFieldName("target_id", true, DbType = TargetedDbType.WPP)]
+        [DBFieldName("targetEntry", true, DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        public uint TargetId;
+
+        [DBFieldName("sniff_build", DbType = TargetedDbType.WPP)]
+        public int? SniffBuild = ClientVersion.BuildInt;
+    }
+
     [DBTableName("spell_unique_caster")]
     public sealed class SpellUniqueCaster : IDataModel
     {
@@ -333,8 +354,8 @@ namespace WowPacketParser.Store.Objects
 
             MissTargetsList.Add(guid);
         }
-        public Vector3 SrcPosition;
-        public Vector3 DstPosition;
+        public Vector3? SrcPosition;
+        public Vector3? DstPosition;
         public float Orientation;
     }
 
