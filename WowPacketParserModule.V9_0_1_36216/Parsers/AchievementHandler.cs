@@ -17,7 +17,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ReadInt32("Flags");
             packet.ReadPackedTime("CurrentTime");
 
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503))
+            if (ClientVersion.IsVersionWith64BitTime())
             {
                 packet.ReadTime64("ElapsedTime");
                 packet.ReadTime64("CreationTime");
@@ -46,7 +46,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ReadPackedGuid128("PlayerGUID", indexes);
             packet.ReadPackedTime("CurrentTime", indexes);
 
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503))
+            if (ClientVersion.IsVersionWith64BitTime())
             {
                 packet.ReadTime64("ElapsedTime", indexes);
                 packet.ReadTime64("CreationTime", indexes);

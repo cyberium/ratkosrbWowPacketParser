@@ -35,13 +35,22 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("money")]
         public uint Money = 0;
 
-        [DBFieldName("playerBytes")]
-        public uint PlayerBytes;
+        [DBFieldName("skin")]
+        public byte Skin;
 
-        [DBFieldName("playerBytes2")]
-        public uint PlayerBytes2;
+        [DBFieldName("face")]
+        public byte Face;
 
-        [DBFieldName("playerFlags")]
+        [DBFieldName("hair_style")]
+        public byte HairStyle;
+
+        [DBFieldName("hair_color")]
+        public byte HairColor;
+
+        [DBFieldName("facial_hair")]
+        public byte FacialHair;
+
+        [DBFieldName("player_flags")]
         public uint PlayerFlags;
 
         [DBFieldName("position_x")]
@@ -65,7 +74,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("power1")]
         public uint Power1 = 0;
 
-        [DBFieldName("equipmentCache")]
+        [DBFieldName("equipment_cache")]
         public string EquipmentCache = "";
     }
     [DBTableName("player")]
@@ -116,17 +125,26 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("money")]
         public uint Money = 0;
 
-        [DBFieldName("player_bytes1")]
-        public uint PlayerBytes;
+        [DBFieldName("skin")]
+        public byte Skin;
 
-        [DBFieldName("player_bytes2")]
-        public uint PlayerBytes2;
+        [DBFieldName("face")]
+        public byte Face;
+
+        [DBFieldName("hair_style")]
+        public byte HairStyle;
+
+        [DBFieldName("hair_color")]
+        public byte HairColor;
+
+        [DBFieldName("facial_hair")]
+        public byte FacialHair;
 
         [DBFieldName("player_flags")]
         public uint PlayerFlags;
 
         [DBFieldName("pvp_rank")]
-        public uint PvPRank;
+        public byte PvPRank;
 
         [DBFieldName("scale")]
         public float? Scale;

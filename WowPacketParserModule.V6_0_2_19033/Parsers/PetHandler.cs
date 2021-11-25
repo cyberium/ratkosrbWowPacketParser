@@ -34,7 +34,11 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             for (var i = 0; i < maxDeclinedNameCases; ++i)
                 packet.ReadWoWString("DeclinedNames", declinedNameLen[i], i);
 
-            packet.ReadTime("Timestamp");
+            if (ClientVersion.IsVersionWith64BitTime())
+                packet.ReadTime64("Timestamp");
+            else
+                packet.ReadTime("Timestamp");
+
             string name = packet.ReadWoWString("Pet name", len);
             StoreGetters.AddName(guid, name);
         }

@@ -321,7 +321,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     if (objectType == ObjectType.Unit && Settings.SqlTables.creature_power_values_update ||
                         objectType != ObjectType.Unit && Settings.SqlTables.player_power_values_update)
                     {
-                        int powersCount = ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build);
+                        int powersCount = ClientVersion.GetPowerCountForClientVersion();
                         for (int powerType = 0; powerType < powersCount; powerType++)
                         {
                             if (oldUnitData.Power[powerType] != unit.UnitData.Power[powerType] ||

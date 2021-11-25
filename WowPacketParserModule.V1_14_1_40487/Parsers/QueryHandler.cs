@@ -199,30 +199,6 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
             Storage.ObjectNames.Add(objectName, packet.TimeSpan);
         }
 
-        [Parser(Opcode.SMSG_QUERY_PET_NAME_RESPONSE)]
-        public static void HandlePetNameQueryResponse(Packet packet)
-        {
-            packet.ReadPackedGuid128("PetID");
-
-            var hasData = packet.ReadBit("HasData");
-            if (!hasData)
-                return;
-
-            var len = packet.ReadBits(8);
-            packet.ReadBit("HasDeclined");
-
-            const int maxDeclinedNameCases = 5;
-            var declinedNameLen = new int[maxDeclinedNameCases];
-            for (var i = 0; i < maxDeclinedNameCases; ++i)
-                declinedNameLen[i] = (int)packet.ReadBits(7);
-
-            for (var i = 0; i < maxDeclinedNameCases; ++i)
-                packet.ReadWoWString("DeclinedNames", declinedNameLen[i], i);
-
-            packet.ReadTime64("Timestamp");
-            packet.ReadWoWString("Petname", len);
-        }
-
         [HasSniffData]
         [Parser(Opcode.SMSG_QUERY_GAME_OBJECT_RESPONSE)]
         public static void HandleGameObjectQueryResponse(Packet packet)

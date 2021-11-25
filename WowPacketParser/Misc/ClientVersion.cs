@@ -853,6 +853,9 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V1_14_1_40926:
                 case ClientVersionBuild.V1_14_1_40962:
                 case ClientVersionBuild.V1_14_1_41009:
+                case ClientVersionBuild.V1_14_1_41030:
+                case ClientVersionBuild.V1_14_1_41077:
+                case ClientVersionBuild.V1_14_1_41137:
                     return ClientVersionBuild.V1_14_1_40487;
                 case ClientVersionBuild.BattleNetV37165:
                     return ClientVersionBuild.BattleNetV37165;
@@ -1126,6 +1129,9 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V1_14_1_40926:
                 case ClientVersionBuild.V1_14_1_40962:
                 case ClientVersionBuild.V1_14_1_41009:
+                case ClientVersionBuild.V1_14_1_41030:
+                case ClientVersionBuild.V1_14_1_41077:
+                case ClientVersionBuild.V1_14_1_41137:
                 {
                     return true;
                 }
@@ -1147,12 +1153,23 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V1_14_1_40926:
                 case ClientVersionBuild.V1_14_1_40962:
                 case ClientVersionBuild.V1_14_1_41009:
+                case ClientVersionBuild.V1_14_1_41030:
+                case ClientVersionBuild.V1_14_1_41077:
+                case ClientVersionBuild.V1_14_1_41137:
                 {
                     return true;
                 }
                 default:
                     return false;
             }
+        }
+
+        public static bool IsVersionWith64BitTime()
+        {
+            if (IsClassicVanillaClientVersionBuild(Build))
+                return false;
+
+            return ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503);
         }
 
         public static bool IsClassicVersionWithUpdatedMovementInfo(ClientVersionBuild build)
@@ -1195,11 +1212,11 @@ namespace WowPacketParser.Misc
             }
         }
 
-        public static int GetPowerCountForClientVersion(ClientVersionBuild build)
+        public static int GetPowerCountForClientVersion()
         {
-            if (IsClassicClientVersionBuild(build))
+            if (IsClassicClientVersionBuild(Build))
             {
-                if (IsClassicSeasonOfMasteryPhase1ClientVersionBuild(build))
+                if (IsClassicSeasonOfMasteryPhase1ClientVersionBuild(Build))
                     return 7;
 
                 return 6;

@@ -54,7 +54,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
                 packet.ReadByte("Subclass", idx, "VisualItems", j);
             }
 
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503))
+            if (ClientVersion.IsVersionWith64BitTime())
                 packet.ReadTime64("LastPlayedTime", idx);
             else
                 packet.ReadTime("LastPlayedTime", idx);

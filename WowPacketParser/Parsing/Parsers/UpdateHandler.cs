@@ -326,7 +326,7 @@ namespace WowPacketParser.Parsing.Parsers
                 int UNIT_FIELD_MAXPOWER = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER);
                 if (UNIT_FIELD_MAXPOWER <= 0)
                     UNIT_FIELD_MAXPOWER = UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_MAXPOWER1);
-                int powersCount = ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build);
+                int powersCount = ClientVersion.GetPowerCountForClientVersion();
 
                 bool hasData = false;
                 CreatureValuesUpdate creatureUpdate = new CreatureValuesUpdate();

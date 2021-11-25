@@ -1,4 +1,5 @@
 ﻿using System;
+using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 
 namespace WowPacketParser.Store.Objects
@@ -42,6 +43,14 @@ namespace WowPacketParser.Store.Objects
             aura.MaxDuration = MaxDuration;
             aura.Duration = Duration;
             return aura;
+        }
+
+        public bool HasDuration()
+        {
+            if (ClientVersion.AddedInVersion(ClientType.MistsOfPandaria) ? AuraFlags.HasAnyFlag(AuraFlagMoP.Duration) : AuraFlags.HasAnyFlag(AuraFlag.Duration))
+                return true;
+
+            return (Duration > 0) || (MaxDuration > 0);
         }
     }
 }

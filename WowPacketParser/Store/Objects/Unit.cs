@@ -191,7 +191,7 @@ namespace WowPacketParser.Store.Objects
             }
         }
 
-        public bool HasAuraMatchingCriteria(Func<uint,bool> auraCheckFunc)
+        public bool HasAuraMatchingCriteria(Func<uint, bool> auraCheckFunc, bool skipPermanent = false)
         {
             if (Auras == null)
                 return false;
@@ -199,6 +199,9 @@ namespace WowPacketParser.Store.Objects
             foreach (Aura aura in Auras)
             {
                 if (aura == null || aura.SpellId == 0)
+                    continue;
+
+                if (skipPermanent && !aura.HasDuration())
                     continue;
 
                 if (auraCheckFunc(aura.SpellId))
@@ -221,10 +224,7 @@ namespace WowPacketParser.Store.Objects
                 if (ClientVersion.AddedInVersion(ClientType.MistsOfPandaria) ? !aura.AuraFlags.HasAnyFlag(AuraFlagMoP.NoCaster) : !aura.AuraFlags.HasAnyFlag(AuraFlag.NotCaster))
                     continue;
 
-                if (ClientVersion.AddedInVersion(ClientType.MistsOfPandaria) ? aura.AuraFlags.HasAnyFlag(AuraFlagMoP.Duration) : aura.AuraFlags.HasAnyFlag(AuraFlag.Duration))
-                    continue;
-
-                if (aura.MaxDuration > 0)
+                if (aura.HasDuration())
                     continue;
 
                 TemplateAuras.Add(aura.SpellId);

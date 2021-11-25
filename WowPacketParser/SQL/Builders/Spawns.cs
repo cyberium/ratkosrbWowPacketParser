@@ -261,7 +261,7 @@ namespace WowPacketParser.SQL.Builders
                 {
                     var powers = unitData.Power;
                     var maxPowers = unitData.MaxPower;
-                    for (int i = 0; i < ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build); i++)
+                    for (int i = 0; i < ClientVersion.GetPowerCountForClientVersion(); i++)
                     {
                         if (powers[i] != 0 || maxPowers[i] != 0)
                         {

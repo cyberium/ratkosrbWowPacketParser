@@ -876,7 +876,8 @@ namespace WowPacketParser.Store
                     int victimLevel = victim.UnitData.Level;
                     int attackerLevel = attacker.UnitData.Level;
 
-                    if (isNormalHit && Math.Abs(victimLevel - attackerLevel) < 10 &
+                    if (isNormalHit && Math.Abs(victimLevel - attackerLevel) < 10 &&
+                        //!attacker.HasAuraMatchingCriteria(HardcodedData.IsModPhysicalDamageDoneAura, true) &&
                         !victim.HasAuraMatchingCriteria(HardcodedData.IsModResistAura) &&
                         !victim.HasAuraMatchingCriteria(HardcodedData.IsModPhysicalDamageTakenAura))
                     {
@@ -2016,25 +2017,27 @@ namespace WowPacketParser.Store
             {
                 ObjectType targetType = hitTarget.GetObjectType();
                 uint targetDbType = 255;
-                switch (targetType)
+
+                if (Settings.TargetedDbType != TargetedDbType.WPP)
                 {
-                    case ObjectType.GameObject:
-                        targetDbType = 0;
-                        break;
-                    case ObjectType.Unit:
-                        targetDbType = 1;
-                        break;
-                    default:
-                        if (Settings.TargetedDbType != TargetedDbType.WPP)
+                    switch (targetType)
+                    {
+                        case ObjectType.GameObject:
+                            targetDbType = 0;
+                            break;
+                        case ObjectType.Unit:
+                            targetDbType = 1;
+                            break;
+                        default:
                             return;
-                        break;
+                    }
                 }
 
                 SpellScriptTarget targetData = new SpellScriptTarget();
                 targetData.SpellId = spellId;
                 targetData.Type = targetDbType;
                 targetData.TargetId = Storage.GetObjectEntry(hitTarget);
-                targetData.TargetType = hitTarget.GetHighType().ToString();
+                targetData.TargetType = GetObjectTypeNameForDB(hitTarget);
                 Storage.SpellScriptTargets.Add(targetData);
             }
         }

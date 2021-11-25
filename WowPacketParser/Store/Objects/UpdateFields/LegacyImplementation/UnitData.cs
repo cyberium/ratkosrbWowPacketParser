@@ -176,11 +176,11 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                     powersBegin = UnitField.UNIT_FIELD_POWER1;
                 else
                 {
-                    int[] powers = new int[ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build)];
+                    int[] powers = new int[ClientVersion.GetPowerCountForClientVersion()];
                     return powers;
                 }
 
-                int size = ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build);
+                int size = ClientVersion.GetPowerCountForClientVersion();
 
                 return UpdateFields.GetArray<UnitField, int>(powersBegin, size);
             }
@@ -197,11 +197,11 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                     powersBegin = UnitField.UNIT_FIELD_MAXPOWER1;
                 else
                 {
-                    int[] powers = new int[ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build)];
+                    int[] powers = new int[ClientVersion.GetPowerCountForClientVersion()];
                     return powers;
                 }
 
-                int size = ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build);
+                int size = ClientVersion.GetPowerCountForClientVersion();
 
                 return UpdateFields.GetArray<UnitField, int>(powersBegin, size);
             }
@@ -548,11 +548,11 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                     powersBegin = UnitField.UNIT_FIELD_POWER1;
                 else
                 {
-                    int[] powers = new int[ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build)];
+                    int[] powers = new int[ClientVersion.GetPowerCountForClientVersion()];
                     return powers;
                 }
 
-                int size = ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build);
+                int size = ClientVersion.GetPowerCountForClientVersion();
 
                 return UpdateFields.GetArray<UnitField, int>(powersBegin, size);
             }
@@ -569,11 +569,11 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                     powersBegin = UnitField.UNIT_FIELD_MAXPOWER1;
                 else
                 {
-                    int[] powers = new int[ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build)];
+                    int[] powers = new int[ClientVersion.GetPowerCountForClientVersion()];
                     return powers;
                 }
 
-                int size = ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build);
+                int size = ClientVersion.GetPowerCountForClientVersion();
 
                 return UpdateFields.GetArray<UnitField, int>(powersBegin, size);
             }

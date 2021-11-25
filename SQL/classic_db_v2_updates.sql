@@ -820,12 +820,20 @@ ALTER TABLE `creature_armor`
 ALTER TABLE `spell_target_position`
 	DROP COLUMN `effect_index`;
 
-CREATE TABLE `spell_script_targets` (
-	`spell_id` INT UNSIGNED NOT NULL,
-	`target_type` VARCHAR(16) NOT NULL,
-	`target_id` INT UNSIGNED NOT NULL,
-	PRIMARY KEY (`spell_id`, `target_type`, `target_id`)
-)
-COLLATE='utf8_unicode_ci'
-ENGINE=InnoDB
-;
+CREATE TABLE `spell_script_target` (
+  `spell_id` int(10) unsigned NOT NULL,
+  `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
+  `target_id` int(10) unsigned NOT NULL,
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`spell_id`,`target_type`,`target_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+ALTER TABLE `player`
+	ADD COLUMN `skin` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `money`,
+	ADD COLUMN `face` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `skin`,
+	ADD COLUMN `hair_style` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `face`,
+	ADD COLUMN `hair_color` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `hair_style`,
+	ADD COLUMN `facial_hair` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `hair_color`,
+	DROP COLUMN `player_bytes1`,
+	DROP COLUMN `player_bytes2`;

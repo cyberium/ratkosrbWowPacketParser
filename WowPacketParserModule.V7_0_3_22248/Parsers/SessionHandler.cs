@@ -11,8 +11,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
         [Parser(Opcode.SMSG_QUERY_TIME_RESPONSE)]
         public static void HandleQueryTimeResponse(Packet packet)
         {
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503) &&
-                ClientVersion.Expansion != ClientType.Classic)
+            if (ClientVersion.IsVersionWith64BitTime())
                 packet.ReadTime64("CurrentTime");
             else
                 packet.ReadTime("CurrentTime");

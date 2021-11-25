@@ -11,16 +11,14 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         {
             packet.ReadPackedGuid128("Guid");
 
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503) &&
-                ClientVersion.Expansion != ClientType.Classic)
+            if (ClientVersion.IsVersionWith64BitTime())
                 packet.ReadTime64("ServerTime");
             else
                 packet.ReadTime("ServerTime");
 
             for (var i = 0; i < 8; ++i)
             {
-                if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503) &&
-                    ClientVersion.Expansion != ClientType.Classic)
+                if (ClientVersion.IsVersionWith64BitTime())
                     packet.ReadTime64($"[{(AccountDataType)i}] Time", i);
                 else
                     packet.ReadTime($"[{(AccountDataType)i}] Time", i);
@@ -32,8 +30,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         {
             packet.ReadPackedGuid128("Guid");
 
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503) &&
-                ClientVersion.Expansion != ClientType.Classic)
+            if (ClientVersion.IsVersionWith64BitTime())
                 packet.ReadTime64("Time");
             else
                 packet.ReadTime("Time");
@@ -62,8 +59,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         {
             packet.ReadPackedGuid128("Guid");
 
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503) &&
-                ClientVersion.Expansion != ClientType.Classic)
+            if (ClientVersion.IsVersionWith64BitTime())
                 packet.ReadTime64("Time");
             else
                 packet.ReadTime("Time");

@@ -44,8 +44,23 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public uint PlayerBytes1 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES);
         public uint PlayerBytes2 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_2);
         public uint PlayerFlags => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_FLAGS);
-        public uint PvPRank => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_PVP_RANK);
 
+        public byte PvPRank
+        {
+            get
+            {
+                if (ClientVersion.RemovedInVersion(ClientVersionBuild.V2_0_1_6180))
+                    return (byte)((UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_3) >> 24) & 0xFF);
+
+                if (ClientVersion.IsClassicVanillaClientVersionBuild(ClientVersion.Build))
+                    return (byte)((UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_2) >> 24) & 0xFF);
+
+                if (ClientVersion.IsClassicSeasonOfMasteryClientVersionBuild(ClientVersion.Build) || ClientVersion.IsBurningCrusadeClassicClientVersionBuild(ClientVersion.Build))
+                    return (byte)((UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_2) >> 16) & 0xFF);
+
+                return 0;
+            }
+        }
         public class VisibleItem : IVisibleItem
         {
             public int ItemID { get; set; }
@@ -164,7 +179,22 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public uint PlayerBytes1 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES);
         public uint PlayerBytes2 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_2);
         public uint PlayerFlags => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_FLAGS);
-        public uint PvPRank => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_PVP_RANK);
+        public byte PvPRank
+        {
+            get
+            {
+                if (ClientVersion.RemovedInVersion(ClientVersionBuild.V2_0_1_6180))
+                    return (byte)((UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_3) >> 24) & 0xFF);
+
+                if (ClientVersion.IsClassicVanillaClientVersionBuild(ClientVersion.Build))
+                    return (byte)((UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_2) >> 24) & 0xFF);
+
+                if (ClientVersion.IsClassicSeasonOfMasteryClientVersionBuild(ClientVersion.Build) || ClientVersion.IsBurningCrusadeClassicClientVersionBuild(ClientVersion.Build))
+                    return (byte)((UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_2) >> 16) & 0xFF);
+
+                return 0;
+            }
+        }
 
         public class VisibleItem : IVisibleItem
         {

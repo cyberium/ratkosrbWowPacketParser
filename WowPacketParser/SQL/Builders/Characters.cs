@@ -2482,18 +2482,24 @@ namespace WowPacketParser.SQL.Builders
             return 0;
         }
 
-        public static void AssignPlayerBytes(Store.Objects.UpdateFields.IPlayerData playerData, out uint playerBytes1, out uint playerBytes2)
+        public static void AssignPlayerAppearanceFields(Store.Objects.UpdateFields.IPlayerData playerData, out byte skin, out byte face, out byte hairStyle, out byte hairColor, out byte facialHair)
         {
             var customizations = playerData.GetCustomizations();
             if (customizations == null || customizations.Length < 1)
             {
-                playerBytes1 = playerData.PlayerBytes1;
-                playerBytes2 = playerData.PlayerBytes1;
+                skin = (byte)(playerData.PlayerBytes1 & 0xFF);
+                face = (byte)((playerData.PlayerBytes1 >> 8) & 0xFF);
+                hairStyle = (byte)((playerData.PlayerBytes1 >> 16) & 0xFF);
+                hairColor = (byte)((playerData.PlayerBytes1 >> 24) & 0xFF);
+                facialHair = (byte)(playerData.PlayerBytes2 & 0xFF);
                 return;
             }
 
-            byte[] bytes1 = new byte[4];
-            byte[] bytes2 = new byte[4];
+            skin = 0;
+            face = 0;
+            hairStyle = 0;
+            hairColor = 0;
+            facialHair = 0;
             foreach (var custom in customizations)
             {
                 CharCustomizationOption option = GetCustomizationOption(custom.ChrCustomizationOptionID);
@@ -2503,34 +2509,31 @@ namespace WowPacketParser.SQL.Builders
                 {
                     case CharCustomizationOption.Skin:
                     {
-                        bytes1[0] = choice;
+                        skin = choice;
                         break;
                     }
                     case CharCustomizationOption.Face:
                     {
-                        bytes1[1] = choice;
+                        face = choice;
                         break;
                     }
                     case CharCustomizationOption.HairStyle:
                     {
-                        bytes1[2] = choice;
+                        hairStyle = choice;
                         break;
                     }
                     case CharCustomizationOption.HairColor:
                     {
-                        bytes1[3] = choice;
+                        hairColor = choice;
                         break;
                     }
                     case CharCustomizationOption.FacialHair:
                     {
-                        bytes2[0] = choice;
+                        facialHair = choice;
                         break;
                     }
                 }
             }
-
-            playerBytes1 = BitConverter.ToUInt32(bytes1, 0);
-            playerBytes2 = BitConverter.ToUInt32(bytes2, 0);
         }
 
         [BuilderMethod]
@@ -2599,7 +2602,7 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.Level = (uint)player.UnitDataOriginal.Level;
                 row.Data.XP = player.PlayerDataOriginal.Experience;
                 row.Data.Money = player.PlayerDataOriginal.Money;
-                AssignPlayerBytes(player.PlayerDataOriginal, out row.Data.PlayerBytes, out row.Data.PlayerBytes2);
+                AssignPlayerAppearanceFields(player.PlayerDataOriginal, out row.Data.Skin, out row.Data.Face, out row.Data.HairStyle, out row.Data.HairColor, out row.Data.FacialHair);
                 row.Data.PlayerFlags = player.PlayerDataOriginal.PlayerFlags;
 
                 MovementInfo moveData = player.OriginalMovement == null ? player.Movement : player.OriginalMovement;
@@ -2673,8 +2676,11 @@ namespace WowPacketParser.SQL.Builders
                     playerRow.Data.Level = row.Data.Level;
                     playerRow.Data.XP = row.Data.XP;
                     playerRow.Data.Money = row.Data.Money;
-                    playerRow.Data.PlayerBytes = row.Data.PlayerBytes;
-                    playerRow.Data.PlayerBytes2 = row.Data.PlayerBytes2;
+                    playerRow.Data.Skin = row.Data.Skin;
+                    playerRow.Data.Face = row.Data.Face;
+                    playerRow.Data.HairStyle = row.Data.HairStyle;
+                    playerRow.Data.HairColor = row.Data.HairColor;
+                    playerRow.Data.FacialHair = row.Data.FacialHair;
                     playerRow.Data.PlayerFlags = row.Data.PlayerFlags;
                     playerRow.Data.PvPRank = player.PlayerDataOriginal.PvPRank;
                     playerRow.Data.PositionX = row.Data.PositionX;
@@ -2760,7 +2766,7 @@ namespace WowPacketParser.SQL.Builders
                 {
                     var powers = player.UnitDataOriginal.Power;
                     var maxPowers = player.UnitDataOriginal.MaxPower;
-                    for (int i = 0; i < ClientVersion.GetPowerCountForClientVersion(ClientVersion.Build); i++)
+                    for (int i = 0; i < ClientVersion.GetPowerCountForClientVersion(); i++)
                     {
                         if (powers[i] != 0 || maxPowers[i] != 0)
                         {

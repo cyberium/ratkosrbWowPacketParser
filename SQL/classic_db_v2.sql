@@ -1848,8 +1848,11 @@ CREATE TABLE IF NOT EXISTS `player` (
   `level` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `xp` int(10) unsigned NOT NULL DEFAULT '0',
   `money` int(10) unsigned NOT NULL DEFAULT '0',
-  `player_bytes1` int(10) unsigned NOT NULL DEFAULT '0',
-  `player_bytes2` int(10) unsigned NOT NULL DEFAULT '0',
+  `skin` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `face` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `hair_style` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `hair_color` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `facial_hair` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `player_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `pvp_rank` int(10) unsigned NOT NULL DEFAULT '0',
   `scale` float NOT NULL DEFAULT '0',
@@ -2980,12 +2983,13 @@ CREATE TABLE IF NOT EXISTS `spell_channel_update` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.spell_script_targets
-DROP TABLE IF EXISTS `spell_script_targets`;
-CREATE TABLE IF NOT EXISTS `spell_script_targets` (
+-- Dumping structure for table sniffs_new_test.spell_script_target
+DROP TABLE IF EXISTS `spell_script_target`;
+CREATE TABLE IF NOT EXISTS `spell_script_target` (
   `spell_id` int(10) unsigned NOT NULL,
   `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
   `target_id` int(10) unsigned NOT NULL,
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`spell_id`,`target_type`,`target_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

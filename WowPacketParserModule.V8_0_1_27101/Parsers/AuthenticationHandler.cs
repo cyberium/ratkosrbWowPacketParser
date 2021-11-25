@@ -40,8 +40,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 var templates = packet.ReadUInt32("Templates");
                 packet.ReadUInt32("AccountCurrency");
 
-                if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503) &&
-                    ClientVersion.Expansion != ClientType.Classic)
+                if (ClientVersion.IsVersionWith64BitTime())
                     packet.ReadTime64("Time");
                 else
                     packet.ReadTime("Time");
