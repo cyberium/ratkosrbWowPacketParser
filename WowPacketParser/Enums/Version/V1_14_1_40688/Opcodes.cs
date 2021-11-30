@@ -135,7 +135,7 @@ namespace WowPacketParser.Enums.Version.V1_14_1_40688
             {Opcode.CMSG_CHANGE_BANK_BAG_SLOT_FLAG, 0x32C1},
             {Opcode.CMSG_CHANGE_REALM_TICKET, 0x3700},
             {Opcode.CMSG_CHANGE_SUB_GROUP, 0x364F},
-            {Opcode.CMSG_CHAR_CUSTOMIZE, 0x368E},
+            {Opcode.CMSG_CHAR_CUSTOMIZE, 0x368D},
             {Opcode.CMSG_CHAR_DELETE, 0x369B},
             {Opcode.CMSG_CHAR_RACE_OR_FACTION_CHANGE, 0x3692},
             {Opcode.CMSG_CHARACTER_CHECK_UPGRADE, 0x36CB},
