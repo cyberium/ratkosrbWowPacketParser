@@ -832,7 +832,7 @@ namespace WowPacketParser.SQL.Builders
 
             if (Settings.SqlTables.creature_power_values && powerValuesRows.Count != 0)
             {
-                var powerValuesDelete = new SQLDelete<CreatureGuidValues>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
+                var powerValuesDelete = new SQLDelete<CreaturePowerValues>(Tuple.Create("@CGUID+0", "@CGUID+" + maxDbGuid));
                 result.Append(powerValuesDelete.Build());
                 var powerValuesSql = new SQLInsert<CreaturePowerValues>(powerValuesRows, false);
                 result.Append(powerValuesSql.Build());
