@@ -238,7 +238,7 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
         [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
-        public int? SniffBuild = ClientVersion.BuildInt;
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("creature_power_values")]
@@ -1005,7 +1005,7 @@ namespace WowPacketParser.Store.Objects
         public string SniffId;
 
         [DBFieldName("sniff_build")]
-        public int? SniffBuild = ClientVersion.BuildInt;
+        public int SniffBuild = ClientVersion.BuildInt;
 
         public string Auras;
     }
@@ -1209,5 +1209,21 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("name")]
         public string Name;
+    }
+
+    [DBTableName("creature_spell_immunity")]
+    public sealed class CreatureSpellImmunity : IDataModel
+    {
+        [DBFieldName("entry", true)]
+        public uint Entry;
+
+        [DBFieldName("spell_id", true)]
+        public uint SpellID;
+
+        [DBFieldName("sniff_id", true, true, false, true)]
+        public string SniffId;
+
+        [DBFieldName("sniff_build", true)]
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 }

@@ -129,7 +129,7 @@ namespace WowPacketParser.Store.Objects
         public uint TotalSchoolMask;
 
         [DBFieldName("sniff_build", true)]
-        public int? SniffBuild = ClientVersion.BuildInt;
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     public sealed class CreatureDamageTaken
@@ -164,7 +164,7 @@ namespace WowPacketParser.Store.Objects
         public float DamageReduction;
 
         [DBFieldName("sniff_build", true)]
-        public int? SniffBuild = ClientVersion.BuildInt;
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("creature_questitem")]
@@ -382,6 +382,6 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
         [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
-        public int? SniffBuild = ClientVersion.BuildInt;
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 }

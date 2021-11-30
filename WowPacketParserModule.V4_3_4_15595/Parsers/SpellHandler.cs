@@ -50,7 +50,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
                 }
 
                 var missTargetsCount = packet.ReadByte("MissStatusCount", idx);
-                dbdata.MissTargetsCount = missTargetsCount;
+                dbdata.MissTargetsCount = dbdata.MissReasonsCount = missTargetsCount;
                 for (var i = 0; i < missTargetsCount; ++i)
                     ReadSpellMissStatus(dbdata, packet, idx, "MissStatus", i);
             }
@@ -183,6 +183,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             dbdata.AddMissTarget(missTarget);
 
             var missType = packet.ReadByteE<SpellMissType>("Reason", idx);
+            dbdata.AddMissReason((uint)missType);
             if (missType == SpellMissType.Reflect)
                 packet.ReadByteE<SpellMissType>("ReflectStatus", idx);
         }

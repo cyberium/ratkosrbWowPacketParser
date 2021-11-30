@@ -130,7 +130,7 @@ namespace WowPacketParser.Store.Objects
         public uint TargetId;
 
         [DBFieldName("sniff_build", DbType = TargetedDbType.WPP)]
-        public int? SniffBuild = ClientVersion.BuildInt;
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("spell_unique_caster")]
@@ -215,6 +215,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("target_type", true)]
         public string TargetType;
+
+        [DBFieldName("miss_reason")]
+        public uint MissReason;
     }
 
     [DBTableName("spell_cast_go_position")]
@@ -354,6 +357,15 @@ namespace WowPacketParser.Store.Objects
 
             MissTargetsList.Add(guid);
         }
+        public uint MissReasonsCount = 0;
+        public List<uint> MissReasonsList;
+        public void AddMissReason(uint reason)
+        {
+            if (MissReasonsList == null)
+                MissReasonsList = new List<uint>();
+
+            MissReasonsList.Add(reason);
+        }
         public Vector3? SrcPosition;
         public Vector3? DstPosition;
         public float Orientation;
@@ -384,7 +396,7 @@ namespace WowPacketParser.Store.Objects
         public string SniffId;
 
         [DBFieldName("sniff_build")]
-        public int? SniffBuild = ClientVersion.BuildInt;
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("creature_pet_remaining_cooldown")]
@@ -415,7 +427,7 @@ namespace WowPacketParser.Store.Objects
         public string SniffId;
 
         [DBFieldName("sniff_build")]
-        public int? SniffBuild = ClientVersion.BuildInt;
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("creature_pet_actions")]
@@ -431,7 +443,7 @@ namespace WowPacketParser.Store.Objects
         public string SniffId;
 
         [DBFieldName("sniff_build")]
-        public int? SniffBuild = ClientVersion.BuildInt;
+        public int SniffBuild = ClientVersion.BuildInt;
 
         public WowGuid CasterGUID;
     }
@@ -470,6 +482,6 @@ namespace WowPacketParser.Store.Objects
         public uint RepeatDelayMax;
 
         [DBFieldName("sniff_build", true)]
-        public int? SniffBuild = ClientVersion.BuildInt;
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 }

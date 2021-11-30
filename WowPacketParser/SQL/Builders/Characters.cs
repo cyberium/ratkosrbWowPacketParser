@@ -3442,7 +3442,7 @@ namespace WowPacketParser.SQL.Builders
                     if (text.Item1.ChannelName == null)
                         text.Item1.ChannelName = "";
                 }
-                result.Append(SQLUtil.Compare(Storage.CharacterTexts, null, t => t.SenderName, false));
+                result.Append(SQLUtil.Insert(Storage.CharacterTexts, false, true));
             }
 
             return result.ToString();

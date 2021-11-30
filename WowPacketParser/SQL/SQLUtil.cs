@@ -283,6 +283,36 @@ namespace WowPacketParser.SQL
         }
 
         /// <summary>
+        /// <para>Creates SQL inserts from a DataBag</para>
+        /// </summary>
+        /// <typeparam name="T">Type of the primary key (uint)</typeparam>
+        /// <param name="storeList">Dictionary retrieved from parser</param>
+        /// <param name="withDelete"></param>
+        /// <param name="withIgnore"></param>
+        /// <returns>A string containing full SQL queries</returns>
+        public static string Insert<T>(IEnumerable<Tuple<T, TimeSpan?>> storeList, bool withDelete = true, bool withIgnore = false)
+            where T : IDataModel, new()
+        {
+            var fields = GetFields<T>();
+            if (fields == null)
+                return string.Empty;
+
+            var rowsIns = new RowList<T>();
+
+            foreach (var elem1 in storeList)
+            {
+                var row = new Row<T>
+                {
+                    Data = elem1.Item1
+                };
+
+                rowsIns.Add(row);
+            }
+
+            return new SQLInsert<T>(rowsIns, withDelete, withIgnore).Build();
+        }
+
+        /// <summary>
         /// <para>Compare two dictionaries (of the same types) and creates SQL inserts
         ///  or updates accordingly.</para>
         /// <remarks>Second dictionary can be null (only inserts queries will be produced)</remarks>

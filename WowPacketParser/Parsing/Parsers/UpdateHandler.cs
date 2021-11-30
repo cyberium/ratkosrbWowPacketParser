@@ -2226,7 +2226,7 @@ namespace WowPacketParser.Parsing.Parsers
                         monsterMove.TransportGuid = moveInfo.TransportGuid;
                     monsterMove.TransportSeat = moveInfo.TransportSeat;
 
-                    if ((Settings.SaveTransports || moveInfo.TransportGuid.IsEmpty()) &&
+                    if ((Settings.SaveTransports || moveInfo.TransportGuid == null || moveInfo.TransportGuid.IsEmpty()) &&
                         Storage.Objects.ContainsKey(guid))
                     {
                         Unit unit = Storage.Objects[guid].Item1 as Unit;
@@ -2757,7 +2757,7 @@ namespace WowPacketParser.Parsing.Parsers
                         monsterMove.TransportGuid = moveInfo.TransportGuid;
                     monsterMove.TransportSeat = moveInfo.TransportSeat;
 
-                    if ((Settings.SaveTransports || moveInfo.TransportGuid.IsEmpty()) &&
+                    if ((Settings.SaveTransports || moveInfo.TransportGuid == null || moveInfo.TransportGuid.IsEmpty()) &&
                         Storage.Objects.ContainsKey(guid))
                     {
                         Unit unit = Storage.Objects[guid].Item1 as Unit;
@@ -3204,7 +3204,7 @@ namespace WowPacketParser.Parsing.Parsers
                         monsterMove.TransportGuid = moveInfo.TransportGuid;
                     monsterMove.TransportSeat = moveInfo.TransportSeat;
 
-                    if ((Settings.SaveTransports || moveInfo.TransportGuid.IsEmpty()) &&
+                    if ((Settings.SaveTransports || moveInfo.TransportGuid == null || moveInfo.TransportGuid.IsEmpty()) &&
                         Storage.Objects.ContainsKey(guid))
                     {
                         Unit unit = Storage.Objects[guid].Item1 as Unit;
@@ -3651,7 +3651,7 @@ namespace WowPacketParser.Parsing.Parsers
                         monsterMove.TransportGuid = moveInfo.TransportGuid;
                     monsterMove.TransportSeat = moveInfo.TransportSeat;
 
-                    if ((Settings.SaveTransports || moveInfo.TransportGuid.IsEmpty()) &&
+                    if ((Settings.SaveTransports || moveInfo.TransportGuid == null || moveInfo.TransportGuid.IsEmpty()) &&
                         Storage.Objects.ContainsKey(guid))
                     {
                         Unit unit = Storage.Objects[guid].Item1 as Unit;
@@ -4074,7 +4074,7 @@ namespace WowPacketParser.Parsing.Parsers
                         monsterMove.TransportGuid = moveInfo.TransportGuid;
                     monsterMove.TransportSeat = moveInfo.TransportSeat;
 
-                    if ((Settings.SaveTransports || moveInfo.TransportGuid.IsEmpty()) &&
+                    if ((Settings.SaveTransports || moveInfo.TransportGuid == null || moveInfo.TransportGuid.IsEmpty()) &&
                         Storage.Objects.ContainsKey(guid))
                     {
                         Unit unit = Storage.Objects[guid].Item1 as Unit;
@@ -4343,7 +4343,7 @@ namespace WowPacketParser.Parsing.Parsers
                     Vector3 endPos = packet.ReadVector3("Spline Endpoint", index);
                     monsterMove.SplinePoints.Add(endPos);
 
-                    if ((Settings.SaveTransports || moveInfo.TransportGuid.IsEmpty()) &&
+                    if ((Settings.SaveTransports || moveInfo.TransportGuid == null || moveInfo.TransportGuid.IsEmpty()) &&
                         Storage.Objects.ContainsKey(guid))
                     {
                         Unit unit = Storage.Objects[guid].Item1 as Unit;

@@ -106,7 +106,7 @@ namespace WowPacketParser.SQL.Builders
 
             var templatesDb = SQLDatabase.Get(Storage.QuestStarters);
 
-            return SQLUtil.Compare(Storage.QuestStarters, templatesDb, StoreNameType.Quest);
+            return SQLUtil.Insert(Storage.QuestStarters, false, true);
         }
 
         [BuilderMethod]
@@ -120,7 +120,7 @@ namespace WowPacketParser.SQL.Builders
 
             var templatesDb = SQLDatabase.Get(Storage.QuestEnders);
 
-            return SQLUtil.Compare(Storage.QuestEnders, templatesDb, StoreNameType.Quest);
+            return SQLUtil.Insert(Storage.QuestEnders, false, true);
         }
 
         [BuilderMethod]
@@ -132,7 +132,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.QuestClientAcceptTimes.IsEmpty())
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.QuestClientAcceptTimes, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.QuestClientAcceptTimes, false, false);
         }
 
         [BuilderMethod]
@@ -144,7 +144,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.QuestClientCompleteTimes.IsEmpty())
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.QuestClientCompleteTimes, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.QuestClientCompleteTimes, false, false);
         }
 
         [BuilderMethod]
@@ -156,7 +156,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.QuestCompleteTimes.IsEmpty())
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.QuestCompleteTimes, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.QuestCompleteTimes, false, false);
         }
 
         [BuilderMethod]
@@ -168,7 +168,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.QuestFailTimes.IsEmpty())
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.QuestFailTimes, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.QuestFailTimes, false, false);
         }
     }
 }

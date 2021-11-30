@@ -79,6 +79,7 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
             var missTargetsCount = packet.ReadBits("MissTargetsCount", 16, idx);
             dbdata.MissTargetsCount = missTargetsCount;
             var missStatusCount = packet.ReadBits("MissStatusCount", 16, idx);
+            dbdata.MissReasonsCount = missStatusCount;
             var remainingPowerCount = packet.ReadBits("RemainingPowerCount", 9, idx);
 
             var hasRuneData = packet.ReadBit("HasRuneData", idx);
@@ -87,7 +88,10 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
             var hasAmmoInventoryType = packet.ReadBit("HasAmmoInventoryType", idx);
 
             for (var i = 0; i < missStatusCount; ++i)
-                V6_0_2_19033.Parsers.SpellHandler.ReadSpellMissStatus(packet, idx, "MissStatus", i);
+            {
+                uint reason = V6_0_2_19033.Parsers.SpellHandler.ReadSpellMissStatus(packet, idx, "MissStatus", i);
+                dbdata.AddMissReason(reason);
+            }
 
             V7_0_3_22248.Parsers.SpellHandler.ReadSpellTargetData(dbdata, packet, dbdata.SpellID, idx, "Target");
 
@@ -283,6 +287,13 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
         [Parser(Opcode.CMSG_CAST_SPELL)]
         public static void HandleCastSpell(Packet packet)
         {
+            ReadSpellCastRequest(packet, "Cast");
+        }
+
+        [Parser(Opcode.CMSG_PET_CAST_SPELL)]
+        public static void HandlePetCastSpell(Packet packet)
+        {
+            packet.ReadPackedGuid128("PetGUID");
             ReadSpellCastRequest(packet, "Cast");
         }
 

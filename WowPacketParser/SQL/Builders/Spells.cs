@@ -43,7 +43,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.spell_unique_caster)
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.SpellUniqueCasters, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.SpellUniqueCasters, false, true);
         }
 
         [BuilderMethod]
@@ -130,11 +130,13 @@ namespace WowPacketParser.SQL.Builders
                 if (cast_pair.Item1.MissTargetsCount > 0)
                 {
                     row.Data.MissTargetsListId = ++maxListId;
-                    foreach (WowGuid target in cast_pair.Item1.MissTargetsList)
+                    for (int i = 0; i < cast_pair.Item1.MissTargetsList.Count; i++)
                     {
+                        WowGuid target = cast_pair.Item1.MissTargetsList[i];
                         Row<SpellCastGoTarget> targetRow = new Row<SpellCastGoTarget>();
                         targetRow.Data.ListId = row.Data.MissTargetsListId;
                         Storage.GetObjectDbGuidEntryType(target, out targetRow.Data.TargetGuid, out targetRow.Data.TargetId, out targetRow.Data.TargetType);
+                        targetRow.Data.MissReason = cast_pair.Item1.MissTargetsCount == cast_pair.Item1.MissReasonsCount ? cast_pair.Item1.MissReasonsList[i] : 0;
                         spellTargetRows.Add(targetRow);
                     }
                 }
@@ -251,7 +253,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.CreaturePetCooldown.IsEmpty())
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.CreaturePetCooldown, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.CreaturePetCooldown, false, true);
         }
 
         [BuilderMethod(false)]
@@ -263,7 +265,7 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.CreaturePetRemainingCooldown.IsEmpty())
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.CreaturePetRemainingCooldown, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.CreaturePetRemainingCooldown, false, true);
         }
 
         [BuilderMethod(false)]

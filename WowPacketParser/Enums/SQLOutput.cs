@@ -117,6 +117,7 @@
         creature_pet_actions,
         creature_pet_cooldown,
         creature_pet_remaining_cooldown,
+        creature_spell_immunity,
         creature_spell_timers,
         creature_stats,
         creature_template,

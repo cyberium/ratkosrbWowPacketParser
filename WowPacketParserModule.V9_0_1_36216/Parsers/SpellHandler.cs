@@ -105,13 +105,17 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             dbdata.MissTargetsCount = missTargetsCount;
             var hitStatusCount = packet.ReadBits("HitStatusCount", 16, idx);
             var missStatusCount = packet.ReadBits("MissStatusCount", 16, idx);
+            dbdata.MissReasonsCount = missStatusCount;
             var remainingPowerCount = packet.ReadBits("RemainingPowerCount", 9, idx);
 
             var hasRuneData = packet.ReadBit("HasRuneData", idx);
             var targetPointsCount = packet.ReadBits("TargetPointsCount", 16, idx);
 
             for (var i = 0; i < missStatusCount; ++i)
-                V6_0_2_19033.Parsers.SpellHandler.ReadSpellMissStatus(packet, idx, "MissStatus", i);
+            {
+                uint reason = V6_0_2_19033.Parsers.SpellHandler.ReadSpellMissStatus(packet, idx, "MissStatus", i);
+                dbdata.AddMissReason(reason);
+            }
 
             V7_0_3_22248.Parsers.SpellHandler.ReadSpellTargetData(dbdata, packet, dbdata.SpellID, idx, "Target");
 

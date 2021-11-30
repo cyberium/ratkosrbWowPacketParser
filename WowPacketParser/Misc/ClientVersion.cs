@@ -1240,5 +1240,11 @@ namespace WowPacketParser.Misc
         {
             return ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056);
         }
+
+        public static bool IsUsingNewUpdateFieldSystem()
+        {
+            return ClientVersion.AddedInVersion(ClientVersionBuild.V8_1_0_28724) &&
+                  !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build);
+        }
     }
 }

@@ -548,7 +548,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
                         monsterMove.TransportGuid = moveInfo.TransportGuid;
                     monsterMove.TransportSeat = moveInfo.TransportSeat;
 
-                    if ((Settings.SaveTransports || moveInfo.TransportGuid.IsEmpty()) &&
+                    if ((Settings.SaveTransports || moveInfo.TransportGuid == null || moveInfo.TransportGuid.IsEmpty()) &&
                         Storage.Objects.ContainsKey(guid))
                     {
                         Unit unit = Storage.Objects[guid].Item1 as Unit;

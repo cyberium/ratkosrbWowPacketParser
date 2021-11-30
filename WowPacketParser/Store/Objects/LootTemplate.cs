@@ -26,7 +26,7 @@ namespace WowPacketParser.Store.Objects
         public string SniffId;
 
         [DBFieldName("sniff_build")]
-        public int? SniffBuild = ClientVersion.BuildInt;
+        public int SniffBuild = ClientVersion.BuildInt;
 
         public static uint LootIdCounter = 0;
 

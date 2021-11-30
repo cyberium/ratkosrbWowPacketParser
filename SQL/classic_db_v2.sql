@@ -807,6 +807,19 @@ CREATE TABLE IF NOT EXISTS `creature_speed_update` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_spell_immunity
+DROP TABLE IF EXISTS `creature_spell_immunity`;
+CREATE TABLE IF NOT EXISTS `creature_spell_immunity` (
+  `entry` int(10) unsigned NOT NULL,
+  `spell_id` int(10) unsigned NOT NULL,
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`spell_id`,`sniff_id`,`sniff_build`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='spells that creatures were immune to\r\nfrom SMSG_SPELL_GO';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_spell_timers
 DROP TABLE IF EXISTS `creature_spell_timers`;
 CREATE TABLE IF NOT EXISTS `creature_spell_timers` (
@@ -2921,7 +2934,8 @@ CREATE TABLE IF NOT EXISTS `spell_cast_go_target` (
   `list_id` int(10) unsigned NOT NULL DEFAULT '0',
   `target_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `target_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
+  `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `miss_reason` tinyint(3) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='hit and miss targets from SMSG_SPELL_GO';
 
 -- Data exporting was unselected.

@@ -837,3 +837,18 @@ ALTER TABLE `player`
 	ADD COLUMN `facial_hair` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `hair_color`,
 	DROP COLUMN `player_bytes1`,
 	DROP COLUMN `player_bytes2`;
+
+CREATE TABLE `creature_spell_immunity` (
+	`entry` INT UNSIGNED NOT NULL,
+	`spell_id` INT UNSIGNED NOT NULL,
+	`sniff_id` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+	`sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0',
+	PRIMARY KEY (`entry`, `spell_id`, `sniff_id`, `sniff_build`)
+)
+COMMENT='spells that creatures were immune to\r\nfrom SMSG_SPELL_GO'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;
+
+ALTER TABLE `spell_cast_go_target`
+	ADD COLUMN `miss_reason` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `target_type`;

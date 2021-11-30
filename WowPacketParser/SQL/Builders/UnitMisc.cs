@@ -511,8 +511,7 @@ namespace WowPacketParser.SQL.Builders
 
             // `creature_gossip`
             if (Settings.SqlTables.creature_gossip)
-                result += SQLUtil.Compare(Storage.CreatureGossips, SQLDatabase.Get(Storage.CreatureGossips),
-                    t => StoreGetters.GetName(StoreNameType.Unit, (int)t.CreatureId)); // BUG: GOs can send gossips too
+                result += SQLUtil.Insert(Storage.CreatureGossips, false, true);
 
             // `gossip_menu`
             if (Settings.SqlTables.gossip_menu)
@@ -658,10 +657,7 @@ namespace WowPacketParser.SQL.Builders
                 return string.Empty;
 
             // Update fields system changed in BfA.
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_1_0_28724) &&
-                ClientVersion.Expansion != ClientType.Classic &&
-                ClientVersion.Expansion != ClientType.ClassicSoM &&
-                ClientVersion.Expansion != ClientType.BurningCrusadeClassic)
+            if (ClientVersion.IsUsingNewUpdateFieldSystem())
                 return string.Empty;
 
             HashSet<Tuple<uint, uint>> mobsWithStats = new HashSet<Tuple<uint, uint>>();
@@ -1486,8 +1482,7 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
-                result += SQLUtil.Compare(Storage.CreatureTexts, null,
-                    t => t.Entry.ToString(), false);
+                result += SQLUtil.Insert(Storage.CreatureTexts, false, false);
             }
 
             return result;
@@ -1521,8 +1516,7 @@ namespace WowPacketParser.SQL.Builders
 
             var result = "";
 
-            result += SQLUtil.Compare(Storage.Music, null,
-                t => t.Music.ToString());
+            result += SQLUtil.Insert(Storage.Music, false, false);
 
             return result;
         }
@@ -1684,6 +1678,18 @@ namespace WowPacketParser.SQL.Builders
             }
 
             return new SQLInsert<CreatureSpellTimers>(rows, false).Build();
+        }
+
+        [BuilderMethod]
+        public static string CreatureSpellImmunity()
+        {
+            if (Storage.CreatureSpellImmunity.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.creature_spell_immunity)
+                return string.Empty;
+
+            return SQLUtil.Insert(Storage.CreatureSpellImmunity, false, true);
         }
     }
 }

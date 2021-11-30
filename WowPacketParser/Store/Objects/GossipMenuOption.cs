@@ -37,7 +37,7 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
         [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
-        public int? SniffBuild = ClientVersion.BuildInt;
+        public int SniffBuild = ClientVersion.BuildInt;
 
         public string BroadcastTextIDHelper;
     }

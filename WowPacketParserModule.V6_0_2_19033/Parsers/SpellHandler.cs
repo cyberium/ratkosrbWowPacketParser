@@ -318,12 +318,13 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadUInt32("Value", idx);
         }
 
-        public static void ReadSpellMissStatus(Packet packet, params object[] idx)
+        public static uint ReadSpellMissStatus(Packet packet, params object[] idx)
         {
             packet.ResetBitReader();
-            var reason = packet.ReadBits("Reason", 4, idx); // TODO enum
-            if (reason == 11)
+            SpellMissType reason = packet.ReadBitsE<SpellMissType>("Reason", 4, idx);
+            if (reason == SpellMissType.Reflect)
                 packet.ReadBits("ReflectStatus", 4, idx);
+            return (uint)reason;
         }
 
         public static void ReadRuneData(Packet packet, params object[] idx)
@@ -365,6 +366,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             var missTargetsCount = packet.ReadUInt32("MissTargetsCount", idx);
             dbdata.MissTargetsCount = missTargetsCount;
             var missStatusCount = packet.ReadUInt32("MissStatusCount", idx);
+            dbdata.MissReasonsCount = missStatusCount;
 
             ReadSpellTargetData(dbdata, packet, idx, "Target");
 
@@ -396,7 +398,10 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             }
 
             for (var i = 0; i < missStatusCount; ++i)
-                ReadSpellMissStatus(packet, idx, "MissStatus", i);
+            {
+                uint reason = ReadSpellMissStatus(packet, idx, "MissStatus", i);
+                dbdata.AddMissReason(reason);
+            }
 
             for (var i = 0; i < remainingPowerCount; ++i)
                 ReadSpellPowerData(packet, idx, "RemainingPower", i);

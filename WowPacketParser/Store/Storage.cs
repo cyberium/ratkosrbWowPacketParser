@@ -214,6 +214,16 @@ namespace WowPacketParser.Store
 
             return 0;
         }
+        public static uint GetCurrentObjectEntry(WowGuid guid)
+        {
+            if (Objects.ContainsKey(guid))
+                return (uint)Objects[guid].Item1.ObjectData.EntryID;
+
+            if (guid.HasEntry() && guid.GetHighType() != HighGuidType.Pet)
+                return guid.GetEntry();
+
+            return 0;
+        }
 
         public static readonly Dictionary<WowGuid, List<DateTime>> ObjectDestroyTimes = new Dictionary<WowGuid, List<DateTime>>();
         public static void StoreObjectDestroyTime(WowGuid guid, DateTime time)
@@ -869,6 +879,7 @@ namespace WowPacketParser.Store
 
                 if (saveCreatureArmor &&
                     attackData.Damage < attackData.OriginalDamage &&
+                    (!(attacker is Player) || ((Player)attacker).HasMainHandWeapon()) &&
                     Storage.Objects.ContainsKey(attackData.Victim))
                 {
                     Unit victim = Storage.Objects[attackData.Victim].Item1 as Unit;
@@ -877,7 +888,6 @@ namespace WowPacketParser.Store
                     int attackerLevel = attacker.UnitData.Level;
 
                     if (isNormalHit && Math.Abs(victimLevel - attackerLevel) < 10 &&
-                        //!attacker.HasAuraMatchingCriteria(HardcodedData.IsModPhysicalDamageDoneAura, true) &&
                         !victim.HasAuraMatchingCriteria(HardcodedData.IsModResistAura) &&
                         !victim.HasAuraMatchingCriteria(HardcodedData.IsModPhysicalDamageTakenAura))
                     {
@@ -1056,8 +1066,7 @@ namespace WowPacketParser.Store
                 return;   // broken entry
 
             // Update fields system changed in BfA.
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_1_0_28724) &&
-               !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+            if (ClientVersion.IsUsingNewUpdateFieldSystem())
                 return;
 
             List<int> statUpdateFields = new List<int>();
@@ -1821,6 +1830,7 @@ namespace WowPacketParser.Store
         public static readonly DataBag<SpellCastData> SpellCastStart = new DataBag<SpellCastData>(Settings.SqlTables.spell_cast_start);
         public static readonly DataBag<SpellCastData> SpellCastGo = new DataBag<SpellCastData>(Settings.SqlTables.spell_cast_go);
         public static readonly DataBag<SpellUniqueCaster> SpellUniqueCasters = new DataBag<SpellUniqueCaster>(Settings.SqlTables.spell_unique_caster);
+        public static readonly DataBag<CreatureSpellImmunity> CreatureSpellImmunity = new DataBag<CreatureSpellImmunity>(Settings.SqlTables.creature_spell_immunity);
 
         public static readonly Dictionary<uint /*creature*/, Dictionary<uint /*spell*/, List<double /*delay*/>>> CreatureInitialSpellTimers = new Dictionary<uint, Dictionary<uint, List<double>>>();
         private static void StoreCreatureInitialSpellTimer(uint creatureId, uint spellId, uint delay)
@@ -1928,6 +1938,29 @@ namespace WowPacketParser.Store
                 Storage.StoreCreatureCastGoTime(castData.CasterGuid, castData.SpellID, packet.Time);
             }
 
+            if (Settings.SqlTables.creature_spell_immunity &&
+                castData.MissTargetsCount == castData.MissReasonsCount &&
+                castData.MissTargetsList != null && castData.MissReasonsList != null)
+            {
+                for (int i = 0; i < castData.MissTargetsCount; i++)
+                {
+                    WowGuid guid = castData.MissTargetsList[i];
+                    uint reason = castData.MissReasonsList[i];
+                    if (guid.GetHighType() == HighGuidType.Creature &&
+                        reason == (uint)SpellMissType.Immune1)
+                    {
+                        CreatureSpellImmunity immunity = new CreatureSpellImmunity
+                        {
+                            Entry = Storage.GetCurrentObjectEntry(guid),
+                            SpellID = castData.SpellID,
+                            SniffId = packet.SniffIdString,
+                            SniffBuild = ClientVersion.BuildInt
+                        };
+                        Storage.CreatureSpellImmunity.Add(immunity);
+                    }
+                }
+            }
+            
             if (Settings.SqlTables.spell_unique_caster &&
                 (castData.CasterGuid.GetObjectType() == ObjectType.Unit ||
                 castData.CasterGuid.GetObjectType() == ObjectType.GameObject))

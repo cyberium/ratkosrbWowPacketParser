@@ -113,6 +113,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             var missTargetsCount = packet.ReadBits("MissTargetsCount", 16, idx);
             dbdata.MissTargetsCount = missTargetsCount;
             var missStatusCount = packet.ReadBits("MissStatusCount", 16, idx);
+            dbdata.MissReasonsCount = missStatusCount;
             var remainingPowerCount = packet.ReadBits("RemainingPowerCount", 9, idx);
 
             var hasRuneData = packet.ReadBit("HasRuneData", idx);
@@ -121,7 +122,10 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
             var hasAmmoInventoryType = packet.ReadBit("HasAmmoInventoryType", idx);
 
             for (var i = 0; i < missStatusCount; ++i)
-                V6_0_2_19033.Parsers.SpellHandler.ReadSpellMissStatus(packet, idx, "MissStatus", i);
+            {
+                uint reason = V6_0_2_19033.Parsers.SpellHandler.ReadSpellMissStatus(packet, idx, "MissStatus", i);
+                dbdata.AddMissReason(reason);
+            }
 
             ReadSpellTargetData(dbdata, packet, dbdata.SpellID, idx, "Target");
 

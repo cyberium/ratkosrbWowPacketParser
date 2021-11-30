@@ -147,7 +147,7 @@ namespace WowPacketParser.SQL.Builders
                 rows.Add(row);
             }
 
-            return new SQLInsert<WeatherUpdate>(rows, ignore: true, withDelete: false).Build();
+            return new SQLInsert<WeatherUpdate>(rows, false, false).Build();
         }
 
         [BuilderMethod]
@@ -239,7 +239,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.client_item_use)
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.ItemClientUseTimes, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.ItemClientUseTimes, false, false);
         }
 
         [BuilderMethod]
@@ -251,7 +251,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.world_text)
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.WorldTexts, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.WorldTexts, false, false);
         }
 
         [BuilderMethod]
@@ -263,7 +263,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.client_reclaim_corpse)
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.ClientReclaimCorpseTimes, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.ClientReclaimCorpseTimes, false, false);
         }
 
         [BuilderMethod]
@@ -275,7 +275,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.client_release_spirit)
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.ClientReleaseSpiritTimes, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.ClientReleaseSpiritTimes, false, false);
         }
 
         [BuilderMethod]
@@ -287,7 +287,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.world_state_init)
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.WorldStateInits, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.WorldStateInits, false, false);
         }
 
         [BuilderMethod]
@@ -299,7 +299,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.world_state_update)
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.WorldStateUpdates, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.WorldStateUpdates, false, false);
         }
 
         [BuilderMethod]
@@ -379,7 +379,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.logout_time)
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.LogoutTimes, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.LogoutTimes, false, false);
         }
 
         [BuilderMethod]
@@ -391,7 +391,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.cinematic_begin)
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.CinematicBeginTimes, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.CinematicBeginTimes, false, false);
         }
 
         [BuilderMethod]
@@ -403,7 +403,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.cinematic_end)
                 return string.Empty;
 
-            return SQLUtil.Compare(Storage.CinematicEndTimes, null, StoreNameType.None);
+            return SQLUtil.Insert(Storage.CinematicEndTimes, false, false);
         }
     }
 }

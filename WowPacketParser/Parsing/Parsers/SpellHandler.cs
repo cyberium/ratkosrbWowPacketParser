@@ -685,12 +685,13 @@ namespace WowPacketParser.Parsing.Parsers
                 }
 
                 var missCount = packet.ReadByte("Miss Count");
-                dbdata.MissTargetsCount = missCount;
+                dbdata.MissTargetsCount = dbdata.MissReasonsCount = missCount;
                 for (var i = 0; i < missCount; i++)
                 {
                     WowGuid missTarget = packet.ReadGuid("Miss GUID", i);
                     dbdata.AddMissTarget(missTarget);
                     var missType = packet.ReadByteE<SpellMissType>("Miss Type", i);
+                    dbdata.AddMissReason((uint)missType);
                     if (missType == SpellMissType.Reflect)
                         packet.ReadByteE<SpellMissType>("Miss Reflect", i);
                 }
