@@ -73,8 +73,30 @@ namespace WowPacketParser.Store
             obj.LastCreateType = type;
 
             Unit creature = obj as Unit;
-            if (creature != null && creature.IsInCombat())
-                creature.EnterCombatTime = packet.Time;
+            if (creature != null)
+            {
+                if (type == ObjectCreateType.Create2 &&
+                    Settings.SqlTables.creature_respawn_time &&
+                    guid.GetHighType() == HighGuidType.Creature &&
+                    obj.OriginalMovement != null)
+                {
+                    Tuple<WowGuid, DateTime> lastDeath;
+                    if (CreatureDeathTimes.TryGetValue(obj.OriginalMovement.Position, out lastDeath))
+                    {
+                        CreatureRespawnTime respawnTime = new CreatureRespawnTime
+                        {
+                            OldGUID = Storage.GetObjectDbGuid(lastDeath.Item1),
+                            NewGUID = "@CGUID+" + creature.DbGuid,
+                            RespawnTime = (uint)(packet.Time - lastDeath.Item2).TotalSeconds
+                        };
+                        CreatureRespawnTimes.Add(respawnTime);
+                        CreatureDeathTimes.Remove(obj.OriginalMovement.Position);
+                    }
+                }
+
+                if (creature.IsInCombat())
+                    creature.EnterCombatTime = packet.Time;
+            }
 
             Storage.Objects.Add(guid, obj, packet.TimeSpan);
         }
@@ -362,6 +384,20 @@ namespace WowPacketParser.Store
                 obj.LastCreateTime = time;
                 obj.LastCreateType = type;
             }
+        }
+        public static readonly DataBag<CreatureRespawnTime> CreatureRespawnTimes = new DataBag<CreatureRespawnTime>(Settings.SqlTables.creature_respawn_time);
+        public static readonly Dictionary<Vector3, Tuple<WowGuid, DateTime>> CreatureDeathTimes = new Dictionary<Vector3, Tuple<WowGuid, DateTime>>();
+        public static void StoreCreatureDeathTime(WowGuid guid, DateTime time)
+        {
+            if (!Settings.SqlTables.creature_respawn_time)
+                return;
+
+            WoWObject obj;
+            if (!Storage.Objects.TryGetValue(guid, out obj))
+                return;
+
+            CreatureDeathTimes.Remove(obj.OriginalMovement.Position);
+            CreatureDeathTimes.Add(obj.OriginalMovement.Position, new Tuple<WowGuid, DateTime>(guid, time));
         }
         public static readonly Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>> UnitAurasUpdates = new Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>>();
         public static void StoreUnitAurasUpdate(WowGuid guid, List<Aura> auras, DateTime time, bool isFullUpdate)
@@ -2125,6 +2161,7 @@ namespace WowPacketParser.Store
             CurrentTaxiNode = 0;
             CurrentActivePlayer = null;
             LastCreatureCastGo.Clear();
+            CreatureDeathTimes.Clear();
         }
 
         // Only called if not in multi sniff sql mode.
@@ -2178,6 +2215,7 @@ namespace WowPacketParser.Store
             CreatureStats.Clear();
             CreatureStatsDirty.Clear();
 
+            CreatureRespawnTimes.Clear();
             CreatureMeleeDamageTaken.Clear();
             CreatureMeleeAttackDamage.Clear();
             CreatureMeleeAttackDamageDirty.Clear();

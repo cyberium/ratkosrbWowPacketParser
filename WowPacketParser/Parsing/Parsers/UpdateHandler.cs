@@ -621,7 +621,10 @@ namespace WowPacketParser.Parsing.Parsers
                                 if (!isCreate && update.Value.UInt32Value == 0 &&
                                     objectType == ObjectType.Unit &&
                                     guid.GetHighType() != HighGuidType.Pet)
+                                {
+                                    Storage.StoreCreatureDeathTime(guid, packet.Time);
                                     packet.AddSniffData(StoreNameType.Unit, (int)guid.GetEntry(), "DEATH");
+                                }
 
                                 if (Settings.SaveHealthUpdates)
                                 {

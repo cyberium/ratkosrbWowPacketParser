@@ -300,7 +300,10 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                         if (!isCreate && unit.UnitData.Health == 0 &&
                             objectType == ObjectType.Unit &&
                             guid.GetHighType() != HighGuidType.Pet)
+                        {
+                            Storage.StoreCreatureDeathTime(guid, packet.Time);
                             packet.AddSniffData(StoreNameType.Unit, (int)guid.GetEntry(), "DEATH");
+                        }
 
                         if (Settings.SaveHealthUpdates)
                         {

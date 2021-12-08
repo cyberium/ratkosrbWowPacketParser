@@ -1226,4 +1226,17 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("sniff_build", true)]
         public int SniffBuild = ClientVersion.BuildInt;
     }
+
+    [DBTableName("creature_respawn_time")]
+    public sealed class CreatureRespawnTime : IDataModel
+    {
+        [DBFieldName("old_guid", true, true)]
+        public string OldGUID;
+
+        [DBFieldName("new_guid", true, true)]
+        public string NewGUID;
+
+        [DBFieldName("respawn_time")]
+        public uint RespawnTime;
+    }
 }

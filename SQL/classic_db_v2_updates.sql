@@ -852,3 +852,14 @@ ENGINE=InnoDB
 
 ALTER TABLE `spell_cast_go_target`
 	ADD COLUMN `miss_reason` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `target_type`;
+
+CREATE TABLE `creature_respawn_time` (
+	`old_guid` INT UNSIGNED NOT NULL,
+	`new_guid` INT UNSIGNED NOT NULL,
+	`respawn_time` INT UNSIGNED NOT NULL COMMENT 'time in seconds',
+	PRIMARY KEY (`old_guid`, `new_guid`)
+)
+COMMENT='stores the time in seconds between the death of one creature, and the spawn of another on the same position\r\nrespawn time is reduced dynamically if there are too many players in the same area, so beware of abnormally low values'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;

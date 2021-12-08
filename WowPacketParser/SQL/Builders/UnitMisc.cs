@@ -1691,5 +1691,17 @@ namespace WowPacketParser.SQL.Builders
 
             return SQLUtil.Insert(Storage.CreatureSpellImmunity, false, true);
         }
+
+        [BuilderMethod]
+        public static string CreatureRespawnTime()
+        {
+            if (Storage.CreatureRespawnTimes.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.creature_respawn_time)
+                return string.Empty;
+
+            return SQLUtil.Insert(Storage.CreatureRespawnTimes, false, true);
+        }
     }
 }
