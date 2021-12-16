@@ -62,6 +62,7 @@ namespace WowPacketParser
 
             SQLConnector.ReadDB();
 
+            var processStartTime = DateTime.Now;
             var count = 0;
             foreach (var file in files)
             {
@@ -110,6 +111,8 @@ namespace WowPacketParser
                 }
             }
                 
+            var processTime = DateTime.Now.Subtract(processStartTime);
+            Trace.WriteLine($"Processing {files.Count} sniffs took { processTime.ToFormattedString() }.");
 
             SQLConnector.Disconnect();
             SSHTunnel.Disconnect();
