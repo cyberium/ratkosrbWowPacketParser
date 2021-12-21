@@ -401,7 +401,7 @@ namespace WowPacketParser.Store
                 {
                     CreatureDeathTimes.Remove(obj.OriginalMovement.Position);
                     CreatureDeathTimes.Add(obj.OriginalMovement.Position, new Tuple<WowGuid, DateTime>(guid, time));
-                } 
+                }
             }
         }
         public static readonly Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>> UnitAurasUpdates = new Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>>();
@@ -1108,8 +1108,9 @@ namespace WowPacketParser.Store
         }
         public static void ClearTemporaryReputationList()
         {
-            if (Storage.CharacterReputations.ContainsKey(CurrentActivePlayer))
-                Storage.CharacterReputations[CurrentActivePlayer].Clear();
+            WowGuid guid = CurrentActivePlayer != null ? CurrentActivePlayer : WowGuid64.Empty;
+            if (Storage.CharacterReputations.ContainsKey(guid))
+                Storage.CharacterReputations[guid].Clear();
         }
 
         public static readonly List<PlayerMovement> PlayerMovements = new List<PlayerMovement>();
