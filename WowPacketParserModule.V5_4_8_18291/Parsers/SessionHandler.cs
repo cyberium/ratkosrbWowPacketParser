@@ -33,7 +33,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             packet.StartBitStream(guid, 1, 4, 7, 3, 2, 6, 5, 0);
             packet.ParseBitStream(guid, 5, 1, 0, 6, 2, 4, 7, 3);
 
-            CoreParsers.SessionHandler.LoginGuid = new WowGuid64(BitConverter.ToUInt64(guid, 0));
+            Storage.CurrentActivePlayer = new WowGuid64(BitConverter.ToUInt64(guid, 0));
             packet.WriteGuid("Guid", guid);
         }
 
@@ -58,7 +58,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
 
             packet.WriteGuid("Guid", guid);
 
-            CoreParsers.SessionHandler.LoginGuid = new WowGuid64(BitConverter.ToUInt64(guid, 0));
+            Storage.CurrentActivePlayer = WowGuid64.Empty;
             LogoutTime logoutTime = new LogoutTime()
             {
                 UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)

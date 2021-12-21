@@ -100,6 +100,7 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
             CoreParsers.MovementHandler.CurrentMapId = (uint)packet.ReadInt32<MapId>("Map");
             packet.AddValue("Position", pos);
 
+            Storage.ClearDataOnMapChange();
             packet.AddSniffData(StoreNameType.Map, (int)CoreParsers.MovementHandler.CurrentMapId, "NEW_WORLD");
         }
 

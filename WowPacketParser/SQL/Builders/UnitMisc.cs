@@ -1703,5 +1703,17 @@ namespace WowPacketParser.SQL.Builders
 
             return SQLUtil.Insert(Storage.CreatureRespawnTimes, false, true);
         }
+
+        [BuilderMethod]
+        public static string CreatureKillReptation()
+        {
+            if (Storage.CreatureKillReputations.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.creature_kill_reputation)
+                return string.Empty;
+
+            return SQLUtil.Insert(Storage.CreatureKillReputations, false, true);
+        }
     }
 }

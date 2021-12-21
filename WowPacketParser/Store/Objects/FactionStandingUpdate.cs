@@ -25,7 +25,5 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("show_visual")]
         public bool ShowVisual;
-
-        public DateTime Time;
     }
 }

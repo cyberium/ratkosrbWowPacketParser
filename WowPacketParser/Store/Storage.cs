@@ -17,7 +17,7 @@ namespace WowPacketParser.Store
 
         /* Key: Guid */
         public static uint CurrentTaxiNode = 0;
-        public static WowGuid CurrentActivePlayer = null;
+        public static WowGuid CurrentActivePlayer = WowGuid64.Empty;
         public static void SetCurrentActivePlayer(WowGuid guid, DateTime time)
         {
             Storage.CurrentActivePlayer = guid;
@@ -387,17 +387,22 @@ namespace WowPacketParser.Store
         }
         public static readonly DataBag<CreatureRespawnTime> CreatureRespawnTimes = new DataBag<CreatureRespawnTime>(Settings.SqlTables.creature_respawn_time);
         public static readonly Dictionary<Vector3, Tuple<WowGuid, DateTime>> CreatureDeathTimes = new Dictionary<Vector3, Tuple<WowGuid, DateTime>>();
+        public static Tuple<uint, DateTime> LastCreatureKill = null;
         public static void StoreCreatureDeathTime(WowGuid guid, DateTime time)
         {
-            if (!Settings.SqlTables.creature_respawn_time)
-                return;
-
-            WoWObject obj;
-            if (!Storage.Objects.TryGetValue(guid, out obj))
-                return;
-
-            CreatureDeathTimes.Remove(obj.OriginalMovement.Position);
-            CreatureDeathTimes.Add(obj.OriginalMovement.Position, new Tuple<WowGuid, DateTime>(guid, time));
+            if (Settings.SqlTables.creature_kill_reputation)
+            {
+                LastCreatureKill = new Tuple<uint, DateTime>(guid.GetEntry(), time);
+            }
+            if (Settings.SqlTables.creature_respawn_time)
+            {
+                WoWObject obj;
+                if (Storage.Objects.TryGetValue(guid, out obj))
+                {
+                    CreatureDeathTimes.Remove(obj.OriginalMovement.Position);
+                    CreatureDeathTimes.Add(obj.OriginalMovement.Position, new Tuple<WowGuid, DateTime>(guid, time));
+                } 
+            }
         }
         public static readonly Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>> UnitAurasUpdates = new Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>>();
         public static void StoreUnitAurasUpdate(WowGuid guid, List<Aura> auras, DateTime time, bool isFullUpdate)
@@ -1022,27 +1027,89 @@ namespace WowPacketParser.Store
                 Storage.CharacterSpells[WowGuid64.Empty].Clear();
         }
 
-        public static readonly Dictionary<WowGuid, List<CharacterReputationData>> CharacterReputations = new Dictionary<WowGuid, List<CharacterReputationData>>();
-        public static void StoreCharacterReputation(WowGuid guid, CharacterReputationData repData)
+        public static readonly Dictionary<WowGuid, Dictionary<uint, CharacterReputationData>> CharacterReputations = new Dictionary<WowGuid, Dictionary<uint, CharacterReputationData>>();
+        public static void StoreCharacterReputation(CharacterReputationData repData)
         {
-            if (!Settings.SqlTables.character_reputation)
+            if (!Settings.SqlTables.character_reputation &&
+                !Settings.SqlTables.creature_kill_reputation)
                 return;
+
+            WowGuid guid = Storage.CurrentActivePlayer;
 
             if (Storage.CharacterReputations.ContainsKey(guid))
             {
-                Storage.CharacterReputations[guid].Add(repData);
+                if (Storage.CharacterReputations[guid].ContainsKey(repData.Faction))
+                {
+                    Storage.CharacterReputations[guid][repData.Faction].Standing = repData.Standing;
+                    if (repData.Flags != null)
+                        Storage.CharacterReputations[guid][repData.Faction].Flags = repData.Flags;
+                }
+                else
+                {
+                    if (repData.Flags == null)
+                        repData.Flags = 0;
+                    Storage.CharacterReputations[guid].Add(repData.Faction, repData);
+                }
             }
             else
             {
-                List<CharacterReputationData> repList = new List<CharacterReputationData>();
-                repList.Add(repData);
-                Storage.CharacterReputations.Add(guid, repList);
+                if (repData.Flags == null)
+                    repData.Flags = 0;
+
+                Dictionary<uint, CharacterReputationData> repDict = new Dictionary<uint, CharacterReputationData>();
+                repDict.Add(repData.Faction, repData);
+                Storage.CharacterReputations.Add(guid, repDict);
             }
+        }
+        public static readonly DataBag<CreatureKillReputation> CreatureKillReputations = new DataBag<CreatureKillReputation>(Settings.SqlTables.creature_kill_reputation);
+        public static void StoreFactionStandingUpdate(FactionStandingUpdate update, Packet packet)
+        {
+            if ((Settings.SqlTables.character_reputation || Settings.SqlTables.creature_kill_reputation) &&
+                Storage.CurrentActivePlayer != null &&
+                Storage.CurrentActivePlayer != WowGuid64.Empty)
+            {
+                
+                if (Settings.SqlTables.creature_kill_reputation &&
+                    LastCreatureKill != null && ((packet.Time - LastCreatureKill.Item2).TotalSeconds <= 1) &&
+                    Storage.Objects.ContainsKey(Storage.CurrentActivePlayer))
+                {
+                    
+                    int? oldStanding = null;
+                    if (Storage.CharacterReputations.ContainsKey(Storage.CurrentActivePlayer))
+                        if (Storage.CharacterReputations[Storage.CurrentActivePlayer].ContainsKey((uint)update.ReputationListId))
+                            oldStanding = Storage.CharacterReputations[Storage.CurrentActivePlayer][(uint)update.ReputationListId].Standing;
+
+                    if (oldStanding != null)
+                    {
+                        Player player = Storage.Objects[Storage.CurrentActivePlayer].Item1 as Player;
+                        CreatureKillReputation killRep = new CreatureKillReputation
+                        {
+                            Entry = LastCreatureKill.Item1,
+                            ReputationListId = (uint)update.ReputationListId,
+                            OldStanding = (int)oldStanding,
+                            NewStanding = update.Standing,
+                            PlayerLevel = (uint)player.UnitData.Level,
+                            PlayerRace = player.UnitData.RaceId,
+                            SniffId = packet.SniffIdString,
+                            SniffBuild = ClientVersion.BuildInt,
+                        };
+                        CreatureKillReputations.Add(killRep);
+                    }
+                }
+
+                CharacterReputationData repData = new CharacterReputationData();
+                repData.Faction = (uint)update.ReputationListId;
+                repData.Standing = update.Standing;
+                StoreCharacterReputation(repData);
+            }
+
+            update.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+            Storage.FactionStandingUpdates.Add(update);
         }
         public static void ClearTemporaryReputationList()
         {
-            if (Storage.CharacterReputations.ContainsKey(WowGuid64.Empty))
-                Storage.CharacterReputations[WowGuid64.Empty].Clear();
+            if (Storage.CharacterReputations.ContainsKey(CurrentActivePlayer))
+                Storage.CharacterReputations[CurrentActivePlayer].Clear();
         }
 
         public static readonly List<PlayerMovement> PlayerMovements = new List<PlayerMovement>();
@@ -2158,10 +2225,17 @@ namespace WowPacketParser.Store
         // and a new one is about to be loaded and parsed.
         public static void ClearTemporaryData()
         {
+            CurrentActivePlayer = WowGuid64.Empty;
+            ClearDataOnMapChange();
+        }
+
+        // Called from SMSG_NEW_WORLD
+        public static void ClearDataOnMapChange()
+        {
             CurrentTaxiNode = 0;
-            CurrentActivePlayer = null;
             LastCreatureCastGo.Clear();
             CreatureDeathTimes.Clear();
+            LastCreatureKill = null;
         }
 
         // Only called if not in multi sniff sql mode.
@@ -2215,6 +2289,7 @@ namespace WowPacketParser.Store
             CreatureStats.Clear();
             CreatureStatsDirty.Clear();
 
+            CreatureKillReputations.Clear();
             CreatureRespawnTimes.Clear();
             CreatureMeleeDamageTaken.Clear();
             CreatureMeleeAttackDamage.Clear();

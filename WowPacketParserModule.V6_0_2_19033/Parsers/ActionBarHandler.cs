@@ -32,10 +32,10 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 if (type != 0)
                     continue;
 
-                if (CoreParsers.SessionHandler.LoginGuid != null)
+                if (Storage.CurrentActivePlayer != null && Storage.CurrentActivePlayer != WowGuid64.Empty)
                 {
                     WoWObject character;
-                    if (Storage.Objects.TryGetValue(CoreParsers.SessionHandler.LoginGuid, out character))
+                    if (Storage.Objects.TryGetValue(Storage.CurrentActivePlayer, out character))
                     {
                         Player player = character as Player;
                         if (player != null && player.FirstLogin)

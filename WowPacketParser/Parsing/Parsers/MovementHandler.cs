@@ -615,6 +615,7 @@ namespace WowPacketParser.Parsing.Parsers
             CurrentMapId = (uint) packet.ReadInt32<MapId>("Map ID");
             packet.ReadVector4("Position");
 
+            Storage.ClearDataOnMapChange();
             packet.AddSniffData(StoreNameType.Map, (int) CurrentMapId, "NEW_WORLD");
         }
 
@@ -626,6 +627,7 @@ namespace WowPacketParser.Parsing.Parsers
             CurrentMapId = (uint) packet.ReadInt32<MapId>("Map");
             packet.ReadSingle("Orientation");
 
+            Storage.ClearDataOnMapChange();
             packet.AddSniffData(StoreNameType.Map, (int)CurrentMapId, "NEW_WORLD");
         }
 
@@ -639,6 +641,7 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadSingle("X");
             packet.ReadSingle("Z");
 
+            Storage.ClearDataOnMapChange();
             packet.AddSniffData(StoreNameType.Map, (int)CurrentMapId, "NEW_WORLD");
         }
 

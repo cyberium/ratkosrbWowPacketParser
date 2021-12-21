@@ -587,7 +587,7 @@ namespace WowPacketParser.Store.Objects
     {
         public uint Faction;
         public int Standing;
-        public uint Flags;
+        public uint? Flags;
     }
 
     [DBTableName("character_skills")]

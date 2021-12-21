@@ -175,6 +175,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadVector4("Position");
             packet.ReadUInt32("Reason");
 
+            Storage.ClearDataOnMapChange();
             packet.AddSniffData(StoreNameType.Map, (int)CoreParsers.MovementHandler.CurrentMapId, "NEW_WORLD");
         }
 

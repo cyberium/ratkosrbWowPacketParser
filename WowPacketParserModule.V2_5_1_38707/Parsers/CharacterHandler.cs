@@ -1,6 +1,7 @@
 ﻿using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
 
 namespace WowPacketParserModule.V2_5_1_38835.Parsers
 {
@@ -9,7 +10,7 @@ namespace WowPacketParserModule.V2_5_1_38835.Parsers
         [Parser(Opcode.CMSG_PLAYER_LOGIN)]
         public static void HandlePlayerLogin(Packet packet)
         {
-            packet.ReadPackedGuid128("PlayerGUID");
+            Storage.CurrentActivePlayer = packet.ReadPackedGuid128("PlayerGUID");
             packet.ReadSingle("FarClip");
             packet.ReadBit("UnkBit");
         }

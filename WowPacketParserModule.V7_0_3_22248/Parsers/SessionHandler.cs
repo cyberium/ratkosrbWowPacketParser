@@ -26,6 +26,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
         [Parser(Opcode.SMSG_LOGOUT_COMPLETE, ClientVersionBuild.V7_1_0_22900)]
         public static void HandleLogoutComplete(Packet packet)
         {
+            Storage.CurrentActivePlayer = WowGuid64.Empty;
             LogoutTime logoutTime = new LogoutTime()
             {
                 UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
@@ -42,7 +43,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
         [Parser(Opcode.CMSG_PLAYER_LOGIN)]
         public static void HandlePlayerLogin(Packet packet)
         {
-            packet.ReadPackedGuid128("Guid");
+            Storage.CurrentActivePlayer = packet.ReadPackedGuid128("Guid");
             packet.ReadSingle("FarClip");
         }
     }

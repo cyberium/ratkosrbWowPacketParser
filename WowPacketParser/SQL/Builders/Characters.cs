@@ -3082,13 +3082,13 @@ namespace WowPacketParser.SQL.Builders
                     {
                         foreach (var repData in Storage.CharacterReputations[objPair.Key])
                         {
-                            if (repData.Standing != 0 || repData.Flags != 0)
+                            if (repData.Value.Standing != 0 || repData.Value.Flags != 0)
                             {
                                 var repRow = new Row<CharacterReputation>();
                                 repRow.Data.Guid = "@PGUID+" + player.DbGuid;
-                                repRow.Data.Faction = repData.Faction;
-                                repRow.Data.Standing = repData.Standing;
-                                repRow.Data.Flags = repData.Flags;
+                                repRow.Data.Faction = repData.Value.Faction;
+                                repRow.Data.Standing = repData.Value.Standing;
+                                repRow.Data.Flags = repData.Value.Flags != null ? (uint)repData.Value.Flags : 0;
                                 characterReputationRows.Add(repRow);
                             }
                         }

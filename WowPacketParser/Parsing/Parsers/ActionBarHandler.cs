@@ -42,7 +42,7 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.AddValue("Type", action.Type, i);
 
                 WoWObject character;
-                if (Storage.Objects.TryGetValue(SessionHandler.LoginGuid, out character))
+                if (Storage.Objects.TryGetValue(Storage.CurrentActivePlayer, out character))
                 {
                     Player player = character as Player;
                     if (player != null && player.FirstLogin)
@@ -122,7 +122,7 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.AddValue("Action " + i, action.Action);
 
                 WoWObject character;
-                if (Storage.Objects.TryGetValue(SessionHandler.LoginGuid, out character))
+                if (Storage.Objects.TryGetValue(Storage.CurrentActivePlayer, out character))
                 {
                     Player player = character as Player;
                     if (player != null && player.FirstLogin)

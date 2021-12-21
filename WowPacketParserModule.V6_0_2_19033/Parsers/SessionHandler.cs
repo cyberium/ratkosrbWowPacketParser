@@ -207,9 +207,8 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.CMSG_PLAYER_LOGIN)]
         public static void HandlePlayerLogin(Packet packet)
         {
-            var guid = packet.ReadPackedGuid128("Guid");
+            Storage.CurrentActivePlayer = packet.ReadPackedGuid128("Guid");
             ReadClientSettings(packet, "ClientSettings");
-            CoreParsers.SessionHandler.LoginGuid = guid;
         }
 
         [Parser(Opcode.CMSG_AUTH_CONTINUED_SESSION)]
@@ -250,7 +249,8 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_LOGOUT_COMPLETE)]
         public static void HandleLogoutComplete(Packet packet)
         {
-            CoreParsers.SessionHandler.LoginGuid = packet.ReadPackedGuid128("Guid");
+            Storage.CurrentActivePlayer = WowGuid64.Empty;
+            packet.ReadPackedGuid128("Guid");
             LogoutTime logoutTime = new LogoutTime()
             {
                 UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)

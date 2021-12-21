@@ -4,6 +4,7 @@ using WowPacketParser.Parsing;
 using WowPacketParserModule.V5_4_8_18291.Enums;
 using CoreParsers = WowPacketParser.Parsing.Parsers;
 using CoreOpcode = WowPacketParser.Enums.Version.Opcodes;
+using WowPacketParser.Store;
 
 namespace WowPacketParserModule.V5_4_8_18291.Parsers
 {
@@ -539,6 +540,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             pos.Z = packet.ReadSingle();
             pos.O = packet.ReadSingle();
 
+            Storage.ClearDataOnMapChange();
             packet.AddValue("Position", pos);
         }
 

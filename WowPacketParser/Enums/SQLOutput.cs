@@ -112,6 +112,7 @@
         creature_equip_template,
         creature_faction,
         creature_gossip,
+        creature_kill_reputation,
         creature_loot,
         creature_melee_damage,
         creature_pet_actions,

@@ -863,3 +863,18 @@ COMMENT='stores the time in seconds between the death of one creature, and the s
 COLLATE='utf8_unicode_ci'
 ENGINE=InnoDB
 ;
+
+CREATE TABLE `creature_kill_reputation` (
+	`entry` INT UNSIGNED NOT NULL,
+	`reputation_list_id` INT UNSIGNED NOT NULL,
+	`old_standing` INT NOT NULL,
+	`new_standing` INT NOT NULL,
+	`player_level` TINYINT UNSIGNED NOT NULL,
+	`player_race` TINYINT UNSIGNED NOT NULL,
+	`sniff_id` SMALLINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
+	`sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0'
+)
+COMMENT='faction standing changes after a creature died\r\ncan be wrong if multiple creatures died at the same time'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;

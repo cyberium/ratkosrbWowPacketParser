@@ -362,7 +362,6 @@ namespace WowPacketParser.SQL.Builders
             {
                 Row<FactionStandingUpdate> row = new Row<FactionStandingUpdate>();
                 row.Data = log.Item1;
-                row.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(row.Data.Time);
                 rows.Add(row);
             }
 

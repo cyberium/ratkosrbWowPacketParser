@@ -529,6 +529,22 @@ CREATE TABLE IF NOT EXISTS `creature_guid_values_update` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_kill_reputation
+DROP TABLE IF EXISTS `creature_kill_reputation`;
+CREATE TABLE IF NOT EXISTS `creature_kill_reputation` (
+  `entry` int(10) unsigned NOT NULL,
+  `reputation_list_id` int(10) unsigned NOT NULL,
+  `old_standing` int(11) NOT NULL,
+  `new_standing` int(11) NOT NULL,
+  `player_level` tinyint(3) unsigned NOT NULL,
+  `player_race` tinyint(3) unsigned NOT NULL,
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='faction standing changes after a creature died\r\ncan be wrong if multiple creatures died at the same time';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_loot
 DROP TABLE IF EXISTS `creature_loot`;
 CREATE TABLE IF NOT EXISTS `creature_loot` (

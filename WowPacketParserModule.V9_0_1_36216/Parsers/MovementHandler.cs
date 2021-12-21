@@ -1,6 +1,7 @@
 ﻿using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
 
 namespace WowPacketParserModule.V9_0_1_36216.Parsers
 {
@@ -17,6 +18,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ReadUInt32("Reason");
             packet.ReadVector3("MovementOffset");
 
+            Storage.ClearDataOnMapChange();
             packet.AddSniffData(StoreNameType.Map, (int)WowPacketParser.Parsing.Parsers.MovementHandler.CurrentMapId, "NEW_WORLD");
         }
 

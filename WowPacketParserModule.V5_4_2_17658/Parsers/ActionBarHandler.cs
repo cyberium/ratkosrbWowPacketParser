@@ -74,7 +74,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                 packet.AddValue("Action " + i, action.Action);
 
                 WoWObject character;
-                if (Storage.Objects.TryGetValue(CoreParsers.SessionHandler.LoginGuid, out character))
+                if (Storage.Objects.TryGetValue(Storage.CurrentActivePlayer, out character))
                 {
                     Player player = character as Player;
                     if (player != null && player.FirstLogin)

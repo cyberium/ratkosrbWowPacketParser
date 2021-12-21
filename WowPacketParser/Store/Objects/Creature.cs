@@ -1239,4 +1239,32 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("respawn_time")]
         public uint RespawnTime;
     }
+
+    [DBTableName("creature_kill_reputation")]
+    public sealed class CreatureKillReputation : IDataModel
+    {
+        [DBFieldName("entry", true)]
+        public uint Entry;
+
+        [DBFieldName("reputation_list_id", true, true)]
+        public uint ReputationListId;
+
+        [DBFieldName("old_standing", true)]
+        public int OldStanding;
+
+        [DBFieldName("new_standing", true)]
+        public int NewStanding;
+
+        [DBFieldName("player_level")]
+        public uint PlayerLevel;
+
+        [DBFieldName("player_race")]
+        public uint PlayerRace;
+
+        [DBFieldName("sniff_id", true, true, false, true)]
+        public string SniffId;
+
+        [DBFieldName("sniff_build", true)]
+        public int SniffBuild = ClientVersion.BuildInt;
+    }
 }

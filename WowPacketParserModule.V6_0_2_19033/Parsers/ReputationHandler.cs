@@ -40,7 +40,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 repData.Faction = (uint)i;
                 repData.Flags = (uint)packet.ReadByteE<FactionFlag>("FactionFlags", i);
                 repData.Standing = (int)packet.ReadUInt32E<ReputationRank>("FactionStandings", i);
-                Storage.StoreCharacterReputation(WowGuid64.Empty, repData);
+                Storage.StoreCharacterReputation(repData);
             }
 
             for (var i = 0; i < 0x100; i++)
@@ -85,8 +85,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 update.AchievementBonus = achievementBonus;
                 update.ReputationListId = faction.Item1;
                 update.Standing = faction.Item2;
-                update.Time = packet.Time;
-                Storage.FactionStandingUpdates.Add(update);
+                Storage.StoreFactionStandingUpdate(update, packet);
             }
         }
 
