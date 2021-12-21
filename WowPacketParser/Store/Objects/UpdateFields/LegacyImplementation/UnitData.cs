@@ -49,6 +49,8 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
             }
         }
 
+        public int[] Resistances => UpdateFields.GetArray<UnitField, int>(UnitField.UNIT_FIELD_RESISTANCES, 7);
+
         public int[] Stats
         {
             get
@@ -420,6 +422,8 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
                     return new uint[] { UpdateFields.GetValue<UnitField, uint>(UnitField.UNIT_NPC_FLAGS), 0 };
             }
         }
+
+        public int[] Resistances => UpdateFields.GetArray<UnitField, int>(UnitField.UNIT_FIELD_RESISTANCES, 7);
 
         public int[] Stats
         {
