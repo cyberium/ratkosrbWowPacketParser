@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Collections.Generic;
+using System;
 using WowPacketParser.DBC;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
@@ -46,6 +48,11 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             packet.ReadSingle("JumpGravity", indexes);
             packet.ReadUInt32("StartTime", indexes);
             packet.ReadUInt32("Duration", indexes);
+        }
+
+        public static double GetDistance(Vector3 start, Vector3 end)
+        {
+            return Math.Sqrt(Math.Pow((start.X - end.X), 2) + Math.Pow((start.Y - end.Y), 2) + Math.Pow((start.Z - end.Z), 2));
         }
 
         public static void ReadMovementSpline(ServerSideMovement monsterMove, Packet packet, Vector3 pos, params object[] indexes)
@@ -177,26 +184,43 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             }
 
             // Calculate mid pos
-            var mid = new Vector3
-            {
-                X = (pos.X + endpos.X) * 0.5f,
-                Y = (pos.Y + endpos.Y) * 0.5f,
-                Z = (pos.Z + endpos.Z) * 0.5f
-            };
+            double mX = (pos.X + endpos.X) * 0.5f;
+            double mY = (pos.Y + endpos.Y) * 0.5f;
+            double mZ = (pos.Z + endpos.Z) * 0.5f;
 
+            List<Vector3> trueWaypoints = new List<Vector3>();
             for (var i = 0; i < packedDeltasCount; ++i)
             {
                 var vec = new Vector3
                 {
-                    X = mid.X - waypoints[i].X,
-                    Y = mid.Y - waypoints[i].Y,
-                    Z = mid.Z - waypoints[i].Z
+                    X = (float) mX - waypoints[i].X,
+                    Y = (float) mY - waypoints[i].Y,
+                    Z = (float) mZ - waypoints[i].Z
                 };
 
                 if (monsterMove != null)
                     monsterMove.SplinePoints.Add(vec);
 
+
+                trueWaypoints.Add(vec);
                 packet.AddValue("WayPoints", vec, indexes, i);
+            }
+
+            if (endpos.X != 0 && endpos.Y != 0 && endpos.Z != 0)
+            {
+                double distance = 0;
+                if (packedDeltasCount > 0)
+                {
+                    distance = GetDistance(pos, trueWaypoints[0]);
+                    for (var i = 1; i < packedDeltasCount; ++i)
+                        distance += GetDistance(trueWaypoints[i - 1], trueWaypoints[i]);
+                    distance += GetDistance(trueWaypoints[(int)(packedDeltasCount - 1)], endpos);
+                }
+                else
+                    distance = GetDistance(pos, endpos);
+
+                packet.WriteLine("(MovementMonsterSpline) Distance: " + distance.ToString());
+                packet.WriteLine("(MovementMonsterSpline) Speed: " + (distance / moveTime * 1000).ToString());
             }
 
             if (monsterMove != null)

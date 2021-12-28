@@ -758,7 +758,12 @@ namespace WowPacketParser.Misc
                 .Aggregate(string.Empty, (current, value) =>
                 {
                     var s = value is string ? "()" : "[]";
-                    return current + (s[0] + value.ToString() + s[1] + ' ');
+                    string result;
+                    if (value is float)
+                        result = string.Format("{0:F20}", value).Substring(0, 20).TrimEnd('0').TrimEnd('.');
+                    else
+                        result = value.ToString();
+                    return current + (s[0] + result + s[1] + ' ');
                 });
         }
     }

@@ -57,7 +57,10 @@ namespace WowPacketParser.Misc
 
         public override string ToString()
         {
-            return "X: " + X + " Y: " + Y + " Z: " + Z;
+            string sx = ((double)X).ToString("0.##########");
+            string sy = ((double)Y).ToString("0.##########");
+            string sz = ((double)Z).ToString("0.##########");
+            return string.Format("X: {0} Y: {1} Z: {2}", sx, sy, sz);
         }
 
         public bool Equals(Vector3 other)
