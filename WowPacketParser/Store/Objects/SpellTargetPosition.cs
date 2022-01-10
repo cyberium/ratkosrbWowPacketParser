@@ -6,7 +6,7 @@ namespace WowPacketParser.Store.Objects
 {
     public sealed class SpellTargetPosition : IDataModel
     {
-        [DBFieldName("entry", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("spell_id", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("ID", true, DbType = (TargetedDbType.TRINITY))]
         [DBFieldName("id", true, DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public uint? ID;
@@ -14,9 +14,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("EffectIndex", true, DbType = (TargetedDbType.TRINITY))]
         public byte? EffectIndex;
 
-        [DBFieldName("map", DbType = (TargetedDbType.WPP))]
-        [DBFieldName("MapID", DbType = (TargetedDbType.TRINITY))]
-        [DBFieldName("target_map", DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+        [DBFieldName("map", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("MapID", true, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("target_map", true, DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public ushort? MapID;
 
         [DBFieldName("position_x", DbType = (TargetedDbType.WPP))]

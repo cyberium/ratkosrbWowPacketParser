@@ -888,7 +888,13 @@ CREATE TABLE `spell_aura_flags` (
 	`sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0',
 	PRIMARY KEY (`spell_id`, `flags`)
 )
-COMMENT='all aura flags seen used with a given spell id'
+COMMENT='all aura flags seen for a given spell id'
 COLLATE='utf8_unicode_ci'
 ENGINE=InnoDB
 ;
+
+ALTER TABLE `spell_target_position`
+	CHANGE COLUMN `entry` `spell_id` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' FIRST,
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`spell_id`, `map`);
+
