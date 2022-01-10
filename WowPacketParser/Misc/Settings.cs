@@ -227,6 +227,7 @@ namespace WowPacketParser.Misc
             public static readonly bool item_template = Conf.GetBoolean("item_template", false);
             public static readonly bool locales_quest = Conf.GetBoolean("locales_quest", false);
             public static readonly bool locales_quest_objectives = Conf.GetBoolean("locales_quest_objectives", false);
+            public static readonly bool mail_template = Conf.GetBoolean("mail_template", false);
             public static readonly bool npc_spellclick_spells = Conf.GetBoolean("npc_spellclick_spells", false);
             public static readonly bool npc_text = Conf.GetBoolean("npc_text", false);
             public static readonly bool npc_trainer = Conf.GetBoolean("npc_trainer", false);

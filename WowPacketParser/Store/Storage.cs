@@ -2239,6 +2239,22 @@ namespace WowPacketParser.Store
         public static readonly DataBag<GuildTemplate> Guild = new DataBag<GuildTemplate>(Settings.SqlTables.guild);
         public static readonly DataBag<GuildRankTemplate> GuildRank = new DataBag<GuildRankTemplate>(Settings.SqlTables.guild_rank);
 
+        // Mail
+        public static readonly DataBag<MailTemplate> MailTemplates = new DataBag<MailTemplate>(Settings.SqlTables.mail_template);
+        public static readonly DataBag<MailTemplateItem> MailTemplateItems = new DataBag<MailTemplateItem>(Settings.SqlTables.mail_template);
+        public static void StoreMailTemplate(MailTemplate mailTemplate)
+        {
+            foreach (var existingMail in MailTemplates)
+            {
+                if (existingMail.Item1.Entry == mailTemplate.Entry &&
+                    existingMail.Item1.Money >= mailTemplate.Money &&
+                    existingMail.Item1.ItemsCount >= mailTemplate.ItemsCount)
+                    return;
+            }
+
+            MailTemplates.Add(mailTemplate);
+        }
+
         // Called every time processing a sniff file finishes,
         // and a new one is about to be loaded and parsed.
         public static void ClearTemporaryData()
@@ -2445,6 +2461,9 @@ namespace WowPacketParser.Store
 
             Guild.Clear();
             GuildRank.Clear();
+
+            MailTemplates.Clear();
+            MailTemplateItems.Clear();
         }
     }
 }

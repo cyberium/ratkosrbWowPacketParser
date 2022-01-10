@@ -64,7 +64,7 @@ namespace WowPacketParser.SQL.Builders
 
             var templatesDb = SQLDatabase.Get(Storage.QuestGreetings);
 
-            return SQLUtil.Compare(Storage.QuestGreetings, templatesDb, StoreNameType.QuestGreeting);
+            return SQLUtil.Compare(Storage.QuestGreetings, templatesDb, StoreNameType.None);
         }
 
         [BuilderMethod]

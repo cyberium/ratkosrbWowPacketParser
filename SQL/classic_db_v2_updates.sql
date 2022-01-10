@@ -898,3 +898,24 @@ ALTER TABLE `spell_target_position`
 	DROP PRIMARY KEY,
 	ADD PRIMARY KEY (`spell_id`, `map`);
 
+CREATE TABLE IF NOT EXISTS `mail_template` (
+  `entry` int(10) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `stationery_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `sender_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `sender_type` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `money` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `items_count` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `subject` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `body` varchar(1024) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`entry`,`sniff_build`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='data for mail sent by creatures\r\nfrom SMSG_MAIL_LIST_RESULT';
+
+CREATE TABLE IF NOT EXISTS `mail_template_item` (
+  `entry` int(10) unsigned NOT NULL DEFAULT '0',
+  `slot` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `item_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `count` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`slot`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='items attached to mail templates\r\nfrom SMSG_MAIL_LIST_RESULT';

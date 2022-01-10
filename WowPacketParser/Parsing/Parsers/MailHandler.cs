@@ -1,5 +1,7 @@
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParser.Parsing.Parsers
 {
@@ -62,27 +64,30 @@ namespace WowPacketParser.Parsing.Parsers
             var count = packet.ReadByte("Shown Mails");
             for (var i = 0; i < count; ++i)
             {
+                MailTemplate mailTemplate = new MailTemplate();
+
                 packet.ReadUInt16("Message Size", i);
                 packet.ReadUInt32("Mail Id", i);
 
                 var mailType = packet.ReadByteE<MailType>("Message Type", i);
+                mailTemplate.SenderType = (byte)mailType;
                 switch (mailType) // Read GUID if MailType.Normal, int32 (entry) if not
                 {
                     case MailType.Normal:
                         packet.ReadGuid("Player GUID", i);
                         break;
                     case MailType.Creature:
-                        packet.ReadInt32<UnitId>("Entry", i);
+                        mailTemplate.SenderId = (uint)packet.ReadInt32<UnitId>("Entry", i);
                         break;
                     case MailType.GameObject:
-                        packet.ReadInt32<GOId>("Entry", i);
+                        mailTemplate.SenderId = (uint)packet.ReadInt32<GOId>("Entry", i);
                         break;
                     case MailType.Item:
-                        packet.ReadInt32<ItemId>("Entry", i);
+                        mailTemplate.SenderId = (uint)packet.ReadInt32<ItemId>("Entry", i);
                         break;
                     case (MailType)1:
                     case MailType.Auction:
-                        packet.ReadInt32("Entry", i);
+                        mailTemplate.SenderId = (uint)packet.ReadInt32("Entry", i);
                         break;
                 }
 
@@ -95,25 +100,30 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.ReadUInt32("Item Text Id", i);
 
                 packet.ReadUInt32("Package", i); // Package.dbc ID
-                packet.ReadUInt32("Stationery", i); // Stationary.dbc ID
+                mailTemplate.StationeryId = packet.ReadUInt32("Stationery", i); // Stationary.dbc ID
+
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_2_2_14545))
-                    packet.ReadUInt64("Money", i);
+                    mailTemplate.Money = packet.ReadUInt64("Money", i);
                 else
-                    packet.ReadUInt32("Money", i);
+                    mailTemplate.Money = packet.ReadUInt32("Money", i);
+
                 packet.ReadUInt32("Flags", i);
                 packet.ReadSingle("Time", i);
-                packet.ReadUInt32("Template Id", i); // MailTemplate.dbc ID
-                packet.ReadCString("Subject", i);
+                mailTemplate.Entry = (uint)packet.ReadUInt32("Template Id", i); // MailTemplate.dbc ID
+                mailTemplate.Subject = packet.ReadCString("Subject", i);
 
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_3_0_10958))
-                    packet.ReadCString("Body", i);
+                    mailTemplate.Subject = packet.ReadCString("Body", i);
 
-                var items = packet.ReadByte("Item Count", i);
-                for (var j = 0; j < items; ++j)
+                mailTemplate.ItemsCount = packet.ReadByte("Item Count", i);
+                for (var j = 0; j < mailTemplate.ItemsCount; ++j)
                 {
-                    packet.ReadByte("Item Index", i, j);
+                    MailTemplateItem mailItem = new MailTemplateItem();
+                    mailItem.Entry = mailTemplate.Entry;
+
+                    mailItem.Slot = packet.ReadByte("Item Index", i, j);
                     packet.ReadUInt32("Item GuidLow", i, j);
-                    packet.ReadUInt32<ItemId>("Item Id", i, j);
+                    mailItem.ItemId = packet.ReadUInt32<ItemId>("Item Id", i, j);
 
                     int enchantmentCount = 6;
                     if (ClientVersion.AddedInVersion(ClientType.WrathOfTheLichKing))
@@ -134,9 +144,9 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.ReadUInt32("Item Suffix Factor", i, j);
 
                     if (ClientVersion.AddedInVersion(ClientType.WrathOfTheLichKing))
-                        packet.ReadUInt32("Item Count", i, j);
+                        mailItem.Count = (byte)packet.ReadUInt32("Item Count", i, j);
                     else
-                        packet.ReadByte("Item Count", i, j);
+                        mailItem.Count = (byte)packet.ReadByte("Item Count", i, j);
 
                     packet.ReadUInt32("Item SpellCharges", i, j);
                     packet.ReadUInt32("Item Max Durability", i, j);
@@ -144,7 +154,13 @@ namespace WowPacketParser.Parsing.Parsers
 
                     if (ClientVersion.AddedInVersion(ClientType.WrathOfTheLichKing))
                         packet.ReadByte("Unk byte", i, j);
+
+                    if (mailItem.Entry != 0)
+                        Storage.MailTemplateItems.Add(mailItem);
                 }
+
+                if (mailTemplate.Entry != 0)
+                    Storage.StoreMailTemplate(mailTemplate);
             }
         }
 

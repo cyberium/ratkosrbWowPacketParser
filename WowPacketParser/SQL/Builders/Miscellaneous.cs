@@ -404,5 +404,29 @@ namespace WowPacketParser.SQL.Builders
 
             return SQLUtil.Insert(Storage.CinematicEndTimes, false, false);
         }
+
+        [BuilderMethod]
+        public static string MailTemplates()
+        {
+            if (Storage.MailTemplates.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.mail_template)
+                return string.Empty;
+
+            return SQLUtil.Insert(Storage.MailTemplates, false, true);
+        }
+
+        [BuilderMethod]
+        public static string MailTemplateItems()
+        {
+            if (Storage.MailTemplateItems.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.mail_template)
+                return string.Empty;
+
+            return SQLUtil.Insert(Storage.MailTemplateItems, false, true);
+        }
     }
 }

@@ -136,6 +136,7 @@
         item_template,
         locales_quest,
         locales_quest_objectives,
+        mail_template,
         npc_spellclick_spells,
         npc_text,
         npc_trainer,

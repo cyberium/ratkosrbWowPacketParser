@@ -1,6 +1,8 @@
 ﻿using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParserModule.V6_0_2_19033.Parsers
 {
@@ -24,8 +26,10 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
 
         public static void ReadMailListEntry(Packet packet, params object[] idx)
         {
+            MailTemplate mailTemplate = new MailTemplate();
+
             packet.ReadInt32("MailID", idx);
-            packet.ReadByteE<MailType>("SenderType", idx);
+            mailTemplate.SenderType = (byte)packet.ReadByteE<MailType>("SenderType", idx);
 
             if (!ClientVersion.AddedInVersion(ClientVersionBuild.V6_1_0_19678))
             {
@@ -44,15 +48,15 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadInt64("Cod", idx);
             if (ClientVersion.RemovedInVersion(ClientVersionBuild.V6_2_0_20173))
                 packet.ReadInt32("PackageID", idx);
-            packet.ReadInt32("StationeryID", idx);
-            packet.ReadInt64("SentMoney", idx);
+            mailTemplate.StationeryId = (uint)packet.ReadInt32("StationeryID", idx);
+            mailTemplate.Money = (ulong)packet.ReadInt64("SentMoney", idx);
             packet.ReadInt32("Flags", idx);
             packet.ReadSingle("DaysLeft", idx);
-            packet.ReadInt32("MailTemplateID", idx);
+            mailTemplate.Entry = (uint)packet.ReadInt32("MailTemplateID", idx);
 
-            var attachmentsCount = packet.ReadInt32("AttachmentsCount", idx);
-            for (var i = 0; i < attachmentsCount; ++i) // Attachments
-                ReadMailAttachedItem(packet, idx, i, "MailAttachedItem");
+            mailTemplate.ItemsCount = (uint)packet.ReadInt32("AttachmentsCount", idx);
+            for (var i = 0; i < mailTemplate.ItemsCount; ++i) // Attachments
+                ReadMailAttachedItem(packet, mailTemplate.Entry, idx, i, "MailAttachedItem");
 
             packet.ResetBitReader();
 
@@ -66,19 +70,25 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 packet.ReadPackedGuid128("SenderCharacter", idx);
 
             if (bit52)
-                packet.ReadInt32("AltSenderID", idx);
+                mailTemplate.SenderId = (uint)packet.ReadInt32("AltSenderID", idx);
 
-            packet.ReadWoWString("Subject", bits23, idx);
-            packet.ReadWoWString("Body", bits87, idx);
+            mailTemplate.Subject = packet.ReadWoWString("Subject", bits23, idx);
+            mailTemplate.Body = packet.ReadWoWString("Body", bits87, idx);
+
+            if (mailTemplate.Entry != 0)
+                Storage.StoreMailTemplate(mailTemplate);
         }
 
-        public static void ReadMailAttachedItem(Packet packet, params object[] idx)
+        public static void ReadMailAttachedItem(Packet packet, uint mailTemplateId, params object[] idx)
         {
-            packet.ReadByte("Position", idx);
+            MailTemplateItem mailItem = new MailTemplateItem();
+            mailItem.Entry = mailTemplateId;
+
+            mailItem.Slot = packet.ReadByte("Position", idx);
             packet.ReadInt32("AttachID", idx);
 
             // ItemInstance
-            Substructures.ItemHandler.ReadItemInstance(packet, idx);
+            mailItem.ItemId = (uint)Substructures.ItemHandler.ReadItemInstance(packet, idx).ItemID;
 
             for (var k = 0; k < 8; ++k)
             {
@@ -87,10 +97,13 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 packet.ReadInt32("Charges", idx, k);
             }
 
-            packet.ReadInt32("Count", idx);
+            mailItem.Count = (byte)packet.ReadInt32("Count", idx);
             packet.ReadInt32("Charges", idx);
             packet.ReadInt32("MaxDurability", idx);
             packet.ReadInt32("Durability", idx);
+
+            if (mailTemplateId != 0)
+                Storage.MailTemplateItems.Add(mailItem);
 
             packet.ResetBitReader();
 
