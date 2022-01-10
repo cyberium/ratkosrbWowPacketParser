@@ -76,7 +76,10 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             mailTemplate.Body = packet.ReadWoWString("Body", bits87, idx);
 
             if (mailTemplate.Entry != 0)
+            {
                 Storage.StoreMailTemplate(mailTemplate);
+                packet.AddSniffData(StoreNameType.MailTemplate, (int)mailTemplate.Entry, "LIST");
+            }
         }
 
         public static void ReadMailAttachedItem(Packet packet, uint mailTemplateId, params object[] idx)

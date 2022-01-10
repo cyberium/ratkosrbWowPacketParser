@@ -21,6 +21,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
                 var val = packet.ReadInt32();
                 var field = packet.ReadInt32();
                 packet.AddValue("Field", field + " - Value: " + val, i);
+                packet.AddSniffData(StoreNameType.WorldState, field, val.ToString());
             }
         }
 
@@ -31,6 +32,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             var val = packet.ReadInt32();
             var field = packet.ReadInt32();
             packet.AddValue("Field", field + " - Value: " + val);
+            packet.AddSniffData(StoreNameType.WorldState, field, val.ToString());
         }
     }
 }

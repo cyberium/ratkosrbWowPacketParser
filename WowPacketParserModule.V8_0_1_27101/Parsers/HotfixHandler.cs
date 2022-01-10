@@ -45,6 +45,8 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 {
                     case DB2Hash.BroadcastText:
                         {
+                            packet.AddSniffData(StoreNameType.BroadcastText, entry, "DB_REPLY");
+
                             var bct = new BroadcastText()
                             {
                                 Text = db2File.ReadCString("Text"),

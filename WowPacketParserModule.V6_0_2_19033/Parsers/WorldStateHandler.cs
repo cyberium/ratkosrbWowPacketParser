@@ -34,6 +34,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 ReadWorldStateBlock(out wsData.Variable, out wsData.Value, packet);
                 wsData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
                 Storage.WorldStateInits.Add(wsData);
+                packet.AddSniffData(StoreNameType.WorldState, wsData.Variable, wsData.Value.ToString());
             }  
         }
 
@@ -45,6 +46,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadBit("Hidden");
             wsData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
             Storage.WorldStateUpdates.Add(wsData);
+            packet.AddSniffData(StoreNameType.WorldState, wsData.Variable, wsData.Value.ToString());
         }
     }
 }

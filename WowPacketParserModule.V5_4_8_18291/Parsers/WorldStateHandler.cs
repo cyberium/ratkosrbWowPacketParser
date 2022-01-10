@@ -28,6 +28,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
                 packet.AddValue("Field", wsData.Variable + " - Value: " + wsData.Value, i);
                 wsData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
                 Storage.WorldStateInits.Add(wsData);
+                packet.AddSniffData(StoreNameType.WorldState, wsData.Variable, wsData.Value.ToString());
             }
         }
 
@@ -41,6 +42,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             packet.AddValue("Field", wsData.Variable + " - Value: " + wsData.Value);
             wsData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
             Storage.WorldStateUpdates.Add(wsData);
+            packet.AddSniffData(StoreNameType.WorldState, wsData.Variable, wsData.Value.ToString());
         }
     }
 }

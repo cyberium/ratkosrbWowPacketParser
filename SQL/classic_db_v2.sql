@@ -2906,7 +2906,7 @@ DROP TABLE IF EXISTS `sniff_data`;
 CREATE TABLE IF NOT EXISTS `sniff_data` (
   `sniff_build` int(10) unsigned NOT NULL DEFAULT '0',
   `sniff_id` int(11) NOT NULL DEFAULT '0',
-  `object_type` enum('None','Spell','Map','LFGDungeon','Battleground','Unit','GameObject','CreatureDifficulty','Item','Quest','Opcode','PageText','NpcText','BroadcastText','Gossip','Zone','Area','AreaTrigger','Phase','Player','Achievement','CreatureFamily','Criteria','Currency','Difficulty','Faction','QuestGreeting','QuestObjective','Sound','Taxi') NOT NULL DEFAULT 'None',
+  `object_type` enum('None','Spell','Map','LFGDungeon','Battleground','Unit','GameObject','CreatureDifficulty','Item','Quest','Opcode','PageText','NpcText','BroadcastText','Gossip','Zone','Area','AreaTrigger','Phase','Player','Achievement','CreatureFamily','Criteria','Currency','Difficulty','Faction','MailTemplate','WorldState','Sound','Taxi') NOT NULL DEFAULT 'None',
   `id` int(10) NOT NULL DEFAULT '0',
   `data` text NOT NULL,
   UNIQUE KEY `SniffName` (`object_type`,`id`,`data`(255),`sniff_id`)

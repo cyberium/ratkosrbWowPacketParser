@@ -943,3 +943,6 @@ ALTER TABLE `page_text`
 	CHANGE COLUMN `sniff_build` `sniff_build` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER `entry`,
 	DROP PRIMARY KEY,
 	ADD PRIMARY KEY (`entry`, `sniff_build`);
+
+ALTER TABLE `sniff_data`
+	CHANGE COLUMN `object_type` `object_type` ENUM('None','Spell','Map','LFGDungeon','Battleground','Unit','GameObject','CreatureDifficulty','Item','Quest','Opcode','PageText','NpcText','BroadcastText','Gossip','Zone','Area','AreaTrigger','Phase','Player','Achievement','CreatureFamily','Criteria','Currency','Difficulty','Faction','MailTemplate','WorldState','Sound','Taxi') NOT NULL DEFAULT 'None' AFTER `sniff_id`;

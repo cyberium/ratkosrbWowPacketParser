@@ -18,6 +18,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
                 var val = packet.ReadInt32();
                 var field = packet.ReadInt32();
                 packet.AddValue("Field", field + " - Value: " + val, i);
+                packet.AddSniffData(StoreNameType.WorldState, field, val.ToString());
             }
 
             CoreParsers.WorldStateHandler.CurrentZoneId = packet.ReadInt32<ZoneId>("Zone Id");
@@ -31,6 +32,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
             var val = packet.ReadInt32();
             var field = packet.ReadInt32();
             packet.AddValue("Field", field + " - Value: " + val);
+            packet.AddSniffData(StoreNameType.WorldState, field, val.ToString());
         }
     }
 }

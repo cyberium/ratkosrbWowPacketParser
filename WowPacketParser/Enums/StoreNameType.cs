@@ -30,8 +30,8 @@ namespace WowPacketParser.Enums
         Currency            = 24,
         Difficulty          = 25,
         Faction             = 26,
-        //QuestGreeting       = 27,
-        //QuestObjective      = 28,
+        MailTemplate        = 27,
+        WorldState          = 28,
         Sound               = 29,
         Taxi                = 30,
     }

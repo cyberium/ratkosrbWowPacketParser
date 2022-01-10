@@ -160,7 +160,10 @@ namespace WowPacketParser.Parsing.Parsers
                 }
 
                 if (mailTemplate.Entry != 0)
+                {
                     Storage.StoreMailTemplate(mailTemplate);
+                    packet.AddSniffData(StoreNameType.MailTemplate, (int)mailTemplate.Entry, "LIST");
+                }
             }
         }
 
