@@ -4,6 +4,24 @@ using WowPacketParser.SQL;
 
 namespace WowPacketParser.Store.Objects
 {
+    [DBTableName("client_areatrigger_enter")]
+    public sealed class ClientAreatriggerEnter : IDataModel
+    {
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
+        [DBFieldName("areatrigger_id")]
+        public uint AreatriggerId;
+    }
+    [DBTableName("client_areatrigger_leave")]
+    public sealed class ClientAreatriggerLeave : IDataModel
+    {
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
+        [DBFieldName("areatrigger_id")]
+        public uint AreatriggerId;
+    }
     [DBTableName("client_quest_accept")]
     public sealed class QuestClientAccept : IDataModel
     {

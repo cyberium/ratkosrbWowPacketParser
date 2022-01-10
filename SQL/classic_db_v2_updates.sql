@@ -946,3 +946,23 @@ ALTER TABLE `page_text`
 
 ALTER TABLE `sniff_data`
 	CHANGE COLUMN `object_type` `object_type` ENUM('None','Spell','Map','LFGDungeon','Battleground','Unit','GameObject','CreatureDifficulty','Item','Quest','Opcode','PageText','NpcText','BroadcastText','Gossip','Zone','Area','AreaTrigger','Phase','Player','Achievement','CreatureFamily','Criteria','Currency','Difficulty','Faction','MailTemplate','WorldState','Sound','Taxi') NOT NULL DEFAULT 'None' AFTER `sniff_id`;
+
+CREATE TABLE `client_areatrigger_enter` (
+	`unixtimems` BIGINT UNSIGNED NOT NULL COMMENT 'when the packet was sent',
+	`areatrigger_id` INT UNSIGNED NOT NULL,
+	PRIMARY KEY (`unixtimems`, `areatrigger_id`)
+)
+COMMENT='times when the client notified the server it has entered an areatrigger\'s confines\r\nfrom CMSG_AREA_TRIGGER'
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;
+
+CREATE TABLE `client_areatrigger_leave` (
+	`unixtimems` BIGINT UNSIGNED NOT NULL COMMENT 'when the packet was sent',
+	`areatrigger_id` INT UNSIGNED NOT NULL,
+	PRIMARY KEY (`unixtimems`, `areatrigger_id`)
+)
+COMMENT='times when the client notified the server it has left an areatrigger\'s confines\r\nfrom CMSG_AREA_TRIGGER'
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;

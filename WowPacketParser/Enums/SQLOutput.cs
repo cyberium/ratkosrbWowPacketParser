@@ -9,6 +9,8 @@
 
         cinematic_begin,
         cinematic_end,
+        client_areatrigger_enter,
+        client_areatrigger_leave,
         client_creature_interact,
         client_gameobject_use,
         client_item_use,

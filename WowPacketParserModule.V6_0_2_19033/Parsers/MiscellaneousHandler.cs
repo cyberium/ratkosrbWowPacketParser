@@ -406,9 +406,10 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         public static void HandleClientAreaTrigger(Packet packet)
         {
             var entry = packet.ReadEntry("Area Trigger Id");
-            packet.ReadBit("Entered");
+            bool entered = packet.ReadBit("Entered");
             packet.ReadBit("FromClient");
 
+            Storage.StoreClientAreatriggerTime((uint)entry.Key, entered, packet.Time);
             packet.AddSniffData(StoreNameType.AreaTrigger, entry.Key, "AREATRIGGER");
         }
 

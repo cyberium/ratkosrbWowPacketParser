@@ -100,6 +100,8 @@ namespace WowPacketParser.Misc
 
             public static readonly bool cinematic_begin = Conf.GetBoolean("cinematic_begin", false);
             public static readonly bool cinematic_end = Conf.GetBoolean("cinematic_end", false);
+            public static readonly bool client_areatrigger_enter = Conf.GetBoolean("client_areatrigger_enter", false);
+            public static readonly bool client_areatrigger_leave = Conf.GetBoolean("client_areatrigger_leave", false);
             public static readonly bool client_creature_interact = Conf.GetBoolean("client_creature_interact", false);
             public static readonly bool client_gameobject_use = Conf.GetBoolean("client_gameobject_use", false);
             public static readonly bool client_item_use = Conf.GetBoolean("client_item_use", false);

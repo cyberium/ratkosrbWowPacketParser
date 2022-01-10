@@ -2225,6 +2225,25 @@ namespace WowPacketParser.Store
         public static readonly DataBag<PlayerChoiceResponseRewardItemTemplate> PlayerChoiceResponseRewardItems = new DataBag<PlayerChoiceResponseRewardItemTemplate>(Settings.SqlTables.playerchoice);
 
         // Client Actions
+        public static readonly DataBag<ClientAreatriggerEnter> ClientAreatriggerEnterTimes = new DataBag<ClientAreatriggerEnter>(Settings.SqlTables.client_areatrigger_enter);
+        public static readonly DataBag<ClientAreatriggerLeave> ClientAreatriggerLeaveTimes = new DataBag<ClientAreatriggerLeave>(Settings.SqlTables.client_areatrigger_leave);
+        public static void StoreClientAreatriggerTime(uint areatriggerId, bool entered, DateTime time)
+        {
+            if (entered)
+            {
+                ClientAreatriggerEnter trigger = new ClientAreatriggerEnter();
+                trigger.AreatriggerId = areatriggerId;
+                trigger.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
+                ClientAreatriggerEnterTimes.Add(trigger);
+            }
+            else
+            {
+                ClientAreatriggerLeave trigger = new ClientAreatriggerLeave();
+                trigger.AreatriggerId = areatriggerId;
+                trigger.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(time);
+                ClientAreatriggerLeaveTimes.Add(trigger);
+            }
+        }
         public static readonly DataBag<ClientReclaimCorpse> ClientReclaimCorpseTimes = new DataBag<ClientReclaimCorpse>(Settings.SqlTables.client_reclaim_corpse);
         public static readonly DataBag<ClientReleaseSpirit> ClientReleaseSpiritTimes = new DataBag<ClientReleaseSpirit>(Settings.SqlTables.client_release_spirit);
 
@@ -2453,6 +2472,8 @@ namespace WowPacketParser.Store
             PlayerChoiceResponseRewardFactions.Clear();
             PlayerChoiceResponseRewardItems.Clear();
 
+            ClientAreatriggerEnterTimes.Clear();
+            ClientAreatriggerLeaveTimes.Clear();
             ClientReclaimCorpseTimes.Clear();
             ClientReleaseSpiritTimes.Clear();
             LogoutTimes.Clear();

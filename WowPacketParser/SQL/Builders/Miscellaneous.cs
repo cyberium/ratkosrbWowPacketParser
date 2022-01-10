@@ -255,6 +255,30 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod]
+        public static string ClientAreatriggerEnterTimes()
+        {
+            if (Storage.ClientAreatriggerEnterTimes.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.client_areatrigger_enter)
+                return string.Empty;
+
+            return SQLUtil.Insert(Storage.ClientAreatriggerEnterTimes, false, false);
+        }
+
+        [BuilderMethod]
+        public static string ClientAreatriggerLeaveTimes()
+        {
+            if (Storage.ClientAreatriggerLeaveTimes.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.client_areatrigger_leave)
+                return string.Empty;
+
+            return SQLUtil.Insert(Storage.ClientAreatriggerLeaveTimes, false, false);
+        }
+
+        [BuilderMethod]
         public static string ClientReclaimCorpseTimes()
         {
             if (Storage.ClientReclaimCorpseTimes.IsEmpty())

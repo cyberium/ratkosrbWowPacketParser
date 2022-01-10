@@ -494,9 +494,11 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleClientAreaTrigger(Packet packet)
         {
             var entry = packet.ReadEntry("Area Trigger Id");
+            bool entered = true;
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V5_1_0_16309))
-                packet.ReadByte("Unk Byte");
+                entered = packet.ReadByte("Entered") != 0;
 
+            Storage.StoreClientAreatriggerTime((uint)entry.Key, entered, packet.Time);
             packet.AddSniffData(StoreNameType.AreaTrigger, entry.Key, "AREATRIGGER");
         }
 

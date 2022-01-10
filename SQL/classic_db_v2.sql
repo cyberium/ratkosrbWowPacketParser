@@ -71,6 +71,28 @@ CREATE TABLE IF NOT EXISTS `cinematic_end` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.client_areatrigger_enter
+DROP TABLE IF EXISTS `client_areatrigger_enter`;
+CREATE TABLE IF NOT EXISTS `client_areatrigger_enter` (
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
+  `areatrigger_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`unixtimems`,`areatrigger_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='times when the client notified the server it has entered an areatrigger''s confines\r\nfrom CMSG_AREA_TRIGGER';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.client_areatrigger_leave
+DROP TABLE IF EXISTS `client_areatrigger_leave`;
+CREATE TABLE IF NOT EXISTS `client_areatrigger_leave` (
+  `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was sent',
+  `areatrigger_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`unixtimems`,`areatrigger_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT COMMENT='times when the client notified the server it has left an areatrigger''s confines\r\nfrom CMSG_AREA_TRIGGER';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.client_creature_interact
 DROP TABLE IF EXISTS `client_creature_interact`;
 CREATE TABLE IF NOT EXISTS `client_creature_interact` (
