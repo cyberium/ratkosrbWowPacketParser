@@ -919,3 +919,7 @@ CREATE TABLE IF NOT EXISTS `mail_template_item` (
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`slot`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='items attached to mail templates\r\nfrom SMSG_MAIL_LIST_RESULT';
+
+ALTER TABLE `mail_template`
+	CHANGE COLUMN `subject` `subject` TEXT NOT NULL DEFAULT '' COLLATE 'utf8_unicode_ci' AFTER `items_count`,
+	CHANGE COLUMN `body` `body` TEXT NOT NULL DEFAULT '' COLLATE 'utf8_unicode_ci' AFTER `subject`;

@@ -1779,8 +1779,8 @@ CREATE TABLE IF NOT EXISTS `mail_template` (
   `sender_type` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `money` bigint(20) unsigned NOT NULL DEFAULT '0',
   `items_count` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `subject` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `body` varchar(1024) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `subject` text COLLATE utf8_unicode_ci NOT NULL,
+  `body` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`entry`,`sniff_build`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='data for mail sent by creatures\r\nfrom SMSG_MAIL_LIST_RESULT';
 
