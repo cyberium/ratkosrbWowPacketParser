@@ -113,7 +113,7 @@ namespace WowPacketParser.Parsing.Parsers
                 mailTemplate.Subject = packet.ReadCString("Subject", i);
 
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_3_0_10958))
-                    mailTemplate.Subject = packet.ReadCString("Body", i);
+                    mailTemplate.Body = packet.ReadCString("Body", i);
 
                 mailTemplate.ItemsCount = packet.ReadByte("Item Count", i);
                 for (var j = 0; j < mailTemplate.ItemsCount; ++j)
