@@ -979,6 +979,7 @@ CREATE TABLE IF NOT EXISTS `creature_template_locale` (
 DROP TABLE IF EXISTS `creature_template_wdb`;
 CREATE TABLE IF NOT EXISTS `creature_template_wdb` (
   `entry` int(10) unsigned NOT NULL,
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `kill_credit1` int(11) NOT NULL DEFAULT '0',
   `kill_credit2` int(11) NOT NULL DEFAULT '0',
   `display_total_count` int(11) NOT NULL DEFAULT '0',
@@ -1015,8 +1016,7 @@ CREATE TABLE IF NOT EXISTS `creature_template_wdb` (
   `civilian` int(11) NOT NULL DEFAULT '0',
   `racial_leader` int(11) NOT NULL DEFAULT '0',
   `movement_id` int(11) NOT NULL DEFAULT '0',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`entry`)
+  PRIMARY KEY (`entry`,`sniff_build`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='static creature data from SMSG_QUERY_CREATURE_RESPONSE which gets saved to wdb cache';
 
 -- Data exporting was unselected.
@@ -1438,6 +1438,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_questitem` (
 DROP TABLE IF EXISTS `gameobject_template`;
 CREATE TABLE IF NOT EXISTS `gameobject_template` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `display_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `scale` float NOT NULL DEFAULT '1',
@@ -1481,8 +1482,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_template` (
   `data33` int(10) unsigned NOT NULL DEFAULT '0',
   `quest_items_count` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `required_level` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` mediumint(8) unsigned DEFAULT '0',
-  PRIMARY KEY (`entry`),
+  PRIMARY KEY (`entry`,`sniff_build`),
   KEY `idx_name` (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='static gameobject data from SMSG_QUERY_GAME_OBJECT_RESPONSE which gets saved to wdb cache';
 
@@ -1805,6 +1805,7 @@ CREATE TABLE IF NOT EXISTS `mail_template_item` (
 DROP TABLE IF EXISTS `npc_text`;
 CREATE TABLE IF NOT EXISTS `npc_text` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `probability1` float NOT NULL DEFAULT '0',
   `probability2` float NOT NULL DEFAULT '0',
   `probability3` float NOT NULL DEFAULT '0',
@@ -1821,8 +1822,7 @@ CREATE TABLE IF NOT EXISTS `npc_text` (
   `broadcast_text_id6` mediumint(6) unsigned NOT NULL DEFAULT '0',
   `broadcast_text_id7` mediumint(6) unsigned NOT NULL DEFAULT '0',
   `broadcast_text_id8` mediumint(6) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`entry`)
+  PRIMARY KEY (`entry`,`sniff_build`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -1879,12 +1879,12 @@ CREATE TABLE IF NOT EXISTS `object_names` (
 DROP TABLE IF EXISTS `page_text`;
 CREATE TABLE IF NOT EXISTS `page_text` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `text` longtext,
   `next_page` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `player_condition_id` int(11) NOT NULL DEFAULT '0',
   `flags` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`entry`)
+  PRIMARY KEY (`entry`,`sniff_build`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Item System';
 
 -- Data exporting was unselected.

@@ -10,6 +10,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("entry", true)]
         public uint? Entry;
 
+        [DBFieldName("sniff_build", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("VerifiedBuild", false, DbType = (TargetedDbType.CMANGOS))]
+        public int? VerifiedBuild = ClientVersion.BuildInt;
+
         [DBFieldName("type")]
         public GameObjectType? Type;
 
@@ -59,10 +63,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("content_tuning_id", TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.WPP))]
         [DBFieldName("ContentTuningId", TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.TRINITY))]
         public int? ContentTuningId;
-
-        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
-        [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.CMANGOS))]
-        public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("gameobject_questitem")]

@@ -410,6 +410,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Id", true, DbType = (TargetedDbType.CMANGOS))]
         public uint? ID;
 
+        [DBFieldName("sniff_build", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("VerifiedBuild", false, DbType = (TargetedDbType.TRINITY))]
+        public int? VerifiedBuild = ClientVersion.BuildInt;
+
         [DBFieldName("probability1", DbType = (TargetedDbType.WPP))]
         [DBFieldName("Probability0", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
         [DBFieldName("Prob0", DbType = (TargetedDbType.CMANGOS))]
@@ -489,9 +493,5 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("BroadcastTextID7", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS))]
         [DBFieldName("BroadcastTextId7", DbType = (TargetedDbType.CMANGOS))]
         public uint? BroadcastTextId7;
-
-        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
-        [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
-        public int? VerifiedBuild = ClientVersion.BuildInt;
     }
 }

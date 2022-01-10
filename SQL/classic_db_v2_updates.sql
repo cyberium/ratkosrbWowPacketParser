@@ -923,3 +923,23 @@ CREATE TABLE IF NOT EXISTS `mail_template_item` (
 ALTER TABLE `mail_template`
 	CHANGE COLUMN `subject` `subject` TEXT NOT NULL DEFAULT '' COLLATE 'utf8_unicode_ci' AFTER `items_count`,
 	CHANGE COLUMN `body` `body` TEXT NOT NULL DEFAULT '' COLLATE 'utf8_unicode_ci' AFTER `subject`;
+
+ALTER TABLE `creature_template_wdb`
+	CHANGE COLUMN `sniff_build` `sniff_build` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER `entry`,
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`entry`, `sniff_build`);
+
+ALTER TABLE `gameobject_template`
+	CHANGE COLUMN `sniff_build` `sniff_build` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER `entry`,
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`entry`, `sniff_build`);
+
+ALTER TABLE `npc_text`
+	CHANGE COLUMN `sniff_build` `sniff_build` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER `entry`,
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`entry`, `sniff_build`);
+
+ALTER TABLE `page_text`
+	CHANGE COLUMN `sniff_build` `sniff_build` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER `entry`,
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`entry`, `sniff_build`);

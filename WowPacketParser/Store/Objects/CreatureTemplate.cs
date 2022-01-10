@@ -195,6 +195,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Entry", true, DbType = (TargetedDbType.CMANGOS))]
         public uint? Entry;
 
+        [DBFieldName("sniff_build", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("VerifiedBuild", false, DbType = (TargetedDbType.TRINITY))]
+        public int SniffBuild = ClientVersion.BuildInt;
+
         [DBFieldName("kill_credit", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, 2, DbType = (TargetedDbType.WPP))]
         [DBFieldName("kill_credit", TargetedDbExpansion.WrathOfTheLichKing, 2, DbType = (TargetedDbType.WPP))]
         [DBFieldName("KillCredit", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, 2, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
@@ -379,9 +383,5 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("movement_id", TargetedDbExpansion.WrathOfTheLichKing, DbType = (TargetedDbType.WPP))]
         [DBFieldName("movementId", TargetedDbExpansion.WrathOfTheLichKing, DbType = (TargetedDbType.TRINITY))]
         public uint? MovementID;
-
-        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
-        [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
-        public int SniffBuild = ClientVersion.BuildInt;
     }
 }
