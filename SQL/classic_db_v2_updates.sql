@@ -966,3 +966,11 @@ COMMENT='times when the client notified the server it has left an areatrigger\'s
 COLLATE='latin1_swedish_ci'
 ENGINE=InnoDB
 ;
+
+ALTER TABLE `creature_template`
+	DROP COLUMN `ranged_attack_time`;
+
+ALTER TABLE `creature`
+	CHANGE COLUMN `is_hovering` `is_hovering` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'hover bit from create object' AFTER `is_spawn`,
+	CHANGE COLUMN `is_pet` `is_pet` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'highguid is pet' AFTER `is_hovering`,
+	CHANGE COLUMN `is_vehicle` `is_vehicle` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'highguid is vehicle' AFTER `is_pet`;
