@@ -160,6 +160,7 @@
         spell_areatrigger,
         spell_areatrigger_splines,
         spell_areatrigger_vertices,
+        spell_aura_flags,
         spell_script_target,
         spell_target_position,
         spell_unique_caster,

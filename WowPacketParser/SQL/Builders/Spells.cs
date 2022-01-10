@@ -47,6 +47,18 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod]
+        public static string SpellAuraFlags()
+        {
+            if (Storage.SpellAuraFlags.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.spell_aura_flags)
+                return string.Empty;
+
+            return SQLUtil.Insert(Storage.SpellAuraFlags, false, true);
+        }
+
+        [BuilderMethod]
         public static string SpellCastStart()
         {
             if (Storage.SpellCastStart.IsEmpty())

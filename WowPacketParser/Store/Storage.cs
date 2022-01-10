@@ -404,9 +404,26 @@ namespace WowPacketParser.Store
                 }
             }
         }
+        public static readonly DataBag<SpellAuraFlags> SpellAuraFlags = new DataBag<SpellAuraFlags>(Settings.SqlTables.spell_aura_flags);
         public static readonly Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>> UnitAurasUpdates = new Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>>();
         public static void StoreUnitAurasUpdate(WowGuid guid, List<Aura> auras, DateTime time, bool isFullUpdate)
         {
+            if (Settings.SqlTables.spell_aura_flags && auras != null)
+            {
+                foreach (Aura aura in auras)
+                {
+                    if (aura.SpellId == 0)
+                        continue;
+
+                    SpellAuraFlags flags = new SpellAuraFlags
+                    {
+                        SpellId = aura.SpellId,
+                        Flags = aura.AuraFlags
+                    };
+                    SpellAuraFlags.Add(flags);
+                }
+            }
+
             if (Storage.Objects.ContainsKey(guid))
             {
                 var unit = Storage.Objects[guid].Item1 as Unit;

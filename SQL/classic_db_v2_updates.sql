@@ -878,3 +878,17 @@ COMMENT='faction standing changes after a creature died\r\ncan be wrong if multi
 COLLATE='utf8_unicode_ci'
 ENGINE=InnoDB
 ;
+
+ALTER TABLE `spell_unique_caster`
+	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `spell_id`;
+
+CREATE TABLE `spell_aura_flags` (
+	`spell_id` INT UNSIGNED NOT NULL,
+	`flags` INT UNSIGNED NOT NULL,
+	`sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0',
+	PRIMARY KEY (`spell_id`, `flags`)
+)
+COMMENT='all aura flags seen used with a given spell id'
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;

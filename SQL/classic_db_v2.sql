@@ -2895,6 +2895,18 @@ CREATE TABLE IF NOT EXISTS `sniff_file` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.spell_aura_flags
+DROP TABLE IF EXISTS `spell_aura_flags`;
+CREATE TABLE IF NOT EXISTS `spell_aura_flags` (
+  `spell_id` int(10) unsigned NOT NULL,
+  `flags` int(10) unsigned NOT NULL,
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`spell_id`,`flags`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='all aura flags seen used with a given spell id';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.spell_cast_failed
 DROP TABLE IF EXISTS `spell_cast_failed`;
 CREATE TABLE IF NOT EXISTS `spell_cast_failed` (
@@ -3060,6 +3072,7 @@ CREATE TABLE IF NOT EXISTS `spell_unique_caster` (
   `caster_id` int(10) unsigned NOT NULL DEFAULT '0',
   `caster_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`caster_id`,`caster_type`,`spell_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='unique caster and spell combinations';
 

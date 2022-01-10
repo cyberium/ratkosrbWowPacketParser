@@ -144,6 +144,22 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("spell_id", true)]
         public uint SpellId;
+
+        [DBFieldName("sniff_build")]
+        public int SniffBuild = ClientVersion.BuildInt;
+    }
+
+    [DBTableName("spell_aura_flags")]
+    public sealed class SpellAuraFlags : IDataModel
+    {
+        [DBFieldName("spell_id", true)]
+        public uint SpellId;
+
+        [DBFieldName("flags", true)]
+        public uint Flags;
+
+        [DBFieldName("sniff_build")]
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("spell_cast_start")]
