@@ -1016,7 +1016,7 @@ namespace WowPacketParser.SQL.Builders
 
             uint count = 0;
             uint maxDbGuid = 0;
-            var rows = new RowList<GameObjectModel>();
+            var rows = new RowList<GameObjectSpawn>();
             var addonRows = new RowList<GameObjectAddon>();
             var create1Rows = new RowList<GameObjectCreate1>();
             var create2Rows = new RowList<GameObjectCreate2>();
@@ -1027,7 +1027,7 @@ namespace WowPacketParser.SQL.Builders
             var useRows = new RowList<GameObjectClientUse>();
             foreach (var gameobject in gameObjects)
             {
-                Row<GameObjectModel> row = new Row<GameObjectModel>();
+                Row<GameObjectSpawn> row = new Row<GameObjectSpawn>();
 
                 GameObject go = gameobject.Value;
 
@@ -1318,9 +1318,9 @@ namespace WowPacketParser.SQL.Builders
             if (rows.Count != 0)
             {
                 // delete query for GUIDs
-                var delete = new SQLDelete<GameObjectModel>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
+                var delete = new SQLDelete<GameObjectSpawn>(Tuple.Create("@OGUID+0", "@OGUID+" + maxDbGuid));
                 result.Append(delete.Build());
-                var sql = new SQLInsert<GameObjectModel>(rows, false);
+                var sql = new SQLInsert<GameObjectSpawn>(rows, false);
                 result.Append(sql.Build());
                 result.AppendLine();
             }

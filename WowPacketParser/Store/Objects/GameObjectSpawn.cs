@@ -5,7 +5,7 @@ using WowPacketParser.SQL;
 namespace WowPacketParser.Store.Objects
 {
     [DBTableName("gameobject")]
-    public sealed class GameObjectModel : IDataModel
+    public sealed class GameObjectSpawn : IDataModel
     {
         [DBFieldName("guid", true, true)]
         public string GUID;

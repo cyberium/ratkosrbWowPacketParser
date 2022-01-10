@@ -680,7 +680,7 @@
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\UpdateFieldExtensions.cs" />
     <Compile Include="Store\Objects\GameObjectAddon.cs" />
     <Compile Include="Store\Objects\GameObject.cs" />
-    <Compile Include="Store\Objects\GameObjectModel.cs" />
+    <Compile Include="Store\Objects\GameObjectSpawn.cs" />
     <Compile Include="Store\Objects\GameObjectTemplate.cs" />
     <Compile Include="Store\Objects\GameObjectTemplateAddon.cs" />
     <Compile Include="Store\Objects\GossipMenu.cs" />
