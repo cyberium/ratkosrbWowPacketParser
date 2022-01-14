@@ -127,6 +127,7 @@
         creature_template_locale,
         creature_template_scaling,
         creature_template_wdb,
+        creature_unique_emote,
         creature_unique_faction,
         creature_unique_gossip,
         gameobject_addon,

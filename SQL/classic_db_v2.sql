@@ -1119,6 +1119,19 @@ CREATE TABLE IF NOT EXISTS `creature_trainer` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_unique_emote
+DROP TABLE IF EXISTS `creature_unique_emote`;
+CREATE TABLE IF NOT EXISTS `creature_unique_emote` (
+  `entry` int(10) unsigned NOT NULL,
+  `emote_id` int(10) unsigned NOT NULL,
+  `emote_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`emote_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='all unique emote ids played by a given creature id\r\nfrom SMSG_EMOTE';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_unique_faction
 DROP TABLE IF EXISTS `creature_unique_faction`;
 CREATE TABLE IF NOT EXISTS `creature_unique_faction` (
@@ -1574,15 +1587,15 @@ CREATE TABLE IF NOT EXISTS `gossip_menu_option` (
   `id` smallint(5) unsigned NOT NULL DEFAULT '0',
   `option_icon` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `option_text` text,
-  `option_broadcast_text` mediumint(6) NOT NULL DEFAULT '0',
-  `option_id` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'guessed based on icon',
-  `npc_option_npcflag` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'guessed based on icon',
+  `option_broadcast_text` mediumint(6) NOT NULL DEFAULT '0' COMMENT 'not part of the packet, must be manually set',
+  `option_id` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, guessed based on icon',
+  `npc_option_npcflag` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, guessed based on icon',
   `action_menu_id` int(10) unsigned NOT NULL DEFAULT '0',
   `action_poi_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `box_coded` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `box_money` int(10) unsigned NOT NULL DEFAULT '0',
   `box_text` text,
-  `box_broadcast_text` mediumint(6) NOT NULL DEFAULT '0',
+  `box_broadcast_text` mediumint(6) NOT NULL DEFAULT '0' COMMENT 'not part of the packet, must be manually set',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`menu_id`,`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

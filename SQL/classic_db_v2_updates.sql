@@ -1085,3 +1085,10 @@ ALTER TABLE `creature_gossip`
 
 RENAME TABLE `creature_gossip` TO `creature_unique_gossip`;
 
+CREATE TABLE `creature_unique_emote` (
+  `entry` int(10) unsigned NOT NULL,
+  `emote_id` int(10) unsigned NOT NULL,
+  `emote_name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`emote_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='all unique emote ids played by a given creature id\r\nfrom SMSG_EMOTE';

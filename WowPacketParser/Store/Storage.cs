@@ -725,11 +725,23 @@ namespace WowPacketParser.Store
                 Storage.CreatureClientInteractTimes.Add(guid, usesList);
             }
         }
+        public static readonly DataBag<CreatureUniqueEmote> CreatureUniqueEmotes = new DataBag<CreatureUniqueEmote>(Settings.SqlTables.creature_unique_emote);
         public static readonly Dictionary<WowGuid, List<CreatureEmote>> Emotes = new Dictionary<WowGuid, List<CreatureEmote>>();
         public static void StoreUnitEmote(WowGuid guid, EmoteType emote, DateTime time)
         {
             if (guid.GetObjectType() == ObjectType.Unit)
             {
+                if (Settings.SqlTables.creature_unique_emote)
+                {
+                    CreatureUniqueEmote uniqueEmote = new CreatureUniqueEmote
+                    {
+                        Entry = guid.GetEntry(),
+                        EmoteId = (uint)emote,
+                        EmoteName = emote.ToString(),
+                    };
+                    CreatureUniqueEmotes.Add(uniqueEmote);
+                }
+
                 if (!Settings.SqlTables.creature_emote)
                     return;
             }

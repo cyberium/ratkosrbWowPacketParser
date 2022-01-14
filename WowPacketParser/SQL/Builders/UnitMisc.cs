@@ -1716,5 +1716,17 @@ namespace WowPacketParser.SQL.Builders
 
             return SQLUtil.Insert(Storage.CreatureKillReputations, false, true);
         }
+
+        [BuilderMethod]
+        public static string CreatureUniqueEmotes()
+        {
+            if (Storage.CreatureUniqueEmotes.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.creature_unique_emote)
+                return string.Empty;
+
+            return SQLUtil.Insert(Storage.CreatureUniqueEmotes, false, true);
+        }
     }
 }

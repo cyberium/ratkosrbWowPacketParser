@@ -91,6 +91,22 @@ namespace WowPacketParser.Store.Objects
         public string Auras;
     }
 
+    [DBTableName("creature_unique_emote")]
+    public sealed class CreatureUniqueEmote : IDataModel
+    {
+        [DBFieldName("entry", true)]
+        public uint Entry;
+
+        [DBFieldName("emote_id", true)]
+        public uint EmoteId;
+
+        [DBFieldName("emote_name")]
+        public string EmoteName;
+
+        [DBFieldName("sniff_build")]
+        public int SniffBuild = ClientVersion.BuildInt;
+    }
+
     [DBTableName("creature_unique_faction")]
     public sealed class CreatureFaction : IDataModel
     {
