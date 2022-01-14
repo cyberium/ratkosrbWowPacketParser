@@ -106,6 +106,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             animData.AsDespawn = packet.ReadBit("PlayAsDespawn");
             animData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
             Storage.StoreGameObjectCustomAnim(guid, animData);
+            packet.AddSniffData(StoreNameType.GameObject, (int)guid.GetEntry(), "CUSTOM_ANIM");
         }
 
         [Parser(Opcode.SMSG_GAME_OBJECT_DESPAWN)]

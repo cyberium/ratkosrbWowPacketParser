@@ -149,7 +149,8 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             packet.ReadXORByte(guid, 0);
             packet.ReadXORByte(guid, 2);
 
-            packet.WriteGuid("Guid", guid);
+            WowGuid objectGuid = packet.WriteGuid("Guid", guid);
+            packet.AddSniffData(StoreNameType.GameObject, (int)objectGuid.GetEntry(), "CUSTOM_ANIM");
         }
     }
 }

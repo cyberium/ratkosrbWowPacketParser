@@ -130,6 +130,7 @@ namespace WowPacketParser.Parsing.Parsers
             animData.AnimId = packet.ReadInt32("Anim");
             animData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
             Storage.StoreGameObjectCustomAnim(guid, animData);
+            packet.AddSniffData(StoreNameType.GameObject, (int)guid.GetEntry(), "CUSTOM_ANIM");
         }
 
         [Parser(Opcode.SMSG_GAME_OBJECT_ACTIVATE_ANIM_KIT)] // 4.3.4
