@@ -654,6 +654,7 @@ namespace WowPacketParser.Store
                     AnimId = animData.AnimId,
                     AsDespawn = animData.AsDespawn,
                 };
+                GameObjectUniqueAnims.Add(uniqueData);
             }
 
             if (!Settings.SqlTables.gameobject_custom_anim)
