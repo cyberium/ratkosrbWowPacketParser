@@ -91,7 +91,7 @@ namespace WowPacketParser.Store.Objects
         public string Auras;
     }
 
-    [DBTableName("creature_faction")]
+    [DBTableName("creature_unique_faction")]
     public sealed class CreatureFaction : IDataModel
     {
         [DBFieldName("entry", true)]
@@ -99,6 +99,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("faction", true)]
         public uint Faction;
+
+        [DBFieldName("sniff_build", true)]
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("creature_melee_damage")]

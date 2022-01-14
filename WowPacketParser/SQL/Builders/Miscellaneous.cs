@@ -452,5 +452,17 @@ namespace WowPacketParser.SQL.Builders
 
             return SQLUtil.Insert(Storage.MailTemplateItems, false, true);
         }
+
+        [BuilderMethod]
+        public static string GameObjectUniqueAnims()
+        {
+            if (Storage.GameObjectUniqueAnims.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.gameobject_unique_anim)
+                return string.Empty;
+
+            return SQLUtil.Insert(Storage.GameObjectUniqueAnims, false, true);
+        }
     }
 }

@@ -509,8 +509,8 @@ namespace WowPacketParser.SQL.Builders
 
             var result = "";
 
-            // `creature_gossip`
-            if (Settings.SqlTables.creature_gossip)
+            // `creature_unique_gossip`
+            if (Settings.SqlTables.creature_unique_gossip)
                 result += SQLUtil.Insert(Storage.CreatureGossips, false, true);
 
             // `gossip_menu`
@@ -698,7 +698,7 @@ namespace WowPacketParser.SQL.Builders
             if (units.Count == 0)
                 return string.Empty;
 
-            if (!Settings.SqlTables.creature_faction)
+            if (!Settings.SqlTables.creature_unique_faction)
                 return string.Empty;
 
             Dictionary<int, SortedSet<int>> factionsPerCreature = new Dictionary<int, SortedSet<int>>();

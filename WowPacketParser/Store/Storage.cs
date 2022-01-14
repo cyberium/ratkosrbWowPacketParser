@@ -642,9 +642,20 @@ namespace WowPacketParser.Store
                 Storage.GameObjectUpdates.Add(guid, updateList);
             }
         }
+        public static readonly DataBag<GameObjectUniqueAnim> GameObjectUniqueAnims = new DataBag<GameObjectUniqueAnim>(Settings.SqlTables.gameobject_unique_anim);
         public static readonly Dictionary<WowGuid, List<GameObjectCustomAnim>> GameObjectCustomAnims = new Dictionary<WowGuid, List<GameObjectCustomAnim>>();
         public static void StoreGameObjectCustomAnim(WowGuid guid, GameObjectCustomAnim animData)
         {
+            if (Settings.SqlTables.gameobject_unique_anim)
+            {
+                GameObjectUniqueAnim uniqueData = new GameObjectUniqueAnim
+                {
+                    GameObjectEntry = guid.GetEntry(),
+                    AnimId = animData.AnimId,
+                    AsDespawn = animData.AsDespawn,
+                };
+            }
+
             if (!Settings.SqlTables.gameobject_custom_anim)
                 return;
 
@@ -1992,7 +2003,7 @@ namespace WowPacketParser.Store
 
         // Gossips (MenuId, TextId)
         public static readonly Dictionary<uint, uint> CreatureDefaultGossips = new Dictionary<uint, uint>();
-        public static readonly DataBag<CreatureGossip> CreatureGossips = new DataBag<CreatureGossip>(Settings.SqlTables.creature_gossip);
+        public static readonly DataBag<CreatureGossip> CreatureGossips = new DataBag<CreatureGossip>(Settings.SqlTables.creature_unique_gossip);
         public static readonly DataBag<GossipMenu> Gossips = new DataBag<GossipMenu>(Settings.SqlTables.gossip_menu);
         public static readonly DataBag<GossipMenuOption> GossipMenuOptions = new DataBag<GossipMenuOption>(Settings.SqlTables.gossip_menu_option);
         public static readonly DataBag<GossipMenuOptionAction> GossipMenuOptionActions = new DataBag<GossipMenuOptionAction>(Settings.SqlTables.gossip_menu_option);

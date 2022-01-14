@@ -898,7 +898,7 @@ ALTER TABLE `spell_target_position`
 	DROP PRIMARY KEY,
 	ADD PRIMARY KEY (`spell_id`, `map`);
 
-CREATE TABLE IF NOT EXISTS `mail_template` (
+CREATE TABLE `mail_template` (
   `entry` int(10) unsigned NOT NULL DEFAULT '0',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `stationery_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -911,7 +911,7 @@ CREATE TABLE IF NOT EXISTS `mail_template` (
   PRIMARY KEY (`entry`,`sniff_build`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='data for mail sent by creatures\r\nfrom SMSG_MAIL_LIST_RESULT';
 
-CREATE TABLE IF NOT EXISTS `mail_template_item` (
+CREATE TABLE `mail_template_item` (
   `entry` int(10) unsigned NOT NULL DEFAULT '0',
   `slot` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `item_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1059,4 +1059,29 @@ ALTER TABLE `gameobject`
 
 ALTER TABLE `creature`
 	ADD COLUMN `is_on_transport` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `is_vehicle`;
+
+CREATE TABLE `gameobject_unique_anim` (
+  `entry` int(10) unsigned NOT NULL,
+  `anim_id` int(10) unsigned NOT NULL,
+  `as_despawn` tinyint(3) unsigned DEFAULT NULL,
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`anim_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='all unique custom anim ids used by a given gameobject id\r\nfrom SMSG_GAME_OBJECT_CUSTOM_ANIM';
+
+ALTER TABLE `creature_faction`
+	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `faction`;
+
+RENAME TABLE `creature_faction` TO `creature_unique_faction`;
+
+ALTER TABLE `creature_gossip`
+	ALTER `entry` DROP DEFAULT,
+	ALTER `gossip_menu_id` DROP DEFAULT,
+	ALTER `is_default` DROP DEFAULT;
+
+ALTER TABLE `creature_gossip`
+	CHANGE COLUMN `entry` `entry` MEDIUMINT(8) UNSIGNED NOT NULL FIRST,
+	CHANGE COLUMN `gossip_menu_id` `gossip_menu_id` MEDIUMINT(8) UNSIGNED NOT NULL AFTER `entry`,
+	CHANGE COLUMN `is_default` `is_default` TINYINT(3) UNSIGNED NOT NULL AFTER `gossip_menu_id`;
+
+RENAME TABLE `creature_gossip` TO `creature_unique_gossip`;
 

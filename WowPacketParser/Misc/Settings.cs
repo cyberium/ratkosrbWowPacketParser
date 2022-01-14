@@ -203,8 +203,6 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_armor = Conf.GetBoolean("creature_armor", false);
             public static readonly bool creature_display_info_addon = Conf.GetBoolean("creature_display_info_addon", false);
             public static readonly bool creature_equip_template = Conf.GetBoolean("creature_equip_template", false);
-            public static readonly bool creature_faction = Conf.GetBoolean("creature_faction", false);
-            public static readonly bool creature_gossip = Conf.GetBoolean("creature_gossip", false);
             public static readonly bool creature_kill_reputation = Conf.GetBoolean("creature_kill_reputation", false);
             public static readonly bool creature_loot = Conf.GetBoolean("creature_loot", false);
             public static readonly bool creature_melee_damage = Conf.GetBoolean("creature_melee_damage", false);
@@ -220,10 +218,13 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_template_locale = Conf.GetBoolean("creature_template_locale", false);
             public static readonly bool creature_template_scaling = Conf.GetBoolean("creature_template_scaling", false);
             public static readonly bool creature_template_wdb = Conf.GetBoolean("creature_template_wdb", false);
+            public static readonly bool creature_unique_faction = Conf.GetBoolean("creature_unique_faction", false);
+            public static readonly bool creature_unique_gossip = Conf.GetBoolean("creature_unique_gossip", false);
             public static readonly bool gameobject_addon = Conf.GetBoolean("gameobject_addon", false);
             public static readonly bool gameobject_loot = Conf.GetBoolean("gameobject_loot", false);
             public static readonly bool gameobject_template = Conf.GetBoolean("gameobject_template", false);
             public static readonly bool gameobject_template_addon = Conf.GetBoolean("gameobject_template_addon", false);
+            public static readonly bool gameobject_unique_anim = Conf.GetBoolean("gameobject_unique_anim", false);
             public static readonly bool gossip_menu = Conf.GetBoolean("gossip_menu", false);
             public static readonly bool gossip_menu_option = Conf.GetBoolean("gossip_menu_option", false);
             public static readonly bool item_template = Conf.GetBoolean("item_template", false);

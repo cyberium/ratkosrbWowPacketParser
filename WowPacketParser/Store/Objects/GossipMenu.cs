@@ -25,7 +25,7 @@ namespace WowPacketParser.Store.Objects
 
         //public ICollection<GossipMenuOption> GossipOptions;
     }
-    [DBTableName("creature_gossip")]
+    [DBTableName("creature_unique_gossip")]
     public class CreatureGossip : IDataModel
     {
         [DBFieldName("entry", true)]

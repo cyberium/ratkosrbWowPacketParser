@@ -482,30 +482,6 @@ CREATE TABLE IF NOT EXISTS `creature_equip_template` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.creature_faction
-DROP TABLE IF EXISTS `creature_faction`;
-CREATE TABLE IF NOT EXISTS `creature_faction` (
-  `entry` mediumint(8) unsigned NOT NULL,
-  `faction` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`entry`,`faction`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all unique faction template ids used by a given creature id';
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sniffs_new_test.creature_gossip
-DROP TABLE IF EXISTS `creature_gossip`;
-CREATE TABLE IF NOT EXISTS `creature_gossip` (
-  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `gossip_menu_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `is_default` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`entry`,`gossip_menu_id`,`is_default`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all unique gossip menu ids used for given creature id';
-
--- Data exporting was unselected.
-
-
 -- Dumping structure for table sniffs_new_test.creature_guid_values
 DROP TABLE IF EXISTS `creature_guid_values`;
 CREATE TABLE IF NOT EXISTS `creature_guid_values` (
@@ -1143,6 +1119,31 @@ CREATE TABLE IF NOT EXISTS `creature_trainer` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_unique_faction
+DROP TABLE IF EXISTS `creature_unique_faction`;
+CREATE TABLE IF NOT EXISTS `creature_unique_faction` (
+  `entry` mediumint(8) unsigned NOT NULL,
+  `faction` int(10) unsigned NOT NULL,
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`faction`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all unique faction template ids used by a given creature id';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.creature_unique_gossip
+DROP TABLE IF EXISTS `creature_unique_gossip`;
+CREATE TABLE IF NOT EXISTS `creature_unique_gossip` (
+  `entry` mediumint(8) unsigned NOT NULL,
+  `gossip_menu_id` mediumint(8) unsigned NOT NULL,
+  `is_default` tinyint(3) unsigned NOT NULL,
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`gossip_menu_id`,`is_default`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all unique gossip menu ids used for given creature id';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_values_update
 DROP TABLE IF EXISTS `creature_values_update`;
 CREATE TABLE IF NOT EXISTS `creature_values_update` (
@@ -1520,6 +1521,19 @@ CREATE TABLE IF NOT EXISTS `gameobject_template_addon` (
   `flags` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.gameobject_unique_anim
+DROP TABLE IF EXISTS `gameobject_unique_anim`;
+CREATE TABLE IF NOT EXISTS `gameobject_unique_anim` (
+  `entry` int(10) unsigned NOT NULL,
+  `anim_id` int(10) unsigned NOT NULL,
+  `as_despawn` tinyint(3) unsigned DEFAULT NULL,
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`anim_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='all unique custom anim ids used by a given gameobject id\r\nfrom SMSG_GAME_OBJECT_CUSTOM_ANIM';
 
 -- Data exporting was unselected.
 

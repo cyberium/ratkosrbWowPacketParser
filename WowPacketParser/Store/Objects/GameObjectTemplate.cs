@@ -85,4 +85,20 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
+
+    [DBTableName("gameobject_unique_anim")]
+    public sealed class GameObjectUniqueAnim : IDataModel
+    {
+        [DBFieldName("entry", true)]
+        public uint GameObjectEntry;
+
+        [DBFieldName("anim_id", true)]
+        public int AnimId;
+
+        [DBFieldName("as_despawn", true, false, true)]
+        public bool? AsDespawn;
+
+        [DBFieldName("sniff_build")]
+        public int SniffBuild = ClientVersion.BuildInt;
+    }
 }
