@@ -78,14 +78,17 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("is_hovering", DbType = (TargetedDbType.WPP))]
         public byte? Hover;
 
-        [DBFieldName("is_temporary", DbType = (TargetedDbType.WPP))]
-        public byte? TemporarySpawn;
-
         [DBFieldName("is_pet", DbType = (TargetedDbType.WPP))]
         public byte? IsPet;
 
         [DBFieldName("is_vehicle", DbType = (TargetedDbType.WPP))]
         public byte? IsVehicle;
+
+        [DBFieldName("is_on_transport", DbType = (TargetedDbType.WPP))]
+        public byte IsOnTransport;
+
+        [DBFieldName("is_temporary", DbType = (TargetedDbType.WPP))]
+        public byte? TemporarySpawn;
 
         [DBFieldName("summon_spell", DbType = (TargetedDbType.WPP))]
         public uint? SummonSpell;

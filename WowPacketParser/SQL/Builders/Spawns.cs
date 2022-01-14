@@ -113,6 +113,9 @@ namespace WowPacketParser.SQL.Builders
                         row.Data.Map = (uint)mapId;
                 }
 
+                if (creature.WasOriginallyOnTransport())
+                    row.Data.IsOnTransport = 1;
+
                 row.Data.AreaID = 0;
                 if (creature.Area != -1)
                     row.Data.AreaID = (uint)creature.Area;
@@ -1064,6 +1067,9 @@ namespace WowPacketParser.SQL.Builders
                     if (mapId != -1)
                         row.Data.Map = (uint)mapId;
                 }
+
+                if (go.WasOriginallyOnTransport())
+                    row.Data.IsOnTransport = 1;
 
                 row.Data.ZoneID = 0;
                 row.Data.AreaID = 0;

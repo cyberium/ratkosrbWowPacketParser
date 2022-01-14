@@ -1445,6 +1445,7 @@ namespace WowPacketParser.SQL.Builders
                             Emote = (textValue.Item1.Emote != null ? textValue.Item1.Emote : 0),
                             Sound = (textValue.Item1.Sound != null ? textValue.Item1.Sound : 0),
                             BroadcastTextID = textValue.Item1.BroadcastTextID,
+                            HealthPercent = textValue.Item1.HealthPercent,
                             Comment = textValue.Item1.Comment
                         },
 

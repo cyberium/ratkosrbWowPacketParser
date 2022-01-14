@@ -1054,3 +1054,9 @@ ALTER TABLE `creature_text`
 ALTER TABLE `creature_text_template`
 	ADD COLUMN `health_percent` FLOAT NULL DEFAULT NULL COMMENT 'not part of the packet, the current health of the creature at the time the text was said' AFTER `broadcast_text_id`;
 
+ALTER TABLE `gameobject`
+	ADD COLUMN `is_on_transport` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `is_transport`;
+
+ALTER TABLE `creature`
+	ADD COLUMN `is_on_transport` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `is_vehicle`;
+

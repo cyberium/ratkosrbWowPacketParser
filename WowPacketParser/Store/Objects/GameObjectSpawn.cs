@@ -71,6 +71,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("is_transport", DbType = (TargetedDbType.WPP))]
         public byte? IsTransport;
 
+        [DBFieldName("is_on_transport", DbType = (TargetedDbType.WPP))]
+        public byte IsOnTransport;
+
         [DBFieldName("creator_guid", false, true, DbType = (TargetedDbType.WPP))]
         public string CreatedByGuid;
 
