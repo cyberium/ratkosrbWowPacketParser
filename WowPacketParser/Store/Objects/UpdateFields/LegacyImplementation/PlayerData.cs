@@ -33,14 +33,6 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
 
         public uint GuildRankID => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_GUILDRANK);
 
-        public uint Experience => (ClientVersion.AddedInVersion(ClientVersionBuild.V8_0_1_27101) ?
-            UpdateFields.GetValue<ActivePlayerField, uint>(ActivePlayerField.ACTIVE_PLAYER_FIELD_XP) :
-            UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_XP));
-
-        public uint Money => (ClientVersion.AddedInVersion(ClientVersionBuild.V8_0_1_27101) ?
-            UpdateFields.GetValue<ActivePlayerField, uint>(ActivePlayerField.ACTIVE_PLAYER_FIELD_COINAGE) :
-            UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_FIELD_COINAGE));
-
         public uint PlayerBytes1 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES);
         public uint PlayerBytes2 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_2);
         public uint PlayerFlags => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_FLAGS);
@@ -167,14 +159,6 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
         public WowGuid WowAccount => GetGuidValue(PlayerField.PLAYER_WOW_ACCOUNT);
 
         public uint GuildRankID => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_GUILDRANK);
-
-        public uint Experience => (ClientVersion.AddedInVersion(ClientVersionBuild.V8_0_1_27101) ?
-            UpdateFields.GetValue<ActivePlayerField, uint>(ActivePlayerField.ACTIVE_PLAYER_FIELD_XP) :
-            UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_XP));
-
-        public uint Money => (ClientVersion.AddedInVersion(ClientVersionBuild.V8_0_1_27101) ?
-            UpdateFields.GetValue<ActivePlayerField, uint>(ActivePlayerField.ACTIVE_PLAYER_FIELD_COINAGE) :
-            UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_FIELD_COINAGE));
 
         public uint PlayerBytes1 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES);
         public uint PlayerBytes2 => UpdateFields.GetValue<PlayerField, uint>(PlayerField.PLAYER_BYTES_2);

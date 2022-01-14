@@ -23,18 +23,22 @@ namespace WowPacketParser.Store.Objects
 
         public IPlayerData PlayerData;
         public IPlayerData PlayerDataOriginal;
+        public IActivePlayerData ActivePlayerData;
+        public IActivePlayerData ActivePlayerDataOriginal;
 
         public Player() : base(false)
         {
             DbGuid = ++PlayerGuidCounter;
             PlayerData = new PlayerData(this);
             PlayerDataOriginal = new OriginalPlayerData(this);
+            ActivePlayerData = new ActivePlayerData(this, false);
+            ActivePlayerDataOriginal = new ActivePlayerData(this, true);
         }
 
-        public bool HasMainHandWeapon()
+        public uint GetMainHandWeapon()
         {
             if (ClientVersion.IsUsingNewUpdateFieldSystem())
-                return PlayerData.VisibleItems[(int)EquipmentSlotType.MainHand].ItemID != 0;
+                return (uint)PlayerData.VisibleItems[(int)EquipmentSlotType.MainHand].ItemID;
 
             // Optimization for old UF system.
             // Don't call PlayerData cause it creates a whole array.
@@ -48,11 +52,30 @@ namespace WowPacketParser.Store.Objects
             if (field <= 0)
                 field = Enums.Version.UpdateFields.GetUpdateField(PlayerField.PLAYER_VISIBLE_ITEM_1_ENTRYID);
             if (field <= 0)
-                return true;
+                return 0;
 
             UpdateField value;
             UpdateFields.TryGetValue(field + offset * (int)EquipmentSlotType.MainHand, out value);
-            return value.UInt32Value != 0;
+            return value.UInt32Value;
+        }
+
+        public void GetSkill(ushort skillId, out ushort currentSkill, out ushort maxSkill)
+        {
+            const uint PLAYER_MAX_SKILLS = 256;
+            ISkillInfo skillData = ActivePlayerData.Skill;
+
+            for (uint i = 0; i < PLAYER_MAX_SKILLS; ++i)
+            {
+                if (skillId == skillData.SkillLineID[i])
+                {
+                    currentSkill = skillData.SkillRank[i];
+                    maxSkill = skillData.SkillMaxRank[i];
+                    return;
+                }
+            }
+
+            currentSkill = 0;
+            maxSkill = 0;
         }
     }
 }

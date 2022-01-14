@@ -7,6 +7,7 @@ using WowPacketParser.Enums.Version;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
 using WowPacketParser.Store.Objects;
+using WowPacketParser.Store.Objects.UpdateFields;
 
 namespace WowPacketParser.SQL.Builders
 {
@@ -2600,8 +2601,8 @@ namespace WowPacketParser.SQL.Builders
                 row.Data.Class = player.UnitDataOriginal.ClassId;
                 row.Data.Gender = player.UnitDataOriginal.Sex;
                 row.Data.Level = (uint)player.UnitDataOriginal.Level;
-                row.Data.XP = player.PlayerDataOriginal.Experience;
-                row.Data.Money = player.PlayerDataOriginal.Money;
+                row.Data.XP = (uint)player.ActivePlayerData.XP;
+                row.Data.Money = (uint)player.ActivePlayerData.Coinage;
                 AssignPlayerAppearanceFields(player.PlayerDataOriginal, out row.Data.Skin, out row.Data.Face, out row.Data.HairStyle, out row.Data.HairColor, out row.Data.FacialHair);
                 row.Data.PlayerFlags = player.PlayerDataOriginal.PlayerFlags;
 
@@ -3097,52 +3098,23 @@ namespace WowPacketParser.SQL.Builders
 
                 if (Settings.SqlTables.character_skills)
                 {
-                    if (ClientVersion.Expansion == ClientType.Classic)
+                    const uint PLAYER_MAX_SKILLS = 256;
+                    ISkillInfo skillData = player.ActivePlayerData.Skill;
+
+                    for (uint i = 0; i < PLAYER_MAX_SKILLS; ++i)
                     {
-                        int skillsField = UpdateFields.GetUpdateField(ActivePlayerField.ACTIVE_PLAYER_FIELD_SKILL_LINEID);
-                        if (skillsField > 0)
+                        uint skillId = skillData.SkillLineID[i];
+                        uint skillRank = skillData.SkillRank[i];
+                        uint skillMaxRank = skillData.SkillMaxRank[i];
+
+                        if (skillId != 0 && skillMaxRank != 0)
                         {
-                            const uint PLAYER_MAX_SKILLS = 256;
-                            const uint SKILL_FIELD_ARRAY_SIZE = 256 / 4 * 2;
-                            const uint SKILL_ID_OFFSET = 0;
-                            const uint SKILL_STEP_OFFSET = SKILL_ID_OFFSET + SKILL_FIELD_ARRAY_SIZE;
-                            const uint SKILL_RANK_OFFSET = SKILL_STEP_OFFSET + SKILL_FIELD_ARRAY_SIZE;
-                            const uint SUBSKILL_START_RANK_OFFSET = SKILL_RANK_OFFSET + SKILL_FIELD_ARRAY_SIZE;
-                            const uint SKILL_MAX_RANK_OFFSET = SUBSKILL_START_RANK_OFFSET + SKILL_FIELD_ARRAY_SIZE;
-
-                            for (uint i = 0; i < PLAYER_MAX_SKILLS; ++i)
-                            {
-                                uint field = i / 2;
-                                uint offset = i & 1; // i % 2
-
-                                uint skillId = 0;
-                                uint skillStep = 0;
-                                uint skillRank = 0;
-                                uint skillMaxRank = 0;
-
-                                UpdateField value;
-                                if (player.UpdateFields.TryGetValue((int)(skillsField + SKILL_ID_OFFSET + field), out value))
-                                    skillId = (value.UInt32Value >> (offset == 1 ? 16 : 0)) & 0xFFFF;
-
-                                if (player.UpdateFields.TryGetValue((int)(skillsField + SKILL_STEP_OFFSET + field), out value))
-                                    skillStep = (value.UInt32Value >> (offset == 1 ? 16 : 0)) & 0xFFFF;
-
-                                if (player.UpdateFields.TryGetValue((int)(skillsField + SKILL_RANK_OFFSET + field), out value))
-                                    skillRank = (value.UInt32Value >> (offset == 1 ? 16 : 0)) & 0xFFFF;
-
-                                if (player.UpdateFields.TryGetValue((int)(skillsField + SKILL_MAX_RANK_OFFSET + field), out value))
-                                    skillMaxRank = (value.UInt32Value >> (offset == 1 ? 16 : 0)) & 0xFFFF;
-
-                                if (skillId != 0 && skillMaxRank != 0)
-                                {
-                                    var skillRow = new Row<CharacterSkill>();
-                                    skillRow.Data.Guid = "@PGUID+" + player.DbGuid;
-                                    skillRow.Data.Skill = skillId;
-                                    skillRow.Data.Value = skillRank;
-                                    skillRow.Data.Max = skillMaxRank;
-                                    characterSkillRows.Add(skillRow);
-                                }
-                            }
+                            var skillRow = new Row<CharacterSkill>();
+                            skillRow.Data.Guid = "@PGUID+" + player.DbGuid;
+                            skillRow.Data.Skill = skillId;
+                            skillRow.Data.Value = skillRank;
+                            skillRow.Data.Max = skillMaxRank;
+                            characterSkillRows.Add(skillRow);
                         }
                     }
                 }
@@ -3517,6 +3489,54 @@ namespace WowPacketParser.SQL.Builders
 
             var sql = new SQLInsert<PlayerLevelupInfo>(rows);
             return sql.Build();
+        }
+
+        [BuilderMethod]
+        public static string PlayerCritChances()
+        {
+            if (Storage.PlayerCritChances.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.player_crit_chance)
+                return string.Empty;
+
+            foreach (var objPair in Storage.Objects)
+            {
+                if (objPair.Key.GetObjectType() != ObjectType.Player)
+                    continue;
+
+                Player player = objPair.Value.Item1 as Player;
+                if (player == null)
+                    continue;
+
+                Storage.SavePlayerCrit(player);
+            }
+
+            return SQLUtil.Insert(Storage.PlayerCritChances, false, true);
+        }
+
+        [BuilderMethod]
+        public static string PlayerDodgeChances()
+        {
+            if (Storage.PlayerDodgeChances.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.player_dodge_chance)
+                return string.Empty;
+
+            foreach (var objPair in Storage.Objects)
+            {
+                if (objPair.Key.GetObjectType() != ObjectType.Player)
+                    continue;
+
+                Player player = objPair.Value.Item1 as Player;
+                if (player == null)
+                    continue;
+
+                Storage.SavePlayerDodge(player);
+            }
+
+            return SQLUtil.Insert(Storage.PlayerDodgeChances, false, true);
         }
     }
 }

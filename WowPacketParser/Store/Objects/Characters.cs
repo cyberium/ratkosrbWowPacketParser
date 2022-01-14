@@ -451,6 +451,68 @@ namespace WowPacketParser.Store.Objects
         public string GUID;
     }
 
+    [DBTableName("player_crit_chance")]
+    public sealed class PlayerCritChance : IDataModel
+    {
+        [DBFieldName("race", true)]
+        public uint RaceId;
+
+        [DBFieldName("class", true)]
+        public uint ClassId;
+
+        [DBFieldName("level", true)]
+        public int Level;
+
+        [DBFieldName("agility", true)]
+        public int Agility;
+
+        [DBFieldName("crit_chance", true)]
+        public float CritChance;
+
+        [DBFieldName("weapon_item_id")]
+        public uint WeaponItemId;
+
+        [DBFieldName("weapon_skill_id", true)]
+        public ushort WeaponSkillId;
+
+        [DBFieldName("skill_current_value", true)]
+        public ushort SkillCurrentValue;
+
+        [DBFieldName("skill_max_value", true)]
+        public ushort SkillMaxValue;
+
+        [DBFieldName("relevant_auras", true)]
+        public string RelevantAuras;
+    }
+
+    [DBTableName("player_dodge_chance")]
+    public sealed class PlayerDodgeChance : IDataModel
+    {
+        [DBFieldName("race", true)]
+        public uint RaceId;
+
+        [DBFieldName("class", true)]
+        public uint ClassId;
+
+        [DBFieldName("level", true)]
+        public int Level;
+
+        [DBFieldName("agility", true)]
+        public int Agility;
+
+        [DBFieldName("dodge_chance", true)]
+        public float DodgeChance;
+
+        [DBFieldName("defense_current_value", true)]
+        public ushort DefenseCurrentValue;
+
+        [DBFieldName("defense_max_value", true)]
+        public ushort DefenseMaxValue;
+
+        [DBFieldName("relevant_auras", true)]
+        public string RelevantAuras;
+    }
+
     [DBTableName("player_classlevelstats")]
     public sealed class PlayerClassLevelStats : IDataModel
     {

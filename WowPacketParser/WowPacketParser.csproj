@@ -291,6 +291,7 @@
     <Compile Include="Enums\RaidSummonFail.cs" />
     <Compile Include="Enums\ReportPvPAFKResult.cs" />
     <Compile Include="Enums\SecureAddonStatus.cs" />
+    <Compile Include="Enums\SkillType.cs" />
     <Compile Include="Enums\SplineFlagTBC.cs" />
     <Compile Include="Enums\SplineFlagVanilla.cs" />
     <Compile Include="Enums\StandState.cs" />
@@ -672,6 +673,7 @@
     <Compile Include="Store\Objects\UpdateFields\IReplayedQuest.cs" />
     <Compile Include="Store\Objects\UpdateFields\ISelectedAzeriteEssences.cs" />
     <Compile Include="Store\Objects\UpdateFields\IUnlockedAzeriteEssence.cs" />
+    <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\ActivePlayerData.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\AreaTriggerData.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\ConversationData.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\DynamicObjectData.cs" />

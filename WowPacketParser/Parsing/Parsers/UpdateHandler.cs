@@ -153,13 +153,23 @@ namespace WowPacketParser.Parsing.Parsers
             HandleMovementInfoChange(obj, guid, packet.Time, moveInfo);
             if (updates != null)
             {
-                bool savePlayerStats = StoreObjectUpdate(packet, guid, updateMaskArray, updates, true);
+                bool hasPlayerLevelUp = false;
+                bool hasCritUpdate = false;
+                bool hasDodgeUpdate = false;
+                StoreObjectUpdate(packet, guid, updateMaskArray, updates, true, ref hasPlayerLevelUp, ref hasCritUpdate, ref hasDodgeUpdate);
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
 
                 if (guid.GetObjectType() == ObjectType.Unit)
                     Storage.StoreCreatureStats(obj as Unit, updateMaskArray, guid.GetHighType() == HighGuidType.Pet, packet);
-                else if (savePlayerStats)
-                    Storage.SavePlayerStats(obj, false);
+                else
+                {
+                    if (hasPlayerLevelUp)
+                        Storage.SavePlayerStats(obj, false);
+                    if (hasCritUpdate)
+                        Storage.SavePlayerCrit(obj);
+                    if (hasDodgeUpdate)
+                        Storage.SavePlayerDodge(obj);
+                }
             }
         }
 
@@ -187,14 +197,25 @@ namespace WowPacketParser.Parsing.Parsers
             {
                 BitArray updateMaskArray = null;
                 var updates = ReadValuesUpdateBlock(packet, obj.Type, index, false, obj.UpdateFields, out updateMaskArray);
-                bool savePlayerStats = StoreObjectUpdate(packet, guid, updateMaskArray, updates, false);
+
+                bool hasPlayerLevelUp = false;
+                bool hasCritUpdate = false;
+                bool hasDodgeUpdate = false;
+                StoreObjectUpdate(packet, guid, updateMaskArray, updates, false, ref hasPlayerLevelUp, ref hasCritUpdate, ref hasDodgeUpdate);
                 var dynamicUpdates = ReadDynamicValuesUpdateBlock(packet, obj.Type, index, false, obj.DynamicUpdateFields);
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
 
                 if (guid.GetObjectType() == ObjectType.Unit)
                     Storage.StoreCreatureStats(obj as Unit, updateMaskArray, guid.GetHighType() == HighGuidType.Pet, packet);
-                else if (savePlayerStats)
-                    Storage.SavePlayerStats(obj, false);
+                else
+                {
+                    if (hasPlayerLevelUp)
+                        Storage.SavePlayerStats(obj, false);
+                    if (hasCritUpdate)
+                        Storage.SavePlayerCrit(obj);
+                    if (hasDodgeUpdate)
+                        Storage.SavePlayerDodge(obj);
+                }
             }
             else
             {
@@ -309,9 +330,8 @@ namespace WowPacketParser.Parsing.Parsers
         }
 
         // returns true if active player leveled up and we need to save stats
-        public static bool StoreObjectUpdate(Packet packet, WowGuid guid, BitArray updateMaskArray, Dictionary<int, UpdateField> updates, bool isCreate)
+        public static void StoreObjectUpdate(Packet packet, WowGuid guid, BitArray updateMaskArray, Dictionary<int, UpdateField> updates, bool isCreate, ref bool hasPlayerLevelup, ref bool hasCritUpdate, ref bool hasDodgeUpdate)
         {
-            bool hasPlayerLevelup = false;
             ObjectType objectType = guid.GetObjectType();
             if ((objectType == ObjectType.Unit) ||
                 (objectType == ObjectType.Player) ||
@@ -424,6 +444,16 @@ namespace WowPacketParser.Parsing.Parsers
                                 creatureUpdate.Level = update.Value.UInt32Value;
                             }
                         }
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(PlayerField.PLAYER_CRIT_PERCENTAGE) ||
+                             update.Key == UpdateFields.GetUpdateField(ActivePlayerField.ACTIVE_PLAYER_FIELD_CRIT_PERCENTAGE))
+                    {
+                        hasCritUpdate = true;
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(PlayerField.PLAYER_DODGE_PERCENTAGE) ||
+                             update.Key == UpdateFields.GetUpdateField(ActivePlayerField.ACTIVE_PLAYER_FIELD_DODGE_PERCENTAGE))
+                    {
+                        hasDodgeUpdate = true;
                     }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_AURASTATE))
                     {
@@ -1188,7 +1218,6 @@ namespace WowPacketParser.Parsing.Parsers
                     Storage.StoreGameObjectUpdate(guid, goUpdate);
                 }
             }
-            return hasPlayerLevelup;
         }
 
         private static void ParseAurasFromUpdateFields(Packet packet, WowGuid guid, BitArray updateMaskArray, Dictionary<int, UpdateField> updates, bool isCreate)

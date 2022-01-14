@@ -150,6 +150,8 @@
         playercreateinfo,
         playercreateinfo_action,
         player_classlevelstats,
+        player_crit_chance,
+        player_dodge_chance,
         player_levelstats,
         player_levelup_info,
         points_of_interest,

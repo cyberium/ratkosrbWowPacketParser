@@ -935,9 +935,9 @@ namespace WowPacketParser.Store
                     StoreCreatureMeleeAttackSchool(entry, attackData.TotalSchoolMask);
                 }
 
-                if (saveCreatureArmor &&
+                if (saveCreatureArmor && isNormalHit &&
+                    attackData.OriginalDamage >= 10 &&
                     attackData.Damage < attackData.OriginalDamage &&
-                    (!(attacker is Player) || ((Player)attacker).HasMainHandWeapon()) &&
                     Storage.Objects.ContainsKey(attackData.Victim))
                 {
                     Unit victim = Storage.Objects[attackData.Victim].Item1 as Unit;
@@ -945,7 +945,7 @@ namespace WowPacketParser.Store
                     int victimLevel = victim.UnitData.Level;
                     int attackerLevel = attacker.UnitData.Level;
 
-                    if (isNormalHit && Math.Abs(victimLevel - attackerLevel) < 10 &&
+                    if ( Math.Abs(victimLevel - attackerLevel) < 10 &&
                         !victim.HasAuraMatchingCriteria(HardcodedData.IsModResistAura) &&
                         !victim.HasAuraMatchingCriteria(HardcodedData.IsModPhysicalDamageTakenAura))
                     {
@@ -1852,6 +1852,8 @@ namespace WowPacketParser.Store
         public static readonly DataBag<PlayerClassLevelStats> PlayerClassLevelStats = new DataBag<PlayerClassLevelStats>(Settings.SqlTables.player_classlevelstats);
         public static readonly DataBag<PlayerLevelStats> PlayerLevelStats = new DataBag<PlayerLevelStats>(Settings.SqlTables.player_levelstats);
         public static readonly DataBag<PlayerLevelupInfo> PlayerLevelupInfos = new DataBag<PlayerLevelupInfo>(Settings.SqlTables.player_levelup_info);
+        public static readonly DataBag<PlayerCritChance> PlayerCritChances = new DataBag<PlayerCritChance>(Settings.SqlTables.player_crit_chance);
+        public static readonly DataBag<PlayerDodgeChance> PlayerDodgeChances = new DataBag<PlayerDodgeChance>(Settings.SqlTables.player_dodge_chance);
         public static void SavePlayerStats(WoWObject obj, bool useInitialData)
         {
             if (!Settings.SqlTables.player_levelstats && !Settings.SqlTables.player_classlevelstats)
@@ -1889,6 +1891,103 @@ namespace WowPacketParser.Store
                 levelStats.Stamina != 0 || levelStats.Intellect != 0 ||
                 levelStats.Spirit != 0)
                 Storage.PlayerLevelStats.Add(levelStats);
+        }
+        public static void SavePlayerCrit(WoWObject obj)
+        {
+            if (!Settings.SqlTables.player_crit_chance)
+                return;
+
+            Player player = obj as Player;
+            if (player == null)
+                return;
+
+            float critChance = player.ActivePlayerData.CritPercentage;
+            if (critChance <= 0)
+                return;
+
+            int agility = player.UnitData.Stats[(int)StatType.Agility];
+            if (agility <= 0)
+                return;
+
+            ushort skillId = 0;
+            ushort skillRank = 0;
+            ushort skillMaxRank = 0;
+            uint itemId = player.GetMainHandWeapon();
+
+            if (itemId == 0 || HardcodedData.WeaponFists.Contains(itemId))
+                skillId = (ushort)SkillType.Unarmed;
+            else if (HardcodedData.WeaponAxes.Contains(itemId))
+                skillId = (ushort)SkillType.Axes;
+            else if (HardcodedData.WeaponTwoHandedAxes.Contains(itemId))
+                skillId = (ushort)SkillType.TwoHandedAxes;
+            else if (HardcodedData.WeaponMaces.Contains(itemId))
+                skillId = (ushort)SkillType.Maces;
+            else if (HardcodedData.WeaponTwoHandedMaces.Contains(itemId))
+                skillId = (ushort)SkillType.TwoHandedMaces;
+            else if (HardcodedData.WeaponPolearms.Contains(itemId))
+                skillId = (ushort)SkillType.Polearms;
+            else if (HardcodedData.WeaponSwords.Contains(itemId))
+                skillId = (ushort)SkillType.Swords;
+            else if (HardcodedData.WeaponTwoHandedSwords.Contains(itemId))
+                skillId = (ushort)SkillType.TwoHandedSwords;
+            else if (HardcodedData.WeaponStaves.Contains(itemId))
+                skillId = (ushort)SkillType.Staves;
+            else if (HardcodedData.WeaponDaggers.Contains(itemId))
+                skillId = (ushort)SkillType.Daggers;
+            else
+                return;
+
+            player.GetSkill(skillId, out skillRank, out skillMaxRank);
+            if (skillRank == 0 || skillMaxRank == 0)
+                return;
+
+            PlayerCritChance critData = new PlayerCritChance();
+            critData.RaceId = player.UnitData.RaceId;
+            critData.ClassId = player.UnitData.ClassId;
+            critData.Level = player.UnitData.Level;
+            critData.Agility = agility;
+            critData.CritChance = critChance;
+            critData.WeaponItemId = itemId;
+            critData.WeaponSkillId = skillId;
+            critData.SkillCurrentValue = skillRank;
+            critData.SkillMaxValue = skillMaxRank;
+            critData.RelevantAuras = player.GetAurasStringMatchingCriteria(HardcodedData.IsModCritPercentAura);
+            PlayerCritChances.Add(critData);
+        }
+        public static void SavePlayerDodge(WoWObject obj)
+        {
+            if (!Settings.SqlTables.player_dodge_chance)
+                return;
+
+            Player player = obj as Player;
+            if (player == null)
+                return;
+
+            float dodgeChance = player.ActivePlayerData.DodgePercentage;
+            if (dodgeChance <= 0)
+                return;
+
+            int agility = player.UnitData.Stats[(int)StatType.Agility];
+            if (agility <= 0)
+                return;
+
+            ushort skillRank = 0;
+            ushort skillMaxRank = 0;
+
+            player.GetSkill((ushort)SkillType.Defense, out skillRank, out skillMaxRank);
+            if (skillRank == 0 || skillMaxRank == 0)
+                return;
+
+            PlayerDodgeChance dodgeData = new PlayerDodgeChance();
+            dodgeData.RaceId = player.UnitData.RaceId;
+            dodgeData.ClassId = player.UnitData.ClassId;
+            dodgeData.Level = player.UnitData.Level;
+            dodgeData.Agility = agility;
+            dodgeData.DodgeChance = dodgeChance;
+            dodgeData.DefenseCurrentValue = skillRank;
+            dodgeData.DefenseMaxValue = skillMaxRank;
+            dodgeData.RelevantAuras = player.GetAurasStringMatchingCriteria(HardcodedData.IsModDodgePercentAura);
+            PlayerDodgeChances.Add(dodgeData);
         }
 
         // Gossips (MenuId, TextId)
@@ -2394,6 +2493,8 @@ namespace WowPacketParser.Store
             PlayerClassLevelStats.Clear();
             PlayerLevelStats.Clear();
             PlayerLevelupInfos.Clear();
+            PlayerCritChances.Clear();
+            PlayerDodgeChances.Clear();
 
             CreatureDefaultGossips.Clear();
             CreatureGossips.Clear();

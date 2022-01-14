@@ -15,8 +15,6 @@ namespace WowPacketParserModule.V9_0_1_36216.UpdateFields.V9_0_2_36639
         public uint PlayerFlags { get; set; }
         public uint PlayerFlagsEx { get; set; }
         public byte PvPRank { get; set; }
-        public uint Money { get; set; }
-        public uint Experience { get; set; }
         public uint GuildRankID { get; set; }
         public uint GuildDeleteDate { get; set; }
         public int GuildLevel { get; set; }

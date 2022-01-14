@@ -211,6 +211,24 @@ namespace WowPacketParser.Store.Objects
             return false;
         }
 
+        public string GetAurasStringMatchingCriteria(Func<uint, bool> auraCheckFunc)
+        {
+            if (Auras == null)
+                return "";
+
+            List<Aura> matchingAuras = new List<Aura>();
+            foreach (Aura aura in Auras)
+            {
+                if (aura == null || aura.SpellId == 0)
+                    continue;
+
+                if (auraCheckFunc(aura.SpellId))
+                    matchingAuras.Add(aura);
+            }
+
+            return AurasToString(matchingAuras, false);
+        }
+
         public void CheckForTemplateAuras()
         {
             if (Auras == null)

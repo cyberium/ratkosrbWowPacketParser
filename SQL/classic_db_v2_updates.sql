@@ -974,3 +974,39 @@ ALTER TABLE `creature`
 	CHANGE COLUMN `is_hovering` `is_hovering` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'hover bit from create object' AFTER `is_spawn`,
 	CHANGE COLUMN `is_pet` `is_pet` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'highguid is pet' AFTER `is_hovering`,
 	CHANGE COLUMN `is_vehicle` `is_vehicle` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'highguid is vehicle' AFTER `is_pet`;
+
+CREATE TABLE `player_crit_chance` (
+	`race` TINYINT UNSIGNED NOT NULL DEFAULT '0',
+	`class` TINYINT UNSIGNED NOT NULL DEFAULT '0',
+	`level` TINYINT UNSIGNED NOT NULL DEFAULT '0',
+	`agility` INT UNSIGNED NOT NULL DEFAULT '0',
+	`crit_chance` FLOAT NOT NULL DEFAULT '0',
+	`weapon_item_id` INT UNSIGNED NOT NULL DEFAULT '0',
+	`weapon_skill_id` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+	`skill_current_value` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+	`skill_max_value` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+	`relevant_auras` VARCHAR(128) NOT NULL DEFAULT '' COMMENT 'auras of type 52'
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;
+
+ALTER TABLE `player_crit_chance`
+	COMMENT='data about player melee crit chance, so that we can calculate the correct bonus to crit chance per agility in vanilla\r\nother expansions have this data in a dbc, because its shown on the user interface when you mouse over the agility stat';
+
+CREATE TABLE `player_dodge_chance` (
+	`race` TINYINT UNSIGNED NOT NULL DEFAULT '0',
+	`class` TINYINT UNSIGNED NOT NULL DEFAULT '0',
+	`level` TINYINT UNSIGNED NOT NULL DEFAULT '0',
+	`agility` INT UNSIGNED NOT NULL DEFAULT '0',
+	`dodge_chance` FLOAT NOT NULL DEFAULT '0',
+	`defense_current_value` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+	`defense_max_value` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
+	`relevant_auras` VARCHAR(128) NOT NULL DEFAULT '' COMMENT 'auras of type 49'
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;
+
+ALTER TABLE `player_dodge_chance`
+	COMMENT='data about player dodge chance, so that we can calculate the correct bonus to dodge chance per agility in vanilla\r\nother expansions have this data in a dbc, because its shown on the user interface when you mouse over the agility stat';

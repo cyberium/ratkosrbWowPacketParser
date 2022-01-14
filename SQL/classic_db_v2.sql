@@ -2215,6 +2215,24 @@ CREATE TABLE IF NOT EXISTS `player_create2_time` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.player_crit_chance
+DROP TABLE IF EXISTS `player_crit_chance`;
+CREATE TABLE IF NOT EXISTS `player_crit_chance` (
+  `race` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `class` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `level` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `agility` int(10) unsigned NOT NULL DEFAULT '0',
+  `crit_chance` float NOT NULL DEFAULT '0',
+  `weapon_item_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `weapon_skill_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `skill_current_value` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `skill_max_value` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `relevant_auras` varchar(128) NOT NULL DEFAULT '' COMMENT 'auras of type 52'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='data about player melee crit chance, so that we can calculate the correct bonus to crit chance per agility in vanilla\r\nother expansions have this data in a dbc, because its shown on the user interface when you mouse over the agility stat';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.player_destroy_time
 DROP TABLE IF EXISTS `player_destroy_time`;
 CREATE TABLE IF NOT EXISTS `player_destroy_time` (
@@ -2222,6 +2240,22 @@ CREATE TABLE IF NOT EXISTS `player_destroy_time` (
   `guid` int(10) unsigned NOT NULL,
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='times when the object was destroyed from the client''s prespective due to despawning, becoming invisible, or going out of range';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_dodge_chance
+DROP TABLE IF EXISTS `player_dodge_chance`;
+CREATE TABLE IF NOT EXISTS `player_dodge_chance` (
+  `race` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `class` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `level` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `agility` int(10) unsigned NOT NULL DEFAULT '0',
+  `dodge_chance` float NOT NULL DEFAULT '0',
+  `defense_current_value` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `defense_max_value` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `relevant_auras` varchar(128) NOT NULL DEFAULT '' COMMENT 'auras of type 49'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='data about player dodge chance, so that we can calculate the correct bonus to dodge chance per agility in vanilla\r\nother expansions have this data in a dbc, because its shown on the user interface when you mouse over the agility stat';
 
 -- Data exporting was unselected.
 

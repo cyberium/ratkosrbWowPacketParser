@@ -104,7 +104,12 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                                         player.PlayerData = data;
                                 }
                                 if ((updateTypeFlag & 0x0080) != 0)
-                                    handler.ReadUpdateActivePlayerData(fieldsData, null, i);
+                                {
+                                    var player = obj as Player;
+                                    var data = handler.ReadUpdateActivePlayerData(fieldsData, null, i);
+                                    if (player != null)
+                                        player.ActivePlayerData = data;
+                                }
                                 if ((updateTypeFlag & 0x0100) != 0)
                                 {
                                     var go = obj as GameObject;
@@ -649,7 +654,9 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                             if (!isExistingObject)
                                 (obj as Player).PlayerDataOriginal = (obj as Player).PlayerData.Clone();
 
-                            handler.ReadCreateActivePlayerData(fieldsData, flags, index);
+                            (obj as Player).ActivePlayerData = handler.ReadCreateActivePlayerData(fieldsData, flags, index);
+                            if (!isExistingObject)
+                                (obj as Player).ActivePlayerDataOriginal = (obj as Player).ActivePlayerData;
                             break;
                         case ObjectType.GameObject:
                             if (isExistingObject && (obj as GameObject).GameObjectData != null)
