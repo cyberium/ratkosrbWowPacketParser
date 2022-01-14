@@ -100,7 +100,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("faction", true)]
         public uint Faction;
 
-        [DBFieldName("sniff_build", true)]
+        [DBFieldName("sniff_build")]
         public int SniffBuild = ClientVersion.BuildInt;
     }
 
