@@ -1010,3 +1010,47 @@ ENGINE=InnoDB
 
 ALTER TABLE `player_dodge_chance`
 	COMMENT='data about player dodge chance, so that we can calculate the correct bonus to dodge chance per agility in vanilla\r\nother expansions have this data in a dbc, because its shown on the user interface when you mouse over the agility stat';
+
+ALTER TABLE `creature_questitem`
+	ALTER `id` DROP DEFAULT;
+ALTER TABLE `creature_questitem`
+	CHANGE COLUMN `id` `idx` INT(10) UNSIGNED NOT NULL AFTER `entry`;
+
+ALTER TABLE `creature_questitem`
+	ALTER `idx` DROP DEFAULT;
+ALTER TABLE `creature_questitem`
+	CHANGE COLUMN `idx` `idx` TINYINT UNSIGNED NOT NULL AFTER `entry`;
+
+ALTER TABLE `gameobject_questitem`
+	CHANGE COLUMN `id` `idx` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `entry`;
+  
+ALTER TABLE `gameobject_questitem`
+	ALTER `entry` DROP DEFAULT,
+	ALTER `idx` DROP DEFAULT;
+ALTER TABLE `gameobject_questitem`
+	CHANGE COLUMN `entry` `entry` INT(10) UNSIGNED NOT NULL FIRST,
+	CHANGE COLUMN `idx` `idx` TINYINT(3) UNSIGNED NOT NULL AFTER `entry`;
+
+RENAME TABLE `creature_questitem` TO `creature_quest_item`;
+
+RENAME TABLE `gameobject_questitem` TO `gameobject_quest_item`;
+
+ALTER TABLE `creature_text_template`
+	CHANGE COLUMN `group_id` `idx` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'counter of unique texts per creature id' AFTER `entry`,
+	CHANGE COLUMN `chat_type` `chat_type` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'version specific chat type enum, not the same as values used in mangos' AFTER `text`,
+	CHANGE COLUMN `language` `language` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'part of the packet, references Languages.dbc' AFTER `chat_type`,
+	CHANGE COLUMN `emote` `emote` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'not part of the packet, emote seen close to when the chat packet was received, references Emotes.dbc' AFTER `language`,
+	CHANGE COLUMN `sound` `sound` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'not part of the packet, sound heard close to when the chat packet was received, references SoundEntries.dbc' AFTER `emote`,
+	CHANGE COLUMN `broadcast_text_id` `broadcast_text_id` MEDIUMINT(6) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'not part of the packet, must be manually set' AFTER `sound`;
+
+ALTER TABLE `creature_text`
+	ALTER `group_id` DROP DEFAULT;
+ALTER TABLE `creature_text`
+	CHANGE COLUMN `group_id` `idx` INT(10) UNSIGNED NOT NULL COMMENT 'counter of unique texts per creature id' AFTER `entry`;
+
+ALTER TABLE `creature_text`
+	DROP COLUMN `health_percent`;
+
+ALTER TABLE `creature_text_template`
+	ADD COLUMN `health_percent` FLOAT NULL DEFAULT NULL COMMENT 'not part of the packet, the current health of the creature at the time the text was said' AFTER `broadcast_text_id`;
+

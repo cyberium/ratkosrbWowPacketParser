@@ -167,14 +167,15 @@ namespace WowPacketParser.Store.Objects
         public int SniffBuild = ClientVersion.BuildInt;
     }
 
-    [DBTableName("creature_questitem")]
+    [DBTableName("creature_quest_item", TargetedDbType.WPP)]
+    [DBTableName("creature_questitem", TargetedDbType.TRINITY)]
     public sealed class CreatureTemplateQuestItem : IDataModel
     {
         [DBFieldName("entry", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("CreatureEntry", true, DbType = (TargetedDbType.TRINITY))]
         public uint? CreatureEntry;
 
-        [DBFieldName("id", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("idx", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("Idx", true, DbType = (TargetedDbType.TRINITY))]
         public uint? Idx;
 

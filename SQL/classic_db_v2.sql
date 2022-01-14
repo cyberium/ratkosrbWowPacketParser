@@ -820,14 +820,14 @@ CREATE TABLE IF NOT EXISTS `creature_power_values_update` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.creature_questitem
-DROP TABLE IF EXISTS `creature_questitem`;
-CREATE TABLE IF NOT EXISTS `creature_questitem` (
+-- Dumping structure for table sniffs_new_test.creature_quest_item
+DROP TABLE IF EXISTS `creature_quest_item`;
+CREATE TABLE IF NOT EXISTS `creature_quest_item` (
   `entry` int(10) unsigned NOT NULL,
-  `id` int(10) unsigned NOT NULL,
+  `idx` tinyint(3) unsigned NOT NULL,
   `item_id` int(10) unsigned NOT NULL DEFAULT '0',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`entry`,`id`)
+  PRIMARY KEY (`entry`,`idx`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='quest items that drop from a given creature id\r\nfrom SMSG_QUERY_CREATURE_RESPONSE';
 
 -- Data exporting was unselected.
@@ -1049,12 +1049,11 @@ CREATE TABLE IF NOT EXISTS `creature_text` (
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `entry` int(10) unsigned NOT NULL COMMENT 'creature template id',
-  `group_id` int(10) unsigned NOT NULL COMMENT 'counter of unique texts per creature id',
-  `health_percent` float DEFAULT NULL COMMENT 'the creature''s current health percent at the time the text was sent',
+  `idx` int(10) unsigned NOT NULL COMMENT 'counter of unique texts per creature id',
   `target_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `target_id` int(10) unsigned NOT NULL DEFAULT '0',
   `target_type` varchar(16) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`entry`,`group_id`,`unixtimems`,`guid`)
+  PRIMARY KEY (`entry`,`idx`,`unixtimems`,`guid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='individual instances of creatures sending a text message';
 
 -- Data exporting was unselected.
@@ -1064,15 +1063,16 @@ CREATE TABLE IF NOT EXISTS `creature_text` (
 DROP TABLE IF EXISTS `creature_text_template`;
 CREATE TABLE IF NOT EXISTS `creature_text_template` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'creature template id',
-  `group_id` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'counter of unique texts per creature id',
+  `idx` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'counter of unique texts per creature id',
   `text` longtext COMMENT 'the actual text that was sent',
-  `chat_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'chat type',
-  `language` tinyint(3) NOT NULL DEFAULT '0' COMMENT 'references Languages.dbc',
-  `emote` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'references Emotes.dbc',
-  `sound` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'references SoundEntries.dbc',
-  `broadcast_text_id` mediumint(6) NOT NULL DEFAULT '0' COMMENT 'must be manually set',
+  `chat_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'version specific chat type enum, not the same as values used in mangos',
+  `language` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'part of the packet, references Languages.dbc',
+  `emote` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, emote seen close to when the chat packet was received, references Emotes.dbc',
+  `sound` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, sound heard close to when the chat packet was received, references SoundEntries.dbc',
+  `broadcast_text_id` mediumint(6) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, must be manually set',
+  `health_percent` float DEFAULT NULL COMMENT 'not part of the packet, the current health of the creature at the time the text was said',
   `comment` varchar(255) DEFAULT '',
-  PRIMARY KEY (`entry`,`group_id`)
+  PRIMARY KEY (`entry`,`idx`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='unique texts per creature id';
 
 -- Data exporting was unselected.
@@ -1442,14 +1442,14 @@ CREATE TABLE IF NOT EXISTS `gameobject_loot_item` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.gameobject_questitem
-DROP TABLE IF EXISTS `gameobject_questitem`;
-CREATE TABLE IF NOT EXISTS `gameobject_questitem` (
-  `entry` int(10) unsigned NOT NULL DEFAULT '0',
-  `id` int(10) unsigned NOT NULL DEFAULT '0',
+-- Dumping structure for table sniffs_new_test.gameobject_quest_item
+DROP TABLE IF EXISTS `gameobject_quest_item`;
+CREATE TABLE IF NOT EXISTS `gameobject_quest_item` (
+  `entry` int(10) unsigned NOT NULL,
+  `idx` tinyint(3) unsigned NOT NULL,
   `item_id` int(10) unsigned NOT NULL DEFAULT '0',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`entry`,`id`)
+  PRIMARY KEY (`entry`,`idx`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='quest items that drop from a given gameobject id\r\nfrom SMSG_QUERY_GAME_OBJECT_RESPONSE';
 
 -- Data exporting was unselected.

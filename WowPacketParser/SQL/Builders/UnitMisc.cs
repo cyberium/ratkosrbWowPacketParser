@@ -1475,7 +1475,7 @@ namespace WowPacketParser.SQL.Builders
                     {
                         foreach (var textRow in sameTextList)
                         {
-                            text.Item1.GroupId = textRow.Data.GroupId;
+                            text.Item1.Idx = textRow.Data.GroupId;
                             break;
                         }
                         continue;

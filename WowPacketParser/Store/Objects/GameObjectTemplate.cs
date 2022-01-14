@@ -65,14 +65,15 @@ namespace WowPacketParser.Store.Objects
         public int? ContentTuningId;
     }
 
-    [DBTableName("gameobject_questitem")]
+    [DBTableName("gameobject_quest_item", TargetedDbType.WPP)]
+    [DBTableName("gameobject_questitem", TargetedDbType.TRINITY)]
     public sealed class GameObjectTemplateQuestItem : IDataModel
     {
         [DBFieldName("entry", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("GameObjectEntry", true, DbType = (TargetedDbType.TRINITY))]
         public uint? GameObjectEntry;
 
-        [DBFieldName("id", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("idx", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("Idx", true, DbType = (TargetedDbType.TRINITY))]
         public uint? Idx;
 

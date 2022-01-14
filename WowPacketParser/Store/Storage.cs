@@ -1783,6 +1783,11 @@ namespace WowPacketParser.Store
                 {
                     CreatureTextTemplate textTemplate = new CreatureTextTemplate(text);
                     textTemplate.Entry = creatureId;
+                    if (Storage.Objects.ContainsKey(textTemplate.SenderGUID))
+                    {
+                        var obj = Storage.Objects[textTemplate.SenderGUID].Item1 as Unit;
+                        textTemplate.HealthPercent = obj.UnitData.HealthPercent;
+                    }
                     Storage.CreatureTextTemplates.Add(creatureId, textTemplate, packet.TimeSpan);
 
                     if (Settings.SqlTables.creature_text)
@@ -1793,11 +1798,6 @@ namespace WowPacketParser.Store
                         textEntry.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
                         textEntry.SenderGUID = textTemplate.SenderGUID;
                         textEntry.ReceiverGUID = textTemplate.ReceiverGUID;
-                        if (Storage.Objects.ContainsKey(textTemplate.SenderGUID))
-                        {
-                            var obj = Storage.Objects[textTemplate.SenderGUID].Item1 as Unit;
-                            textEntry.HealthPercent = obj.UnitData.HealthPercent;
-                        }
                         Storage.CreatureTexts.Add(textEntry);
                     }
                 }

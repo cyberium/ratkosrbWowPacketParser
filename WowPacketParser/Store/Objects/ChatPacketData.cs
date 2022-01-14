@@ -55,11 +55,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("entry", true)]
         public uint? Entry;
 
-        [DBFieldName("group_id", true)]
-        public uint GroupId;
-
-        [DBFieldName("health_percent", false, false, true)]
-        public float? HealthPercent;
+        [DBFieldName("idx", true)]
+        public uint Idx;
 
         [DBFieldName("target_guid", false, true)]
         public string TargetGuid = "0";
@@ -83,7 +80,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("CreatureID", true, DbType = TargetedDbType.TRINITY)]
         public uint? Entry;
 
-        [DBFieldName("group_id", true, DbType = TargetedDbType.WPP)]
+        [DBFieldName("idx", true, DbType = TargetedDbType.WPP)]
         [DBFieldName("GroupID", true, DbType = TargetedDbType.TRINITY)]
         public uint GroupId;
 
@@ -110,6 +107,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("broadcast_text_id", false, true, DbType = TargetedDbType.WPP)]
         [DBFieldName("BroadcastTextId", false, true, DbType = TargetedDbType.TRINITY)]
         public object BroadcastTextID = 0;
+
+        [DBFieldName("health_percent", false, false, true)]
+        public float? HealthPercent;
 
         [DBFieldName("comment")]
         public string Comment = String.Empty;
