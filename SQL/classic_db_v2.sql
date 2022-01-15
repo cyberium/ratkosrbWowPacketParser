@@ -1040,17 +1040,18 @@ CREATE TABLE IF NOT EXISTS `creature_text` (
 DROP TABLE IF EXISTS `creature_text_template`;
 CREATE TABLE IF NOT EXISTS `creature_text_template` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'creature template id',
-  `idx` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'counter of unique texts per creature id',
-  `text` longtext COMMENT 'the actual text that was sent',
+  `idx` tinyint(3) unsigned NOT NULL AUTO_INCREMENT COMMENT 'counter of unique texts per creature id',
+  `text` varchar(512) COLLATE latin1_general_ci NOT NULL COMMENT 'the actual text that was sent',
   `chat_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'version specific chat type enum, not the same as values used in mangos',
   `language` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'part of the packet, references Languages.dbc',
   `emote` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, emote seen close to when the chat packet was received, references Emotes.dbc',
   `sound` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, sound heard close to when the chat packet was received, references SoundEntries.dbc',
   `broadcast_text_id` mediumint(6) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, must be manually set',
   `health_percent` float DEFAULT NULL COMMENT 'not part of the packet, the current health of the creature at the time the text was said',
-  `comment` varchar(255) DEFAULT '',
-  PRIMARY KEY (`entry`,`idx`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='unique texts per creature id';
+  `comment` varchar(255) CHARACTER SET utf8 DEFAULT '',
+  PRIMARY KEY (`entry`,`text`),
+  UNIQUE KEY `entry` (`entry`,`idx`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='unique texts per creature id';
 
 -- Data exporting was unselected.
 

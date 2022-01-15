@@ -1092,3 +1092,18 @@ CREATE TABLE `creature_unique_emote` (
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`,`emote_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT COMMENT='all unique emote ids played by a given creature id\r\nfrom SMSG_EMOTE';
+
+ALTER TABLE `creature_text_template`
+	COLLATE='latin1_general_ci';
+  
+ALTER TABLE `creature_text_template`
+	CHANGE COLUMN `text` `text` LONGTEXT NULL COMMENT 'the actual text that was sent' COLLATE 'latin1_general_ci' AFTER `idx`;
+
+ALTER TABLE `creature_text_template`
+	CHANGE COLUMN `text` `text` VARCHAR(512) NOT NULL COMMENT 'the actual text that was sent' COLLATE 'latin1_general_ci' AFTER `idx`,
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`entry`, `text`);
+
+ALTER TABLE `creature_text_template`
+	CHANGE COLUMN `idx` `idx` TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'counter of unique texts per creature id' AFTER `entry`,
+	ADD UNIQUE INDEX `entry` (`entry`, `idx`);

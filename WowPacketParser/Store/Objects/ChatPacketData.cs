@@ -80,11 +80,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("CreatureID", true, DbType = TargetedDbType.TRINITY)]
         public uint? Entry;
 
-        [DBFieldName("idx", true, DbType = TargetedDbType.WPP)]
+        //[DBFieldName("idx", true, DbType = TargetedDbType.WPP)] using auto increment grouped by entry
         [DBFieldName("GroupID", true, DbType = TargetedDbType.TRINITY)]
         public uint GroupId;
 
-        [DBFieldName("text", DbType = TargetedDbType.WPP)]
+        [DBFieldName("text", true, DbType = TargetedDbType.WPP)]
         [DBFieldName("Text", DbType = TargetedDbType.TRINITY)]
         public string Text;
 

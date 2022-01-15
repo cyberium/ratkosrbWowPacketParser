@@ -1461,7 +1461,7 @@ namespace WowPacketParser.SQL.Builders
                 }
             }
 
-            string result = new SQLInsert<CreatureTextTemplate>(rows).Build();
+            string result = new SQLInsert<CreatureTextTemplate>(rows, false, true).Build();
 
             if (Settings.SqlTables.creature_text)
             {
