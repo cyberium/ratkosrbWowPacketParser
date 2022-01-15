@@ -1805,7 +1805,7 @@ namespace WowPacketParser.Store
             {
                 if (Settings.SqlTables.creature_text_template)
                 {
-                    CreatureTextTemplate textTemplate = new CreatureTextTemplate(text);
+                    CreatureTextTemplate textTemplate = new CreatureTextTemplate(text, packet.SniffId);
                     textTemplate.Entry = creatureId;
                     if (Storage.Objects.ContainsKey(textTemplate.SenderGUID))
                     {

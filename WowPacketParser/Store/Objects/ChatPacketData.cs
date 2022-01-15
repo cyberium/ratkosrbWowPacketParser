@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.SQL;
@@ -74,7 +75,7 @@ namespace WowPacketParser.Store.Objects
 
     [DBTableName("creature_text_template", TargetedDbType.WPP)]
     [DBTableName("creature_text", TargetedDbType.TRINITY)]
-    public sealed class CreatureTextTemplate : IDataModel
+    public sealed class CreatureTextTemplate : ITableWithSniffIdList
     {
         [DBFieldName("entry", true, DbType = TargetedDbType.WPP)]
         [DBFieldName("CreatureID", true, DbType = TargetedDbType.TRINITY)]
@@ -119,11 +120,21 @@ namespace WowPacketParser.Store.Objects
         public WowGuid ReceiverGUID;
         public string ReceiverName;
         public DateTime Time;
+        public int SniffId;
+        public HashSet<int> SniffIdList;
 
         public string BroadcastTextIDHelper;
 
+        public HashSet<int> GetSniffIdList
+        {
+            get
+            {
+                return SniffIdList;
+            }
+        }
+
         public CreatureTextTemplate() { }
-        public CreatureTextTemplate(ChatPacketData textTemplate)
+        public CreatureTextTemplate(ChatPacketData textTemplate, int sniffId)
         {
             Text = textTemplate.Text;
             Type = textTemplate.TypeOriginal;
@@ -133,6 +144,7 @@ namespace WowPacketParser.Store.Objects
             ReceiverGUID = textTemplate.ReceiverGUID;
             ReceiverName = textTemplate.ReceiverName;
             Time = textTemplate.Time;
+            SniffId = sniffId;
         }
     }
 

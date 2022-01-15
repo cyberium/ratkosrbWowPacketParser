@@ -1431,7 +1431,15 @@ namespace WowPacketParser.SQL.Builders
 
                     var sameTextList = rows.Where(text2 => text2.Data.Entry == text.Key && text2.Data.Text == textValue.Item1.Text);
                     if (sameTextList.Count() != 0)
+                    {
+                        // add all sniff ids in which the text has been seen
+                        foreach (var sameTextRow in sameTextList)
+                        {
+                            sameTextRow.Data.SniffIdList.Add(textValue.Item1.SniffId);
+                        }
+
                         continue;
+                    }
 
                     var row = new Row<CreatureTextTemplate>
                     {
@@ -1446,11 +1454,15 @@ namespace WowPacketParser.SQL.Builders
                             Sound = (textValue.Item1.Sound != null ? textValue.Item1.Sound : 0),
                             BroadcastTextID = textValue.Item1.BroadcastTextID,
                             HealthPercent = textValue.Item1.HealthPercent,
-                            Comment = textValue.Item1.Comment
+                            Comment = textValue.Item1.Comment,
+                            SniffId = textValue.Item1.SniffId,
+                            SniffIdList = new HashSet<int>()
                         },
 
                         Comment = textValue.Item1.BroadcastTextIDHelper
                     };
+
+                    row.Data.SniffIdList.Add(row.Data.SniffId);
 
                     if (!entryCount.ContainsKey(text.Key))
                         entryCount.Add(text.Key, count + 1);
@@ -1462,6 +1474,13 @@ namespace WowPacketParser.SQL.Builders
             }
 
             string result = new SQLInsert<CreatureTextTemplate>(rows, false, true).Build();
+            
+            if (!String.IsNullOrEmpty(result))
+            {
+                result += Environment.NewLine;
+                result += SQLUtil.MakeSniffIdListUpdate<CreatureTextTemplate>(rows);
+                result += Environment.NewLine;
+            }
 
             if (Settings.SqlTables.creature_text)
             {

@@ -1049,6 +1049,7 @@ CREATE TABLE IF NOT EXISTS `creature_text_template` (
   `broadcast_text_id` mediumint(6) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, must be manually set',
   `health_percent` float DEFAULT NULL COMMENT 'not part of the packet, the current health of the creature at the time the text was said',
   `comment` varchar(255) CHARACTER SET utf8 DEFAULT '',
+  `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`entry`,`text`),
   UNIQUE KEY `entry` (`entry`,`idx`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='unique texts per creature id';

@@ -1107,3 +1107,6 @@ ALTER TABLE `creature_text_template`
 ALTER TABLE `creature_text_template`
 	CHANGE COLUMN `idx` `idx` TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'counter of unique texts per creature id' AFTER `entry`,
 	ADD UNIQUE INDEX `entry` (`entry`, `idx`);
+
+ALTER TABLE `creature_text_template`
+	ADD COLUMN `sniff_id_list` TEXT NOT NULL DEFAULT '' AFTER `comment`;

@@ -746,5 +746,19 @@ namespace WowPacketParser.SQL
             return result;*/
             return string.Empty;
         }
+
+        public static string MakeSniffIdListUpdate<T>(RowList<T> rows) where T : ITableWithSniffIdList, new()
+        {
+            string result = "";
+            foreach (var row in rows)
+            {
+                var tempRowList = new RowList<T>();
+                tempRowList.Add(row);
+
+                foreach (var sniffId in row.Data.GetSniffIdList)
+                    result += "UPDATE " + SQLUtil.GetTableName<T>() + " SET `sniff_id_list` = RTRIM(CONCAT(@SNIFFID+" + sniffId + ", ' ', `sniff_id_list`)) WHERE " + new SQLWhere<T>(tempRowList, true).Build() + ";" + Environment.NewLine;
+            }
+            return result;
+        }
     }
 }
