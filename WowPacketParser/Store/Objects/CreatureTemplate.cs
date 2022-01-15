@@ -107,16 +107,13 @@ namespace WowPacketParser.Store.Objects
     }
 
     [DBTableName("creature_unique_faction")]
-    public sealed class CreatureFaction : IDataModel
+    public sealed class CreatureUniqueFaction : ITableWithSniffIdList
     {
         [DBFieldName("entry", true)]
         public uint Entry;
 
         [DBFieldName("faction", true)]
         public uint Faction;
-
-        [DBFieldName("sniff_build")]
-        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("creature_melee_damage")]

@@ -1139,7 +1139,7 @@ DROP TABLE IF EXISTS `creature_unique_faction`;
 CREATE TABLE IF NOT EXISTS `creature_unique_faction` (
   `entry` mediumint(8) unsigned NOT NULL,
   `faction` int(10) unsigned NOT NULL,
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `sniff_id_list` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`entry`,`faction`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='all unique faction template ids used by a given creature id';
 

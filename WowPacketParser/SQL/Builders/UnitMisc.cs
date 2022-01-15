@@ -693,7 +693,7 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod(false, Units = true)]
-        public static string CreatureFaction(Dictionary<WowGuid, Unit> units)
+        public static string CreatureUniqueFactions(Dictionary<WowGuid, Unit> units)
         {
             if (units.Count == 0)
                 return string.Empty;
@@ -701,7 +701,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.creature_unique_faction)
                 return string.Empty;
 
-            Dictionary<int, SortedSet<int>> factionsPerCreature = new Dictionary<int, SortedSet<int>>();
+            var rows = new DataBag<CreatureUniqueFaction>();
 
             foreach (var unit in units)
             {
@@ -710,60 +710,51 @@ namespace WowPacketParser.SQL.Builders
 
                 if (unit.Value.ObjectDataOriginal != null && unit.Value.UnitDataOriginal != null)
                 {
-                    int entry = unit.Value.ObjectDataOriginal.EntryID;
-                    if (!factionsPerCreature.ContainsKey(entry))
-                        factionsPerCreature.Add(entry, new SortedSet<int>());
-                    factionsPerCreature[entry].Add(unit.Value.UnitDataOriginal.FactionTemplate);
+                    var row = new CreatureUniqueFaction
+                    {
+                        Entry = (uint)unit.Value.ObjectDataOriginal.EntryID,
+                        Faction = (uint)unit.Value.UnitDataOriginal.FactionTemplate,
+                        SniffId = unit.Value.SourceSniffId
+                    };
+
+                    rows.Add(row);
                 }
 
                 if (unit.Value.ObjectData != null && unit.Value.UnitData != null)
                 {
-                    int entry = unit.Value.ObjectData.EntryID;
-                    if (!factionsPerCreature.ContainsKey(entry))
-                        factionsPerCreature.Add(entry, new SortedSet<int>());
-                    factionsPerCreature[entry].Add(unit.Value.UnitData.FactionTemplate);
+                    var row = new CreatureUniqueFaction
+                    {
+                        Entry = (uint)unit.Value.ObjectData.EntryID,
+                        Faction = (uint)unit.Value.UnitData.FactionTemplate,
+                        SniffId = unit.Value.SourceSniffId
+                    };
+
+                    rows.Add(row);
                 }
 
                 if (Storage.UnitValuesUpdates.ContainsKey(unit.Key))
                 {
-                    int entry = unit.Value.ObjectDataOriginal != null ? unit.Value.ObjectDataOriginal.EntryID : (int)unit.Key.GetEntry();
+                    uint entry = unit.Value.ObjectDataOriginal != null ? (uint)unit.Value.ObjectDataOriginal.EntryID : unit.Key.GetEntry();
                     foreach (var update in Storage.UnitValuesUpdates[unit.Key])
                     {
                         if (update.Entry != null)
-                            entry = (int)update.Entry;
+                            entry = (uint)update.Entry;
 
                         if (update.FactionTemplate != null)
                         {
-                            if (!factionsPerCreature.ContainsKey(entry))
-                                factionsPerCreature.Add(entry, new SortedSet<int>());
-                            factionsPerCreature[entry].Add((int)update.FactionTemplate);
+                            var row = new CreatureUniqueFaction
+                            {
+                                Entry = entry,
+                                Faction = (uint)update.FactionTemplate,
+                                SniffId = unit.Value.SourceSniffId
+                            };
+                            rows.Add(row);
                         }
                     }
                 }
             }
 
-            StringBuilder result = new StringBuilder();
-
-            if (factionsPerCreature.Count != 0)
-            {
-                var rows = new RowList<CreatureFaction>();
-                foreach (var itr in factionsPerCreature)
-                {
-                    foreach(var faction in itr.Value)
-                    {
-                        Row<CreatureFaction> row = new Row<CreatureFaction>();
-                        row.Data.Entry = (uint)itr.Key;
-                        row.Data.Faction = (uint)faction;
-                        rows.Add(row);
-                    }
-                }
-
-                var updateSql = new SQLInsert<CreatureFaction>(rows, false, true);
-                result.Append(updateSql.Build());
-                result.AppendLine();
-            }  
-
-            return result.ToString();
+            return SQLUtil.MakeInsertWithSniffIdList<CreatureUniqueFaction>(rows, false, true);
         }
 
         public static double GetArmor(double damage, double originalDamage, float level)

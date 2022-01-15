@@ -1116,3 +1116,9 @@ ALTER TABLE `creature_unique_emote`
 
 ALTER TABLE `creature_unique_emote`
 	DROP COLUMN `sniff_build`;
+
+ALTER TABLE `creature_unique_faction`
+	ADD COLUMN `sniff_id_list` TEXT NOT NULL AFTER `sniff_build`;
+
+ALTER TABLE `creature_unique_faction`
+	DROP COLUMN `sniff_build`;
