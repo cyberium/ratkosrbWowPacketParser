@@ -9,8 +9,9 @@ namespace WowPacketParser.SQL
     {
     }
 
-    public interface ITableWithSniffIdList : IDataModel
+    public abstract class ITableWithSniffIdList : IDataModel
     {
-        HashSet<int> GetSniffIdList { get; }
+        public int SniffId = 0;
+        public HashSet<int> SniffIdList = null;
     }
 }

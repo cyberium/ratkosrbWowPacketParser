@@ -120,18 +120,8 @@ namespace WowPacketParser.Store.Objects
         public WowGuid ReceiverGUID;
         public string ReceiverName;
         public DateTime Time;
-        public int SniffId;
-        public HashSet<int> SniffIdList;
 
         public string BroadcastTextIDHelper;
-
-        public HashSet<int> GetSniffIdList
-        {
-            get
-            {
-                return SniffIdList;
-            }
-        }
 
         public CreatureTextTemplate() { }
         public CreatureTextTemplate(ChatPacketData textTemplate, int sniffId)

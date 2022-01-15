@@ -727,7 +727,7 @@ namespace WowPacketParser.Store
         }
         public static readonly DataBag<CreatureUniqueEmote> CreatureUniqueEmotes = new DataBag<CreatureUniqueEmote>(Settings.SqlTables.creature_unique_emote);
         public static readonly Dictionary<WowGuid, List<CreatureEmote>> Emotes = new Dictionary<WowGuid, List<CreatureEmote>>();
-        public static void StoreUnitEmote(WowGuid guid, EmoteType emote, DateTime time)
+        public static void StoreUnitEmote(WowGuid guid, EmoteType emote, Packet packet)
         {
             if (guid.GetObjectType() == ObjectType.Unit)
             {
@@ -738,6 +738,7 @@ namespace WowPacketParser.Store
                         Entry = guid.GetEntry(),
                         EmoteId = (uint)emote,
                         EmoteName = emote.ToString(),
+                        SniffId = packet.SniffId
                     };
                     CreatureUniqueEmotes.Add(uniqueEmote);
                 }
@@ -756,12 +757,12 @@ namespace WowPacketParser.Store
 
             if (Storage.Emotes.ContainsKey(guid))
             {
-                Storage.Emotes[guid].Add(new CreatureEmote(emote, time));
+                Storage.Emotes[guid].Add(new CreatureEmote(emote, packet.Time));
             }
             else
             {
                 List<CreatureEmote> emotesList = new List<CreatureEmote>();
-                emotesList.Add(new CreatureEmote(emote, time));
+                emotesList.Add(new CreatureEmote(emote, packet.Time));
                 Storage.Emotes.Add(guid, emotesList);
             }
         }

@@ -1110,3 +1110,9 @@ ALTER TABLE `creature_text_template`
 
 ALTER TABLE `creature_text_template`
 	ADD COLUMN `sniff_id_list` TEXT NOT NULL DEFAULT '' AFTER `comment`;
+
+ALTER TABLE `creature_unique_emote`
+	ADD COLUMN `sniff_id_list` TEXT NOT NULL COLLATE 'latin1_general_ci' AFTER `sniff_build`;
+
+ALTER TABLE `creature_unique_emote`
+	DROP COLUMN `sniff_build`;

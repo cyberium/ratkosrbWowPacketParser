@@ -1,4 +1,6 @@
-﻿using WowPacketParser.Enums;
+﻿using System;
+using System.Collections.Generic;
+using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.SQL;
 
@@ -92,7 +94,7 @@ namespace WowPacketParser.Store.Objects
     }
 
     [DBTableName("creature_unique_emote")]
-    public sealed class CreatureUniqueEmote : IDataModel
+    public sealed class CreatureUniqueEmote : ITableWithSniffIdList
     {
         [DBFieldName("entry", true)]
         public uint Entry;
@@ -102,9 +104,6 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("emote_name")]
         public string EmoteName;
-
-        [DBFieldName("sniff_build")]
-        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("creature_unique_faction")]

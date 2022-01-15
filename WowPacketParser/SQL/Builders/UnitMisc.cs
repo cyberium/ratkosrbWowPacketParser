@@ -1745,7 +1745,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.creature_unique_emote)
                 return string.Empty;
 
-            return SQLUtil.Insert(Storage.CreatureUniqueEmotes, false, true);
+            return SQLUtil.MakeInsertWithSniffIdList(Storage.CreatureUniqueEmotes, false, true);
         }
     }
 }

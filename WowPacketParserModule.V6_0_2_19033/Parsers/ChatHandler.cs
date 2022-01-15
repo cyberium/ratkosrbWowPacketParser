@@ -138,7 +138,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         {
             var guid = packet.ReadPackedGuid128("GUID");
             var emote = packet.ReadInt32E<EmoteType>("Emote ID");
-            Storage.StoreUnitEmote(guid, emote, packet.Time);
+            Storage.StoreUnitEmote(guid, emote, packet);
         }
 
         [Parser(Opcode.CMSG_SEND_TEXT_EMOTE, ClientVersionBuild.V6_0_2_19033, ClientVersionBuild.V6_0_3_19103)]

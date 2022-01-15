@@ -755,9 +755,44 @@ namespace WowPacketParser.SQL
                 var tempRowList = new RowList<T>();
                 tempRowList.Add(row);
 
-                foreach (var sniffId in row.Data.GetSniffIdList)
+                foreach (var sniffId in row.Data.SniffIdList)
                     result += "UPDATE " + SQLUtil.GetTableName<T>() + " SET `sniff_id_list` = RTRIM(CONCAT(@SNIFFID+" + sniffId + ", ' ', `sniff_id_list`)) WHERE " + new SQLWhere<T>(tempRowList, true).Build() + ";" + Environment.NewLine;
             }
+            return result;
+        }
+
+        public static string MakeInsertWithSniffIdList<T>(IEnumerable<Tuple<T, TimeSpan?>> storeList, bool withDelete = true, bool withIgnore = false) where T : ITableWithSniffIdList, new()
+        {
+            RowList<T> rows = new RowList<T>();
+            foreach (var elem1 in storeList)
+            {
+                var row = new Row<T>
+                {
+                    Data = elem1.Item1
+                };
+                var existingRow = rows[row];
+
+                if (existingRow != null)
+                {
+                    existingRow.Data.SniffIdList.Add(elem1.Item1.SniffId);
+                }
+                else
+                {
+                    row.Data.SniffIdList = new HashSet<int>();
+                    row.Data.SniffIdList.Add(row.Data.SniffId);
+                    rows.Add(row);
+                }
+            }
+
+            string result = new SQLInsert<T>(rows, withDelete, withIgnore).Build();
+
+            if (!String.IsNullOrEmpty(result))
+            {
+                result += Environment.NewLine;
+                result += SQLUtil.MakeSniffIdListUpdate<T>(rows);
+                result += Environment.NewLine;
+            }
+
             return result;
         }
     }

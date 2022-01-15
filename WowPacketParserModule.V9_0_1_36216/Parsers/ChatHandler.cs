@@ -71,7 +71,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
                     packet.ReadUInt32("SpellVisualKitID", i);
             }
 
-            Storage.StoreUnitEmote(guid, emote, packet.Time);
+            Storage.StoreUnitEmote(guid, emote, packet);
         }
     }
 }
