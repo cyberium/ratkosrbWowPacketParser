@@ -87,7 +87,7 @@ namespace WowPacketParser.Store.Objects
     }
 
     [DBTableName("gameobject_unique_anim")]
-    public sealed class GameObjectUniqueAnim : IDataModel
+    public sealed class GameObjectUniqueAnim : ITableWithSniffIdList
     {
         [DBFieldName("entry", true)]
         public uint GameObjectEntry;
@@ -97,8 +97,5 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("as_despawn", true, false, true)]
         public bool? AsDespawn;
-
-        [DBFieldName("sniff_build")]
-        public int SniffBuild = ClientVersion.BuildInt;
     }
 }

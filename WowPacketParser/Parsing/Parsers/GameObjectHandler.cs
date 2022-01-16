@@ -129,7 +129,7 @@ namespace WowPacketParser.Parsing.Parsers
             GameObjectCustomAnim animData = new GameObjectCustomAnim();
             animData.AnimId = packet.ReadInt32("Anim");
             animData.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
-            Storage.StoreGameObjectCustomAnim(guid, animData);
+            Storage.StoreGameObjectCustomAnim(guid, animData, packet.SniffId);
             packet.AddSniffData(StoreNameType.GameObject, (int)guid.GetEntry(), "CUSTOM_ANIM");
         }
 

@@ -511,7 +511,7 @@ namespace WowPacketParser.SQL.Builders
 
             // `creature_unique_gossip`
             if (Settings.SqlTables.creature_unique_gossip)
-                result += SQLUtil.Insert(Storage.CreatureGossips, false, true);
+                result += SQLUtil.MakeInsertWithSniffIdList(Storage.CreatureGossips, false, true);
 
             // `gossip_menu`
             if (Settings.SqlTables.gossip_menu)
@@ -1447,7 +1447,7 @@ namespace WowPacketParser.SQL.Builders
                             HealthPercent = textValue.Item1.HealthPercent,
                             Comment = textValue.Item1.Comment,
                             SniffId = textValue.Item1.SniffId,
-                            SniffIdList = new HashSet<int>()
+                            SniffIdList = new SortedSet<int>()
                         },
 
                         Comment = textValue.Item1.BroadcastTextIDHelper

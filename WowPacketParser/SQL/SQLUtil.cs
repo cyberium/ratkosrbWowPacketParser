@@ -778,7 +778,7 @@ namespace WowPacketParser.SQL
                 }
                 else
                 {
-                    row.Data.SniffIdList = new HashSet<int>();
+                    row.Data.SniffIdList = new SortedSet<int>();
                     row.Data.SniffIdList.Add(row.Data.SniffId);
                     rows.Add(row);
                 }

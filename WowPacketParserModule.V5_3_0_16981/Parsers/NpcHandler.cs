@@ -149,25 +149,7 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
             gossip.ObjectType = guid.GetObjectType();
             gossip.ObjectEntry = guid.GetEntry();
 
-            if (guid.GetObjectType() == ObjectType.Unit)
-            {
-                bool isDefault = false;
-                if (!Storage.CreatureDefaultGossips.ContainsKey(guid.GetEntry()))
-                {
-                    isDefault = true;
-                    Storage.CreatureDefaultGossips.Add(guid.GetEntry(), (uint)menuId);
-                }
-                else if (Storage.CreatureDefaultGossips[guid.GetEntry()] == menuId)
-                    isDefault = true;
-
-                CreatureGossip newGossip = new CreatureGossip
-                {
-                    CreatureId = gossip.ObjectEntry,
-                    GossipMenuId = menuId,
-                    IsDefault = isDefault,
-                };
-                Storage.CreatureGossips.Add(newGossip, packet.TimeSpan);
-            }
+            Storage.StoreCreatureGossip(guid, menuId, packet);
 
             gossipOptions.ForEach(g =>
             {
@@ -181,7 +163,7 @@ namespace WowPacketParserModule.V5_3_0_16981.Parsers
             });
 
             Storage.Gossips.Add(gossip, packet.TimeSpan);
-
+            CoreParsers.NpcHandler.CanBeDefaultGossipMenu = false;
             var lastGossipOption = CoreParsers.NpcHandler.LastGossipOption;
             var tempGossipOptionPOI = CoreParsers.NpcHandler.TempGossipOptionPOI;
             if (lastGossipOption.HasSelection)

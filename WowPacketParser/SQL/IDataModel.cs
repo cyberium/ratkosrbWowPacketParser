@@ -12,6 +12,6 @@ namespace WowPacketParser.SQL
     public abstract class ITableWithSniffIdList : IDataModel
     {
         public int SniffId = 0;
-        public HashSet<int> SniffIdList = null;
+        public SortedSet<int> SniffIdList = null;
     }
 }

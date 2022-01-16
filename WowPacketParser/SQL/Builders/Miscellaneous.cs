@@ -462,7 +462,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.gameobject_unique_anim)
                 return string.Empty;
 
-            return SQLUtil.Insert(Storage.GameObjectUniqueAnims, false, true);
+            return SQLUtil.MakeInsertWithSniffIdList(Storage.GameObjectUniqueAnims, false, true);
         }
     }
 }

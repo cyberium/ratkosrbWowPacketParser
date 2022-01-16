@@ -644,7 +644,7 @@ namespace WowPacketParser.Store
         }
         public static readonly DataBag<GameObjectUniqueAnim> GameObjectUniqueAnims = new DataBag<GameObjectUniqueAnim>(Settings.SqlTables.gameobject_unique_anim);
         public static readonly Dictionary<WowGuid, List<GameObjectCustomAnim>> GameObjectCustomAnims = new Dictionary<WowGuid, List<GameObjectCustomAnim>>();
-        public static void StoreGameObjectCustomAnim(WowGuid guid, GameObjectCustomAnim animData)
+        public static void StoreGameObjectCustomAnim(WowGuid guid, GameObjectCustomAnim animData, int sniffId)
         {
             if (Settings.SqlTables.gameobject_unique_anim)
             {
@@ -653,6 +653,7 @@ namespace WowPacketParser.Store
                     GameObjectEntry = guid.GetEntry(),
                     AnimId = animData.AnimId,
                     AsDespawn = animData.AsDespawn,
+                    SniffId = sniffId,
                 };
                 GameObjectUniqueAnims.Add(uniqueData);
             }
@@ -2022,7 +2023,34 @@ namespace WowPacketParser.Store
         public static readonly DataBag<GossipMenuOption> GossipMenuOptions = new DataBag<GossipMenuOption>(Settings.SqlTables.gossip_menu_option);
         public static readonly DataBag<GossipMenuOptionAction> GossipMenuOptionActions = new DataBag<GossipMenuOptionAction>(Settings.SqlTables.gossip_menu_option);
         public static readonly DataBag<GossipMenuOptionBox> GossipMenuOptionBoxes = new DataBag<GossipMenuOptionBox>(Settings.SqlTables.gossip_menu_option);
+        public static void StoreCreatureGossip(WowGuid guid, uint menuId, Packet packet)
+        {
+            if (menuId == 0)
+                return;
 
+            if (guid.GetObjectType() != ObjectType.Unit)
+                return;
+
+            bool isDefault = false;
+            if (!Storage.CreatureDefaultGossips.ContainsKey(guid.GetEntry()))
+            {
+                isDefault = true;
+                Storage.CreatureDefaultGossips.Add(guid.GetEntry(), (uint)menuId);
+            }
+            else if (Storage.CreatureDefaultGossips[guid.GetEntry()] == menuId)
+                isDefault = true;
+            else if (WowPacketParser.Parsing.Parsers.NpcHandler.CanBeDefaultGossipMenu)
+                isDefault = true;
+
+            CreatureGossip newGossip = new CreatureGossip
+            {
+                CreatureId = guid.GetEntry(),
+                GossipMenuId = menuId,
+                IsDefault = isDefault,
+                SniffId = packet.SniffId,
+            };
+            Storage.CreatureGossips.Add(newGossip, packet.TimeSpan);
+        }
         // Quest POI (QuestId, Id)
         public static readonly DataBag<QuestPOI> QuestPOIs = new DataBag<QuestPOI>(Settings.SqlTables.quest_poi_points);
         public static readonly DataBag<QuestPOIPoint> QuestPOIPoints = new DataBag<QuestPOIPoint>(Settings.SqlTables.quest_poi_points); // WoD

@@ -33,6 +33,7 @@ namespace WowPacketParser.Parsing.Parsers
 
     public static class NpcHandler
     {
+        public static bool CanBeDefaultGossipMenu = true; // set false on gossip menu, true on CMSG_CLOSE_INTERACTION
         public static uint LastGossipPOIEntry;
         public static GossipOptionSelection LastGossipOption = new GossipOptionSelection();
         public static GossipOptionSelection TempGossipOptionPOI = new GossipOptionSelection();
@@ -506,25 +507,7 @@ namespace WowPacketParser.Parsing.Parsers
                 menuId = packet.ReadUInt32("Menu Id");
             gossip.Entry = menuId;
 
-            if (menuId != 0 && guid.GetObjectType() == ObjectType.Unit)
-            {
-                bool isDefault = false;
-                if (!Storage.CreatureDefaultGossips.ContainsKey(guid.GetEntry()))
-                {
-                    isDefault = true;
-                    Storage.CreatureDefaultGossips.Add(guid.GetEntry(), (uint)menuId);
-                }
-                else if (Storage.CreatureDefaultGossips[guid.GetEntry()] == menuId)
-                    isDefault = true;
-
-                CreatureGossip newGossip = new CreatureGossip
-                {
-                    CreatureId = gossip.ObjectEntry,
-                    GossipMenuId = menuId,
-                    IsDefault = isDefault,
-                };
-                Storage.CreatureGossips.Add(newGossip, packet.TimeSpan);
-            }
+            Storage.StoreCreatureGossip(guid, menuId, packet);
 
             if (ClientVersion.AddedInVersion(ClientType.MistsOfPandaria))
                 packet.ReadUInt32("Friendship Faction");
@@ -586,6 +569,7 @@ namespace WowPacketParser.Parsing.Parsers
             if (menuId != 0)
                 Storage.Gossips.Add(gossip, packet.TimeSpan);
 
+            CanBeDefaultGossipMenu = false;
             if (LastGossipOption.HasSelection)
             {
                 if ((packet.TimeSpan - LastGossipOption.TimeSpan).Duration() <= TimeSpan.FromMilliseconds(2500))

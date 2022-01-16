@@ -26,7 +26,7 @@ namespace WowPacketParser.Store.Objects
         //public ICollection<GossipMenuOption> GossipOptions;
     }
     [DBTableName("creature_unique_gossip")]
-    public class CreatureGossip : IDataModel
+    public class CreatureGossip : ITableWithSniffIdList
     {
         [DBFieldName("entry", true)]
         public uint? CreatureId;
@@ -36,8 +36,5 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("is_default", true)]
         public bool? IsDefault;
-
-        [DBFieldName("sniff_build")]
-        public int SniffBuild = ClientVersion.BuildInt;
     }
 }

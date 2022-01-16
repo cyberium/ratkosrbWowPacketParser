@@ -1109,16 +1109,49 @@ ALTER TABLE `creature_text_template`
 	ADD UNIQUE INDEX `entry` (`entry`, `idx`);
 
 ALTER TABLE `creature_text_template`
-	ADD COLUMN `sniff_id_list` TEXT NOT NULL DEFAULT '' AFTER `comment`;
+	ADD COLUMN `sniff_id_list` TEXT NOT NULL AFTER `comment`;
 
 ALTER TABLE `creature_unique_emote`
 	ADD COLUMN `sniff_id_list` TEXT NOT NULL COLLATE 'latin1_general_ci' AFTER `sniff_build`;
 
 ALTER TABLE `creature_unique_emote`
 	DROP COLUMN `sniff_build`;
+  
+ALTER TABLE `creature_unique_emote`
+	COLLATE='latin1_general_ci',
+	CHANGE COLUMN `emote_name` `emote_name` VARCHAR(50) NULL DEFAULT NULL COLLATE 'latin1_general_ci' AFTER `emote_id`;
 
 ALTER TABLE `creature_unique_faction`
 	ADD COLUMN `sniff_id_list` TEXT NOT NULL AFTER `sniff_build`;
 
 ALTER TABLE `creature_unique_faction`
 	DROP COLUMN `sniff_build`;
+
+ALTER TABLE `creature_unique_faction`
+	COLLATE='latin1_general_ci',
+	CHANGE COLUMN `sniff_id_list` `sniff_id_list` TEXT NOT NULL COLLATE 'latin1_general_ci' AFTER `faction`;
+
+ALTER TABLE `creature_unique_gossip`
+	DROP COLUMN `sniff_build`;
+
+ALTER TABLE `creature_unique_gossip`
+	ADD COLUMN `sniff_id_list` TEXT NOT NULL AFTER `is_default`;
+
+ALTER TABLE `creature_unique_gossip`
+	COLLATE='latin1_general_ci',
+	CHANGE COLUMN `sniff_id_list` `sniff_id_list` TEXT NOT NULL COLLATE 'latin1_general_ci' AFTER `is_default`;
+
+ALTER TABLE `gameobject_unique_anim`
+	COLLATE='utf8_unicode_ci',
+	ADD COLUMN `sniff_id_list` TEXT NOT NULL COLLATE 'latin1_general_ci' AFTER `as_despawn`,
+	DROP COLUMN `sniff_build`;
+
+ALTER TABLE `gameobject_unique_anim`
+	COLLATE='latin1_general_ci';
+
+ALTER TABLE `broadcast_text`
+	COLLATE='latin1_general_ci';
+
+ALTER TABLE `broadcast_text`
+	CHANGE COLUMN `male_text` `male_text` VARCHAR(1024) NOT NULL DEFAULT '' COLLATE 'latin1_general_ci' AFTER `entry`,
+	CHANGE COLUMN `female_text` `female_text` VARCHAR(1024) NOT NULL DEFAULT '' COLLATE 'latin1_general_ci' AFTER `male_text`;
