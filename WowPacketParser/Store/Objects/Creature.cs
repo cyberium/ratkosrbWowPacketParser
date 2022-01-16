@@ -236,7 +236,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("auras", DbType = (TargetedDbType.WPP))]
         public string Auras;
 
-        [DBFieldName("sniff_id", false, true, false, true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("sniff_id", false, true, DbType = (TargetedDbType.WPP))]
         public string SniffId;
 
         [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
@@ -1004,7 +1004,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("negative_arcane_res", false, false, true)]
         public int? NegativeArcaneResistance;
 
-        [DBFieldName("sniff_id", false, true, false, true)]
+        [DBFieldName("sniff_id", false, true)]
         public string SniffId;
 
         [DBFieldName("sniff_build")]
@@ -1215,19 +1215,13 @@ namespace WowPacketParser.Store.Objects
     }
 
     [DBTableName("creature_spell_immunity")]
-    public sealed class CreatureSpellImmunity : IDataModel
+    public sealed class CreatureSpellImmunity : ITableWithSniffIdList
     {
         [DBFieldName("entry", true)]
         public uint Entry;
 
         [DBFieldName("spell_id", true)]
         public uint SpellID;
-
-        [DBFieldName("sniff_id", true, true, false, true)]
-        public string SniffId;
-
-        [DBFieldName("sniff_build", true)]
-        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("creature_respawn_time")]
@@ -1264,7 +1258,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("player_race")]
         public uint PlayerRace;
 
-        [DBFieldName("sniff_id", true, true, false, true)]
+        [DBFieldName("sniff_id", true, true)]
         public string SniffId;
 
         [DBFieldName("sniff_build", true)]

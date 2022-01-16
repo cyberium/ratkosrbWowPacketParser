@@ -2226,8 +2226,7 @@ namespace WowPacketParser.Store
                         {
                             Entry = Storage.GetCurrentObjectEntry(guid),
                             SpellID = castData.SpellID,
-                            SniffId = packet.SniffIdString,
-                            SniffBuild = ClientVersion.BuildInt
+                            SniffId = packet.SniffId,
                         };
                         Storage.CreatureSpellImmunity.Add(immunity);
                     }

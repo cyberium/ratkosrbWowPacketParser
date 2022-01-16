@@ -839,9 +839,8 @@ DROP TABLE IF EXISTS `creature_spell_immunity`;
 CREATE TABLE IF NOT EXISTS `creature_spell_immunity` (
   `entry` int(10) unsigned NOT NULL,
   `spell_id` int(10) unsigned NOT NULL,
-  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`entry`,`spell_id`,`sniff_id`,`sniff_build`)
+  `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
+  PRIMARY KEY (`entry`,`spell_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='spells that creatures were immune to\r\nfrom SMSG_SPELL_GO';
 
 -- Data exporting was unselected.

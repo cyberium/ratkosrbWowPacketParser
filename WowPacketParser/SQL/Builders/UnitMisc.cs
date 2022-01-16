@@ -1700,7 +1700,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.creature_spell_immunity)
                 return string.Empty;
 
-            return SQLUtil.Insert(Storage.CreatureSpellImmunity, false, true);
+            return SQLUtil.MakeInsertWithSniffIdList(Storage.CreatureSpellImmunity, false, true);
         }
 
         [BuilderMethod]

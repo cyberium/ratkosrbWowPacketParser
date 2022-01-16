@@ -1155,3 +1155,10 @@ ALTER TABLE `broadcast_text`
 ALTER TABLE `broadcast_text`
 	CHANGE COLUMN `male_text` `male_text` VARCHAR(1024) NOT NULL DEFAULT '' COLLATE 'latin1_general_ci' AFTER `entry`,
 	CHANGE COLUMN `female_text` `female_text` VARCHAR(1024) NOT NULL DEFAULT '' COLLATE 'latin1_general_ci' AFTER `male_text`;
+
+ALTER TABLE `creature_spell_immunity`
+	DROP COLUMN `sniff_id`,
+	DROP COLUMN `sniff_build`;
+
+ALTER TABLE `creature_spell_immunity`
+	ADD COLUMN `sniff_id_list` TEXT NOT NULL AFTER `spell_id`;
