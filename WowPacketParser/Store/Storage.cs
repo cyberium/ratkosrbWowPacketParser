@@ -2239,10 +2239,12 @@ namespace WowPacketParser.Store
             {
                 SpellUniqueCaster uniqueCast = new SpellUniqueCaster();
                 uniqueCast.SpellId = castData.SpellID;
-                uniqueCast.CasterId = castData.CasterGuid.GetEntry();
+                uniqueCast.CasterId = GetCurrentObjectEntry(castData.CasterGuid);
                 uniqueCast.CasterType = GetObjectTypeNameForDB(castData.CasterGuid);
                 uniqueCast.SniffId = packet.SniffId;
-                SpellUniqueCasters.Add(uniqueCast);
+
+                if (uniqueCast.CasterId != 0)
+                    SpellUniqueCasters.Add(uniqueCast);
             }
 
             if (!Settings.SqlTables.spell_cast_start &&
