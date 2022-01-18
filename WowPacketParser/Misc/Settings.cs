@@ -228,6 +228,7 @@ namespace WowPacketParser.Misc
             public static readonly bool gameobject_unique_anim = Conf.GetBoolean("gameobject_unique_anim", false);
             public static readonly bool gossip_menu = Conf.GetBoolean("gossip_menu", false);
             public static readonly bool gossip_menu_option = Conf.GetBoolean("gossip_menu_option", false);
+            public static readonly bool item_loot = Conf.GetBoolean("item_loot", false);
             public static readonly bool item_template = Conf.GetBoolean("item_template", false);
             public static readonly bool locales_quest = Conf.GetBoolean("locales_quest", false);
             public static readonly bool locales_quest_objectives = Conf.GetBoolean("locales_quest_objectives", false);

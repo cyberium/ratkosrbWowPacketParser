@@ -41,7 +41,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadByteE<ItemQuality>("Threshold");
 
             LootEntry loot = new LootEntry();
-            loot.Entry = lootOwner.GetEntry();
+            loot.Entry = Storage.GetCurrentObjectEntry(lootOwner);
             loot.Money = packet.ReadUInt32("Coins");
 
             uint itemCount = packet.ReadUInt32("ItemCount");

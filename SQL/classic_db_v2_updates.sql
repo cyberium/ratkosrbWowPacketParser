@@ -1166,3 +1166,23 @@ ALTER TABLE `creature_spell_immunity`
 ALTER TABLE `spell_unique_caster`
 	ADD COLUMN `sniff_id_list` TEXT NOT NULL AFTER `spell_id`,
 	DROP COLUMN `sniff_build`;
+
+ALTER TABLE `gameobject_loot_item`
+	CHANGE COLUMN `loot_id` `loot_id` INT(10) UNSIGNED NOT NULL COMMENT 'references gameobject_loot' FIRST;
+
+CREATE TABLE `item_loot` (
+  `entry` int(10) unsigned NOT NULL COMMENT 'item template id',
+  `loot_id` int(10) unsigned NOT NULL COMMENT 'counter',
+  `money` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'copper',
+  `items_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'number of items dropped',
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`loot_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='each row represents a separate loot instance';
+
+
+CREATE TABLE `item_loot_item` (
+  `loot_id` int(10) unsigned NOT NULL COMMENT 'references item_loot',
+  `item_id` int(10) unsigned NOT NULL COMMENT 'item template id',
+  `count` int(10) unsigned NOT NULL DEFAULT '1' COMMENT 'stack size'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='individual item that is part of a loot instance';

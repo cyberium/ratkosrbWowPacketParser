@@ -137,6 +137,7 @@
         gameobject_unique_anim,
         gossip_menu,
         gossip_menu_option,
+        item_loot,
         item_template,
         locales_quest,
         locales_quest_objectives,

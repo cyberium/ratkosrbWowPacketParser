@@ -227,6 +227,14 @@ namespace WowPacketParser.SQL.Builders
                 query += BuildLootQuery(Storage.GameObjectLoot, "gameobject_loot", "gameobject_loot_item");
             }
 
+            if (Storage.ItemLoot.Count > 0 && Settings.SqlTables.item_loot)
+            {
+                if (!String.IsNullOrEmpty(query))
+                    query += Environment.NewLine;
+
+                query += BuildLootQuery(Storage.ItemLoot, "item_loot", "item_loot_item");
+            }
+
             return query;
         }
 

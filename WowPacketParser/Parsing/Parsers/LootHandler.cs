@@ -110,7 +110,7 @@ namespace WowPacketParser.Parsing.Parsers
             }
 
             LootEntry loot = new LootEntry();
-            loot.Entry = lootOwner.GetEntry();
+            loot.Entry = Storage.GetCurrentObjectEntry(lootOwner);
             loot.Money = packet.ReadUInt32("Coins");
 
             var itemsCount = packet.ReadByte("Drop Count");

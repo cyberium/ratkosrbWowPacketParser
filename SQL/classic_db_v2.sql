@@ -1451,7 +1451,7 @@ CREATE TABLE IF NOT EXISTS `gameobject_loot` (
 -- Dumping structure for table sniffs_new_test.gameobject_loot_item
 DROP TABLE IF EXISTS `gameobject_loot_item`;
 CREATE TABLE IF NOT EXISTS `gameobject_loot_item` (
-  `loot_id` int(10) unsigned NOT NULL COMMENT 'references creature_loot',
+  `loot_id` int(10) unsigned NOT NULL COMMENT 'references gameobject_loot',
   `item_id` int(10) unsigned NOT NULL COMMENT 'item template id',
   `count` int(10) unsigned NOT NULL DEFAULT '1' COMMENT 'stack size'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='individual item that is part of a loot instance';
@@ -1657,6 +1657,32 @@ CREATE TABLE IF NOT EXISTS `hotfix_data` (
   `VerifiedBuild` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Id`,`TableHash`,`RecordId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.item_loot
+DROP TABLE IF EXISTS `item_loot`;
+CREATE TABLE IF NOT EXISTS `item_loot` (
+  `entry` int(10) unsigned NOT NULL COMMENT 'item template id',
+  `loot_id` int(10) unsigned NOT NULL COMMENT 'counter',
+  `money` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'copper',
+  `items_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'number of items dropped',
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`loot_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='each row represents a separate loot instance';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.item_loot_item
+DROP TABLE IF EXISTS `item_loot_item`;
+CREATE TABLE IF NOT EXISTS `item_loot_item` (
+  `loot_id` int(10) unsigned NOT NULL COMMENT 'references item_loot',
+  `item_id` int(10) unsigned NOT NULL COMMENT 'item template id',
+  `count` int(10) unsigned NOT NULL DEFAULT '1' COMMENT 'stack size'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='individual item that is part of a loot instance';
 
 -- Data exporting was unselected.
 

@@ -1739,8 +1739,12 @@ namespace WowPacketParser.Store
         // Loot
         public static readonly Dictionary<uint, Dictionary<WowGuid, LootEntry>> CreatureLoot = new Dictionary<uint, Dictionary<WowGuid, LootEntry>>();
         public static readonly Dictionary<uint, Dictionary<WowGuid, LootEntry>> GameObjectLoot = new Dictionary<uint, Dictionary<WowGuid, LootEntry>>();
+        public static readonly Dictionary<uint, Dictionary<WowGuid, LootEntry>> ItemLoot = new Dictionary<uint, Dictionary<WowGuid, LootEntry>>();
         public static void StoreLoot(LootEntry loot, WowGuid objectGuid, WowGuid lootGuid)
         {
+            if (loot.Entry == 0)
+                return;
+
             Dictionary<uint, Dictionary<WowGuid, LootEntry>> lootStorage = null;
             if (objectGuid.GetObjectType() == ObjectType.Unit)
             {
@@ -1756,6 +1760,14 @@ namespace WowPacketParser.Store
 
                 lootStorage = GameObjectLoot;
             }
+            else if (objectGuid.GetObjectType() == ObjectType.Item)
+            {
+                if (!Settings.SqlTables.item_loot)
+                    return;
+
+                lootStorage = ItemLoot;
+            }
+
             if (lootStorage == null)
                 return;
 
