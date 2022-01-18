@@ -3189,7 +3189,7 @@ CREATE TABLE IF NOT EXISTS `spell_unique_caster` (
   `caster_id` int(10) unsigned NOT NULL DEFAULT '0',
   `caster_type` varchar(16) COLLATE latin1_general_ci NOT NULL DEFAULT '',
   `spell_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`caster_id`,`caster_type`,`spell_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='unique caster and spell combinations';
 

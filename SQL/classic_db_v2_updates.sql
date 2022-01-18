@@ -1162,3 +1162,7 @@ ALTER TABLE `creature_spell_immunity`
 
 ALTER TABLE `creature_spell_immunity`
 	ADD COLUMN `sniff_id_list` TEXT NOT NULL AFTER `spell_id`;
+
+ALTER TABLE `spell_unique_caster`
+	ADD COLUMN `sniff_id_list` TEXT NOT NULL AFTER `spell_id`,
+	DROP COLUMN `sniff_build`;

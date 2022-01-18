@@ -134,7 +134,7 @@ namespace WowPacketParser.Store.Objects
     }
 
     [DBTableName("spell_unique_caster")]
-    public sealed class SpellUniqueCaster : IDataModel
+    public sealed class SpellUniqueCaster : ITableWithSniffIdList
     {
         [DBFieldName("caster_id", true)]
         public uint CasterId;
@@ -144,9 +144,6 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("spell_id", true)]
         public uint SpellId;
-
-        [DBFieldName("sniff_build")]
-        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("spell_aura_flags")]

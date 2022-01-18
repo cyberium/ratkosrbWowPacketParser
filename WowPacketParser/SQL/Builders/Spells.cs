@@ -43,7 +43,7 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.spell_unique_caster)
                 return string.Empty;
 
-            return SQLUtil.Insert(Storage.SpellUniqueCasters, false, true);
+            return SQLUtil.MakeInsertWithSniffIdList(Storage.SpellUniqueCasters, false, true);
         }
 
         [BuilderMethod]

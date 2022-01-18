@@ -2241,6 +2241,7 @@ namespace WowPacketParser.Store
                 uniqueCast.SpellId = castData.SpellID;
                 uniqueCast.CasterId = castData.CasterGuid.GetEntry();
                 uniqueCast.CasterType = GetObjectTypeNameForDB(castData.CasterGuid);
+                uniqueCast.SniffId = packet.SniffId;
                 SpellUniqueCasters.Add(uniqueCast);
             }
 
@@ -2440,6 +2441,7 @@ namespace WowPacketParser.Store
             LastCreatureCastGo.Clear();
             CreatureDeathTimes.Clear();
             LastCreatureKill = null;
+            WowPacketParser.Parsing.Parsers.NpcHandler.CanBeDefaultGossipMenu = true;
         }
 
         // Only called if not in multi sniff sql mode.
