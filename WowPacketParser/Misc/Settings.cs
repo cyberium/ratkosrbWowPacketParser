@@ -244,7 +244,9 @@ namespace WowPacketParser.Misc
             public static readonly bool playercreateinfo = Conf.GetBoolean("playercreateinfo", false);
             public static readonly bool playercreateinfo_action = Conf.GetBoolean("playercreateinfo_action", false);
             public static readonly bool player_classlevelstats = Conf.GetBoolean("player_classlevelstats", false);
-            public static readonly bool player_crit_chance = Conf.GetBoolean("player_crit_chance", false);
+            public static readonly bool player_melee_crit_chance = Conf.GetBoolean("player_melee_crit_chance", false);
+            public static readonly bool player_ranged_crit_chance = Conf.GetBoolean("player_ranged_crit_chance", false);
+            public static readonly bool player_spell_crit_chance = Conf.GetBoolean("player_spell_crit_chance", false);
             public static readonly bool player_dodge_chance = Conf.GetBoolean("player_dodge_chance", false);
             public static readonly bool player_levelstats = Conf.GetBoolean("player_levelstats", false);
             public static readonly bool player_levelup_info = Conf.GetBoolean("player_levelup_info", false);

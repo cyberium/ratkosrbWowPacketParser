@@ -1186,3 +1186,27 @@ CREATE TABLE `item_loot_item` (
   `item_id` int(10) unsigned NOT NULL COMMENT 'item template id',
   `count` int(10) unsigned NOT NULL DEFAULT '1' COMMENT 'stack size'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='individual item that is part of a loot instance';
+
+RENAME TABLE `player_crit_chance` TO `player_melee_crit_chance`;
+
+CREATE TABLE `player_ranged_crit_chance` (
+  `race` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `class` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `level` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `agility` int(10) unsigned NOT NULL DEFAULT '0',
+  `crit_chance` float NOT NULL DEFAULT '0',
+  `weapon_item_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `weapon_skill_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `skill_current_value` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `skill_max_value` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `relevant_auras` varchar(128) COLLATE latin1_general_ci NOT NULL DEFAULT '' COMMENT 'auras of type 52'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='data about player ranged crit chance, so that we can calculate the correct bonus to crit chance per agility in vanilla\r\nother expansions have this data in a dbc, because its shown on the user interface when you mouse over the agility stat';
+
+CREATE TABLE `player_spell_crit_chance` (
+  `race` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `class` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `level` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `intellect` int(10) unsigned NOT NULL DEFAULT '0',
+  `crit_chance` float NOT NULL DEFAULT '0',
+  `relevant_auras` varchar(128) COLLATE latin1_general_ci NOT NULL DEFAULT '' COMMENT 'auras of type 57 and 71'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='data about player spell crit chance, so that we can calculate the correct bonus to crit chance per intellect in vanilla\r\nother expansions have this data in a dbc, because its shown on the user interface when you mouse over the intellect stat';

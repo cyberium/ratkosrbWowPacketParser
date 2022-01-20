@@ -122,6 +122,7 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
 
             packet.ReadInt32("NumNewTalents");
             packet.ReadInt32("NumNewPvpTalentSlots");
+            info.SniffId = packet.SniffIdString;
             Storage.PlayerLevelupInfos.Add(info);
         }
 

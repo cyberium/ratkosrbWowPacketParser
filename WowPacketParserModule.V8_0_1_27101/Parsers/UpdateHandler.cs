@@ -212,7 +212,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                     if (oldUnitData.Level != unit.UnitData.Level)
                     {
                         if (objectType == ObjectType.ActivePlayer)
-                            Storage.SavePlayerStats(obj, false);
+                            Storage.SavePlayerStats(obj, false, packet.SniffId);
 
                         hasData = true;
                         creatureUpdate.Level = (uint)unit.UnitData.Level;

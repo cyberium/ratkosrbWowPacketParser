@@ -170,6 +170,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 info.Stat[i] = packet.ReadInt32("StatDelta", (StatType)i);
 
             packet.ReadInt32("Cp");
+            info.SniffId = packet.SniffIdString;
             Storage.PlayerLevelupInfos.Add(info);
         }
 

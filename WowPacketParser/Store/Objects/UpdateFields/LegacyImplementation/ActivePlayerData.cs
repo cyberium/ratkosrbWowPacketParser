@@ -61,6 +61,18 @@ namespace WowPacketParser.Store.Objects.UpdateFields.LegacyImplementation
             UpdateFields.GetValue<ActivePlayerField, float>(ActivePlayerField.ACTIVE_PLAYER_FIELD_CRIT_PERCENTAGE) :
             UpdateFields.GetValue<PlayerField, float>(PlayerField.PLAYER_CRIT_PERCENTAGE));
 
+        public float RangedCritPercentage => (ClientVersion.AddedInVersion(ClientVersionBuild.V8_0_1_27101) ?
+            UpdateFields.GetValue<ActivePlayerField, float>(ActivePlayerField.ACTIVE_PLAYER_FIELD_RANGED_CRIT_PERCENTAGE) :
+            UpdateFields.GetValue<PlayerField, float>(PlayerField.PLAYER_RANGED_CRIT_PERCENTAGE));
+
+        public float OffhandCritPercentage => (ClientVersion.AddedInVersion(ClientVersionBuild.V8_0_1_27101) ?
+            UpdateFields.GetValue<ActivePlayerField, float>(ActivePlayerField.ACTIVE_PLAYER_FIELD_OFFHAND_CRIT_PERCENTAGE) :
+            UpdateFields.GetValue<PlayerField, float>(PlayerField.PLAYER_OFFHAND_CRIT_PERCENTAGE));
+
+        public float SpellCritPercentage => (ClientVersion.AddedInVersion(ClientVersionBuild.V8_0_1_27101) ?
+            UpdateFields.GetValue<ActivePlayerField, float>(ActivePlayerField.ACTIVE_PLAYER_FIELD_SPELL_CRIT_PERCENTAGE1) :
+            UpdateFields.GetValue<PlayerField, float>(PlayerField.PLAYER_SPELL_CRIT_PERCENTAGE1));
+
         public class SkillInfo : ISkillInfo
         {
             public ushort[] SkillLineID { get; } = new ushort[256];

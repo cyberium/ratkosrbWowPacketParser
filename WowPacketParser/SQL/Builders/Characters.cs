@@ -3435,7 +3435,7 @@ namespace WowPacketParser.SQL.Builders
                 if (player == null)
                     continue;
 
-                Storage.SavePlayerStats(player, true);
+                Storage.SavePlayerStats(player, true, null);
             }
 
             string result = "";
@@ -3492,12 +3492,12 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod]
-        public static string PlayerCritChances()
+        public static string PlayerMeleeCritChances()
         {
-            if (Storage.PlayerCritChances.IsEmpty())
+            if (Storage.PlayerMeleeCritChances.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SqlTables.player_crit_chance)
+            if (!Settings.SqlTables.player_melee_crit_chance)
                 return string.Empty;
 
             foreach (var objPair in Storage.Objects)
@@ -3509,10 +3509,58 @@ namespace WowPacketParser.SQL.Builders
                 if (player == null)
                     continue;
 
-                Storage.SavePlayerCrit(player);
+                Storage.SavePlayerMeleeCrit(player, null);
             }
 
-            return SQLUtil.Insert(Storage.PlayerCritChances, false, true);
+            return SQLUtil.Insert(Storage.PlayerMeleeCritChances, false, true, "player_melee_crit_chance");
+        }
+
+        [BuilderMethod]
+        public static string PlayerRangedCritChances()
+        {
+            if (Storage.PlayerRangedCritChances.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.player_ranged_crit_chance)
+                return string.Empty;
+
+            foreach (var objPair in Storage.Objects)
+            {
+                if (objPair.Key.GetObjectType() != ObjectType.Player)
+                    continue;
+
+                Player player = objPair.Value.Item1 as Player;
+                if (player == null)
+                    continue;
+
+                Storage.SavePlayerRangedCrit(player, null);
+            }
+
+            return SQLUtil.Insert(Storage.PlayerRangedCritChances, false, true, "player_ranged_crit_chance");
+        }
+
+        [BuilderMethod]
+        public static string PlayerSpellCritChances()
+        {
+            if (Storage.PlayerSpellCritChances.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.player_spell_crit_chance)
+                return string.Empty;
+
+            foreach (var objPair in Storage.Objects)
+            {
+                if (objPair.Key.GetObjectType() != ObjectType.Player)
+                    continue;
+
+                Player player = objPair.Value.Item1 as Player;
+                if (player == null)
+                    continue;
+
+                Storage.SavePlayerSpellCrit(player, null);
+            }
+
+            return SQLUtil.Insert(Storage.PlayerSpellCritChances, false, true);
         }
 
         [BuilderMethod]
@@ -3533,7 +3581,7 @@ namespace WowPacketParser.SQL.Builders
                 if (player == null)
                     continue;
 
-                Storage.SavePlayerDodge(player);
+                Storage.SavePlayerDodge(player, null);
             }
 
             return SQLUtil.Insert(Storage.PlayerDodgeChances, false, true);

@@ -451,8 +451,8 @@ namespace WowPacketParser.Store.Objects
         public string GUID;
     }
 
-    [DBTableName("player_crit_chance")]
-    public sealed class PlayerCritChance : IDataModel
+    [DBTableName("player_melee_crit_chance")]
+    public sealed class PlayerWeaponCritChance : IDataModel
     {
         [DBFieldName("race", true)]
         public uint RaceId;
@@ -483,6 +483,40 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("relevant_auras", true)]
         public string RelevantAuras;
+
+        [DBFieldName("sniff_id", false, true)]
+        public string SniffId;
+
+        [DBFieldName("sniff_build")]
+        public int SniffBuild = ClientVersion.BuildInt;
+    }
+
+    [DBTableName("player_spell_crit_chance")]
+    public sealed class PlayerSpellCritChance : IDataModel
+    {
+        [DBFieldName("race", true)]
+        public uint RaceId;
+
+        [DBFieldName("class", true)]
+        public uint ClassId;
+
+        [DBFieldName("level", true)]
+        public int Level;
+
+        [DBFieldName("intellect", true)]
+        public int Intellect;
+
+        [DBFieldName("crit_chance", true)]
+        public float CritChance;
+
+        [DBFieldName("relevant_auras", true)]
+        public string RelevantAuras;
+
+        [DBFieldName("sniff_id", false, true)]
+        public string SniffId;
+
+        [DBFieldName("sniff_build")]
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("player_dodge_chance")]
@@ -511,6 +545,12 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("relevant_auras", true)]
         public string RelevantAuras;
+
+        [DBFieldName("sniff_id", false, true)]
+        public string SniffId;
+
+        [DBFieldName("sniff_build")]
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("player_classlevelstats")]
@@ -527,6 +567,12 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("basemana")]
         public int BaseMana;
+
+        [DBFieldName("sniff_id", false, true, DbType = (TargetedDbType.WPP))]
+        public string SniffId;
+
+        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("player_levelstats")]
@@ -555,6 +601,12 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("spi")]
         public int Spirit;
+
+        [DBFieldName("sniff_id", false, true, DbType = (TargetedDbType.WPP))]
+        public string SniffId;
+
+        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("player_levelup_info")]
@@ -582,6 +634,12 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("stat", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Legion, 5, true)]
         [DBFieldName("stat", TargetedDbExpansion.Legion, 4, true)]
         public int?[] Stat;
+
+        [DBFieldName("sniff_id", false, true)]
+        public string SniffId;
+
+        [DBFieldName("sniff_build")]
+        public int SniffBuild = ClientVersion.BuildInt;
 
         public WowGuid GUID;
     }

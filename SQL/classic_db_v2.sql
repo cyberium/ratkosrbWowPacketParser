@@ -2191,6 +2191,8 @@ CREATE TABLE IF NOT EXISTS `player_classlevelstats` (
   `level` tinyint(3) unsigned NOT NULL,
   `basehp` smallint(5) unsigned NOT NULL,
   `basemana` smallint(5) unsigned NOT NULL,
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`class`,`level`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci PACK_KEYS=0 COMMENT='Stores levels stats.';
 
@@ -2271,24 +2273,6 @@ CREATE TABLE IF NOT EXISTS `player_create2_time` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.player_crit_chance
-DROP TABLE IF EXISTS `player_crit_chance`;
-CREATE TABLE IF NOT EXISTS `player_crit_chance` (
-  `race` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `class` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `level` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `agility` int(10) unsigned NOT NULL DEFAULT '0',
-  `crit_chance` float NOT NULL DEFAULT '0',
-  `weapon_item_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `weapon_skill_id` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `skill_current_value` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `skill_max_value` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `relevant_auras` varchar(128) COLLATE latin1_general_ci NOT NULL DEFAULT '' COMMENT 'auras of type 52'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='data about player melee crit chance, so that we can calculate the correct bonus to crit chance per agility in vanilla\r\nother expansions have this data in a dbc, because its shown on the user interface when you mouse over the agility stat';
-
--- Data exporting was unselected.
-
-
 -- Dumping structure for table sniffs_new_test.player_destroy_time
 DROP TABLE IF EXISTS `player_destroy_time`;
 CREATE TABLE IF NOT EXISTS `player_destroy_time` (
@@ -2310,7 +2294,9 @@ CREATE TABLE IF NOT EXISTS `player_dodge_chance` (
   `dodge_chance` float NOT NULL DEFAULT '0',
   `defense_current_value` smallint(5) unsigned NOT NULL DEFAULT '0',
   `defense_max_value` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `relevant_auras` varchar(128) COLLATE latin1_general_ci NOT NULL DEFAULT '' COMMENT 'auras of type 49'
+  `relevant_auras` varchar(128) COLLATE latin1_general_ci NOT NULL DEFAULT '' COMMENT 'auras of type 49',
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='data about player dodge chance, so that we can calculate the correct bonus to dodge chance per agility in vanilla\r\nother expansions have this data in a dbc, because its shown on the user interface when you mouse over the agility stat';
 
 -- Data exporting was unselected.
@@ -2399,6 +2385,8 @@ CREATE TABLE IF NOT EXISTS `player_levelstats` (
   `sta` tinyint(3) unsigned NOT NULL,
   `inte` tinyint(3) unsigned NOT NULL,
   `spi` tinyint(3) unsigned NOT NULL,
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`race`,`class`,`level`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci PACK_KEYS=0 COMMENT='Stores levels stats.';
 
@@ -2423,8 +2411,30 @@ CREATE TABLE IF NOT EXISTS `player_levelup_info` (
   `stat2` int(11) NOT NULL DEFAULT '0',
   `stat3` int(11) NOT NULL DEFAULT '0',
   `stat4` int(11) NOT NULL DEFAULT '0',
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`race`,`class`,`level`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_melee_crit_chance
+DROP TABLE IF EXISTS `player_melee_crit_chance`;
+CREATE TABLE IF NOT EXISTS `player_melee_crit_chance` (
+  `race` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `class` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `level` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `agility` int(10) unsigned NOT NULL DEFAULT '0',
+  `crit_chance` float NOT NULL DEFAULT '0',
+  `weapon_item_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `weapon_skill_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `skill_current_value` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `skill_max_value` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `relevant_auras` varchar(128) COLLATE latin1_general_ci NOT NULL DEFAULT '' COMMENT 'auras of type 52',
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='data about player melee crit chance, so that we can calculate the correct bonus to crit chance per agility in vanilla\r\nother expansions have this data in a dbc, because its shown on the user interface when you mouse over the agility stat';
 
 -- Data exporting was unselected.
 
@@ -2533,6 +2543,26 @@ CREATE TABLE IF NOT EXISTS `player_power_values_update` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.player_ranged_crit_chance
+DROP TABLE IF EXISTS `player_ranged_crit_chance`;
+CREATE TABLE IF NOT EXISTS `player_ranged_crit_chance` (
+  `race` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `class` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `level` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `agility` int(10) unsigned NOT NULL DEFAULT '0',
+  `crit_chance` float NOT NULL DEFAULT '0',
+  `weapon_item_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `weapon_skill_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `skill_current_value` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `skill_max_value` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `relevant_auras` varchar(128) COLLATE latin1_general_ci NOT NULL DEFAULT '' COMMENT 'auras of type 52',
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='data about player ranged crit chance, so that we can calculate the correct bonus to crit chance per agility in vanilla\r\nother expansions have this data in a dbc, because its shown on the user interface when you mouse over the agility stat';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.player_speed_update
 DROP TABLE IF EXISTS `player_speed_update`;
 CREATE TABLE IF NOT EXISTS `player_speed_update` (
@@ -2541,6 +2571,22 @@ CREATE TABLE IF NOT EXISTS `player_speed_update` (
   `speed_type` tinyint(3) unsigned NOT NULL,
   `speed_rate` float unsigned NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='changes to movement speed';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.player_spell_crit_chance
+DROP TABLE IF EXISTS `player_spell_crit_chance`;
+CREATE TABLE IF NOT EXISTS `player_spell_crit_chance` (
+  `race` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `class` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `level` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `intellect` int(10) unsigned NOT NULL DEFAULT '0',
+  `crit_chance` float NOT NULL DEFAULT '0',
+  `relevant_auras` varchar(128) COLLATE latin1_general_ci NOT NULL DEFAULT '' COMMENT 'auras of type 57 and 71',
+  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='data about player spell crit chance, so that we can calculate the correct bonus to crit chance per intellect in vanilla\r\nother expansions have this data in a dbc, because its shown on the user interface when you mouse over the intellect stat';
 
 -- Data exporting was unselected.
 

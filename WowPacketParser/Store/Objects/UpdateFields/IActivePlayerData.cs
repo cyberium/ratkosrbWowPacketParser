@@ -7,5 +7,8 @@
         ISkillInfo Skill { get; }
         float DodgePercentage { get; }
         float CritPercentage { get; }
+        float RangedCritPercentage { get; }
+        float OffhandCritPercentage { get; }
+        float SpellCritPercentage { get;}
     }
 }

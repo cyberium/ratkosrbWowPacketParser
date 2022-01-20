@@ -1347,6 +1347,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V5_1_0_16309))
                 packet.ReadInt32("Talent Level"); // 0 - No Talent gain / 1 - Talent Point gain
+            info.SniffId = packet.SniffIdString;
             Storage.PlayerLevelupInfos.Add(info);
         }
 

@@ -146,6 +146,7 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
             info.Power = new int?[5];
             for (var i = 0; i < 5; i++)
                 info.Power[i] = packet.ReadInt32("Power", (PowerType) i);
+            info.SniffId = packet.SniffIdString;
             Storage.PlayerLevelupInfos.Add(info);
         }
 

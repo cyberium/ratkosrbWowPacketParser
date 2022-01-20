@@ -1890,9 +1890,11 @@ namespace WowPacketParser.Store
         public static readonly DataBag<PlayerClassLevelStats> PlayerClassLevelStats = new DataBag<PlayerClassLevelStats>(Settings.SqlTables.player_classlevelstats);
         public static readonly DataBag<PlayerLevelStats> PlayerLevelStats = new DataBag<PlayerLevelStats>(Settings.SqlTables.player_levelstats);
         public static readonly DataBag<PlayerLevelupInfo> PlayerLevelupInfos = new DataBag<PlayerLevelupInfo>(Settings.SqlTables.player_levelup_info);
-        public static readonly DataBag<PlayerCritChance> PlayerCritChances = new DataBag<PlayerCritChance>(Settings.SqlTables.player_crit_chance);
+        public static readonly DataBag<PlayerWeaponCritChance> PlayerMeleeCritChances = new DataBag<PlayerWeaponCritChance>(Settings.SqlTables.player_melee_crit_chance);
+        public static readonly DataBag<PlayerWeaponCritChance> PlayerRangedCritChances = new DataBag<PlayerWeaponCritChance>(Settings.SqlTables.player_ranged_crit_chance);
+        public static readonly DataBag<PlayerSpellCritChance> PlayerSpellCritChances = new DataBag<PlayerSpellCritChance>(Settings.SqlTables.player_spell_crit_chance);
         public static readonly DataBag<PlayerDodgeChance> PlayerDodgeChances = new DataBag<PlayerDodgeChance>(Settings.SqlTables.player_dodge_chance);
-        public static void SavePlayerStats(WoWObject obj, bool useInitialData)
+        public static void SavePlayerStats(WoWObject obj, bool useInitialData, int? sniffId)
         {
             if (!Settings.SqlTables.player_levelstats && !Settings.SqlTables.player_classlevelstats)
                 return;
@@ -1902,8 +1904,12 @@ namespace WowPacketParser.Store
                 return;
 
             var unitData = useInitialData ? player.UnitDataOriginal : player.UnitData;
+            string sniffIdString = "@SNIFFID+" + (sniffId != null ? sniffId.ToString() : obj.SourceSniffId.ToString());
+            int sniffBuild = useInitialData ? obj.SourceSniffBuild : ClientVersion.BuildInt;
 
             PlayerClassLevelStats classLevelStats = new PlayerClassLevelStats();
+            classLevelStats.SniffId = sniffIdString;
+            classLevelStats.SniffBuild = sniffBuild;
             classLevelStats.ClassId = unitData.ClassId;
             classLevelStats.Level = unitData.Level;
             classLevelStats.BaseHP = unitData.BaseHealth;
@@ -1916,6 +1922,8 @@ namespace WowPacketParser.Store
             var negstats = unitData.StatNegBuff;
 
             PlayerLevelStats levelStats = new PlayerLevelStats();
+            levelStats.SniffId = sniffIdString;
+            levelStats.SniffBuild = sniffBuild;
             levelStats.RaceId = unitData.RaceId;
             levelStats.ClassId = unitData.ClassId;
             levelStats.Level = unitData.Level;
@@ -1930,9 +1938,9 @@ namespace WowPacketParser.Store
                 levelStats.Spirit != 0)
                 Storage.PlayerLevelStats.Add(levelStats);
         }
-        public static void SavePlayerCrit(WoWObject obj)
+        public static void SavePlayerMeleeCrit(WoWObject obj, int? sniffId)
         {
-            if (!Settings.SqlTables.player_crit_chance)
+            if (!Settings.SqlTables.player_melee_crit_chance)
                 return;
 
             Player player = obj as Player;
@@ -1950,7 +1958,7 @@ namespace WowPacketParser.Store
             ushort skillId = 0;
             ushort skillRank = 0;
             ushort skillMaxRank = 0;
-            uint itemId = player.GetMainHandWeapon();
+            uint itemId = player.GetItemInSlot(EquipmentSlotType.MainHand);
 
             if (itemId == 0 || HardcodedData.WeaponFists.Contains(itemId))
                 skillId = (ushort)SkillType.Unarmed;
@@ -1979,7 +1987,7 @@ namespace WowPacketParser.Store
             if (skillRank == 0 || skillMaxRank == 0)
                 return;
 
-            PlayerCritChance critData = new PlayerCritChance();
+            PlayerWeaponCritChance critData = new PlayerWeaponCritChance();
             critData.RaceId = player.UnitData.RaceId;
             critData.ClassId = player.UnitData.ClassId;
             critData.Level = player.UnitData.Level;
@@ -1990,9 +1998,86 @@ namespace WowPacketParser.Store
             critData.SkillCurrentValue = skillRank;
             critData.SkillMaxValue = skillMaxRank;
             critData.RelevantAuras = player.GetAurasStringMatchingCriteria(HardcodedData.IsModCritPercentAura);
-            PlayerCritChances.Add(critData);
+            critData.SniffId = "@SNIFFID+" + (sniffId != null ? sniffId.ToString() : obj.SourceSniffId.ToString());
+            PlayerMeleeCritChances.Add(critData);
         }
-        public static void SavePlayerDodge(WoWObject obj)
+        public static void SavePlayerRangedCrit(WoWObject obj, int? sniffId)
+        {
+            if (!Settings.SqlTables.player_ranged_crit_chance)
+                return;
+
+            Player player = obj as Player;
+            if (player == null)
+                return;
+
+            float critChance = player.ActivePlayerData.RangedCritPercentage;
+            if (critChance <= 0)
+                return;
+
+            int agility = player.UnitData.Stats[(int)StatType.Agility];
+            if (agility <= 0)
+                return;
+
+            ushort skillId = 0;
+            ushort skillRank = 0;
+            ushort skillMaxRank = 0;
+            uint itemId = player.GetItemInSlot(EquipmentSlotType.Ranged);
+
+            if (HardcodedData.WeaponBows.Contains(itemId))
+                skillId = (ushort)SkillType.Bows;
+            else if (HardcodedData.WeaponGuns.Contains(itemId))
+                skillId = (ushort)SkillType.Guns;
+            else if (HardcodedData.WeaponCrossbows.Contains(itemId))
+                skillId = (ushort)SkillType.Crossbows;
+            else
+                return;
+
+            player.GetSkill(skillId, out skillRank, out skillMaxRank);
+            if (skillRank == 0 || skillMaxRank == 0)
+                return;
+
+            PlayerWeaponCritChance critData = new PlayerWeaponCritChance();
+            critData.RaceId = player.UnitData.RaceId;
+            critData.ClassId = player.UnitData.ClassId;
+            critData.Level = player.UnitData.Level;
+            critData.Agility = agility;
+            critData.CritChance = critChance;
+            critData.WeaponItemId = itemId;
+            critData.WeaponSkillId = skillId;
+            critData.SkillCurrentValue = skillRank;
+            critData.SkillMaxValue = skillMaxRank;
+            critData.RelevantAuras = player.GetAurasStringMatchingCriteria(HardcodedData.IsModCritPercentAura);
+            critData.SniffId = "@SNIFFID+" + (sniffId != null ? sniffId.ToString() : obj.SourceSniffId.ToString());
+            PlayerRangedCritChances.Add(critData);
+        }
+        public static void SavePlayerSpellCrit(WoWObject obj, int? sniffId)
+        {
+            if (!Settings.SqlTables.player_spell_crit_chance)
+                return;
+
+            Player player = obj as Player;
+            if (player == null)
+                return;
+
+            float critChance = player.ActivePlayerData.SpellCritPercentage;
+            if (critChance <= 0)
+                return;
+
+            int intellect = player.UnitData.Stats[(int)StatType.Intellect];
+            if (intellect <= 0)
+                return;
+
+            PlayerSpellCritChance critData = new PlayerSpellCritChance();
+            critData.RaceId = player.UnitData.RaceId;
+            critData.ClassId = player.UnitData.ClassId;
+            critData.Level = player.UnitData.Level;
+            critData.Intellect = intellect;
+            critData.CritChance = critChance;
+            critData.RelevantAuras = player.GetAurasStringMatchingCriteria(HardcodedData.IsModSpellCritChanceAura);
+            critData.SniffId = "@SNIFFID+" + (sniffId != null ? sniffId.ToString() : obj.SourceSniffId.ToString());
+            PlayerSpellCritChances.Add(critData);
+        }
+        public static void SavePlayerDodge(WoWObject obj, int? sniffId)
         {
             if (!Settings.SqlTables.player_dodge_chance)
                 return;
@@ -2025,6 +2110,7 @@ namespace WowPacketParser.Store
             dodgeData.DefenseCurrentValue = skillRank;
             dodgeData.DefenseMaxValue = skillMaxRank;
             dodgeData.RelevantAuras = player.GetAurasStringMatchingCriteria(HardcodedData.IsModDodgePercentAura);
+            dodgeData.SniffId = "@SNIFFID+" + (sniffId != null ? sniffId.ToString() : obj.SourceSniffId.ToString());
             PlayerDodgeChances.Add(dodgeData);
         }
 
@@ -2561,7 +2647,9 @@ namespace WowPacketParser.Store
             PlayerClassLevelStats.Clear();
             PlayerLevelStats.Clear();
             PlayerLevelupInfos.Clear();
-            PlayerCritChances.Clear();
+            PlayerMeleeCritChances.Clear();
+            PlayerRangedCritChances.Clear();
+            PlayerSpellCritChances.Clear();
             PlayerDodgeChances.Clear();
 
             CreatureDefaultGossips.Clear();

@@ -154,9 +154,11 @@ namespace WowPacketParser.Parsing.Parsers
             if (updates != null)
             {
                 bool hasPlayerLevelUp = false;
-                bool hasCritUpdate = false;
+                bool hasMeleeCritUpdate = false;
+                bool hasRangedCritUpdate = false;
+                bool hasSpellCritUpdate = false;
                 bool hasDodgeUpdate = false;
-                StoreObjectUpdate(packet, guid, updateMaskArray, updates, true, ref hasPlayerLevelUp, ref hasCritUpdate, ref hasDodgeUpdate);
+                StoreObjectUpdate(packet, guid, updateMaskArray, updates, true, ref hasPlayerLevelUp, ref hasMeleeCritUpdate, ref hasRangedCritUpdate, ref hasSpellCritUpdate, ref hasDodgeUpdate);
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
 
                 if (guid.GetObjectType() == ObjectType.Unit)
@@ -164,11 +166,15 @@ namespace WowPacketParser.Parsing.Parsers
                 else
                 {
                     if (hasPlayerLevelUp)
-                        Storage.SavePlayerStats(obj, false);
-                    if (hasCritUpdate)
-                        Storage.SavePlayerCrit(obj);
+                        Storage.SavePlayerStats(obj, false, packet.SniffId);
+                    if (hasMeleeCritUpdate)
+                        Storage.SavePlayerMeleeCrit(obj, packet.SniffId);
+                    if (hasRangedCritUpdate)
+                        Storage.SavePlayerRangedCrit(obj, packet.SniffId);
+                    if (hasSpellCritUpdate)
+                        Storage.SavePlayerSpellCrit(obj, packet.SniffId);
                     if (hasDodgeUpdate)
-                        Storage.SavePlayerDodge(obj);
+                        Storage.SavePlayerDodge(obj, packet.SniffId);
                 }
             }
         }
@@ -199,9 +205,11 @@ namespace WowPacketParser.Parsing.Parsers
                 var updates = ReadValuesUpdateBlock(packet, obj.Type, index, false, obj.UpdateFields, out updateMaskArray);
 
                 bool hasPlayerLevelUp = false;
-                bool hasCritUpdate = false;
+                bool hasMeleeCritUpdate = false;
+                bool hasRangedCritUpdate = false;
+                bool hasSpellCritUpdate = false;
                 bool hasDodgeUpdate = false;
-                StoreObjectUpdate(packet, guid, updateMaskArray, updates, false, ref hasPlayerLevelUp, ref hasCritUpdate, ref hasDodgeUpdate);
+                StoreObjectUpdate(packet, guid, updateMaskArray, updates, false, ref hasPlayerLevelUp, ref hasMeleeCritUpdate, ref hasRangedCritUpdate, ref hasSpellCritUpdate, ref hasDodgeUpdate);
                 var dynamicUpdates = ReadDynamicValuesUpdateBlock(packet, obj.Type, index, false, obj.DynamicUpdateFields);
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
 
@@ -210,11 +218,15 @@ namespace WowPacketParser.Parsing.Parsers
                 else
                 {
                     if (hasPlayerLevelUp)
-                        Storage.SavePlayerStats(obj, false);
-                    if (hasCritUpdate)
-                        Storage.SavePlayerCrit(obj);
+                        Storage.SavePlayerStats(obj, false, packet.SniffId);
+                    if (hasMeleeCritUpdate)
+                        Storage.SavePlayerMeleeCrit(obj, packet.SniffId);
+                    if (hasRangedCritUpdate)
+                        Storage.SavePlayerRangedCrit(obj, packet.SniffId);
+                    if (hasSpellCritUpdate)
+                        Storage.SavePlayerSpellCrit(obj, packet.SniffId);
                     if (hasDodgeUpdate)
-                        Storage.SavePlayerDodge(obj);
+                        Storage.SavePlayerDodge(obj, packet.SniffId);
                 }
             }
             else
@@ -330,7 +342,7 @@ namespace WowPacketParser.Parsing.Parsers
         }
 
         // returns true if active player leveled up and we need to save stats
-        public static void StoreObjectUpdate(Packet packet, WowGuid guid, BitArray updateMaskArray, Dictionary<int, UpdateField> updates, bool isCreate, ref bool hasPlayerLevelup, ref bool hasCritUpdate, ref bool hasDodgeUpdate)
+        public static void StoreObjectUpdate(Packet packet, WowGuid guid, BitArray updateMaskArray, Dictionary<int, UpdateField> updates, bool isCreate, ref bool hasPlayerLevelup, ref bool hasMeleeCritUpdate, ref bool hasRangedCritUpdate, ref bool hasSpellCritUpdate, ref bool hasDodgeUpdate)
         {
             ObjectType objectType = guid.GetObjectType();
             if ((objectType == ObjectType.Unit) ||
@@ -448,7 +460,17 @@ namespace WowPacketParser.Parsing.Parsers
                     else if (update.Key == UpdateFields.GetUpdateField(PlayerField.PLAYER_CRIT_PERCENTAGE) ||
                              update.Key == UpdateFields.GetUpdateField(ActivePlayerField.ACTIVE_PLAYER_FIELD_CRIT_PERCENTAGE))
                     {
-                        hasCritUpdate = true;
+                        hasMeleeCritUpdate = true;
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(PlayerField.PLAYER_RANGED_CRIT_PERCENTAGE) ||
+                             update.Key == UpdateFields.GetUpdateField(ActivePlayerField.ACTIVE_PLAYER_FIELD_RANGED_CRIT_PERCENTAGE))
+                    {
+                        hasRangedCritUpdate = true;
+                    }
+                    else if (update.Key == UpdateFields.GetUpdateField(PlayerField.PLAYER_SPELL_CRIT_PERCENTAGE1) ||
+                             update.Key == UpdateFields.GetUpdateField(ActivePlayerField.ACTIVE_PLAYER_FIELD_SPELL_CRIT_PERCENTAGE1))
+                    {
+                        hasSpellCritUpdate = true;
                     }
                     else if (update.Key == UpdateFields.GetUpdateField(PlayerField.PLAYER_DODGE_PERCENTAGE) ||
                              update.Key == UpdateFields.GetUpdateField(ActivePlayerField.ACTIVE_PLAYER_FIELD_DODGE_PERCENTAGE))

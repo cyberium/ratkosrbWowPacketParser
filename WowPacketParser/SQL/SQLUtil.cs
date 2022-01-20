@@ -290,7 +290,7 @@ namespace WowPacketParser.SQL
         /// <param name="withDelete"></param>
         /// <param name="withIgnore"></param>
         /// <returns>A string containing full SQL queries</returns>
-        public static string Insert<T>(IEnumerable<Tuple<T, TimeSpan?>> storeList, bool withDelete = true, bool withIgnore = false)
+        public static string Insert<T>(IEnumerable<Tuple<T, TimeSpan?>> storeList, bool withDelete = true, bool withIgnore = false, string tableNameOverride = null)
             where T : IDataModel, new()
         {
             var fields = GetFields<T>();
@@ -309,7 +309,7 @@ namespace WowPacketParser.SQL
                 rowsIns.Add(row);
             }
 
-            return new SQLInsert<T>(rowsIns, withDelete, withIgnore).Build();
+            return new SQLInsert<T>(rowsIns, withDelete, withIgnore, tableNameOverride).Build();
         }
 
         /// <summary>

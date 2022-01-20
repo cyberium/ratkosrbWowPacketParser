@@ -15,6 +15,7 @@ namespace WowPacketParser
     public static class Program
     {
         public static string currentSniffFile = "";
+        public static int currentSniffId => sniffFileNames.IndexOf(currentSniffFile);
         public static List<string> sniffFileNames = new List<string>();
         public static List<int> sniffFileBuilds = new List<int>();
         private static void Main(string[] args)

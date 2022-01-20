@@ -35,10 +35,10 @@ namespace WowPacketParser.Store.Objects
             ActivePlayerDataOriginal = new ActivePlayerData(this, true);
         }
 
-        public uint GetMainHandWeapon()
+        public uint GetItemInSlot(EquipmentSlotType slot)
         {
             if (ClientVersion.IsUsingNewUpdateFieldSystem())
-                return (uint)PlayerData.VisibleItems[(int)EquipmentSlotType.MainHand].ItemID;
+                return (uint)PlayerData.VisibleItems[(int)slot].ItemID;
 
             // Optimization for old UF system.
             // Don't call PlayerData cause it creates a whole array.
@@ -55,7 +55,7 @@ namespace WowPacketParser.Store.Objects
                 return 0;
 
             UpdateField value;
-            UpdateFields.TryGetValue(field + offset * (int)EquipmentSlotType.MainHand, out value);
+            UpdateFields.TryGetValue(field + offset * (int)slot, out value);
             return value.UInt32Value;
         }
 

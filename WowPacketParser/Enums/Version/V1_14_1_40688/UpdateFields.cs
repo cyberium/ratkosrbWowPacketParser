@@ -239,7 +239,7 @@
         ACTIVE_PLAYER_FIELD_CRIT_PERCENTAGE                               = PlayerField.PLAYER_END + 0x05AF,      // Size: 1, Flags: (PUBLIC)
         ACTIVE_PLAYER_FIELD_RANGED_CRIT_PERCENTAGE                        = PlayerField.PLAYER_END + 0x05B0,      // Size: 1, Flags: (PUBLIC)
         ACTIVE_PLAYER_FIELD_OFFHAND_CRIT_PERCENTAGE                       = PlayerField.PLAYER_END + 0x05B1,      // Size: 1, Flags: (PUBLIC)
-        ACTIVE_PLAYER_FIELD_SPELL_CRIT_PERCENTAGE                         = PlayerField.PLAYER_END + 0x05B2,      // Size: 7, Flags: (PUBLIC)
+        ACTIVE_PLAYER_FIELD_SPELL_CRIT_PERCENTAGE1                        = PlayerField.PLAYER_END + 0x05B2,      // Size: 7, Flags: (PUBLIC)
         ACTIVE_PLAYER_FIELD_SHIELD_BLOCK                                  = PlayerField.PLAYER_END + 0x05B9,      // Size: 1, Flags: (PUBLIC)
         ACTIVE_PLAYER_FIELD_MASTERY                                       = PlayerField.PLAYER_END + 0x05BA,      // Size: 1, Flags: (PUBLIC)
         ACTIVE_PLAYER_FIELD_SPEED                                         = PlayerField.PLAYER_END + 0x05BB,      // Size: 1, Flags: (PUBLIC)
