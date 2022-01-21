@@ -1225,3 +1225,8 @@ ALTER TABLE `creature_trainer`
 
 ALTER TABLE `creature_trainer`
 	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `option_index`;
+
+ALTER TABLE `trainer`
+	CHANGE COLUMN `greeting` `greeting` VARCHAR(128) NOT NULL DEFAULT '' AFTER `type`,
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`id`, `type`, `greeting`);

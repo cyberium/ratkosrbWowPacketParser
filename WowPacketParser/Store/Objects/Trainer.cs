@@ -11,11 +11,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("Id", true, DbType = (TargetedDbType.TRINITY))]
         public uint? Id;
 
-        [DBFieldName("type", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("type", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("Type", DbType = (TargetedDbType.TRINITY))]
         public TrainerType? Type;
 
-        [DBFieldName("greeting", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("greeting", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("Greeting", DbType = (TargetedDbType.TRINITY))]
         public string Greeting;
 

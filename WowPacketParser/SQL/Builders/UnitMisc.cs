@@ -223,6 +223,9 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.trainer)
                 return string.Empty;
 
+            if (Settings.TargetedDbType == TargetedDbType.WPP)
+                return SQLUtil.Insert(Storage.Trainers, false, true);
+
             var templatesDb = SQLDatabase.Get(Storage.Trainers);
 
             return SQLUtil.Compare(Storage.Trainers, templatesDb, StoreNameType.None);
@@ -240,6 +243,9 @@ namespace WowPacketParser.SQL.Builders
             foreach (var trainerSpell in Storage.TrainerSpells)
                 trainerSpell.Item1.ConvertToDBStruct();
 
+            if (Settings.TargetedDbType == TargetedDbType.WPP)
+                return SQLUtil.Insert(Storage.TrainerSpells, false, true);
+
             var templatesDb = SQLDatabase.Get(Storage.TrainerSpells);
 
             return SQLUtil.Compare(Storage.TrainerSpells, templatesDb, t => t.FactionHelper);
@@ -253,6 +259,9 @@ namespace WowPacketParser.SQL.Builders
 
             if (!Settings.SqlTables.trainer)
                 return string.Empty;
+
+            if (Settings.TargetedDbType == TargetedDbType.WPP)
+                return SQLUtil.Insert(Storage.CreatureTrainers, false, true);
 
             return SQLUtil.Compare(Storage.CreatureTrainers, SQLDatabase.Get(Storage.CreatureTrainers), StoreNameType.None);
         }

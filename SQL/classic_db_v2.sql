@@ -3287,9 +3287,9 @@ DROP TABLE IF EXISTS `trainer`;
 CREATE TABLE IF NOT EXISTS `trainer` (
   `id` int(10) unsigned NOT NULL DEFAULT '0',
   `type` tinyint(2) unsigned NOT NULL DEFAULT '2',
-  `greeting` text,
+  `greeting` varchar(128) NOT NULL DEFAULT '',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`,`type`,`greeting`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
