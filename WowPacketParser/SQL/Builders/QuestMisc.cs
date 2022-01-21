@@ -104,8 +104,6 @@ namespace WowPacketParser.SQL.Builders
             if (Storage.QuestStarters.IsEmpty())
                 return string.Empty;
 
-            var templatesDb = SQLDatabase.Get(Storage.QuestStarters);
-
             return SQLUtil.Insert(Storage.QuestStarters, false, true);
         }
 
@@ -117,8 +115,6 @@ namespace WowPacketParser.SQL.Builders
 
             if (Storage.QuestEnders.IsEmpty())
                 return string.Empty;
-
-            var templatesDb = SQLDatabase.Get(Storage.QuestEnders);
 
             return SQLUtil.Insert(Storage.QuestEnders, false, true);
         }

@@ -256,7 +256,8 @@ CREATE TABLE IF NOT EXISTS `creature_armor` (
   `hits_count` smallint(5) unsigned NOT NULL DEFAULT '0',
   `armor` int(10) unsigned NOT NULL DEFAULT '0',
   `damage_reduction` float NOT NULL DEFAULT '0',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  KEY `entry` (`entry`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='estimated armor of creatures from damage taken';
 
 -- Data exporting was unselected.
@@ -538,7 +539,8 @@ CREATE TABLE IF NOT EXISTS `creature_kill_reputation` (
   `player_level` tinyint(3) unsigned NOT NULL,
   `player_race` tinyint(3) unsigned NOT NULL,
   `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  KEY `entry` (`entry`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='faction standing changes after a creature died\r\ncan be wrong if multiple creatures died at the same time';
 
 -- Data exporting was unselected.
@@ -581,7 +583,8 @@ CREATE TABLE IF NOT EXISTS `creature_melee_damage` (
   `damage_average` int(10) unsigned NOT NULL DEFAULT '0',
   `damage_max` int(10) unsigned NOT NULL DEFAULT '0',
   `total_school_mask` int(10) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  KEY `entry` (`entry`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='statistics for melee damage per creature id';
 
 -- Data exporting was unselected.
@@ -721,7 +724,8 @@ CREATE TABLE IF NOT EXISTS `creature_pet_actions` (
   `slot9` int(10) unsigned NOT NULL DEFAULT '0',
   `slot10` int(10) unsigned NOT NULL DEFAULT '0',
   `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  KEY `entry` (`entry`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='from SMSG_PET_SPELLS_MESSAGE';
 
 -- Data exporting was unselected.
@@ -737,7 +741,8 @@ CREATE TABLE IF NOT EXISTS `creature_pet_cooldown` (
   `cooldown` int(10) unsigned NOT NULL DEFAULT '0',
   `mod_rate` float unsigned NOT NULL DEFAULT '1',
   `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  KEY `entry` (`entry`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='from SMSG_SPELL_COOLDOWN';
 
 -- Data exporting was unselected.
@@ -765,7 +770,8 @@ CREATE TABLE IF NOT EXISTS `creature_pet_remaining_cooldown` (
   `mod_rate` float unsigned NOT NULL DEFAULT '1',
   `time_since_cast` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'milliseconds since last SMSG_SPELL_GO for this spell',
   `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  KEY `entry` (`entry`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='cooldowns that were already present when the creature became charmed\r\nfrom SMSG_PET_SPELLS_MESSAGE.';
 
 -- Data exporting was unselected.
@@ -859,7 +865,8 @@ CREATE TABLE IF NOT EXISTS `creature_spell_timers` (
   `repeat_delay_min` int(10) unsigned NOT NULL DEFAULT '0',
   `repeat_delay_average` int(10) unsigned NOT NULL DEFAULT '0',
   `repeat_delay_max` int(10) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0'
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  KEY `entry` (`entry`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='calculated time between casts for creatures';
 
 -- Data exporting was unselected.
@@ -1873,7 +1880,7 @@ CREATE TABLE IF NOT EXISTS `mail_template_item` (
   `item_id` int(10) unsigned NOT NULL DEFAULT '0',
   `count` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`entry`,`slot`)
+  PRIMARY KEY (`entry`,`slot`,`item_id`,`count`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='items attached to mail templates\r\nfrom SMSG_MAIL_LIST_RESULT';
 
 -- Data exporting was unselected.
@@ -1933,9 +1940,8 @@ CREATE TABLE IF NOT EXISTS `npc_vendor` (
   `type` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `player_condition_id` int(10) unsigned NOT NULL DEFAULT '0',
   `ignore_filtering` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`entry`,`item`,`extended_cost`,`type`),
-  KEY `slot` (`slot`)
+  `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
+  PRIMARY KEY (`entry`,`item`,`extended_cost`,`type`,`slot`,`maxcount`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=FIXED COMMENT='Npc System';
 
 -- Data exporting was unselected.
@@ -2713,6 +2719,7 @@ CREATE TABLE IF NOT EXISTS `quest_ender` (
   `object_id` int(10) unsigned NOT NULL COMMENT 'entry of the quest ender object',
   `object_type` varchar(16) COLLATE latin1_general_ci NOT NULL COMMENT 'type of the quest ender object',
   `quest_id` int(10) unsigned NOT NULL COMMENT 'references quest_template',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`object_id`,`object_type`,`quest_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='list of quests that can be turned in to a given creature or gameobject';
 
@@ -2849,6 +2856,7 @@ CREATE TABLE IF NOT EXISTS `quest_starter` (
   `object_id` int(10) unsigned NOT NULL COMMENT 'entry of the quest giver object',
   `object_type` varchar(16) COLLATE latin1_general_ci NOT NULL COMMENT 'type of the quest giver object',
   `quest_id` int(10) unsigned NOT NULL COMMENT 'references quest_template',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`object_id`,`object_type`,`quest_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='list of quests that can be picked up from a given creature or gameobject';
 
@@ -3263,7 +3271,7 @@ CREATE TABLE IF NOT EXISTS `spell_target_position` (
   `position_z` float NOT NULL DEFAULT '0',
   `orientation` float NOT NULL DEFAULT '0',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`spell_id`,`map`)
+  PRIMARY KEY (`spell_id`,`map`,`position_x`,`position_y`,`position_z`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=FIXED COMMENT='target coordinates for spells which need them defined in the database';
 
 -- Data exporting was unselected.

@@ -275,6 +275,9 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.npc_vendor)
                 return string.Empty;
 
+            if (Settings.TargetedDbType == TargetedDbType.WPP)
+                return SQLUtil.MakeInsertWithSniffIdList(Storage.NpcVendors, false, true);
+
             var templatesDb = SQLDatabase.Get(Storage.NpcVendors);
 
             return SQLUtil.Compare(Storage.NpcVendors, templatesDb,

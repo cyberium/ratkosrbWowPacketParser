@@ -395,6 +395,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("quest_id", true)]
         public uint? QuestId;
+
+        [DBFieldName("sniff_build")]
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("quest_ender")]
@@ -408,6 +411,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("quest_id", true)]
         public uint? QuestId;
+
+        [DBFieldName("sniff_build")]
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("quest_update_complete")]

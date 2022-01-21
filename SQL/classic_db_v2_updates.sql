@@ -1230,3 +1230,49 @@ ALTER TABLE `trainer`
 	CHANGE COLUMN `greeting` `greeting` VARCHAR(128) NOT NULL DEFAULT '' AFTER `type`,
 	DROP PRIMARY KEY,
 	ADD PRIMARY KEY (`id`, `type`, `greeting`);
+
+ALTER TABLE `spell_target_position`
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`spell_id`, `map`, `position_x`, `position_y`, `position_z`);
+
+ALTER TABLE `quest_ender`
+	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `quest_id`;
+
+ALTER TABLE `quest_starter`
+	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `quest_id`;
+
+ALTER TABLE `npc_vendor`
+	DROP INDEX `slot`,
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`entry`, `item`, `extended_cost`, `type`, `slot`, `maxcount`);
+
+ALTER TABLE `npc_vendor`
+	DROP COLUMN `sniff_build`;
+
+ALTER TABLE `npc_vendor`
+	ADD COLUMN `sniff_id_list` TEXT NOT NULL AFTER `ignore_filtering`;
+
+ALTER TABLE `mail_template_item`
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`entry`, `slot`, `item_id`, `count`);
+
+ALTER TABLE `creature_melee_damage`
+	ADD INDEX `entry` (`entry`);
+
+ALTER TABLE `creature_armor`
+	ADD INDEX `entry` (`entry`);
+
+ALTER TABLE `creature_kill_reputation`
+	ADD INDEX `entry` (`entry`);
+
+ALTER TABLE `creature_pet_actions`
+	ADD INDEX `entry` (`entry`);
+
+ALTER TABLE `creature_pet_cooldown`
+	ADD INDEX `entry` (`entry`);
+
+ALTER TABLE `creature_pet_remaining_cooldown`
+	ADD INDEX `entry` (`entry`);
+
+ALTER TABLE `creature_spell_timers`
+	ADD INDEX `entry` (`entry`);

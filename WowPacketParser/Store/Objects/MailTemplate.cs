@@ -44,10 +44,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("slot", true)]
         public byte Slot;
 
-        [DBFieldName("item_id")]
+        [DBFieldName("item_id", true)]
         public uint ItemId;
 
-        [DBFieldName("count")]
+        [DBFieldName("count", true)]
         public byte Count;
 
         [DBFieldName("sniff_build")]

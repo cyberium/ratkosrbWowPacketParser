@@ -19,6 +19,9 @@ namespace WowPacketParser.SQL.Builders
             if (!Settings.SqlTables.spell_script_target)
                 return string.Empty;
 
+            if (Settings.TargetedDbType == TargetedDbType.WPP)
+                return SQLUtil.Insert(Storage.SpellScriptTargets, false, true);
+
             return SQLUtil.Compare(Storage.SpellScriptTargets, SQLDatabase.Get(Storage.SpellScriptTargets), StoreNameType.None);
         }
 
@@ -30,6 +33,9 @@ namespace WowPacketParser.SQL.Builders
 
             if (!Settings.SqlTables.spell_target_position)
                 return string.Empty;
+
+            if (Settings.TargetedDbType == TargetedDbType.WPP)
+                return SQLUtil.Insert(Storage.SpellTargetPositions, false, true);
 
             return SQLUtil.Compare(Storage.SpellTargetPositions, SQLDatabase.Get(Storage.SpellTargetPositions), t => t.EffectHelper);
         }
@@ -312,7 +318,7 @@ namespace WowPacketParser.SQL.Builders
                 sql += ", " + row.Item1.SniffId + ", " + row.Item1.SniffBuild;
                 sql += ")";
             }
-            sql = "REPLACE INTO `creature_pet_actions` (`entry`, `slot1`, `slot2`, `slot3`, `slot4`, `slot5`, `slot6`, `slot7`, `slot8`, `slot9`, `slot10`, `sniff_id`, `sniff_build`) VALUES\n" + sql + ";\n";
+            sql = "INSERT IGNORE INTO `creature_pet_actions` (`entry`, `slot1`, `slot2`, `slot3`, `slot4`, `slot5`, `slot6`, `slot7`, `slot8`, `slot9`, `slot10`, `sniff_id`, `sniff_build`) VALUES\n" + sql + ";\n";
 
             return sql;
         }

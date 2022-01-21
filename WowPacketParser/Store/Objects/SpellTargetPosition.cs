@@ -19,17 +19,17 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("target_map", true, DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public ushort? MapID;
 
-        [DBFieldName("position_x", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("position_x", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("PositionX", DbType = (TargetedDbType.TRINITY))]
         [DBFieldName("target_position_x", DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public float? PositionX;
 
-        [DBFieldName("position_y", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("position_y", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("PositionY", DbType = (TargetedDbType.TRINITY))]
         [DBFieldName("target_position_y", DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public float? PositionY;
 
-        [DBFieldName("position_z", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("position_z", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("PositionZ", DbType = (TargetedDbType.TRINITY))]
         [DBFieldName("target_position_z", DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public float? PositionZ;

@@ -4,18 +4,20 @@ using WowPacketParser.Enums;
 
 namespace WowPacketParser.Store.Objects
 {
-    public sealed class NpcVendor : IDataModel
+    public sealed class NpcVendor : ITableWithSniffIdList
     {
         [DBFieldName("entry", true)]
         public uint? Entry;
 
-        [DBFieldName("slot")]
+        [DBFieldName("slot", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("slot", DbType = (TargetedDbType.TRINITY))]
         public int? Slot;
 
         [DBFieldName("item", true)]
         public int? Item;
 
-        [DBFieldName("maxcount")]
+        [DBFieldName("maxcount", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("maxcount", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public uint? MaxCount;
 
         [DBFieldName("extended_cost", TargetedDbExpansion.BurningCrusadeClassic, TargetedDbExpansion.Zero, true, DbType = (TargetedDbType.WPP))]
@@ -40,7 +42,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("IgnoreFiltering", TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.TRINITY))]
         public bool IgnoreFiltering = false;
 
-        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
         [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }
