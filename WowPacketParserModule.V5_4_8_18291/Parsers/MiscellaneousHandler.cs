@@ -285,7 +285,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             packet.ParseBitStream(guid, 3, 2, 4, 7, 5, 0, 6, 1);
             WowGuid objectGuid = packet.WriteGuid("Guid", guid);
 
-            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, objectGuid));
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, objectGuid, packet.SniffId));
             packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_SOUND");
         }
 
@@ -326,7 +326,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             packet.WriteGuid("Guid 1", guid1);
             WowGuid objectGuid = packet.WriteGuid("Guid 2", guid2);
 
-            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, objectGuid));
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, objectGuid, packet.SniffId));
             packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_OBJECT_SOUND");
         }
 

@@ -424,7 +424,7 @@ namespace WowPacketParser.Parsing.Parsers
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_3_0_15005))
                 sourceGuid = packet.ReadGuid("Source GUID");
 
-            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, sourceGuid));
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, sourceGuid, packet.SniffId));
             packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_SOUND");
         }
 
@@ -437,7 +437,7 @@ namespace WowPacketParser.Parsing.Parsers
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_3_0_15005))
                 packet.ReadGuid("Target GUID");
 
-            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, sourceGuid));
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, sourceGuid, packet.SniffId));
             packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_OBJECT_SOUND");
         }
 

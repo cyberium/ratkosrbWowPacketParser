@@ -8,15 +8,30 @@ namespace WowPacketParser.Store.Objects
 {
     public sealed class ObjectSound
     {
-        public ObjectSound(uint sound_, DateTime time_, WowGuid guid_)
+        public ObjectSound(uint sound_, DateTime time_, WowGuid guid_, int sniffId_)
         {
             sound = sound_;
             time = time_;
             guid = guid_;
+            sniffId = sniffId_;
         }
         public uint sound;
         public DateTime time;
         public WowGuid guid;
+        public int sniffId;
+    }
+
+    [DBTableName("sound_unique_source")]
+    public sealed class SoundUniqueSource : ITableWithSniffIdList
+    {
+        [DBFieldName("source_id", true)]
+        public uint SourceEntry;
+
+        [DBFieldName("source_type", true)]
+        public string SourceType;
+
+        [DBFieldName("sound", true)]
+        public uint Sound;
     }
 
     [DBTableName("play_sound")]

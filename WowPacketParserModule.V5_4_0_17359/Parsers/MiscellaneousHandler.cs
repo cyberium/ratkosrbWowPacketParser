@@ -122,7 +122,7 @@ namespace WowPacketParserModule.V5_4_0_17359.Parsers
             var sound = packet.ReadUInt32("Sound Id");
             WowGuid objectGuid = packet.WriteGuid("Guid", guid);
 
-            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, objectGuid));
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, objectGuid, packet.SniffId));
             packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_SOUND");
         }
 

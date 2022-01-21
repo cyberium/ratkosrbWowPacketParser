@@ -258,6 +258,7 @@ namespace WowPacketParser.Misc
             public static readonly bool quest_template = Conf.GetBoolean("quest_template", false);
             public static readonly bool scenario_poi = Conf.GetBoolean("scenario_poi", false);
             public static readonly bool scene_template = Conf.GetBoolean("scene_template", false);
+            public static readonly bool sound_unique_source = Conf.GetBoolean("sound_unique_source", false);
             public static readonly bool spell_areatrigger = Conf.GetBoolean("spell_areatrigger", false);
             public static readonly bool spell_areatrigger_splines = Conf.GetBoolean("spell_areatrigger_splines", false);
             public static readonly bool spell_areatrigger_vertices = Conf.GetBoolean("spell_areatrigger_vertices", false);

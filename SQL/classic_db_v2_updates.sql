@@ -1210,3 +1210,11 @@ CREATE TABLE `player_spell_crit_chance` (
   `crit_chance` float NOT NULL DEFAULT '0',
   `relevant_auras` varchar(128) COLLATE latin1_general_ci NOT NULL DEFAULT '' COMMENT 'auras of type 57 and 71'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='data about player spell crit chance, so that we can calculate the correct bonus to crit chance per intellect in vanilla\r\nother expansions have this data in a dbc, because its shown on the user interface when you mouse over the intellect stat';
+
+CREATE TABLE `sound_unique_source` (
+  `source_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `source_type` varchar(16) COLLATE latin1_general_ci NOT NULL DEFAULT '',
+  `sound_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
+  PRIMARY KEY (`source_id`,`source_type`,`sound_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='unique source object and sound id combinations';

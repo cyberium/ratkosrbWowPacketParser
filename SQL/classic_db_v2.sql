@@ -3084,6 +3084,19 @@ CREATE TABLE IF NOT EXISTS `sniff_file` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.sound_unique_source
+DROP TABLE IF EXISTS `sound_unique_source`;
+CREATE TABLE IF NOT EXISTS `sound_unique_source` (
+  `source_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `source_type` varchar(16) COLLATE latin1_general_ci NOT NULL DEFAULT '',
+  `sound_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
+  PRIMARY KEY (`source_id`,`source_type`,`sound_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='unique source object and sound id combinations';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.spell_aura_flags
 DROP TABLE IF EXISTS `spell_aura_flags`;
 CREATE TABLE IF NOT EXISTS `spell_aura_flags` (

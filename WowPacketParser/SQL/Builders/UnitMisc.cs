@@ -1500,6 +1500,29 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod]
+        public static string SoundUniqueSources()
+        {
+            if (Storage.Sounds.Count == 0 || !Settings.SqlTables.sound_unique_source)
+                return string.Empty;
+
+            var soundRows = new DataBag<SoundUniqueSource>();
+            foreach (var sound in Storage.Sounds)
+            {
+                if (sound.guid == null || sound.guid.IsEmpty())
+                    continue;
+
+                SoundUniqueSource row = new SoundUniqueSource();
+                row.SourceEntry = Storage.GetObjectEntry(sound.guid);
+                row.SourceType = Storage.GetObjectTypeNameForDB(sound.guid);
+                row.Sound = sound.sound;
+                row.SniffId = sound.sniffId;
+                soundRows.Add(row);
+            }
+
+            return SQLUtil.MakeInsertWithSniffIdList(soundRows, false, true);
+        }
+
+        [BuilderMethod]
         public static string PlaySound()
         {
             if (Storage.Sounds.Count == 0 || !Settings.SqlTables.play_sound)

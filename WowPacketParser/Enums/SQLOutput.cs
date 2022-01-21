@@ -167,6 +167,7 @@
         quest_template,
         scenario_poi,
         scene_template,
+        sound_unique_source,
         spell_areatrigger,
         spell_areatrigger_splines,
         spell_areatrigger_vertices,

@@ -181,7 +181,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ReadVector3("Position");
             packet.ReadInt32("BroadcastTextID");
 
-            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, guid));
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, guid, packet.SniffId));
             packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_OBJECT_SOUND");
         }
 

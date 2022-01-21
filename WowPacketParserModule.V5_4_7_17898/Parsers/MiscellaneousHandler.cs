@@ -55,7 +55,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
 
             WowGuid objectGuid = packet.WriteGuid("Guid", guid);
 
-            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, objectGuid));
+            Storage.Sounds.Add(new ObjectSound(sound, packet.Time, objectGuid, packet.SniffId));
             packet.AddSniffData(StoreNameType.Sound, (int)sound, "PLAY_SOUND");
         }
 
