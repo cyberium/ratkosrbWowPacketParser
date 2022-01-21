@@ -1,5 +1,6 @@
 ﻿using WowPacketParser.SQL;
 using WowPacketParser.Enums;
+using WowPacketParser.Misc;
 
 namespace WowPacketParser.Store.Objects
 {
@@ -10,7 +11,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("CreatureId", true, DbType = (TargetedDbType.TRINITY))]
         public uint? CreatureId;
 
-        [DBFieldName("trainer_id", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("trainer_id", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("TrainerId", DbType = (TargetedDbType.TRINITY))]
         public uint? TrainerId;
 
@@ -21,5 +22,8 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("option_index", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("OptionIndex", true, DbType = (TargetedDbType.TRINITY))]
         public uint? OptionIndex;
+
+        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 }

@@ -1218,3 +1218,10 @@ CREATE TABLE `sound_unique_source` (
   `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`source_id`,`source_type`,`sound_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='unique source object and sound id combinations';
+
+ALTER TABLE `creature_trainer`
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`entry`, `menu_id`, `trainer_id`, `option_index`);
+
+ALTER TABLE `creature_trainer`
+	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `option_index`;

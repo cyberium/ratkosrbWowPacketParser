@@ -1114,7 +1114,8 @@ CREATE TABLE IF NOT EXISTS `creature_trainer` (
   `trainer_id` int(11) unsigned NOT NULL DEFAULT '0',
   `menu_id` int(11) unsigned NOT NULL DEFAULT '0',
   `option_index` int(11) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`entry`,`menu_id`)
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`entry`,`menu_id`,`trainer_id`,`option_index`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 -- Data exporting was unselected.
