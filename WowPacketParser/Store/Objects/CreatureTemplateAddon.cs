@@ -40,6 +40,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("meleeAnimKit", TargetedDbExpansion.Legion, DbType = (TargetedDbType.TRINITY))]
         public ushort? MeleeAnimKit;
 
+        // visibilityDistanceType exists in all database versions but because UnitFlags2 to detect the value from sniff doesn't exist in earlier client version
+        // we pretend the field doesn't exist
+        [DBFieldName("visibilityDistanceType", TargetedDbExpansion.WarlordsOfDraenor, DbType = (TargetedDbType.TRINITY))]
+        public byte? VisibilityDistanceType;
+
         [DBFieldName("auras")]
         public string Auras;
     }

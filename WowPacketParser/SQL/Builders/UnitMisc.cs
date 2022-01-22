@@ -61,6 +61,7 @@ namespace WowPacketParser.SQL.Builders
                     AIAnimKit = npc.AIAnimKit.GetValueOrDefault(0),
                     MovementAnimKit = npc.MovementAnimKit.GetValueOrDefault(0),
                     MeleeAnimKit = npc.MeleeAnimKit.GetValueOrDefault(0),
+                    VisibilityDistanceType = npc.VisibilityDistanceType,
                     Auras = auras,
                 };
 

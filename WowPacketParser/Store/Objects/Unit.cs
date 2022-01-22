@@ -296,5 +296,21 @@ namespace WowPacketParser.Store.Objects
             }
             list.Add(movementData);
         }
+
+        public byte? VisibilityDistanceType
+        {
+            get
+            {
+                if (UnitData.Flags2 == 0)
+                    return null;
+                if (((UnitFlags2)UnitData.Flags2).HasFlag(UnitFlags2.InfiniteAOI))
+                    return 5;
+                if (((UnitFlags2)UnitData.Flags2).HasFlag(UnitFlags2.GiganticAOI))
+                    return 4;
+                if (((UnitFlags2)UnitData.Flags2).HasFlag(UnitFlags2.LargeAOI))
+                    return 3;
+                return 0;
+            }
+        }
     }
 }

@@ -608,6 +608,7 @@ namespace WowPacketParser.SQL.Builders
                     addonRow.Data.AIAnimKit = creature.AIAnimKit.GetValueOrDefault(0);
                     addonRow.Data.MovementAnimKit = creature.MovementAnimKit.GetValueOrDefault(0);
                     addonRow.Data.MeleeAnimKit = creature.MeleeAnimKit.GetValueOrDefault(0);
+                    addonRow.Data.VisibilityDistanceType = creature.VisibilityDistanceType;
                     addonRow.Comment += StoreGetters.GetName(StoreNameType.Unit, (int)unit.Key.GetEntry(), false);
                     addonRows.Add(addonRow);
                 }
