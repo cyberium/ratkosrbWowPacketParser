@@ -5,17 +5,17 @@ using WowPacketParser.SQL;
 namespace WowPacketParser.Store.Objects
 {
     [DBTableName("creature_equip_template")]
-    public sealed class CreatureEquipment : IDataModel
+    public sealed class CreatureEquipment : ITableWithSniffIdList
     {
         [DBFieldName("entry", true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("CreatureID", true, DbType = (TargetedDbType.TRINITY))]
         public uint? CreatureID;
 
-        [DBFieldName("id", true, DbType = (TargetedDbType.WPP))]
+        //[DBFieldName("idx", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("ID", true, DbType = (TargetedDbType.TRINITY))]
         public uint? ID;
 
-        [DBFieldName("item_id1", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("main_hand_slot_item", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("equipentry1", DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("ItemID1", DbType = (TargetedDbType.TRINITY))]
         public uint? ItemID1;
@@ -28,7 +28,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ItemVisual1", TargetedDbExpansion.Legion, DbType = (TargetedDbType.TRINITY))]
         public ushort? ItemVisual1;
 
-        [DBFieldName("item_id2", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("off_hand_slot_item", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("equipentry2", DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("ItemID2", DbType = (TargetedDbType.TRINITY))]
         public uint? ItemID2;
@@ -41,7 +41,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ItemVisual2", TargetedDbExpansion.Legion, DbType = (TargetedDbType.TRINITY))]
         public ushort? ItemVisual2;
 
-        [DBFieldName("item_id3", DbType = (TargetedDbType.WPP))]
+        [DBFieldName("ranged_slot_item", true, DbType = (TargetedDbType.WPP))]
         [DBFieldName("equipentry3", DbType = (TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("ItemID3", DbType = (TargetedDbType.TRINITY))]
         public uint? ItemID3;
@@ -54,7 +54,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ItemVisual3", TargetedDbExpansion.Legion, DbType = (TargetedDbType.TRINITY))]
         public ushort? ItemVisual3;
 
-        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
+        //[DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
         [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
         public int? VerifiedBuild = ClientVersion.BuildInt;
     }

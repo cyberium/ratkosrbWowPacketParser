@@ -154,26 +154,33 @@ namespace WowPacketParser.Parsing.Parsers
             if (updates != null)
             {
                 bool hasPlayerLevelUp = false;
-                bool hasMeleeCritUpdate = false;
-                bool hasRangedCritUpdate = false;
-                bool hasSpellCritUpdate = false;
-                bool hasDodgeUpdate = false;
-                StoreObjectUpdate(packet, guid, updateMaskArray, updates, true, ref hasPlayerLevelUp, ref hasMeleeCritUpdate, ref hasRangedCritUpdate, ref hasSpellCritUpdate, ref hasDodgeUpdate);
+                bool hasPlayerMeleeCritUpdate = false;
+                bool hasPlayerRangedCritUpdate = false;
+                bool hasPlayerSpellCritUpdate = false;
+                bool hasPlayerDodgeUpdate = false;
+                bool hasCreatureEquipmentUpdate = false;
+                StoreObjectUpdate(packet, guid, updateMaskArray, updates, true, ref hasPlayerLevelUp, ref hasPlayerMeleeCritUpdate, ref hasPlayerRangedCritUpdate, ref hasPlayerSpellCritUpdate, ref hasPlayerDodgeUpdate, ref hasCreatureEquipmentUpdate);
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
 
                 if (guid.GetObjectType() == ObjectType.Unit)
-                    Storage.StoreCreatureStats(obj as Unit, updateMaskArray, guid.GetHighType() == HighGuidType.Pet, packet);
+                {
+                    Unit creature = obj as Unit;
+                    Storage.StoreCreatureStats(creature, updateMaskArray, guid.GetHighType() == HighGuidType.Pet, packet);
+
+                    if (hasCreatureEquipmentUpdate && guid.GetHighType() != HighGuidType.Pet)
+                        Storage.StoreCreatureEquipment(creature, packet.SniffId);
+                }
                 else
                 {
                     if (hasPlayerLevelUp)
                         Storage.SavePlayerStats(obj, false, packet.SniffId);
-                    if (hasMeleeCritUpdate)
+                    if (hasPlayerMeleeCritUpdate)
                         Storage.SavePlayerMeleeCrit(obj, packet.SniffId);
-                    if (hasRangedCritUpdate)
+                    if (hasPlayerRangedCritUpdate)
                         Storage.SavePlayerRangedCrit(obj, packet.SniffId);
-                    if (hasSpellCritUpdate)
+                    if (hasPlayerSpellCritUpdate)
                         Storage.SavePlayerSpellCrit(obj, packet.SniffId);
-                    if (hasDodgeUpdate)
+                    if (hasPlayerDodgeUpdate)
                         Storage.SavePlayerDodge(obj, packet.SniffId);
                 }
             }
@@ -205,27 +212,34 @@ namespace WowPacketParser.Parsing.Parsers
                 var updates = ReadValuesUpdateBlock(packet, obj.Type, index, false, obj.UpdateFields, out updateMaskArray);
 
                 bool hasPlayerLevelUp = false;
-                bool hasMeleeCritUpdate = false;
-                bool hasRangedCritUpdate = false;
-                bool hasSpellCritUpdate = false;
-                bool hasDodgeUpdate = false;
-                StoreObjectUpdate(packet, guid, updateMaskArray, updates, false, ref hasPlayerLevelUp, ref hasMeleeCritUpdate, ref hasRangedCritUpdate, ref hasSpellCritUpdate, ref hasDodgeUpdate);
+                bool hasPlayerMeleeCritUpdate = false;
+                bool hasPlayerRangedCritUpdate = false;
+                bool hasPlayerSpellCritUpdate = false;
+                bool hasPlayerDodgeUpdate = false;
+                bool hasCreatureEquipmentUpdate = false;
+                StoreObjectUpdate(packet, guid, updateMaskArray, updates, false, ref hasPlayerLevelUp, ref hasPlayerMeleeCritUpdate, ref hasPlayerRangedCritUpdate, ref hasPlayerSpellCritUpdate, ref hasPlayerDodgeUpdate, ref hasCreatureEquipmentUpdate);
                 var dynamicUpdates = ReadDynamicValuesUpdateBlock(packet, obj.Type, index, false, obj.DynamicUpdateFields);
                 ApplyUpdateFieldsChange(obj, updates, dynamicUpdates);
 
                 if (guid.GetObjectType() == ObjectType.Unit)
-                    Storage.StoreCreatureStats(obj as Unit, updateMaskArray, guid.GetHighType() == HighGuidType.Pet, packet);
+                {
+                    Unit creature = obj as Unit;
+                    Storage.StoreCreatureStats(creature, updateMaskArray, guid.GetHighType() == HighGuidType.Pet, packet);
+
+                    if (hasCreatureEquipmentUpdate && guid.GetHighType() != HighGuidType.Pet)
+                        Storage.StoreCreatureEquipment(creature, packet.SniffId);
+                }
                 else
                 {
                     if (hasPlayerLevelUp)
                         Storage.SavePlayerStats(obj, false, packet.SniffId);
-                    if (hasMeleeCritUpdate)
+                    if (hasPlayerMeleeCritUpdate)
                         Storage.SavePlayerMeleeCrit(obj, packet.SniffId);
-                    if (hasRangedCritUpdate)
+                    if (hasPlayerRangedCritUpdate)
                         Storage.SavePlayerRangedCrit(obj, packet.SniffId);
-                    if (hasSpellCritUpdate)
+                    if (hasPlayerSpellCritUpdate)
                         Storage.SavePlayerSpellCrit(obj, packet.SniffId);
-                    if (hasDodgeUpdate)
+                    if (hasPlayerDodgeUpdate)
                         Storage.SavePlayerDodge(obj, packet.SniffId);
                 }
             }
@@ -342,7 +356,7 @@ namespace WowPacketParser.Parsing.Parsers
         }
 
         // returns true if active player leveled up and we need to save stats
-        public static void StoreObjectUpdate(Packet packet, WowGuid guid, BitArray updateMaskArray, Dictionary<int, UpdateField> updates, bool isCreate, ref bool hasPlayerLevelup, ref bool hasMeleeCritUpdate, ref bool hasRangedCritUpdate, ref bool hasSpellCritUpdate, ref bool hasDodgeUpdate)
+        public static void StoreObjectUpdate(Packet packet, WowGuid guid, BitArray updateMaskArray, Dictionary<int, UpdateField> updates, bool isCreate, ref bool hasPlayerLevelup, ref bool hasPlayerMeleeCritUpdate, ref bool hasPlayerRangedCritUpdate, ref bool hasPlayerSpellCritUpdate, ref bool hasPlayerDodgeUpdate, ref bool hasCreatureEquipmentUpdate)
         {
             ObjectType objectType = guid.GetObjectType();
             if ((objectType == ObjectType.Unit) ||
@@ -460,22 +474,22 @@ namespace WowPacketParser.Parsing.Parsers
                     else if (update.Key == UpdateFields.GetUpdateField(PlayerField.PLAYER_CRIT_PERCENTAGE) ||
                              update.Key == UpdateFields.GetUpdateField(ActivePlayerField.ACTIVE_PLAYER_FIELD_CRIT_PERCENTAGE))
                     {
-                        hasMeleeCritUpdate = true;
+                        hasPlayerMeleeCritUpdate = true;
                     }
                     else if (update.Key == UpdateFields.GetUpdateField(PlayerField.PLAYER_RANGED_CRIT_PERCENTAGE) ||
                              update.Key == UpdateFields.GetUpdateField(ActivePlayerField.ACTIVE_PLAYER_FIELD_RANGED_CRIT_PERCENTAGE))
                     {
-                        hasRangedCritUpdate = true;
+                        hasPlayerRangedCritUpdate = true;
                     }
                     else if (update.Key == UpdateFields.GetUpdateField(PlayerField.PLAYER_SPELL_CRIT_PERCENTAGE1) ||
                              update.Key == UpdateFields.GetUpdateField(ActivePlayerField.ACTIVE_PLAYER_FIELD_SPELL_CRIT_PERCENTAGE1))
                     {
-                        hasSpellCritUpdate = true;
+                        hasPlayerSpellCritUpdate = true;
                     }
                     else if (update.Key == UpdateFields.GetUpdateField(PlayerField.PLAYER_DODGE_PERCENTAGE) ||
                              update.Key == UpdateFields.GetUpdateField(ActivePlayerField.ACTIVE_PLAYER_FIELD_DODGE_PERCENTAGE))
                     {
-                        hasDodgeUpdate = true;
+                        hasPlayerDodgeUpdate = true;
                     }
                     else if (update.Key == UpdateFields.GetUpdateField(UnitField.UNIT_FIELD_AURASTATE))
                     {
@@ -837,6 +851,7 @@ namespace WowPacketParser.Parsing.Parsers
                                 equipmentUpdate.Slot = slot;
                                 equipmentUpdate.time = packet.Time;
                                 Storage.StoreUnitEquipmentValuesUpdate(guid, equipmentUpdate);
+                                hasCreatureEquipmentUpdate = true;
                             }
                         }
                     }

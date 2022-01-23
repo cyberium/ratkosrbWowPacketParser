@@ -63,8 +63,7 @@ namespace WowPacketParser.Store
             obj.OriginalMovement = obj.Movement != null ? obj.Movement.CopyFromMe() : null;
             obj.OriginalUpdateFields = obj.UpdateFields != null ? new Dictionary<int, UpdateField>(obj.UpdateFields) : null;
 
-            if (!string.IsNullOrWhiteSpace(Settings.SQLFileName) && Settings.DumpFormatWithSQL())
-                obj.SourceSniffId = packet.SniffId;
+            obj.SourceSniffId = packet.SniffId;
             obj.SourceSniffBuild = ClientVersion.BuildInt;
 
             obj.FirstCreateTime = packet.Time;
@@ -72,9 +71,12 @@ namespace WowPacketParser.Store
             obj.LastCreateTime = packet.Time;
             obj.LastCreateType = type;
 
-            Unit creature = obj as Unit;
-            if (creature != null)
+            Storage.Objects.Add(guid, obj, packet.TimeSpan);
+
+            if (obj.Type == ObjectType.Unit)
             {
+                Unit creature = obj as Unit;
+
                 if (type == ObjectCreateType.Create2 &&
                     Settings.SqlTables.creature_respawn_time &&
                     guid.GetHighType() == HighGuidType.Creature &&
@@ -96,9 +98,10 @@ namespace WowPacketParser.Store
 
                 if (creature.IsInCombat())
                     creature.EnterCombatTime = packet.Time;
-            }
 
-            Storage.Objects.Add(guid, obj, packet.TimeSpan);
+                if (guid.GetHighType() != HighGuidType.Pet)
+                    StoreCreatureEquipment(creature, obj.SourceSniffId);
+            }
         }
         public static string GetObjectDbGuid(WowGuid guid)
         {
@@ -1199,7 +1202,69 @@ namespace WowPacketParser.Store
         public static readonly DataBag<CreatureTemplateModel> CreatureTemplateModels = new DataBag<CreatureTemplateModel>(Settings.SqlTables.creature_template);
         public static readonly DataBag<CreatureStats> CreatureStats = new DataBag<CreatureStats>(Settings.SqlTables.creature_stats);
         public static readonly DataBag<CreatureStats> CreatureStatsDirty = new DataBag<CreatureStats>(Settings.SqlTables.creature_stats);
+        public static readonly DataBag<CreatureEquipment> CreatureEquipments = new DataBag<CreatureEquipment>(Settings.SqlTables.creature_equip_template);
 
+        public static void StoreCreatureEquipment(Unit npc, int sniffId)
+        {
+            if (!Settings.SqlTables.creature_equip_template)
+                return;
+
+            if (npc == null)
+                return;
+
+            uint entry = (uint)npc.ObjectData.EntryID;
+            if (entry == 0)
+                return;   // broken entry
+
+            var equipment = npc.UnitData.VirtualItems;
+            if (equipment.Length != 3)
+                return;
+
+            if (equipment[0].ItemID == 0 && equipment[1].ItemID == 0 && equipment[2].ItemID == 0)
+                return;
+
+            var equip = new CreatureEquipment
+            {
+                CreatureID = entry,
+                ItemID1 = (uint)equipment[0].ItemID,
+                ItemID2 = (uint)equipment[1].ItemID,
+                ItemID3 = (uint)equipment[2].ItemID,
+
+                AppearanceModID1 = equipment[0].ItemAppearanceModID,
+                AppearanceModID2 = equipment[1].ItemAppearanceModID,
+                AppearanceModID3 = equipment[2].ItemAppearanceModID,
+
+                ItemVisual1 = equipment[0].ItemVisual,
+                ItemVisual2 = equipment[1].ItemVisual,
+                ItemVisual3 = equipment[2].ItemVisual,
+
+                SniffId = sniffId
+            };
+
+            // Only Trinity has ID in the table and part of the primary key.
+            if (Settings.TargetedDbType == TargetedDbType.TRINITY)
+            {
+                equip.ID = 1;
+
+                foreach (var existingEquip in Storage.CreatureEquipments)
+                {
+                    if (existingEquip.Item1.CreatureID == equip.CreatureID)
+                    {
+                        if (existingEquip.Item1.ItemID1 == equip.ItemID1 &&
+                            existingEquip.Item1.ItemID2 == equip.ItemID2 &&
+                            existingEquip.Item1.ItemID3 == equip.ItemID3)
+                        {
+                            return;
+                        }
+
+                        if (existingEquip.Item1.ID >= equip.ID)
+                            equip.ID = existingEquip.Item1.ID + 1;
+                    }
+                }
+            }
+
+            Storage.CreatureEquipments.Add(equip);
+        }
         public static void StoreCreatureStats(Unit npc, BitArray updateMaskArray, bool isPet, Packet packet)
         {
             if (!Settings.SqlTables.creature_stats)
@@ -2594,6 +2659,7 @@ namespace WowPacketParser.Store
             CreatureLoot.Clear();
             CreatureStats.Clear();
             CreatureStatsDirty.Clear();
+            CreatureEquipments.Clear();
 
             CreatureKillReputations.Clear();
             CreatureRespawnTimes.Clear();

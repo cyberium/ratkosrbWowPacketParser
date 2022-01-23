@@ -1276,3 +1276,20 @@ ALTER TABLE `creature_pet_remaining_cooldown`
 
 ALTER TABLE `creature_spell_timers`
 	ADD INDEX `entry` (`entry`);
+
+ALTER TABLE `creature_equip_template`
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`entry`, `item_id1`, `item_id2`, `item_id3`);
+
+ALTER TABLE `creature_equip_template`
+	CHANGE COLUMN `id` `idx` TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT AFTER `entry`,
+	ADD UNIQUE INDEX `entry` (`entry`, `idx`);
+
+ALTER TABLE `creature_equip_template`
+	CHANGE COLUMN `item_id1` `main_hand_slot_item` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER `idx`,
+	CHANGE COLUMN `item_id2` `off_hand_slot_item` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER `main_hand_slot_item`,
+	CHANGE COLUMN `item_id3` `ranged_slot_item` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER `off_hand_slot_item`;
+
+ALTER TABLE `creature_equip_template`
+	ADD COLUMN `sniff_id_list` TEXT NOT NULL AFTER `ranged_slot_item`,
+	DROP COLUMN `sniff_build`;

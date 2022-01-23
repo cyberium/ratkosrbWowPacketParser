@@ -10,6 +10,7 @@ using WowPacketParser.Hotfix;
 using WowPacketParser.Misc;
 using WowPacketParser.Store;
 using WowPacketParser.Store.Objects;
+using WowPacketParser.Store.Objects.UpdateFields;
 
 namespace WowPacketParser.SQL.Builders
 {
@@ -284,72 +285,20 @@ namespace WowPacketParser.SQL.Builders
                 vendor => StoreGetters.GetName(vendor.Type <= 1 ? StoreNameType.Item : StoreNameType.Currency, vendor.Item.GetValueOrDefault(), false));
         }
 
-        [BuilderMethod(Units = true)]
-        public static string CreatureEquip(Dictionary<WowGuid, Unit> units)
+        [BuilderMethod]
+        public static string CreatureEquip()
         {
-            if (units.Count == 0)
+            if (Storage.CreatureEquipments.IsEmpty())
                 return string.Empty;
 
             if (!Settings.SqlTables.creature_equip_template)
                 return string.Empty;
 
-            var equips = new DataBag<CreatureEquipment>();
-            foreach (var npc in units)
-            {
-                if (npc.Key.GetHighType() == HighGuidType.Pet)
-                    continue;
+            if (Settings.TargetedDbType == TargetedDbType.WPP)
+                return SQLUtil.MakeInsertWithSniffIdList(Storage.CreatureEquipments, false, true);
 
-                uint entry = (uint)npc.Value.ObjectData.EntryID;
-                if (entry == 0)
-                    continue;   // broken entry
-
-                if (Settings.AreaFilters.Length > 0)
-                    if (!(npc.Value.Area.ToString(CultureInfo.InvariantCulture).MatchesFilters(Settings.AreaFilters)))
-                        continue;
-
-                if (Settings.MapFilters.Length > 0)
-                    if (!(npc.Value.Map.ToString(CultureInfo.InvariantCulture).MatchesFilters(Settings.MapFilters)))
-                        continue;
-
-                var equipment = npc.Value.UnitData.VirtualItems;
-                if (equipment.Length != 3)
-                    continue;
-
-                if (equipment[0].ItemID == 0 && equipment[1].ItemID == 0 && equipment[2].ItemID == 0)
-                    continue;
-
-                var equip = new CreatureEquipment
-                {
-                    CreatureID = entry,
-                    ItemID1 = (uint)equipment[0].ItemID,
-                    ItemID2 = (uint)equipment[1].ItemID,
-                    ItemID3 = (uint)equipment[2].ItemID,
-
-                    AppearanceModID1 = equipment[0].ItemAppearanceModID,
-                    AppearanceModID2 = equipment[1].ItemAppearanceModID,
-                    AppearanceModID3 = equipment[2].ItemAppearanceModID,
-
-                    ItemVisual1 = equipment[0].ItemVisual,
-                    ItemVisual2 = equipment[1].ItemVisual,
-                    ItemVisual3 = equipment[2].ItemVisual
-                };
-
-
-                if (equips.Contains(equip))
-                    continue;
-
-                for (uint i = 1;; i++)
-                {
-                    equip.ID = i;
-                    if (!equips.ContainsKey(equip))
-                        break;
-                }
-
-                equips.Add(equip);
-            }
-
-            var equipsDb = SQLDatabase.Get(equips);
-            return SQLUtil.Compare(equips, equipsDb, StoreNameType.Unit);
+            var equipsDb = SQLDatabase.Get(Storage.CreatureEquipments);
+            return SQLUtil.Compare(Storage.CreatureEquipments, equipsDb, StoreNameType.Unit);
         }
 
         [BuilderMethod]

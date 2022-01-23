@@ -472,12 +472,13 @@ CREATE TABLE IF NOT EXISTS `creature_equipment_values_update` (
 DROP TABLE IF EXISTS `creature_equip_template`;
 CREATE TABLE IF NOT EXISTS `creature_equip_template` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `id` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `item_id1` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `item_id2` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `item_id3` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`entry`,`id`)
+  `idx` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `main_hand_slot_item` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `off_hand_slot_item` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `ranged_slot_item` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
+  PRIMARY KEY (`entry`,`main_hand_slot_item`,`off_hand_slot_item`,`ranged_slot_item`),
+  UNIQUE KEY `entry` (`entry`,`idx`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='all weapons used by a given creature id, assigned in the virtual item slots';
 
 -- Data exporting was unselected.
