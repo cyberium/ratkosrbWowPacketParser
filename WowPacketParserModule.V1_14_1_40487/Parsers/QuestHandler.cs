@@ -100,6 +100,8 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
             quest.PortraitGiverMount = (uint)packet.ReadInt32("PortraitGiverMount");
             quest.QuestTurnInPortrait = (uint)packet.ReadInt32("PortraitTurnIn");
 
+            packet.ReadInt32("Unk");
+
             quest.RewardFactionID = new uint?[5];
             quest.RewardFactionOverride = new int?[5];
             quest.RewardFactionValue = new int?[5];
