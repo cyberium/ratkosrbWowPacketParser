@@ -197,8 +197,87 @@ namespace WowPacketParserModule.V2_5_1_38835.Parsers
         }
 
         [HasSniffData]
-        [Parser(Opcode.SMSG_DB_REPLY)]
+        [Parser(Opcode.SMSG_DB_REPLY, ClientVersionBuild.V2_5_1_38598, ClientVersionBuild.V2_5_2_39926)]
         public static void HandleDBReply(Packet packet)
+        {
+            var type = packet.ReadUInt32E<DB2Hash>("TableHash");
+            var entry = packet.ReadInt32("RecordID");
+            var timeStamp = packet.ReadUInt32();
+            packet.AddValue("Timestamp", Utilities.GetDateTimeFromUnixTime(timeStamp));
+            var status = packet.ReadBitsE<HotfixStatus>("Status", 2);
+
+            var size = packet.ReadInt32("Size");
+            var data = packet.ReadBytes(size);
+            var db2File = new Packet(data, packet.Opcode, packet.Time, packet.Direction, packet.Number, packet.Writer, packet.FileName);
+
+            if (entry < 0 || status == HotfixStatus.RecordRemoved)
+            {
+                packet.WriteLine("Row {0} has been removed.", -entry);
+                HotfixStoreMgr.RemoveRecord(type, entry);
+            }
+            if (status == HotfixStatus.Invalid)
+            {
+                packet.WriteLine("Row {0} is invalid.", entry);
+            }
+            else
+            {
+                switch (type)
+                {
+                    case DB2Hash.BroadcastText:
+                    {
+                        var bct = new BroadcastText()
+                        {
+                            Text = db2File.ReadCString("Text"),
+                            Text1 = db2File.ReadCString("Text1"),
+                        };
+
+                        bct.ID = db2File.ReadUInt32("ID");
+                        bct.LanguageID = db2File.ReadInt32("LanguageID");
+                        bct.ConditionID = db2File.ReadUInt32("ConditionID");
+                        bct.EmotesID = db2File.ReadUInt16("EmotesID");
+                        bct.Flags = db2File.ReadByte("Flags");
+                        bct.ChatBubbleDurationMs = db2File.ReadUInt32("ChatBubbleDurationMs");
+
+                        bct.SoundEntriesID = new uint?[2];
+                        for (int i = 0; i < 2; ++i)
+                            bct.SoundEntriesID[i] = db2File.ReadUInt32("SoundEntriesID", i);
+
+                        bct.EmoteID = new ushort?[3];
+                        bct.EmoteDelay = new ushort?[3];
+                        for (int i = 0; i < 3; ++i)
+                            bct.EmoteID[i] = db2File.ReadUInt16("EmoteID", i);
+                        for (int i = 0; i < 3; ++i)
+                            bct.EmoteDelay[i] = db2File.ReadUInt16("EmoteDelay", i);
+
+                        Storage.BroadcastTexts.Add(bct, packet.TimeSpan);
+
+                        if (ClientLocale.PacketLocale != LocaleConstant.enUS)
+                        {
+                            BroadcastTextLocale lbct = new BroadcastTextLocale
+                            {
+                                ID = bct.ID,
+                                TextLang = bct.Text,
+                                Text1Lang = bct.Text1
+                            };
+                            Storage.BroadcastTextLocales.Add(lbct, packet.TimeSpan);
+                        }
+                        break;
+                    }
+                    default:
+                    HotfixStoreMgr.AddRecord(type, entry, db2File);
+                    break;
+                }
+
+                if (db2File.Position != db2File.Length)
+                    HandleHotfixOptionalData(packet, type, entry, db2File);
+
+                db2File.ClosePacket(false);
+            }
+        }
+
+        [HasSniffData]
+        [Parser(Opcode.SMSG_DB_REPLY, ClientVersionBuild.V2_5_2_39926)]
+        public static void HandleDBReply252(Packet packet)
         {
             WowPacketParserModule.V9_0_1_36216.Parsers.HotfixHandler.HandleDBReply(packet);
         }
