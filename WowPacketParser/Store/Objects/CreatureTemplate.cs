@@ -91,6 +91,9 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("auras", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         public string Auras;
+
+        [DBFieldName("sniff_build")]
+        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("creature_unique_emote")]

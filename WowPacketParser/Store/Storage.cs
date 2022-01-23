@@ -1969,12 +1969,10 @@ namespace WowPacketParser.Store
                 return;
 
             var unitData = useInitialData ? player.UnitDataOriginal : player.UnitData;
-            string sniffIdString = "@SNIFFID+" + (sniffId != null ? sniffId.ToString() : obj.SourceSniffId.ToString());
-            int sniffBuild = useInitialData ? obj.SourceSniffBuild : ClientVersion.BuildInt;
+            int sniffFileId =  sniffId != null ? (int)sniffId : obj.SourceSniffId;
 
             PlayerClassLevelStats classLevelStats = new PlayerClassLevelStats();
-            classLevelStats.SniffId = sniffIdString;
-            classLevelStats.SniffBuild = sniffBuild;
+            classLevelStats.SniffId = sniffFileId;
             classLevelStats.ClassId = unitData.ClassId;
             classLevelStats.Level = unitData.Level;
             classLevelStats.BaseHP = unitData.BaseHealth;
@@ -1987,8 +1985,7 @@ namespace WowPacketParser.Store
             var negstats = unitData.StatNegBuff;
 
             PlayerLevelStats levelStats = new PlayerLevelStats();
-            levelStats.SniffId = sniffIdString;
-            levelStats.SniffBuild = sniffBuild;
+            levelStats.SniffId = sniffFileId;
             levelStats.RaceId = unitData.RaceId;
             levelStats.ClassId = unitData.ClassId;
             levelStats.Level = unitData.Level;

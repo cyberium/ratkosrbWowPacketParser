@@ -934,7 +934,7 @@ CREATE TABLE IF NOT EXISTS `creature_stats` (
   `negative_arcane_res` int(11) DEFAULT NULL,
   `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'points to sniff_file table',
   `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`entry`,`level`,`is_pet`,`is_dirty`)
+  KEY `entry` (`entry`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='stats data from SMSG_UPDATE_OBJECT\r\nserver only sends it to the creature''s charmer, or player who casts beast lore on it';
 
 -- Data exporting was unselected.
@@ -958,6 +958,7 @@ CREATE TABLE IF NOT EXISTS `creature_template` (
   `vehicle_id` int(11) NOT NULL DEFAULT '0',
   `hover_height` float NOT NULL DEFAULT '0',
   `auras` text COLLATE latin1_general_ci COMMENT 'only includes auras with the NO_CASTER flag',
+  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`entry`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=FIXED COMMENT='most commonly seen values per given creature id\r\ndata here is not guaranteed to be the true default';
 
@@ -1011,7 +1012,7 @@ CREATE TABLE IF NOT EXISTS `creature_template_wdb` (
   `vignette_id` int(11) NOT NULL DEFAULT '0',
   `unit_class` int(11) NOT NULL DEFAULT '0',
   `rank` int(11) NOT NULL DEFAULT '0',
-  `beast_family` int(11) NOT NULL DEFAULT '0',
+  `pet_family` int(11) NOT NULL DEFAULT '0',
   `type` int(11) NOT NULL DEFAULT '0',
   `type_flags` int(10) unsigned NOT NULL DEFAULT '0',
   `type_flags2` int(10) unsigned NOT NULL DEFAULT '0',
@@ -2197,11 +2198,10 @@ DROP TABLE IF EXISTS `player_classlevelstats`;
 CREATE TABLE IF NOT EXISTS `player_classlevelstats` (
   `class` tinyint(3) unsigned NOT NULL,
   `level` tinyint(3) unsigned NOT NULL,
-  `basehp` smallint(5) unsigned NOT NULL,
-  `basemana` smallint(5) unsigned NOT NULL,
-  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`class`,`level`)
+  `base_health` smallint(5) unsigned NOT NULL,
+  `base_mana` smallint(5) unsigned NOT NULL,
+  `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
+  PRIMARY KEY (`class`,`level`,`base_health`,`base_mana`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci PACK_KEYS=0 COMMENT='Stores levels stats.';
 
 -- Data exporting was unselected.
@@ -2388,14 +2388,13 @@ CREATE TABLE IF NOT EXISTS `player_levelstats` (
   `race` tinyint(3) unsigned NOT NULL,
   `class` tinyint(3) unsigned NOT NULL,
   `level` tinyint(3) unsigned NOT NULL,
-  `str` tinyint(3) unsigned NOT NULL,
-  `agi` tinyint(3) unsigned NOT NULL,
-  `sta` tinyint(3) unsigned NOT NULL,
-  `inte` tinyint(3) unsigned NOT NULL,
-  `spi` tinyint(3) unsigned NOT NULL,
-  `sniff_id` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `sniff_build` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`race`,`class`,`level`)
+  `strength` tinyint(3) unsigned NOT NULL,
+  `agility` tinyint(3) unsigned NOT NULL,
+  `stamina` tinyint(3) unsigned NOT NULL,
+  `intellect` tinyint(3) unsigned NOT NULL,
+  `spirit` tinyint(3) unsigned NOT NULL,
+  `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
+  PRIMARY KEY (`race`,`class`,`level`,`strength`,`agility`,`stamina`,`intellect`,`spirit`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci PACK_KEYS=0 COMMENT='Stores levels stats.';
 
 -- Data exporting was unselected.
@@ -3099,9 +3098,9 @@ DROP TABLE IF EXISTS `sound_unique_source`;
 CREATE TABLE IF NOT EXISTS `sound_unique_source` (
   `source_id` int(10) unsigned NOT NULL DEFAULT '0',
   `source_type` varchar(16) COLLATE latin1_general_ci NOT NULL DEFAULT '',
-  `sound_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `sound` int(10) unsigned NOT NULL DEFAULT '0',
   `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
-  PRIMARY KEY (`source_id`,`source_type`,`sound_id`)
+  PRIMARY KEY (`source_id`,`source_type`,`sound`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='unique source object and sound id combinations';
 
 -- Data exporting was unselected.

@@ -1293,3 +1293,54 @@ ALTER TABLE `creature_equip_template`
 ALTER TABLE `creature_equip_template`
 	ADD COLUMN `sniff_id_list` TEXT NOT NULL AFTER `ranged_slot_item`,
 	DROP COLUMN `sniff_build`;
+
+ALTER TABLE `player_classlevelstats`
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`class`, `level`, `basehp`, `basemana`);
+
+ALTER TABLE `player_classlevelstats`
+	ADD COLUMN `sniff_id_list` TEXT NOT NULL AFTER `basemana`,
+	DROP COLUMN `sniff_id`,
+	DROP COLUMN `sniff_build`;
+
+ALTER TABLE `player_levelstats`
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`race`, `class`, `level`, `str`, `agi`, `sta`, `inte`, `spi`);
+
+ALTER TABLE `player_levelstats`
+	ADD COLUMN `sniff_id_list` TEXT NOT NULL AFTER `spi`,
+	DROP COLUMN `sniff_id`,
+	DROP COLUMN `sniff_build`;
+
+ALTER TABLE `player_classlevelstats`
+	ALTER `basehp` DROP DEFAULT,
+	ALTER `basemana` DROP DEFAULT;
+ALTER TABLE `player_classlevelstats`
+	CHANGE COLUMN `basehp` `base_health` SMALLINT(5) UNSIGNED NOT NULL AFTER `level`,
+	CHANGE COLUMN `basemana` `base_mana` SMALLINT(5) UNSIGNED NOT NULL AFTER `base_health`;
+
+ALTER TABLE `player_levelstats`
+	ALTER `str` DROP DEFAULT,
+	ALTER `agi` DROP DEFAULT,
+	ALTER `sta` DROP DEFAULT,
+	ALTER `inte` DROP DEFAULT,
+	ALTER `spi` DROP DEFAULT;
+ALTER TABLE `player_levelstats`
+	CHANGE COLUMN `str` `strength` TINYINT(3) UNSIGNED NOT NULL AFTER `level`,
+	CHANGE COLUMN `agi` `agility` TINYINT(3) UNSIGNED NOT NULL AFTER `strength`,
+	CHANGE COLUMN `sta` `stamina` TINYINT(3) UNSIGNED NOT NULL AFTER `agility`,
+	CHANGE COLUMN `inte` `intellect` TINYINT(3) UNSIGNED NOT NULL AFTER `stamina`,
+	CHANGE COLUMN `spi` `spirit` TINYINT(3) UNSIGNED NOT NULL AFTER `intellect`;
+
+ALTER TABLE `creature_template`
+	ADD COLUMN `sniff_build` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `auras`;
+
+ALTER TABLE `creature_stats`
+	DROP PRIMARY KEY,
+	ADD INDEX `entry` (`entry`);
+
+ALTER TABLE `sound_unique_source`
+	CHANGE COLUMN `sound_id` `sound` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER `source_type`;
+
+ALTER TABLE `creature_template_wdb`
+	CHANGE COLUMN `beast_family` `pet_family` INT(11) NOT NULL DEFAULT '0' AFTER `rank`;

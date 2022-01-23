@@ -554,7 +554,7 @@ namespace WowPacketParser.Store.Objects
     }
 
     [DBTableName("player_classlevelstats")]
-    public sealed class PlayerClassLevelStats : IDataModel
+    public sealed class PlayerClassLevelStats : ITableWithSniffIdList
     {
         [DBFieldName("class", true)]
         public uint ClassId;
@@ -562,21 +562,17 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("level", true)]
         public int Level;
 
-        [DBFieldName("basehp")]
+        [DBFieldName("base_health", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("basehp", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public int BaseHP;
 
-        [DBFieldName("basemana")]
+        [DBFieldName("base_mana", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("basemana", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public int BaseMana;
-
-        [DBFieldName("sniff_id", false, true, DbType = (TargetedDbType.WPP))]
-        public string SniffId;
-
-        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
-        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("player_levelstats")]
-    public sealed class PlayerLevelStats : IDataModel
+    public sealed class PlayerLevelStats : ITableWithSniffIdList
     {
         [DBFieldName("race", true)]
         public uint RaceId;
@@ -587,26 +583,25 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("level", true)]
         public int Level;
 
-        [DBFieldName("str")]
+        [DBFieldName("strength", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("str", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public int Strength;
 
-        [DBFieldName("agi")]
+        [DBFieldName("agility", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("agi", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public int Agility;
 
-        [DBFieldName("sta")]
+        [DBFieldName("stamina", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("sta", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public int Stamina;
 
-        [DBFieldName("inte")]
+        [DBFieldName("intellect", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("inte", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public int Intellect;
 
-        [DBFieldName("spi")]
+        [DBFieldName("spirit", true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("spi", DbType = (TargetedDbType.TRINITY | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         public int Spirit;
-
-        [DBFieldName("sniff_id", false, true, DbType = (TargetedDbType.WPP))]
-        public string SniffId;
-
-        [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
-        public int SniffBuild = ClientVersion.BuildInt;
     }
 
     [DBTableName("player_levelup_info")]

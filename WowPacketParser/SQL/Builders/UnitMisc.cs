@@ -476,8 +476,17 @@ namespace WowPacketParser.SQL.Builders
 
             // `gossip_menu`
             if (Settings.SqlTables.gossip_menu)
-                result += SQLUtil.Compare(Storage.Gossips, SQLDatabase.Get(Storage.Gossips),
+            { 
+                if (Settings.TargetedDbType == TargetedDbType.WPP)
+                {
+                    result += SQLUtil.Insert(Storage.Gossips, false, true);
+                }
+                else
+                {
+                    result += SQLUtil.Compare(Storage.Gossips, SQLDatabase.Get(Storage.Gossips),
                     t => StoreGetters.GetName(StoreNameType.Unit, (int)t.ObjectEntry)); // BUG: GOs can send gossips too
+                }
+            }
 
             // `gossip_menu_option`
             if (Settings.SqlTables.gossip_menu_option)
@@ -489,7 +498,14 @@ namespace WowPacketParser.SQL.Builders
                     AssignNpcFlagsToGossipOption(gossipOption);
                 }
 
-                result += SQLUtil.Compare(Storage.GossipMenuOptions, SQLDatabase.Get(Storage.GossipMenuOptions), t => t.BroadcastTextIDHelper);
+                if (Settings.TargetedDbType == TargetedDbType.WPP)
+                {
+                    result += SQLUtil.Insert(Storage.GossipMenuOptions, false, true);
+                }
+                else
+                {
+                    result += SQLUtil.Compare(Storage.GossipMenuOptions, SQLDatabase.Get(Storage.GossipMenuOptions), t => t.BroadcastTextIDHelper);
+                }
 
                 if (!Storage.GossipMenuOptionActions.IsEmpty())
                 {
@@ -503,7 +519,7 @@ namespace WowPacketParser.SQL.Builders
                         else
                             gossipAction.ActionPoiId = 0;
 
-                        result += "UPDATE `gossip_menu_option` SET `action_menu_id`=" + gossipAction.ActionMenuId.ToString() + ", `action_poi_id`=" + poiId + ", `option_id`=1, `npc_option_npcflag`=1 WHERE `menu_id`=" + gossipAction.MenuId.ToString() + " && `id`=" + gossipAction.OptionIndex.ToString() + ";" + Environment.NewLine;
+                        result += "UPDATE `gossip_menu_option` SET `action_menu_id`=" + gossipAction.ActionMenuId.ToString() + ", `action_poi_id`=" + poiId + " WHERE `menu_id`=" + gossipAction.MenuId.ToString() + " && `id`=" + gossipAction.OptionIndex.ToString() + ";" + Environment.NewLine;
 
                     }
 
@@ -649,7 +665,7 @@ namespace WowPacketParser.SQL.Builders
                 }
             }
 
-            var statSql = new SQLInsert<CreatureStats>(rows, true);
+            var statSql = new SQLInsert<CreatureStats>(rows, false, true);
             return statSql.Build();
         }
 

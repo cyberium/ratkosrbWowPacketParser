@@ -10,7 +10,7 @@ namespace WowPacketParser.SQL.Builders
     [BuilderClass]
     public static class WDBTemplates
     {
-        [BuilderMethod(true)]
+        [BuilderMethod(false)]
         public static string QuestTemplate()
         {
             if (!Settings.SqlTables.quest_template)
@@ -24,7 +24,7 @@ namespace WowPacketParser.SQL.Builders
             return SQLUtil.Compare(Storage.QuestTemplates, templatesDb, StoreNameType.Quest);
         }
 
-        [BuilderMethod(true)]
+        [BuilderMethod(false)]
         public static string QuestObjective()
         {
             if (!Settings.SqlTables.quest_template)
@@ -77,7 +77,7 @@ namespace WowPacketParser.SQL.Builders
             return SQLUtil.Compare(Storage.QuestRewardDisplaySpells, templatesDb, StoreNameType.None);
         }
 
-        [BuilderMethod(true)]
+        [BuilderMethod(false)]
         public static string CreatureTemplate()
         {
             if (!Settings.SqlTables.creature_template_wdb)

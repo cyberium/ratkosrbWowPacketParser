@@ -8,7 +8,7 @@ namespace WowPacketParser.SQL.Builders
     [BuilderClass]
     class Guilds
     {
-        [BuilderMethod(true)]
+        [BuilderMethod]
         public static string GuildBuilder()
         {
             if (!Settings.SqlTables.guild && !Settings.SqlTables.guild_rank)

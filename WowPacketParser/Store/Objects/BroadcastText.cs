@@ -25,6 +25,10 @@ namespace WowPacketParser.Store.Objects
             SoundEntriesID2 = SoundEntriesID[1];
         }
 
+        [DBFieldName("entry", true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
+        [DBFieldName("ID", true, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
+        public uint? ID;
+
         [DBFieldName("male_text", LocaleConstant.enUS, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         [DBFieldName("Text", LocaleConstant.enUS, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
         public string Text;
@@ -32,10 +36,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("female_text", LocaleConstant.enUS, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         [DBFieldName("Text1", LocaleConstant.enUS, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
         public string Text1;
-
-        [DBFieldName("entry", true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
-        [DBFieldName("ID", true, DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
-        public uint? ID;
 
         [DBFieldName("language_id", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
         [DBFieldName("LanguageID", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]

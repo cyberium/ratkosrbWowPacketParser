@@ -3443,17 +3443,32 @@ namespace WowPacketParser.SQL.Builders
             if (Settings.SqlTables.player_classlevelstats &&
                 !Storage.PlayerClassLevelStats.IsEmpty())
             {
-                var templateDb = SQLDatabase.Get(Storage.PlayerClassLevelStats, Settings.TDBDatabase);
+                if (Settings.TargetedDbType == TargetedDbType.WPP)
+                {
+                    result += SQLUtil.MakeInsertWithSniffIdList(Storage.PlayerClassLevelStats, false, true);
+                }
+                else
+                {
+                    var templateDb = SQLDatabase.Get(Storage.PlayerClassLevelStats, Settings.TDBDatabase);
 
-                result += SQLUtil.Compare(Storage.PlayerClassLevelStats, templateDb, StoreNameType.None);
+                    result += SQLUtil.Compare(Storage.PlayerClassLevelStats, templateDb, StoreNameType.None);
+                }
+                
             }
 
             if (Settings.SqlTables.player_levelstats &&
                 !Storage.PlayerLevelStats.IsEmpty())
             {
-                var templateDb = SQLDatabase.Get(Storage.PlayerLevelStats, Settings.TDBDatabase);
+                if (Settings.TargetedDbType == TargetedDbType.WPP)
+                {
+                    result += SQLUtil.MakeInsertWithSniffIdList(Storage.PlayerLevelStats, false, true);
+                }
+                else
+                {
+                    var templateDb = SQLDatabase.Get(Storage.PlayerLevelStats, Settings.TDBDatabase);
 
-                result += SQLUtil.Compare(Storage.PlayerLevelStats, templateDb, StoreNameType.None);
+                    result += SQLUtil.Compare(Storage.PlayerLevelStats, templateDb, StoreNameType.None);
+                }
             }
 
             return result;
