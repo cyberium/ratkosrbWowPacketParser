@@ -288,17 +288,17 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string CreatureEquip()
         {
-            if (Storage.CreatureEquipments.IsEmpty())
+            if (Storage.CreatureUniqueEquipments.IsEmpty())
                 return string.Empty;
 
-            if (!Settings.SqlTables.creature_equip_template)
+            if (!Settings.SqlTables.creature_unique_equipment)
                 return string.Empty;
 
             if (Settings.TargetedDbType == TargetedDbType.WPP)
-                return SQLUtil.MakeInsertWithSniffIdList(Storage.CreatureEquipments, false, true);
+                return SQLUtil.MakeInsertWithSniffIdList(Storage.CreatureUniqueEquipments, false, true);
 
-            var equipsDb = SQLDatabase.Get(Storage.CreatureEquipments);
-            return SQLUtil.Compare(Storage.CreatureEquipments, equipsDb, StoreNameType.Unit);
+            var equipsDb = SQLDatabase.Get(Storage.CreatureUniqueEquipments);
+            return SQLUtil.Compare(Storage.CreatureUniqueEquipments, equipsDb, StoreNameType.Unit);
         }
 
         [BuilderMethod]
@@ -1302,15 +1302,15 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod]
-        public static string CreatureTextTemplate()
+        public static string CreatureUniqueText()
         {
-            if (Storage.CreatureTextTemplates.IsEmpty() || !Settings.SqlTables.creature_text_template)
+            if (Storage.CreatureUniqueTexts.IsEmpty() || !Settings.SqlTables.creature_unique_text)
                 return string.Empty;
 
             // For each sound and emote, if the time they were send is in the +1/-1 seconds range of
-            // our texts, add that sound and emote to our Storage.CreatureTextTemplates
+            // our texts, add that sound and emote to our Storage.CreatureUniqueTexts
 
-            foreach (var text in Storage.CreatureTextTemplates)
+            foreach (var text in Storage.CreatureUniqueTexts)
             {
                 // For each text
                 foreach (var textValue in text.Value)
@@ -1383,14 +1383,14 @@ namespace WowPacketParser.SQL.Builders
             }
 
             /* can't use compare DB without knowing values of groupid or id
-            var entries = Storage.CreatureTextTemplates.Keys.ToList();
-            var creatureTextDb = SQLDatabase.GetDict<uint, CreatureTextTemplate>(entries);
+            var entries = Storage.CreatureUniqueTexts.Keys.ToList();
+            var creatureTextDb = SQLDatabase.GetDict<uint, CreatureUniqueText>(entries);
             */
 
-            var rows = new RowList<CreatureTextTemplate>();
+            var rows = new RowList<CreatureUniqueText>();
             Dictionary<uint, uint> entryCount = new Dictionary<uint, uint>();
 
-            foreach (var text in Storage.CreatureTextTemplates.OrderBy(t => t.Key))
+            foreach (var text in Storage.CreatureUniqueTexts.OrderBy(t => t.Key))
             {
                 foreach (var textValue in text.Value)
                 {
@@ -1409,9 +1409,9 @@ namespace WowPacketParser.SQL.Builders
                         continue;
                     }
 
-                    var row = new Row<CreatureTextTemplate>
+                    var row = new Row<CreatureUniqueText>
                     {
-                        Data = new CreatureTextTemplate
+                        Data = new CreatureUniqueText
                         {
                             Entry = textValue.Item1.Entry,
                             GroupId = count,
@@ -1441,12 +1441,12 @@ namespace WowPacketParser.SQL.Builders
                 }
             }
 
-            string result = new SQLInsert<CreatureTextTemplate>(rows, false, true).Build();
+            string result = new SQLInsert<CreatureUniqueText>(rows, false, true).Build();
             
             if (!String.IsNullOrEmpty(result))
             {
                 result += Environment.NewLine;
-                result += SQLUtil.MakeSniffIdListUpdate<CreatureTextTemplate>(rows);
+                result += SQLUtil.MakeSniffIdListUpdate<CreatureUniqueText>(rows);
                 result += Environment.NewLine;
             }
 

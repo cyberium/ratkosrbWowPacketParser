@@ -1344,3 +1344,7 @@ ALTER TABLE `sound_unique_source`
 
 ALTER TABLE `creature_template_wdb`
 	CHANGE COLUMN `beast_family` `pet_family` INT(11) NOT NULL DEFAULT '0' AFTER `rank`;
+
+RENAME TABLE `creature_equip_template` TO `creature_unique_equipment`;
+
+RENAME TABLE `creature_text_template` TO `creature_unique_text`;

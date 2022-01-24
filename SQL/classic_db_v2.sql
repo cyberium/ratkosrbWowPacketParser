@@ -468,22 +468,6 @@ CREATE TABLE IF NOT EXISTS `creature_equipment_values_update` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.creature_equip_template
-DROP TABLE IF EXISTS `creature_equip_template`;
-CREATE TABLE IF NOT EXISTS `creature_equip_template` (
-  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `idx` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
-  `main_hand_slot_item` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `off_hand_slot_item` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `ranged_slot_item` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
-  PRIMARY KEY (`entry`,`main_hand_slot_item`,`off_hand_slot_item`,`ranged_slot_item`),
-  UNIQUE KEY `entry` (`entry`,`idx`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='all weapons used by a given creature id, assigned in the virtual item slots';
-
--- Data exporting was unselected.
-
-
 -- Dumping structure for table sniffs_new_test.creature_guid_values
 DROP TABLE IF EXISTS `creature_guid_values`;
 CREATE TABLE IF NOT EXISTS `creature_guid_values` (
@@ -1044,27 +1028,6 @@ CREATE TABLE IF NOT EXISTS `creature_text` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sniffs_new_test.creature_text_template
-DROP TABLE IF EXISTS `creature_text_template`;
-CREATE TABLE IF NOT EXISTS `creature_text_template` (
-  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'creature template id',
-  `idx` tinyint(3) unsigned NOT NULL AUTO_INCREMENT COMMENT 'counter of unique texts per creature id',
-  `text` varchar(512) COLLATE latin1_general_ci NOT NULL COMMENT 'the actual text that was sent',
-  `chat_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'version specific chat type enum, not the same as values used in mangos',
-  `language` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'part of the packet, references Languages.dbc',
-  `emote` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, emote seen close to when the chat packet was received, references Emotes.dbc',
-  `sound` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, sound heard close to when the chat packet was received, references SoundEntries.dbc',
-  `broadcast_text_id` mediumint(6) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, must be manually set',
-  `health_percent` float DEFAULT NULL COMMENT 'not part of the packet, the current health of the creature at the time the text was said',
-  `comment` varchar(255) CHARACTER SET utf8 DEFAULT '',
-  `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
-  PRIMARY KEY (`entry`,`text`),
-  UNIQUE KEY `entry` (`entry`,`idx`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='unique texts per creature id';
-
--- Data exporting was unselected.
-
-
 -- Dumping structure for table sniffs_new_test.creature_threat_clear
 DROP TABLE IF EXISTS `creature_threat_clear`;
 CREATE TABLE IF NOT EXISTS `creature_threat_clear` (
@@ -1143,6 +1106,22 @@ CREATE TABLE IF NOT EXISTS `creature_unique_emote` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.creature_unique_equipment
+DROP TABLE IF EXISTS `creature_unique_equipment`;
+CREATE TABLE IF NOT EXISTS `creature_unique_equipment` (
+  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `idx` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `main_hand_slot_item` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `off_hand_slot_item` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `ranged_slot_item` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
+  PRIMARY KEY (`entry`,`main_hand_slot_item`,`off_hand_slot_item`,`ranged_slot_item`),
+  UNIQUE KEY `entry` (`entry`,`idx`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='all weapons used by a given creature id, assigned in the virtual item slots';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.creature_unique_faction
 DROP TABLE IF EXISTS `creature_unique_faction`;
 CREATE TABLE IF NOT EXISTS `creature_unique_faction` (
@@ -1164,6 +1143,27 @@ CREATE TABLE IF NOT EXISTS `creature_unique_gossip` (
   `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (`entry`,`gossip_menu_id`,`is_default`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='all unique gossip menu ids used for given creature id';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table sniffs_new_test.creature_unique_text
+DROP TABLE IF EXISTS `creature_unique_text`;
+CREATE TABLE IF NOT EXISTS `creature_unique_text` (
+  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'creature template id',
+  `idx` tinyint(3) unsigned NOT NULL AUTO_INCREMENT COMMENT 'counter of unique texts per creature id',
+  `text` varchar(512) COLLATE latin1_general_ci NOT NULL COMMENT 'the actual text that was sent',
+  `chat_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'version specific chat type enum, not the same as values used in mangos',
+  `language` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'part of the packet, references Languages.dbc',
+  `emote` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, emote seen close to when the chat packet was received, references Emotes.dbc',
+  `sound` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, sound heard close to when the chat packet was received, references SoundEntries.dbc',
+  `broadcast_text_id` mediumint(6) unsigned NOT NULL DEFAULT '0' COMMENT 'not part of the packet, must be manually set',
+  `health_percent` float DEFAULT NULL COMMENT 'not part of the packet, the current health of the creature at the time the text was said',
+  `comment` varchar(255) CHARACTER SET utf8 DEFAULT '',
+  `sniff_id_list` text COLLATE latin1_general_ci NOT NULL,
+  PRIMARY KEY (`entry`,`text`),
+  UNIQUE KEY `entry` (`entry`,`idx`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='unique texts per creature id';
 
 -- Data exporting was unselected.
 

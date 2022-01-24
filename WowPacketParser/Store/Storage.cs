@@ -1202,11 +1202,11 @@ namespace WowPacketParser.Store
         public static readonly DataBag<CreatureTemplateModel> CreatureTemplateModels = new DataBag<CreatureTemplateModel>(Settings.SqlTables.creature_template);
         public static readonly DataBag<CreatureStats> CreatureStats = new DataBag<CreatureStats>(Settings.SqlTables.creature_stats);
         public static readonly DataBag<CreatureStats> CreatureStatsDirty = new DataBag<CreatureStats>(Settings.SqlTables.creature_stats);
-        public static readonly DataBag<CreatureEquipment> CreatureEquipments = new DataBag<CreatureEquipment>(Settings.SqlTables.creature_equip_template);
+        public static readonly DataBag<CreatureUniqueEquipment> CreatureUniqueEquipments = new DataBag<CreatureUniqueEquipment>(Settings.SqlTables.creature_unique_equipment);
 
         public static void StoreCreatureEquipment(Unit npc, int sniffId)
         {
-            if (!Settings.SqlTables.creature_equip_template)
+            if (!Settings.SqlTables.creature_unique_equipment)
                 return;
 
             if (npc == null)
@@ -1223,7 +1223,7 @@ namespace WowPacketParser.Store
             if (equipment[0].ItemID == 0 && equipment[1].ItemID == 0 && equipment[2].ItemID == 0)
                 return;
 
-            var equip = new CreatureEquipment
+            var equip = new CreatureUniqueEquipment
             {
                 CreatureID = entry,
                 ItemID1 = (uint)equipment[0].ItemID,
@@ -1246,7 +1246,7 @@ namespace WowPacketParser.Store
             {
                 equip.ID = 1;
 
-                foreach (var existingEquip in Storage.CreatureEquipments)
+                foreach (var existingEquip in Storage.CreatureUniqueEquipments)
                 {
                     if (existingEquip.Item1.CreatureID == equip.CreatureID)
                     {
@@ -1263,7 +1263,7 @@ namespace WowPacketParser.Store
                 }
             }
 
-            Storage.CreatureEquipments.Add(equip);
+            Storage.CreatureUniqueEquipments.Add(equip);
         }
         public static void StoreCreatureStats(Unit npc, BitArray updateMaskArray, bool isPet, Packet packet)
         {
@@ -1867,7 +1867,7 @@ namespace WowPacketParser.Store
         // Chat packet data (says, yells, etc.)
         public static readonly DataBag<WorldText> WorldTexts = new DataBag<WorldText>(Settings.SqlTables.world_text);
         public static readonly DataBag<CreatureText> CreatureTexts = new DataBag<CreatureText>(Settings.SqlTables.creature_text);
-        public static readonly StoreMulti<uint, CreatureTextTemplate> CreatureTextTemplates = new StoreMulti<uint, CreatureTextTemplate>(Settings.SqlTables.creature_text_template);
+        public static readonly StoreMulti<uint, CreatureUniqueText> CreatureUniqueTexts = new StoreMulti<uint, CreatureUniqueText>(Settings.SqlTables.creature_unique_text);
         public static readonly DataBag<CharacterChat> CharacterTexts = new DataBag<CharacterChat>(Settings.SqlTables.player_chat);
 
         public static void StoreText(ChatPacketData text, Packet packet)
@@ -1882,16 +1882,16 @@ namespace WowPacketParser.Store
 
             if (creatureId != 0)
             {
-                if (Settings.SqlTables.creature_text_template)
+                if (Settings.SqlTables.creature_unique_text)
                 {
-                    CreatureTextTemplate textTemplate = new CreatureTextTemplate(text, packet.SniffId);
+                    CreatureUniqueText textTemplate = new CreatureUniqueText(text, packet.SniffId);
                     textTemplate.Entry = creatureId;
                     if (Storage.Objects.ContainsKey(textTemplate.SenderGUID))
                     {
                         var obj = Storage.Objects[textTemplate.SenderGUID].Item1 as Unit;
                         textTemplate.HealthPercent = obj.UnitData.HealthPercent;
                     }
-                    Storage.CreatureTextTemplates.Add(creatureId, textTemplate, packet.TimeSpan);
+                    Storage.CreatureUniqueTexts.Add(creatureId, textTemplate, packet.TimeSpan);
 
                     if (Settings.SqlTables.creature_text)
                     {
@@ -2656,7 +2656,7 @@ namespace WowPacketParser.Store
             CreatureLoot.Clear();
             CreatureStats.Clear();
             CreatureStatsDirty.Clear();
-            CreatureEquipments.Clear();
+            CreatureUniqueEquipments.Clear();
 
             CreatureKillReputations.Clear();
             CreatureRespawnTimes.Clear();
@@ -2693,7 +2693,7 @@ namespace WowPacketParser.Store
 
             WorldTexts.Clear();
             CreatureTexts.Clear();
-            CreatureTextTemplates.Clear();
+            CreatureUniqueTexts.Clear();
             CharacterTexts.Clear();
 
             GossipPOIs.Clear();

@@ -129,7 +129,7 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_power_values_update = Conf.GetBoolean("creature_power_values_update", false);
             public static readonly bool creature_speed_update = Conf.GetBoolean("creature_speed_update", false);
             public static readonly bool creature_text = Conf.GetBoolean("creature_text", false);
-            public static readonly bool creature_text_template = Conf.GetBoolean("creature_text_template", false);
+            public static readonly bool creature_unique_text = Conf.GetBoolean("creature_unique_text", false);
             public static readonly bool creature_threat_clear = Conf.GetBoolean("creature_threat_clear", false);
             public static readonly bool creature_threat_remove = Conf.GetBoolean("creature_threat_remove", false);
             public static readonly bool creature_threat_update = Conf.GetBoolean("creature_threat_update", false);
@@ -202,7 +202,6 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_addon = Conf.GetBoolean("creature_addon", false);
             public static readonly bool creature_armor = Conf.GetBoolean("creature_armor", false);
             public static readonly bool creature_display_info_addon = Conf.GetBoolean("creature_display_info_addon", false);
-            public static readonly bool creature_equip_template = Conf.GetBoolean("creature_equip_template", false);
             public static readonly bool creature_kill_reputation = Conf.GetBoolean("creature_kill_reputation", false);
             public static readonly bool creature_loot = Conf.GetBoolean("creature_loot", false);
             public static readonly bool creature_melee_damage = Conf.GetBoolean("creature_melee_damage", false);
@@ -219,6 +218,7 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_template_scaling = Conf.GetBoolean("creature_template_scaling", false);
             public static readonly bool creature_template_wdb = Conf.GetBoolean("creature_template_wdb", false);
             public static readonly bool creature_unique_emote = Conf.GetBoolean("creature_unique_emote", false);
+            public static readonly bool creature_unique_equipment = Conf.GetBoolean("creature_unique_equipment", false);
             public static readonly bool creature_unique_faction = Conf.GetBoolean("creature_unique_faction", false);
             public static readonly bool creature_unique_gossip = Conf.GetBoolean("creature_unique_gossip", false);
             public static readonly bool gameobject_addon = Conf.GetBoolean("gameobject_addon", false);

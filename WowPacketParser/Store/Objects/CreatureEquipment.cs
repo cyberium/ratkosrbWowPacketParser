@@ -4,8 +4,9 @@ using WowPacketParser.SQL;
 
 namespace WowPacketParser.Store.Objects
 {
-    [DBTableName("creature_equip_template")]
-    public sealed class CreatureEquipment : ITableWithSniffIdList
+    [DBTableName("creature_unique_equipment", TargetedDbType.WPP)]
+    [DBTableName("creature_equip_template", (TargetedDbType.TRINITY | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
+    public sealed class CreatureUniqueEquipment : ITableWithSniffIdList
     {
         [DBFieldName("entry", true, DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("CreatureID", true, DbType = (TargetedDbType.TRINITY))]

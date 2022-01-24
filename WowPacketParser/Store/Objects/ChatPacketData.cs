@@ -73,9 +73,9 @@ namespace WowPacketParser.Store.Objects
         public string Text;
     }
 
-    [DBTableName("creature_text_template", TargetedDbType.WPP)]
+    [DBTableName("creature_unique_text", TargetedDbType.WPP)]
     [DBTableName("creature_text", TargetedDbType.TRINITY)]
-    public sealed class CreatureTextTemplate : ITableWithSniffIdList
+    public sealed class CreatureUniqueText : ITableWithSniffIdList
     {
         [DBFieldName("entry", true, DbType = TargetedDbType.WPP)]
         [DBFieldName("CreatureID", true, DbType = TargetedDbType.TRINITY)]
@@ -123,8 +123,8 @@ namespace WowPacketParser.Store.Objects
 
         public string BroadcastTextIDHelper;
 
-        public CreatureTextTemplate() { }
-        public CreatureTextTemplate(ChatPacketData textTemplate, int sniffId)
+        public CreatureUniqueText() { }
+        public CreatureUniqueText(ChatPacketData textTemplate, int sniffId)
         {
             Text = textTemplate.Text;
             Type = textTemplate.TypeOriginal;
