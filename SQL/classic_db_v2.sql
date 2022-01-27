@@ -2447,6 +2447,19 @@ CREATE TABLE IF NOT EXISTS `player_melee_crit_chance` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.player_minimap_ping
+DROP TABLE IF EXISTS `player_minimap_ping`;
+CREATE TABLE IF NOT EXISTS `player_minimap_ping` (
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `guid` int(10) unsigned NOT NULL,
+  `position_x` float NOT NULL DEFAULT '0',
+  `position_y` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`guid`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_MINIMAP_PING';
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.player_movement_client
 DROP TABLE IF EXISTS `player_movement_client`;
 CREATE TABLE IF NOT EXISTS `player_movement_client` (

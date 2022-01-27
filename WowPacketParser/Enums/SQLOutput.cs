@@ -72,6 +72,7 @@
         player_equipment_values_update,
         player_guid_values,
         player_guid_values_update,
+        player_minimap_ping,
         player_movement_client,
         player_movement_server,
         player_power_values,

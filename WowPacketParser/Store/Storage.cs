@@ -1049,6 +1049,23 @@ namespace WowPacketParser.Store
                 store.Add(attackerGuid, attackList);
             }
         }
+        public static readonly Dictionary<WowGuid, List<PlayerMinimapPing>> PlayerMinimapPings = new Dictionary<WowGuid, List<PlayerMinimapPing>>();
+        public static void StorePlayerMinimapPing(WowGuid guid, PlayerMinimapPing ping)
+        {
+            if (!Settings.SqlTables.player_minimap_ping)
+                return;
+
+            if (Storage.PlayerMinimapPings.ContainsKey(guid))
+            {
+                Storage.PlayerMinimapPings[guid].Add(ping);
+            }
+            else
+            {
+                List<PlayerMinimapPing> pingList = new List<PlayerMinimapPing>();
+                pingList.Add(ping);
+                Storage.PlayerMinimapPings.Add(guid, pingList);
+            }
+        }
 
         public static readonly Dictionary<WowGuid, List<uint>> CharacterSpells = new Dictionary<WowGuid, List<uint>>();
         public static void StoreCharacterSpell(WowGuid guid, uint spellId)
@@ -2632,6 +2649,7 @@ namespace WowPacketParser.Store
             CharacterSpells.Clear();
             CharacterReputations.Clear();
 
+            PlayerMinimapPings.Clear();
             PlayerMovements.Clear();
             PlayerActiveCreateTime.Clear();
 

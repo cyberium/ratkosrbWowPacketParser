@@ -2571,6 +2571,7 @@ namespace WowPacketParser.SQL.Builders
             var playerSpeedUpdateRows = new RowList<CreatureSpeedUpdate>();
             var playerServerMovementRows = new RowList<ServerSideMovement>();
             var playerServerMovementSplineRows = new RowList<ServerSideMovementSpline>();
+            var playerMinimapPingRows = new RowList<PlayerMinimapPing>();
             Dictionary<WowGuid, uint> accountIdDictionary = new Dictionary<WowGuid, uint>();
             foreach (var objPair in Storage.Objects)
             {
@@ -3077,6 +3078,20 @@ namespace WowPacketParser.SQL.Builders
                     }
                 }
 
+                if (Settings.SqlTables.player_minimap_ping)
+                {
+                    if (Storage.PlayerMinimapPings.ContainsKey(objPair.Key))
+                    {
+                        foreach (var ping in Storage.PlayerMinimapPings[objPair.Key])
+                        {
+                            Row<PlayerMinimapPing> pingRow = new Row<PlayerMinimapPing>();
+                            pingRow.Data = ping;
+                            pingRow.Data.GUID = row.Data.Guid;
+                            playerMinimapPingRows.Add(pingRow);
+                        }
+                    }
+                }
+
                 if (Settings.SqlTables.character_reputation)
                 {
                     if (Storage.CharacterReputations.ContainsKey(objPair.Key))
@@ -3356,6 +3371,13 @@ namespace WowPacketParser.SQL.Builders
             {
                 var emoteSql = new SQLInsert<CreatureEmote>(playerEmoteRows, false, false, "player_emote");
                 result.Append(emoteSql.Build());
+                result.AppendLine();
+            }
+
+            if (Settings.SqlTables.player_minimap_ping && playerMinimapPingRows.Count != 0)
+            {
+                var pingSql = new SQLInsert<PlayerMinimapPing>(playerMinimapPingRows, false, false);
+                result.Append(pingSql.Build());
                 result.AppendLine();
             }
 

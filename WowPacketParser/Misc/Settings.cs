@@ -163,6 +163,7 @@ namespace WowPacketParser.Misc
             public static readonly bool player_equipment_values_update = Conf.GetBoolean("player_equipment_values_update", false);
             public static readonly bool player_guid_values = Conf.GetBoolean("player_guid_values", false);
             public static readonly bool player_guid_values_update = Conf.GetBoolean("player_guid_values_update", false);
+            public static readonly bool player_minimap_ping = Conf.GetBoolean("player_minimap_ping", false);
             public static readonly bool player_movement_client = Conf.GetBoolean("player_movement_client", false);
             public static readonly bool player_movement_server = Conf.GetBoolean("player_movement_server", false);
             public static readonly bool player_power_values = Conf.GetBoolean("player_power_values", false);

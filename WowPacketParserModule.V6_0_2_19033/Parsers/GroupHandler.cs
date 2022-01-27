@@ -1,6 +1,8 @@
 ﻿using WowPacketParser.Enums;
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParserModule.V6_0_2_19033.Parsers
 {
@@ -16,8 +18,16 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_MINIMAP_PING)]
         public static void HandleServerMinimapPing(Packet packet)
         {
-            packet.ReadPackedGuid128("Sender");
-            packet.ReadVector2("Position");
+            WowGuid guid = packet.ReadPackedGuid128("Sender");
+            Vector2 pos = packet.ReadVector2("Position");
+
+            PlayerMinimapPing ping = new PlayerMinimapPing
+            {
+                PositionX = pos.X,
+                PositionY = pos.Y,
+                UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
+            };
+            Storage.StorePlayerMinimapPing(guid, ping);
         }
 
         [Parser(Opcode.SMSG_PARTY_UPDATE)]

@@ -451,6 +451,22 @@ namespace WowPacketParser.Store.Objects
         public string GUID;
     }
 
+    [DBTableName("player_minimap_ping")]
+    public sealed class PlayerMinimapPing : IDataModel
+    {
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
+        [DBFieldName("guid", true, true)]
+        public string GUID;
+
+        [DBFieldName("position_x")]
+        public float PositionX;
+
+        [DBFieldName("position_y")]
+        public float PositionY;
+    }
+
     [DBTableName("player_melee_crit_chance")]
     public sealed class PlayerWeaponCritChance : IDataModel
     {

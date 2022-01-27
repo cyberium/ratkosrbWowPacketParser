@@ -1362,3 +1362,11 @@ ALTER TABLE `creature_text`
 	COLLATE='utf8_general_ci',
 	CHANGE COLUMN `text` `text` TEXT NOT NULL COLLATE 'utf8_general_ci' AFTER `entry`,
 	DROP PRIMARY KEY;
+
+CREATE TABLE `player_minimap_ping` (
+  `unixtimems` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `guid` int(10) unsigned NOT NULL,
+  `position_x` float NOT NULL DEFAULT '0',
+  `position_y` float NOT NULL DEFAULT '0',
+  PRIMARY KEY (`guid`,`unixtimems`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_MINIMAP_PING';
