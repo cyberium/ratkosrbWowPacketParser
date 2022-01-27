@@ -56,8 +56,14 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("entry", true)]
         public uint? Entry;
 
-        [DBFieldName("idx", true)]
-        public uint Idx;
+        [DBFieldName("text", true)]
+        public string Text;
+
+        [DBFieldName("chat_type")]
+        public uint Type;
+
+        [DBFieldName("language")]
+        public Language? Language;
 
         [DBFieldName("target_guid", false, true)]
         public string TargetGuid = "0";
@@ -70,7 +76,6 @@ namespace WowPacketParser.Store.Objects
 
         public WowGuid SenderGUID;
         public WowGuid ReceiverGUID;
-        public string Text;
     }
 
     [DBTableName("creature_unique_text", TargetedDbType.WPP)]

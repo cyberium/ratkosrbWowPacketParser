@@ -1018,12 +1018,13 @@ CREATE TABLE IF NOT EXISTS `creature_text` (
   `unixtimems` bigint(20) unsigned NOT NULL COMMENT 'when the packet was received',
   `guid` int(10) unsigned NOT NULL COMMENT 'creature spawn guid',
   `entry` int(10) unsigned NOT NULL COMMENT 'creature template id',
-  `idx` int(10) unsigned NOT NULL COMMENT 'counter of unique texts per creature id',
+  `text` text NOT NULL,
+  `chat_type` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `language` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `target_guid` int(10) unsigned NOT NULL DEFAULT '0',
   `target_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `target_type` varchar(16) COLLATE latin1_general_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`entry`,`idx`,`unixtimems`,`guid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci COMMENT='individual instances of creatures sending a text message';
+  `target_type` varchar(16) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='individual instances of creatures sending a text message';
 
 -- Data exporting was unselected.
 

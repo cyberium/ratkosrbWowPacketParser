@@ -1447,33 +1447,29 @@ namespace WowPacketParser.SQL.Builders
             {
                 result += Environment.NewLine;
                 result += SQLUtil.MakeSniffIdListUpdate<CreatureUniqueText>(rows);
-                result += Environment.NewLine;
-            }
-
-            if (Settings.SqlTables.creature_text)
-            {
-                foreach (var text in Storage.CreatureTexts)
-                {
-                    if (text.Item1.Guid == null)
-                        text.Item1.Guid = Storage.GetObjectDbGuid(text.Item1.SenderGUID);
-                    if (text.Item1.ReceiverGUID != null)
-                        Storage.GetObjectDbGuidEntryType(text.Item1.ReceiverGUID, out text.Item1.TargetGuid, out text.Item1.TargetId, out text.Item1.TargetType);
-                    var sameTextList = rows.Where(text2 => text2.Data.Entry == text.Item1.Entry && text2.Data.Text == text.Item1.Text);
-                    if (sameTextList.Count() != 0)
-                    {
-                        foreach (var textRow in sameTextList)
-                        {
-                            text.Item1.Idx = textRow.Data.GroupId + 1;
-                            break;
-                        }
-                        continue;
-                    }
-                }
-
-                result += SQLUtil.Insert(Storage.CreatureTexts, false, false);
             }
 
             return result;
+        }
+
+        [BuilderMethod]
+        public static string CreatureTexts()
+        {
+            if (!Settings.SqlTables.creature_text)
+                return string.Empty;
+
+            if (Storage.CreatureTexts.IsEmpty())
+                return string.Empty;
+
+            foreach (var text in Storage.CreatureTexts)
+            {
+                if (text.Item1.Guid == null)
+                    text.Item1.Guid = Storage.GetObjectDbGuid(text.Item1.SenderGUID);
+                if (text.Item1.ReceiverGUID != null)
+                    Storage.GetObjectDbGuidEntryType(text.Item1.ReceiverGUID, out text.Item1.TargetGuid, out text.Item1.TargetId, out text.Item1.TargetType);
+            }
+
+            return SQLUtil.Insert(Storage.CreatureTexts, false, false);
         }
 
         [BuilderMethod]

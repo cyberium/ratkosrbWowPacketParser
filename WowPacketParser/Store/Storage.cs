@@ -1898,6 +1898,8 @@ namespace WowPacketParser.Store
                         CreatureText textEntry = new CreatureText();
                         textEntry.Entry = creatureId;
                         textEntry.Text = textTemplate.Text;
+                        textEntry.Type = textTemplate.Type;
+                        textEntry.Language = textTemplate.Language;
                         textEntry.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
                         textEntry.SenderGUID = textTemplate.SenderGUID;
                         textEntry.ReceiverGUID = textTemplate.ReceiverGUID;

@@ -1348,3 +1348,17 @@ ALTER TABLE `creature_template_wdb`
 RENAME TABLE `creature_equip_template` TO `creature_unique_equipment`;
 
 RENAME TABLE `creature_text_template` TO `creature_unique_text`;
+
+ALTER TABLE `creature_text`
+	ALTER `idx` DROP DEFAULT;
+ALTER TABLE `creature_text`
+	CHANGE COLUMN `idx` `text` VARCHAR(50) NOT NULL AFTER `entry`,
+	ADD COLUMN `chat_type` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `text`,
+	ADD COLUMN `language` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `chat_type`;
+
+ALTER TABLE `creature_text`
+	ALTER `text` DROP DEFAULT;
+ALTER TABLE `creature_text`
+	COLLATE='utf8_general_ci',
+	CHANGE COLUMN `text` `text` TEXT NOT NULL COLLATE 'utf8_general_ci' AFTER `entry`,
+	DROP PRIMARY KEY;

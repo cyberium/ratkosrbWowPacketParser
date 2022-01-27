@@ -129,7 +129,6 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_power_values_update = Conf.GetBoolean("creature_power_values_update", false);
             public static readonly bool creature_speed_update = Conf.GetBoolean("creature_speed_update", false);
             public static readonly bool creature_text = Conf.GetBoolean("creature_text", false);
-            public static readonly bool creature_unique_text = Conf.GetBoolean("creature_unique_text", false);
             public static readonly bool creature_threat_clear = Conf.GetBoolean("creature_threat_clear", false);
             public static readonly bool creature_threat_remove = Conf.GetBoolean("creature_threat_remove", false);
             public static readonly bool creature_threat_update = Conf.GetBoolean("creature_threat_update", false);
@@ -221,6 +220,7 @@ namespace WowPacketParser.Misc
             public static readonly bool creature_unique_equipment = Conf.GetBoolean("creature_unique_equipment", false);
             public static readonly bool creature_unique_faction = Conf.GetBoolean("creature_unique_faction", false);
             public static readonly bool creature_unique_gossip = Conf.GetBoolean("creature_unique_gossip", false);
+            public static readonly bool creature_unique_text = Conf.GetBoolean("creature_unique_text", false);
             public static readonly bool gameobject_addon = Conf.GetBoolean("gameobject_addon", false);
             public static readonly bool gameobject_loot = Conf.GetBoolean("gameobject_loot", false);
             public static readonly bool gameobject_template = Conf.GetBoolean("gameobject_template", false);

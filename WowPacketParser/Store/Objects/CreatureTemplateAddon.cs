@@ -10,7 +10,6 @@ namespace WowPacketParser.Store.Objects
         public uint? Entry;
 
         [DBFieldName("mount", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
-        [DBFieldName("mount_display_id", DbType = (TargetedDbType.VMANGOS))]
         public uint? MountID;
 
         [DBFieldName("bytes1", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
@@ -19,7 +18,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("bytes2", DbType = (TargetedDbType.TRINITY))]
         public uint? Bytes2;
 
-        [DBFieldName("sheath_state", DbType = (TargetedDbType.VMANGOS))]
         [DBFieldName("b2_0_sheath", DbType = (TargetedDbType.CMANGOS))]
         public uint? SheathState;
 
@@ -28,7 +26,6 @@ namespace WowPacketParser.Store.Objects
         public uint? PvpFlags;
 
         [DBFieldName("emote", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
-        [DBFieldName("emote_state", DbType = (TargetedDbType.VMANGOS))]
         public uint? Emote;
 
         [DBFieldName("moveflags", DbType = (TargetedDbType.CMANGOS))]
