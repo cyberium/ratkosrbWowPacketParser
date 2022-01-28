@@ -45,7 +45,6 @@ namespace WowPacketParser.SQL.Builders
 
             uint count = 0;
             uint maxDbGuid = 0;
-            uint moveCounter = 0;
             uint threatTargetsCounter = 1;
             var rows = new RowList<Creature>();
             var powerValuesRows = new RowList<CreaturePowerValues>();
@@ -59,7 +58,6 @@ namespace WowPacketParser.SQL.Builders
             var movementCombatRows = new RowList<ServerSideMovement>();
             var movementCombatSplineRows = new RowList<ServerSideMovementSpline>();
             var movementSplineRows = new RowList<ServerSideMovementSpline>();
-            var movementClientRows = new RowList<ClientSideMovement>();
             var petNameRows = new RowList<CreaturePetName>();
             var updateAurasRows = new RowList<CreatureAurasUpdate>();
             var updateThreatRows = new RowList<CreatureThreatUpdate>();
@@ -519,47 +517,6 @@ namespace WowPacketParser.SQL.Builders
                         }
                     }
                 }
-
-                if (Settings.SqlTables.creature_movement_client)
-                {
-                    foreach (var movement in Storage.PlayerMovements)
-                    {
-                        if (movement.Guid != unit.Key)
-                            continue;
-
-                        Row<ClientSideMovement> clientMovementRow = new Row<ClientSideMovement>();
-                        clientMovementRow.Data.Guid = "@CGUID+" + creature.DbGuid;
-                        clientMovementRow.Data.MoveFlags = movement.MoveInfo.Flags;
-                        clientMovementRow.Data.MoveFlags2 = movement.MoveInfo.FlagsExtra;
-                        clientMovementRow.Data.MoveTime = movement.MoveInfo.MoveTime;
-                        clientMovementRow.Data.Map = movement.Map;
-                        clientMovementRow.Data.PositionX = movement.MoveInfo.Position.X;
-                        clientMovementRow.Data.PositionY = movement.MoveInfo.Position.Y;
-                        clientMovementRow.Data.PositionZ = movement.MoveInfo.Position.Z;
-                        clientMovementRow.Data.Orientation = movement.MoveInfo.Orientation;
-                        if (movement.MoveInfo.TransportGuid != null && !movement.MoveInfo.TransportGuid.IsEmpty())
-                        {
-                            Storage.GetObjectDbGuidEntryType(movement.MoveInfo.TransportGuid, out clientMovementRow.Data.TransportGuid, out clientMovementRow.Data.TransportId, out clientMovementRow.Data.TransportType);
-                            clientMovementRow.Data.TransportPositionX = movement.MoveInfo.TransportOffset.X;
-                            clientMovementRow.Data.TransportPositionY = movement.MoveInfo.TransportOffset.Y;
-                            clientMovementRow.Data.TransportPositionZ = movement.MoveInfo.TransportOffset.Z;
-                            clientMovementRow.Data.TransportOrientation = movement.MoveInfo.TransportOffset.O;
-                            clientMovementRow.Data.TransportTime = movement.MoveInfo.TransportTime;
-                            clientMovementRow.Data.TransportSeat = movement.MoveInfo.TransportSeat;
-                        }
-                        clientMovementRow.Data.SwimPitch = movement.MoveInfo.SwimPitch;
-                        clientMovementRow.Data.FallTime = movement.MoveInfo.FallTime;
-                        clientMovementRow.Data.JumpHorizontalSpeed = movement.MoveInfo.JumpHorizontalSpeed;
-                        clientMovementRow.Data.JumpVerticalSpeed = movement.MoveInfo.JumpVerticalSpeed;
-                        clientMovementRow.Data.JumpCosAngle = movement.MoveInfo.JumpCosAngle;
-                        clientMovementRow.Data.JumpSinAngle = movement.MoveInfo.JumpSinAngle;
-                        clientMovementRow.Data.SplineElevation = movement.MoveInfo.SplineElevation;
-                        clientMovementRow.Data.PacketId = moveCounter++;
-                        clientMovementRow.Data.Opcode = Opcodes.GetOpcodeName(movement.Opcode, movement.OpcodeDirection);
-                        clientMovementRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(movement.Time);
-                        movementClientRows.Add(clientMovementRow);
-                    }
-                }
                 
                 if (creature.Waypoints != null && creature.OriginalMovement.Position != null)
                 {
@@ -930,11 +887,59 @@ namespace WowPacketParser.SQL.Builders
                 result.AppendLine();
             }
 
-            if (Settings.SqlTables.creature_movement_client && movementClientRows.Count != 0)
+            if (Settings.SqlTables.creature_movement_client)
             {
-                var clientMovementSql = new SQLInsert<ClientSideMovement>(movementClientRows, false, false, "creature_movement_client");
-                result.Append(clientMovementSql.Build());
-                result.AppendLine();
+                uint moveCounter = 0;
+                var movementClientRows = new RowList<ClientSideMovement>();
+                foreach (var movement in Storage.PlayerMovements)
+                {
+                    WoWObject obj;
+                    if (!Storage.Objects.TryGetValue(movement.Guid, out obj))
+                        continue;
+
+                    Unit creature = obj as Unit;
+                    if (creature == null)
+                        continue;
+
+                    Row<ClientSideMovement> clientMovementRow = new Row<ClientSideMovement>();
+                    clientMovementRow.Data.Guid = "@CGUID+" + creature.DbGuid;
+                    clientMovementRow.Data.MoveFlags = movement.MoveInfo.Flags;
+                    clientMovementRow.Data.MoveFlags2 = movement.MoveInfo.FlagsExtra;
+                    clientMovementRow.Data.MoveTime = movement.MoveInfo.MoveTime;
+                    clientMovementRow.Data.Map = movement.Map;
+                    clientMovementRow.Data.PositionX = movement.MoveInfo.Position.X;
+                    clientMovementRow.Data.PositionY = movement.MoveInfo.Position.Y;
+                    clientMovementRow.Data.PositionZ = movement.MoveInfo.Position.Z;
+                    clientMovementRow.Data.Orientation = movement.MoveInfo.Orientation;
+                    if (movement.MoveInfo.TransportGuid != null && !movement.MoveInfo.TransportGuid.IsEmpty())
+                    {
+                        Storage.GetObjectDbGuidEntryType(movement.MoveInfo.TransportGuid, out clientMovementRow.Data.TransportGuid, out clientMovementRow.Data.TransportId, out clientMovementRow.Data.TransportType);
+                        clientMovementRow.Data.TransportPositionX = movement.MoveInfo.TransportOffset.X;
+                        clientMovementRow.Data.TransportPositionY = movement.MoveInfo.TransportOffset.Y;
+                        clientMovementRow.Data.TransportPositionZ = movement.MoveInfo.TransportOffset.Z;
+                        clientMovementRow.Data.TransportOrientation = movement.MoveInfo.TransportOffset.O;
+                        clientMovementRow.Data.TransportTime = movement.MoveInfo.TransportTime;
+                        clientMovementRow.Data.TransportSeat = movement.MoveInfo.TransportSeat;
+                    }
+                    clientMovementRow.Data.SwimPitch = movement.MoveInfo.SwimPitch;
+                    clientMovementRow.Data.FallTime = movement.MoveInfo.FallTime;
+                    clientMovementRow.Data.JumpHorizontalSpeed = movement.MoveInfo.JumpHorizontalSpeed;
+                    clientMovementRow.Data.JumpVerticalSpeed = movement.MoveInfo.JumpVerticalSpeed;
+                    clientMovementRow.Data.JumpCosAngle = movement.MoveInfo.JumpCosAngle;
+                    clientMovementRow.Data.JumpSinAngle = movement.MoveInfo.JumpSinAngle;
+                    clientMovementRow.Data.SplineElevation = movement.MoveInfo.SplineElevation;
+                    clientMovementRow.Data.PacketId = moveCounter++;
+                    clientMovementRow.Data.Opcode = Opcodes.GetOpcodeName(movement.Opcode, movement.OpcodeDirection);
+                    clientMovementRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(movement.Time);
+                    movementClientRows.Add(clientMovementRow);
+                }
+
+                if (movementClientRows.Count != 0)
+                {
+                    var clientMovementSql = new SQLInsert<ClientSideMovement>(movementClientRows, false, false, "creature_movement_client");
+                    result.Append(clientMovementSql.Build());
+                    result.AppendLine();
+                }
             }
 
             if (Settings.SqlTables.creature_movement_server && movementRows.Count != 0)
