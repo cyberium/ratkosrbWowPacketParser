@@ -451,7 +451,7 @@ namespace WowPacketParser.Enums
         V1_14_1_41077 = 41077, // both live and ptr
         V1_14_1_41137 = 41137, // both live and ptr
         V1_14_1_41243 = 41243, // both live and ptr
-        V1_14_1_41511 = 41511, // both live and ptr
+        V1_14_1_41511 = 41511, // both live and ptr (issue: bugged timestamps in sniffer)
         V1_14_1_41794 = 41794, // both live and ptr
 
         // TBC Classic
@@ -474,7 +474,7 @@ namespace WowPacketParser.Enums
         V2_5_2_39926 = 39926, // ptr
         V2_5_2_40011 = 40011, // both live and ptr
         V2_5_2_40045 = 40045, // live
-        V2_5_2_40203 = 40203, // both live and ptr
+        V2_5_2_40203 = 40203, // both live and ptr  (issue: no spells on action bar for charmed mobs)
         V2_5_2_40260 = 40260, // both live and ptr
         V2_5_2_40422 = 40422, // both live and ptr
         V2_5_2_40488 = 40488, // both live and ptr
