@@ -893,6 +893,9 @@ namespace WowPacketParser.SQL.Builders
                 var movementClientRows = new RowList<ClientSideMovement>();
                 foreach (var movement in Storage.PlayerMovements)
                 {
+                    if (movement.Guid.GetObjectType() != ObjectType.Unit)
+                        continue;
+
                     WoWObject obj;
                     if (!Storage.Objects.TryGetValue(movement.Guid, out obj))
                         continue;
