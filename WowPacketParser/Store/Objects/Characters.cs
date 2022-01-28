@@ -467,6 +467,30 @@ namespace WowPacketParser.Store.Objects
         public float PositionY;
     }
 
+    [DBTableName("raid_target_icon_update")]
+    public sealed class RaidTargetIconUpdate : IDataModel
+    {
+        [DBFieldName("unixtimems", true)]
+        public ulong UnixTimeMs;
+
+        [DBFieldName("is_full_update")]
+        public bool IsFullUpdate;
+
+        [DBFieldName("icon", true)]
+        public sbyte Icon;
+
+        [DBFieldName("target_guid", true, true)]
+        public string TargetGuid = "0";
+
+        [DBFieldName("target_id")]
+        public uint TargetId;
+
+        [DBFieldName("target_type", true)]
+        public string TargetType = "";
+
+        public WowGuid TargetGUID;
+    }
+
     [DBTableName("player_melee_crit_chance")]
     public sealed class PlayerWeaponCritChance : IDataModel
     {

@@ -81,6 +81,7 @@
         player_values_update,
         quest_update_complete,
         quest_update_failed,
+        raid_target_icon_update,
         spell_cast_failed,
         spell_cast_go,
         spell_cast_start,

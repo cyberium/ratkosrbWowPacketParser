@@ -3443,6 +3443,39 @@ namespace WowPacketParser.SQL.Builders
         }
 
         [BuilderMethod]
+        public static string RaidTargetIconUpdates()
+        {
+            if (Storage.RaidTargetIconUpdates.IsEmpty())
+                return string.Empty;
+
+            if (!Settings.SqlTables.raid_target_icon_update)
+                return string.Empty;
+
+            RowList<RaidTargetIconUpdate> rows = new RowList<RaidTargetIconUpdate>();
+            foreach (var iconUpdate in Storage.RaidTargetIconUpdates)
+            {
+                Row<RaidTargetIconUpdate> row = new Row<RaidTargetIconUpdate>();
+                row.Data = iconUpdate.Item1;
+
+                if (row.Data.TargetGUID != null)
+                {
+                    Storage.GetObjectDbGuidEntryType(row.Data.TargetGUID, out row.Data.TargetGuid, out row.Data.TargetId, out row.Data.TargetType);
+                    if (String.IsNullOrEmpty(row.Data.TargetType))
+                        continue;
+                }
+                else
+                {
+                    if (!row.Data.IsFullUpdate)
+                        continue;
+                }
+                rows.Add(row);
+            }
+
+            var sql = new SQLInsert<RaidTargetIconUpdate>(rows, false);
+            return sql.Build();
+        }
+
+        [BuilderMethod]
         public static string PlayerClassLevelStats()
         {
             if (!Settings.SqlTables.player_classlevelstats && !Settings.SqlTables.player_levelstats)

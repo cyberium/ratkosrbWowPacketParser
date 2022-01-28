@@ -3081,6 +3081,21 @@ CREATE TABLE IF NOT EXISTS `quest_update_failed` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table sniffs_new_test.raid_target_icon_update
+DROP TABLE IF EXISTS `raid_target_icon_update`;
+CREATE TABLE IF NOT EXISTS `raid_target_icon_update` (
+  `unixtimems` bigint(20) unsigned NOT NULL,
+  `is_full_update` tinyint(3) unsigned NOT NULL,
+  `icon` tinyint(4) NOT NULL,
+  `target_guid` int(10) unsigned NOT NULL,
+  `target_id` int(10) unsigned NOT NULL,
+  `target_type` varchar(16) COLLATE latin1_general_ci NOT NULL,
+  PRIMARY KEY (`unixtimems`,`icon`,`target_guid`,`target_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table sniffs_new_test.sniff_data
 DROP TABLE IF EXISTS `sniff_data`;
 CREATE TABLE IF NOT EXISTS `sniff_data` (

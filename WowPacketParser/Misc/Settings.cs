@@ -172,6 +172,7 @@ namespace WowPacketParser.Misc
             public static readonly bool player_values_update = Conf.GetBoolean("player_values_update", false);
             public static readonly bool quest_update_complete = Conf.GetBoolean("quest_update_complete", false);
             public static readonly bool quest_update_failed = Conf.GetBoolean("quest_update_failed", false);
+            public static readonly bool raid_target_icon_update = Conf.GetBoolean("raid_target_icon_update", false);
             public static readonly bool spell_cast_failed = Conf.GetBoolean("spell_cast_failed", false);
             public static readonly bool spell_cast_go = Conf.GetBoolean("spell_cast_go", false);
             public static readonly bool spell_cast_start = Conf.GetBoolean("spell_cast_start", false);

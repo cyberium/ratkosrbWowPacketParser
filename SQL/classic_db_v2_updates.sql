@@ -1370,3 +1370,16 @@ CREATE TABLE `player_minimap_ping` (
   `position_y` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`guid`,`unixtimems`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ROW_FORMAT=COMPACT COMMENT='from SMSG_MINIMAP_PING';
+
+CREATE TABLE `raid_target_icon_update` (
+	`unixtimems` BIGINT UNSIGNED NOT NULL,
+	`is_full_update` TINYINT UNSIGNED NOT NULL,
+	`icon` TINYINT NOT NULL,
+	`target_guid` INT UNSIGNED NOT NULL,
+	`target_id` INT UNSIGNED NOT NULL,
+	`target_type` VARCHAR(16) NOT NULL,
+	PRIMARY KEY (`unixtimems`, `icon`, `target_guid`, `target_type`)
+)
+COLLATE='latin1_general_ci'
+ENGINE=InnoDB
+;

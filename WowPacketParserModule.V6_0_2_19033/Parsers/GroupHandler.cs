@@ -418,9 +418,15 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         public static void HandleSendRaidTargetUpdateSingle(Packet packet)
         {
             packet.ReadByte("PartyIndex");
-            packet.ReadByte("Symbol");
-            packet.ReadPackedGuid128("Target");
+            RaidTargetIconUpdate iconUpdate = new RaidTargetIconUpdate()
+            {
+                IsFullUpdate = false,
+                Icon = packet.ReadSByte("Symbol"),
+                TargetGUID = packet.ReadPackedGuid128("Target"),
+                UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
+            };
             packet.ReadPackedGuid128("ChangedBy");
+            Storage.RaidTargetIconUpdates.Add(iconUpdate);
         }
 
         [Parser(Opcode.SMSG_SEND_RAID_TARGET_UPDATE_ALL)]
@@ -428,10 +434,31 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         {
             packet.ReadByte("PartyIndex");
             var raidTargetSymbolCount = packet.ReadInt32("RaidTargetSymbolCount");
-            for (int i = 0; i < raidTargetSymbolCount; i++)
+
+            if (raidTargetSymbolCount != 0)
             {
-                packet.ReadPackedGuid128("Target", i);
-                packet.ReadByte("Symbol", i);
+                for (int i = 0; i < raidTargetSymbolCount; i++)
+                {
+                    RaidTargetIconUpdate iconUpdate = new RaidTargetIconUpdate()
+                    {
+                        IsFullUpdate = true,
+                        TargetGUID = packet.ReadPackedGuid128("Target", i),
+                        Icon = packet.ReadSByte("Symbol", i),
+                        UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
+                    };
+                    Storage.RaidTargetIconUpdates.Add(iconUpdate);
+                }
+            }
+            else
+            {
+                RaidTargetIconUpdate iconUpdate = new RaidTargetIconUpdate()
+                {
+                    IsFullUpdate = true,
+                    TargetGUID = null,
+                    Icon = -1,
+                    UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
+                };
+                Storage.RaidTargetIconUpdates.Add(iconUpdate);
             }
         }
 

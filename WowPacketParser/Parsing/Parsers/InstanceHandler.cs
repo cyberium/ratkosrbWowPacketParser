@@ -1,5 +1,7 @@
 using WowPacketParser.Enums;
 using WowPacketParser.Misc;
+using WowPacketParser.Store;
+using WowPacketParser.Store.Objects;
 
 namespace WowPacketParser.Parsing.Parsers
 {
@@ -147,14 +149,34 @@ namespace WowPacketParser.Parsing.Parsers
                 return;
             }
 
-            var test = packet.ReadBool("List target"); // false == Set Target
-            if (!test)
+            var isFullUpdate = packet.ReadBool("List target"); // false == Set Target
+            if (!isFullUpdate && ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
                 packet.ReadGuid("Owner GUID");
 
+            bool targetsRead = false;
             for (int i = 0; packet.CanRead(); ++i)
             {
-                packet.ReadByteE<TargetIcon>("Icon Id", i);
-                packet.ReadGuid("Target Guid", i);
+                targetsRead = true;
+                RaidTargetIconUpdate iconUpdate = new RaidTargetIconUpdate()
+                {
+                    IsFullUpdate = isFullUpdate,
+                    Icon = (sbyte)packet.ReadSByteE<TargetIcon>("Icon Id", i),
+                    TargetGUID = packet.ReadGuid("Target Guid", i),
+                    UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
+                };
+                Storage.RaidTargetIconUpdates.Add(iconUpdate);
+            }
+
+            if (!targetsRead && isFullUpdate)
+            {
+                RaidTargetIconUpdate iconUpdate = new RaidTargetIconUpdate()
+                {
+                    IsFullUpdate = isFullUpdate,
+                    Icon = -1,
+                    TargetGUID = null,
+                    UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time)
+                };
+                Storage.RaidTargetIconUpdates.Add(iconUpdate);
             }
         }
 

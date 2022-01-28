@@ -1066,6 +1066,7 @@ namespace WowPacketParser.Store
                 Storage.PlayerMinimapPings.Add(guid, pingList);
             }
         }
+        public static readonly DataBag<RaidTargetIconUpdate> RaidTargetIconUpdates = new DataBag<RaidTargetIconUpdate>(Settings.SqlTables.raid_target_icon_update);
 
         public static readonly Dictionary<WowGuid, List<uint>> CharacterSpells = new Dictionary<WowGuid, List<uint>>();
         public static void StoreCharacterSpell(WowGuid guid, uint spellId)
