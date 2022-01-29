@@ -1383,3 +1383,6 @@ CREATE TABLE `raid_target_icon_update` (
 COLLATE='latin1_general_ci'
 ENGINE=InnoDB
 ;
+
+ALTER TABLE `sniff_file`
+	ADD COLUMN `author` VARCHAR(32) NOT NULL DEFAULT '' AFTER `build`;

@@ -97,12 +97,12 @@ namespace WowPacketParser
                 {
                     using (StreamWriter sw = File.AppendText(Settings.SQLFileName))
                     {
-                        string query = "INSERT INTO `sniff_file` (`id`, `build`, `name`) VALUES" + System.Environment.NewLine;
+                        string query = "INSERT INTO `sniff_file` (`id`, `build`, `author`, `name`) VALUES" + System.Environment.NewLine;
                         for (int i = 0; i < sniffFileNames.Count; i++)
                         {
                             if (i != 0)
                                 query += "," + System.Environment.NewLine;
-                            query += "(@SNIFFID+" + i + ", " + sniffFileBuilds[i].ToString() + ", '" + MySql.Data.MySqlClient.MySqlHelper.EscapeString(sniffFileNames[i]) + "')";
+                            query += "(@SNIFFID+" + i + ", " + sniffFileBuilds[i].ToString() + ", '" + MySql.Data.MySqlClient.MySqlHelper.EscapeString(Settings.AuthorName) + "', '" + MySql.Data.MySqlClient.MySqlHelper.EscapeString(sniffFileNames[i]) + "')";
                         }
                         query += ";" + System.Environment.NewLine;
                         sw.WriteLine(query);

@@ -3115,6 +3115,7 @@ DROP TABLE IF EXISTS `sniff_file`;
 CREATE TABLE IF NOT EXISTS `sniff_file` (
   `id` smallint(5) unsigned NOT NULL,
   `build` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `author` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `name` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='the names of all sniffs included in the database';

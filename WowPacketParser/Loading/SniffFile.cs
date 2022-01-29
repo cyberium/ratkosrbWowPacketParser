@@ -528,10 +528,10 @@ namespace WowPacketParser.Loading
 
         private void WriteSQLs()
         {
-            var sqlFileName = string.IsNullOrWhiteSpace(Settings.SQLFileName) ? $"{Utilities.FormattedDateTimeForFiles()}_{Path.GetFileName(FileName)}.sql" : Settings.SQLFileName;
-
             if (!string.IsNullOrWhiteSpace(Settings.SQLFileName))
                 return;
+
+            var sqlFileName = Settings.PrefixSqlWithDateTime ? $"{Utilities.FormattedDateTimeForFiles()}_{Path.GetFileName(FileName)}.sql" : $"{Path.GetFileName(FileName)}.sql";
 
             Builder.DumpSQL($"{_logPrefix}: Dumping sql", sqlFileName, GetHeader(FileName));
             Storage.ClearContainers();

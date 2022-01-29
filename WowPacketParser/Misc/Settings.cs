@@ -31,6 +31,8 @@ namespace WowPacketParser.Misc
         public static readonly bool IgnoreZeroValues = Conf.GetBoolean("IgnoreZeroValues", false);
         public static readonly bool ForceInsertQueries = Conf.GetBoolean("ForceInsertQueries", false);
         public static readonly bool RecalcDiscount = Conf.GetBoolean("RecalcDiscount", false);
+        public static readonly string AuthorName = Conf.GetString("AuthorName", string.Empty);
+        public static readonly bool PrefixSqlWithDateTime = Conf.GetBoolean("PrefixSqlWithDateTime", true);
         public static readonly string SQLFileName = Conf.GetString("SQLFileName", string.Empty);
         public static readonly bool ShowEndPrompt = Conf.GetBoolean("ShowEndPrompt", false);
         public static readonly bool LogErrors = Conf.GetBoolean("LogErrors", false);
