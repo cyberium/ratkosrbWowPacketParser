@@ -408,7 +408,7 @@ namespace WowPacketParser.Store
             }
         }
         public static readonly DataBag<SpellAuraFlags> SpellAuraFlags = new DataBag<SpellAuraFlags>(Settings.SqlTables.spell_aura_flags);
-        public static readonly Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>> UnitAurasUpdates = new Dictionary<WowGuid, List<Tuple<List<Aura>, DateTime>>>();
+        public static readonly Dictionary<WowGuid, List<AuraUpdateData>> UnitAurasUpdates = new Dictionary<WowGuid, List<AuraUpdateData>>();
         public static void StoreUnitAurasUpdate(WowGuid guid, List<Aura> auras, DateTime time, bool isFullUpdate)
         {
             if (Settings.SqlTables.spell_aura_flags && auras != null)
@@ -476,12 +476,12 @@ namespace WowPacketParser.Store
 
             if (Storage.UnitAurasUpdates.ContainsKey(guid))
             {
-                Storage.UnitAurasUpdates[guid].Add(new Tuple<List<Aura>, DateTime>(auras, time));
+                Storage.UnitAurasUpdates[guid].Add(new AuraUpdateData(isFullUpdate, auras, time));
             }
             else
             {
-                List<Tuple<List<Aura>, DateTime>> updateList = new List<Tuple<List<Aura>, DateTime>>();
-                updateList.Add(new Tuple<List<Aura>, DateTime>(auras, time));
+                List<AuraUpdateData> updateList = new List<AuraUpdateData>();
+                updateList.Add(new AuraUpdateData(isFullUpdate, auras, time));
                 Storage.UnitAurasUpdates.Add(guid, updateList);
             }
         }

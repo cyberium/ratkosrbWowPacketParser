@@ -1386,3 +1386,15 @@ ENGINE=InnoDB
 
 ALTER TABLE `sniff_file`
 	ADD COLUMN `author` VARCHAR(32) NOT NULL DEFAULT '' AFTER `build`;
+
+ALTER TABLE `creature_auras_update`
+	ALTER `slot` DROP DEFAULT;
+ALTER TABLE `creature_auras_update`
+	ADD COLUMN `is_full_update` TINYINT UNSIGNED NOT NULL AFTER `update_id`,
+	CHANGE COLUMN `slot` `slot` SMALLINT NOT NULL AFTER `is_full_update`;
+
+ALTER TABLE `player_auras_update`
+	ALTER `slot` DROP DEFAULT;
+ALTER TABLE `player_auras_update`
+	ADD COLUMN `is_full_update` TINYINT UNSIGNED NOT NULL AFTER `update_id`,
+	CHANGE COLUMN `slot` `slot` SMALLINT NOT NULL AFTER `is_full_update`;

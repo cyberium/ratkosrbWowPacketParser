@@ -394,12 +394,26 @@ namespace WowPacketParser.SQL.Builders
                         foreach (var update in Storage.UnitAurasUpdates[unit.Key])
                         {
                             updateId++;
-                            foreach (var aura in update.Item1)
+
+                            if (update.Auras == null)
                             {
                                 var updateRow = new Row<CreatureAurasUpdate>();
                                 updateRow.Data.GUID = "@CGUID+" + creature.DbGuid;
                                 updateRow.Data.UpdateId = updateId;
-                                updateRow.Data.Slot = aura.Slot;
+                                updateRow.Data.IsFullUpdate = update.IsFullUpdate;
+                                updateRow.Data.Slot = -1;
+                                updateRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(update.Time);
+                                updateAurasRows.Add(updateRow);
+                                continue;
+                            }
+
+                            foreach (var aura in update.Auras)
+                            {
+                                var updateRow = new Row<CreatureAurasUpdate>();
+                                updateRow.Data.GUID = "@CGUID+" + creature.DbGuid;
+                                updateRow.Data.UpdateId = updateId;
+                                updateRow.Data.IsFullUpdate = update.IsFullUpdate;
+                                updateRow.Data.Slot = (int)aura.Slot;
                                 updateRow.Data.SpellId = aura.SpellId;
                                 updateRow.Data.VisualId = aura.VisualId;
                                 updateRow.Data.AuraFlags = aura.AuraFlags;
@@ -410,7 +424,7 @@ namespace WowPacketParser.SQL.Builders
                                 updateRow.Data.Duration = aura.Duration;
                                 updateRow.Data.MaxDuration = aura.MaxDuration;
                                 Storage.GetObjectDbGuidEntryType(aura.CasterGuid, out updateRow.Data.CasterGuid, out updateRow.Data.CasterId, out updateRow.Data.CasterType);
-                                updateRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(update.Item2);
+                                updateRow.Data.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(update.Time);
                                 updateAurasRows.Add(updateRow);
                             }
                         }

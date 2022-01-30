@@ -621,6 +621,19 @@ namespace WowPacketParser.Store.Objects
         public string GUID;
     }
 
+    public class AuraUpdateData
+    {
+        public bool IsFullUpdate;
+        public List<Aura> Auras;
+        public DateTime Time;
+        public AuraUpdateData(bool isFullUpdate, List<Aura> auras, DateTime time)
+        {
+            IsFullUpdate = isFullUpdate;
+            Auras = auras;
+            Time = time;
+        }
+    }
+
     [DBTableName("creature_auras_update")]
     public sealed class CreatureAurasUpdate : IDataModel
     {
@@ -633,8 +646,11 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("update_id", true)]
         public uint UpdateId;
 
+        [DBFieldName("is_full_update")]
+        public bool IsFullUpdate;
+
         [DBFieldName("slot", true)]
-        public uint? Slot;
+        public int Slot;
 
         [DBFieldName("spell_id")]
         public uint SpellId;
@@ -664,7 +680,7 @@ namespace WowPacketParser.Store.Objects
         public int MaxDuration;
 
         [DBFieldName("caster_guid", false, true)]
-        public string CasterGuid;
+        public string CasterGuid = "0";
 
         [DBFieldName("caster_id")]
         public uint CasterId;
