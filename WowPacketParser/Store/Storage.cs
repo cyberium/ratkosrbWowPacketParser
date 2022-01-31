@@ -1910,19 +1910,19 @@ namespace WowPacketParser.Store
                         textTemplate.HealthPercent = obj.UnitData.HealthPercent;
                     }
                     Storage.CreatureUniqueTexts.Add(creatureId, textTemplate, packet.TimeSpan);
+                }
 
-                    if (Settings.SqlTables.creature_text)
-                    {
-                        CreatureText textEntry = new CreatureText();
-                        textEntry.Entry = creatureId;
-                        textEntry.Text = textTemplate.Text;
-                        textEntry.Type = textTemplate.Type;
-                        textEntry.Language = textTemplate.Language;
-                        textEntry.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
-                        textEntry.SenderGUID = textTemplate.SenderGUID;
-                        textEntry.ReceiverGUID = textTemplate.ReceiverGUID;
-                        Storage.CreatureTexts.Add(textEntry);
-                    }
+                if (Settings.SqlTables.creature_text)
+                {
+                    CreatureText textEntry = new CreatureText();
+                    textEntry.Entry = creatureId;
+                    textEntry.Text = text.Text;
+                    textEntry.Type = text.TypeOriginal;
+                    textEntry.Language = text.Language;
+                    textEntry.UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time);
+                    textEntry.SenderGUID = text.SenderGUID;
+                    textEntry.ReceiverGUID = text.ReceiverGUID;
+                    Storage.CreatureTexts.Add(textEntry);
                 }
             }
             else if (((text.SenderGUID.GetObjectType() == ObjectType.Player) || (text.SenderName != null && text.TypeNormalized == ChatMessageType.Channel)) &&
