@@ -278,7 +278,8 @@ namespace WowPacketParser.Parsing.Parsers
                 NpcVendor vendor = new NpcVendor
                 {
                     Entry = entry,
-                    Slot = packet.ReadInt32("Item Position", i)
+                    Slot = packet.ReadInt32("Item Position", i),
+                    SniffId = packet.SniffId
                 };
 
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_0_3_13329))
@@ -334,7 +335,8 @@ namespace WowPacketParser.Parsing.Parsers
             {
                 NpcVendor npcVendor = new NpcVendor
                 {
-                    Entry = entry
+                    Entry = entry,
+                    SniffId = packet.SniffId
                 };
 
                 packet.ReadInt32("Max Durability", i);
@@ -427,6 +429,7 @@ namespace WowPacketParser.Parsing.Parsers
             tempList.ForEach(v =>
             {
                 v.Entry = entry;
+                v.SniffId = packet.SniffId;
                 Storage.NpcVendors.Add(v, packet.TimeSpan);
             });
 

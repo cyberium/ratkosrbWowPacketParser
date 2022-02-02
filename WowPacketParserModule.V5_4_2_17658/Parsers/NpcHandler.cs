@@ -378,6 +378,7 @@ namespace WowPacketParserModule.V5_4_2_17658.Parsers
             tempList.ForEach(v =>
             {
                 v.Entry = entry;
+                v.SniffId = packet.SniffId;
                 Storage.NpcVendors.Add(v, packet.TimeSpan);
             });
         }
