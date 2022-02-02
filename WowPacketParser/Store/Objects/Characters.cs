@@ -518,7 +518,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("relevant_auras", true)]
         public string RelevantAuras;
 
-        [DBFieldName("sniff_id", false, true)]
+        [DBFieldName("sniff_id", false, true, false, true)]
         public string SniffId;
 
         [DBFieldName("sniff_build")]
@@ -546,7 +546,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("relevant_auras", true)]
         public string RelevantAuras;
 
-        [DBFieldName("sniff_id", false, true)]
+        [DBFieldName("sniff_id", false, true, false, true)]
         public string SniffId;
 
         [DBFieldName("sniff_build")]
@@ -580,7 +580,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("relevant_auras", true)]
         public string RelevantAuras;
 
-        [DBFieldName("sniff_id", false, true)]
+        [DBFieldName("sniff_id", false, true, false, true)]
         public string SniffId;
 
         [DBFieldName("sniff_build")]
@@ -664,7 +664,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("stat", TargetedDbExpansion.Legion, 4, true)]
         public int?[] Stat;
 
-        [DBFieldName("sniff_id", false, true)]
+        [DBFieldName("sniff_id", false, true, false, true)]
         public string SniffId;
 
         [DBFieldName("sniff_build")]

@@ -22,7 +22,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("items_count")]
         public uint ItemsCount;
 
-        [DBFieldName("sniff_id", false, true)]
+        [DBFieldName("sniff_id", false, true, false, true)]
         public string SniffId;
 
         [DBFieldName("sniff_build")]

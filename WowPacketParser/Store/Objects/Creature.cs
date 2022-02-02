@@ -236,7 +236,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("auras", DbType = (TargetedDbType.WPP))]
         public string Auras;
 
-        [DBFieldName("sniff_id", false, true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("sniff_id", false, true, false, true, DbType = (TargetedDbType.WPP))]
         public string SniffId;
 
         [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
@@ -1020,7 +1020,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("negative_arcane_res", false, false, true)]
         public int? NegativeArcaneResistance;
 
-        [DBFieldName("sniff_id", false, true)]
+        [DBFieldName("sniff_id", false, true, false, true)]
         public string SniffId;
 
         [DBFieldName("sniff_build")]
@@ -1274,7 +1274,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("player_race")]
         public uint PlayerRace;
 
-        [DBFieldName("sniff_id", true, true)]
+        [DBFieldName("sniff_id", true, true, false, true)]
         public string SniffId;
 
         [DBFieldName("sniff_build", true)]

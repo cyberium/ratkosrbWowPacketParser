@@ -118,7 +118,7 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("custom_param", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.WPP))]
         public uint? CustomParam;
 
-        [DBFieldName("sniff_id", false, true, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("sniff_id", false, true, false, true, DbType = (TargetedDbType.WPP))]
         public string SniffId;
 
         [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
