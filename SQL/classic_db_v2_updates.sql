@@ -1398,3 +1398,8 @@ ALTER TABLE `player_auras_update`
 ALTER TABLE `player_auras_update`
 	ADD COLUMN `is_full_update` TINYINT UNSIGNED NOT NULL AFTER `update_id`,
 	CHANGE COLUMN `slot` `slot` SMALLINT NOT NULL AFTER `is_full_update`;
+
+ALTER TABLE `player`
+	CHANGE COLUMN `pvp_rank` `pvp_rank` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `player_flags`,
+	DROP COLUMN `xp`,
+	DROP COLUMN `money`;

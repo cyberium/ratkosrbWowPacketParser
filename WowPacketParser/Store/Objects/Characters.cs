@@ -119,12 +119,6 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("level")]
         public uint Level;
 
-        [DBFieldName("xp")]
-        public uint XP = 0;
-
-        [DBFieldName("money")]
-        public uint Money = 0;
-
         [DBFieldName("skin")]
         public byte Skin;
 

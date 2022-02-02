@@ -2676,8 +2676,6 @@ namespace WowPacketParser.SQL.Builders
                     playerRow.Data.Class = row.Data.Class;
                     playerRow.Data.Gender = row.Data.Gender;
                     playerRow.Data.Level = row.Data.Level;
-                    playerRow.Data.XP = row.Data.XP;
-                    playerRow.Data.Money = row.Data.Money;
                     playerRow.Data.Skin = row.Data.Skin;
                     playerRow.Data.Face = row.Data.Face;
                     playerRow.Data.HairStyle = row.Data.HairStyle;
