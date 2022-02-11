@@ -192,7 +192,10 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ReadByte("IsTournamentRealm");
 
             packet.ReadBit("XRealmPvpAlert");
-            packet.ReadBit("BlockExitingLoadingScreen");
+
+            if (!ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+                packet.ReadBit("BlockExitingLoadingScreen");
+
             var hasRestrictedAccountMaxLevel = packet.ReadBit("HasRestrictedAccountMaxLevel");
             var hasRestrictedAccountMaxMoney = packet.ReadBit("HasRestrictedAccountMaxMoney");
             var hasInstanceGroupSize = packet.ReadBit("HasInstanceGroupSize");
