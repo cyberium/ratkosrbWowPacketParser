@@ -838,6 +838,11 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V2_5_2_40892:
                 case ClientVersionBuild.V2_5_2_41446:
                 case ClientVersionBuild.V2_5_2_41510:
+                case ClientVersionBuild.V2_5_3_41402:
+                case ClientVersionBuild.V2_5_3_41531:
+                case ClientVersionBuild.V2_5_3_41750:
+                case ClientVersionBuild.V2_5_3_41812:
+                case ClientVersionBuild.V2_5_3_42083:
                 case ClientVersionBuild.V1_14_0_39802:
                 case ClientVersionBuild.V1_14_0_39958:
                 case ClientVersionBuild.V1_14_0_40140:
@@ -1181,12 +1186,22 @@ namespace WowPacketParser.Misc
             if (IsClassicVanillaClientVersionBuild(Build))
                 return false;
 
-            return ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503);
+            return AddedInVersion(ClientVersionBuild.V9_0_5_37503);
         }
 
-        public static bool IsClassicVersionWithUpdatedMovementInfo(ClientVersionBuild build)
+        public static bool IsClassicVersionWithUpdatedMovementInfo()
         {
-            return IsClassicSeasonOfMasteryPhase1ClientVersionBuild(build);
+            if (IsClassicSeasonOfMasteryClientVersionBuild(Build))
+            {
+                if (IsClassicSeasonOfMasteryPhase1ClientVersionBuild(Build) || AddedInVersion(ClientVersionBuild.V1_14_1_40666))
+                    return true;
+            }
+            else if (IsBurningCrusadeClassicClientVersionBuild(Build))
+            {
+                if (IsBurningCrusadeClassicPhase3ClientVersionBuild(Build) || AddedInVersion(ClientVersionBuild.V2_5_3_41531))
+                    return true;
+            }
+            return false;
         }
 
         public static bool IsBurningCrusadeClassicClientVersionBuild(ClientVersionBuild build)
@@ -1219,6 +1234,78 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V2_5_2_40892:
                 case ClientVersionBuild.V2_5_2_41446:
                 case ClientVersionBuild.V2_5_2_41510:
+                case ClientVersionBuild.V2_5_3_41402:
+                case ClientVersionBuild.V2_5_3_41531:
+                case ClientVersionBuild.V2_5_3_41750:
+                case ClientVersionBuild.V2_5_3_41812:
+                case ClientVersionBuild.V2_5_3_42083:
+                {
+                    return true;
+                }
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsBurningCrusadeClassicPhase1ClientVersionBuild(ClientVersionBuild build)
+        {
+            switch (build)
+            {
+                case ClientVersionBuild.V2_5_1_38598:
+                case ClientVersionBuild.V2_5_1_38644:
+                case ClientVersionBuild.V2_5_1_38707:
+                case ClientVersionBuild.V2_5_1_38741:
+                case ClientVersionBuild.V2_5_1_38757:
+                case ClientVersionBuild.V2_5_1_38835:
+                case ClientVersionBuild.V2_5_1_38892:
+                case ClientVersionBuild.V2_5_1_38921:
+                case ClientVersionBuild.V2_5_1_38988:
+                case ClientVersionBuild.V2_5_1_39170:
+                case ClientVersionBuild.V2_5_1_39475:
+                case ClientVersionBuild.V2_5_1_39603:
+                case ClientVersionBuild.V2_5_1_39640:
+                {
+                    return true;
+                }
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsBurningCrusadeClassicPhase2ClientVersionBuild(ClientVersionBuild build)
+        {
+            switch (build)
+            {
+                case ClientVersionBuild.V2_5_2_39570:
+                case ClientVersionBuild.V2_5_2_39618:
+                case ClientVersionBuild.V2_5_2_39926:
+                case ClientVersionBuild.V2_5_2_40011:
+                case ClientVersionBuild.V2_5_2_40045:
+                case ClientVersionBuild.V2_5_2_40203:
+                case ClientVersionBuild.V2_5_2_40260:
+                case ClientVersionBuild.V2_5_2_40422:
+                case ClientVersionBuild.V2_5_2_40488:
+                case ClientVersionBuild.V2_5_2_40617:
+                case ClientVersionBuild.V2_5_2_40892:
+                case ClientVersionBuild.V2_5_2_41446:
+                case ClientVersionBuild.V2_5_2_41510:
+                {
+                    return true;
+                }
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsBurningCrusadeClassicPhase3ClientVersionBuild(ClientVersionBuild build)
+        {
+            switch (build)
+            {
+                case ClientVersionBuild.V2_5_3_41402:
+                case ClientVersionBuild.V2_5_3_41531:
+                case ClientVersionBuild.V2_5_3_41750:
+                case ClientVersionBuild.V2_5_3_41812:
+                case ClientVersionBuild.V2_5_3_42083:
                 {
                     return true;
                 }
@@ -1231,8 +1318,16 @@ namespace WowPacketParser.Misc
         {
             if (IsClassicClientVersionBuild(Build))
             {
-                if (IsClassicSeasonOfMasteryPhase1ClientVersionBuild(Build))
-                    return 7;
+                if (IsClassicSeasonOfMasteryClientVersionBuild(Build))
+                {
+                    if (IsClassicSeasonOfMasteryPhase1ClientVersionBuild(Build) || AddedInVersion(ClientVersionBuild.V1_14_1_40666))
+                        return 7;
+                }
+                else if (IsBurningCrusadeClassicClientVersionBuild(Build))
+                {
+                    if (IsBurningCrusadeClassicPhase3ClientVersionBuild(Build) || AddedInVersion(ClientVersionBuild.V2_5_3_41531))
+                        return 7;
+                }
 
                 return 6;
             }

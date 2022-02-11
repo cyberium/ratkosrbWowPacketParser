@@ -18,7 +18,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
     {
         public static WowGuid ReadMovementStats(Packet packet, params object[] idx)
         {
-            if (ClientVersion.IsClassicVersionWithUpdatedMovementInfo(ClientVersion.Build))
+            if (ClientVersion.IsClassicVersionWithUpdatedMovementInfo())
                 return ReadMovementStatsClassicSoM(packet, idx);
 
             MovementInfo moveInfo = new MovementInfo();
@@ -67,7 +67,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ResetBitReader();
             moveInfo.FlagsExtra = (uint)packet.ReadBitsE<MovementFlags2>("ExtraMovementFlags", 26, idx);
             packet.ReadBits(6);
-            packet.ReadUInt32("Unk1", idx);
+            packet.ReadUInt32("MovementFlags3", idx);
 
             moveInfo.MoveTime = packet.ReadUInt32("MoveTime", idx);
             moveInfo.Position = packet.ReadVector3("Position", idx);

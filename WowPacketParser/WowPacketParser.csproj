@@ -432,6 +432,8 @@
     <Compile Include="Enums\Version\V2_5_1_38835\Opcodes.cs" />
     <Compile Include="Enums\Version\V2_5_2_39570\UpdateFields.cs" />
     <Compile Include="Enums\Version\V2_5_2_39570\Opcodes.cs" />
+    <Compile Include="Enums\Version\V2_5_3_41750\UpdateFields.cs" />
+    <Compile Include="Enums\Version\V2_5_3_41750\Opcodes.cs" />
     <Compile Include="Enums\Version\V3_0_9_9551\UpdateFields.cs" />
     <Compile Include="Enums\Version\V4_1_0_13914\UpdateFields.cs" />
     <Compile Include="Enums\Version\V5_0_5_16048\Opcodes.cs" />
