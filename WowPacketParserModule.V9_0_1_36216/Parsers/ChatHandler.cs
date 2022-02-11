@@ -62,7 +62,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
         public static void HandleEmote(Packet packet)
         {
             var guid = packet.ReadPackedGuid128("GUID");
-            var emote = packet.ReadInt32E<EmoteType>("Emote ID");
+            var emote = packet.ReadUInt32E<EmoteType>("Emote ID");
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503))
             {
