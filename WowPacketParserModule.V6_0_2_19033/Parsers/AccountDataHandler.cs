@@ -16,7 +16,15 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             else
                 packet.ReadTime("ServerTime");
 
-            for (var i = 0; i < 8; ++i)
+            int count = 8;
+            if (ClientVersion.IsClassicSeasonOfMasteryClientVersionBuild(ClientVersion.Build))
+            {
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V1_14_1_40688))
+                    count = 13;
+                else
+                    count = 10;
+            }
+            for (var i = 0; i < count; ++i)
             {
                 if (ClientVersion.IsVersionWith64BitTime())
                     packet.ReadTime64($"[{(AccountDataType)i}] Time", i);

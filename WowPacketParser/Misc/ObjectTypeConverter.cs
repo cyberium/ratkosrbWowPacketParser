@@ -46,6 +46,13 @@ namespace WowPacketParser.Misc
             { ObjectType801.Conversation,           ObjectType.Conversation }
         };
 
+        public static ObjectType Convert(ObjectType801 type)
+        {
+            if (!ConvDict801.ContainsKey(type))
+                throw new ArgumentOutOfRangeException("0x" + type.ToString("X"));
+            return ConvDict801[type];
+        }
+
         private static readonly Dictionary<ObjectTypeBCC, ObjectType> ConvDictBCC = new Dictionary<ObjectTypeBCC, ObjectType>
         {
             { ObjectTypeBCC.Object,                 ObjectType.Object },
@@ -61,13 +68,6 @@ namespace WowPacketParser.Misc
             { ObjectTypeBCC.SceneObject,            ObjectType.SceneObject },
             { ObjectTypeBCC.Conversation,           ObjectType.Conversation }
         };
-
-        public static ObjectType Convert(ObjectType801 type)
-        {
-            if (!ConvDict801.ContainsKey(type))
-                throw new ArgumentOutOfRangeException("0x" + type.ToString("X"));
-            return ConvDict801[type];
-        }
 
         public static ObjectType Convert(ObjectTypeBCC type)
         {

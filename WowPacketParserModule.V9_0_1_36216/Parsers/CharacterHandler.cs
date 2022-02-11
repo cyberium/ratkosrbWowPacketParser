@@ -25,7 +25,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             var race = packet.ReadByteE<Race>("RaceID", idx);
             var @class = packet.ReadByteE<Class>("ClassID", idx);
             packet.ReadByteE<Gender>("SexID", idx);
-            var customizationCount = packet.ReadUInt32();
+            var customizationCount = packet.ReadUInt32("CustomizationCount", idx);
 
             packet.ReadByte("ExperienceLevel", idx);
             var zone = packet.ReadInt32<ZoneId>("ZoneID", idx);
@@ -63,8 +63,8 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ReadInt32("Unknown703", idx);
             packet.ReadInt32("InterfaceVersion", idx);
             packet.ReadUInt32("Flags4", idx);
-            var mailSenderLengths = new uint[packet.ReadUInt32()];
-            var mailSenderTypes = ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_2_36639) ? new uint[packet.ReadUInt32()] : Array.Empty<uint>();
+            var mailSenderLengths = new uint[packet.ReadUInt32("MailSenderLengths", idx)];
+            var mailSenderTypes = ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_2_36639) ? new uint[packet.ReadUInt32("MailSenderTypes", idx)] : Array.Empty<uint>();
             packet.ReadUInt32("OverrideSelectScreenFileDataID", idx);
 
             for (var j = 0u; j < customizationCount; ++j)
@@ -80,6 +80,12 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ReadBit("BoostInProgress", idx);
             packet.ReadBits("UnkWod61x", 5, idx);
 
+            if (ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+            {
+                packet.ReadBit("UnkBit", idx);
+                packet.ReadBit("ExpansionChosen", idx);
+            }
+            
             for (var j = 0; j < mailSenderLengths.Length; ++j)
                 mailSenderLengths[j] = packet.ReadBits(6);
 
