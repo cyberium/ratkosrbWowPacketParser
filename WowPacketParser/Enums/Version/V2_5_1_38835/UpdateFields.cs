@@ -342,7 +342,7 @@
         GAMEOBJECT_STATE_ANIM_ID                                    = ObjectField.OBJECT_END + 0x013, // Size: 1, Flags: DYNAMIC, URGENT
         GAMEOBJECT_STATE_ANIM_KIT_ID                                = ObjectField.OBJECT_END + 0x014, // Size: 1, Flags: DYNAMIC, URGENT
         GAMEOBJECT_STATE_WORLD_EFFECT_ID                            = ObjectField.OBJECT_END + 0x015, // Size: 4, Flags: DYNAMIC, URGENT
-        GAMEOBJECT_CUSTOM_PARAM                                     = ObjectField.OBJECT_END + 0x019, // Size: 1, Flags: PUBLIC, URGENT
+        GAMEOBJECT_FIELD_CUSTOM_PARAM                               = ObjectField.OBJECT_END + 0x019, // Size: 1, Flags: PUBLIC, URGENT
         GAMEOBJECT_END                                              = ObjectField.OBJECT_END + 0x01A,
     }
 

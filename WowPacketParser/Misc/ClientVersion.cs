@@ -773,24 +773,24 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V1_13_4_33645:
                 case ClientVersionBuild.V1_13_4_33728:
                 case ClientVersionBuild.V1_13_4_33920:
-                case ClientVersionBuild.v1_13_4_34219:
-                case ClientVersionBuild.v1_13_4_34266:
-                case ClientVersionBuild.v1_13_4_34600:
-                case ClientVersionBuild.v1_13_4_34835:
-                case ClientVersionBuild.v1_13_5_34713:
-                case ClientVersionBuild.v1_13_5_34911:
-                case ClientVersionBuild.v1_13_5_35000:
-                case ClientVersionBuild.v1_13_5_35186:
-                case ClientVersionBuild.v1_13_5_35395:
-                case ClientVersionBuild.v1_13_5_35663:
-                case ClientVersionBuild.v1_13_5_35705:
-                case ClientVersionBuild.v1_13_5_35753:
-                case ClientVersionBuild.v1_13_5_36035:
-                case ClientVersionBuild.v1_13_5_36307:
-                case ClientVersionBuild.v1_13_5_36325:
-                case ClientVersionBuild.v1_13_6_36149:
-                case ClientVersionBuild.v1_13_6_36231:
-                case ClientVersionBuild.v1_13_6_36310:
+                case ClientVersionBuild.V1_13_4_34219:
+                case ClientVersionBuild.V1_13_4_34266:
+                case ClientVersionBuild.V1_13_4_34600:
+                case ClientVersionBuild.V1_13_4_34835:
+                case ClientVersionBuild.V1_13_5_34713:
+                case ClientVersionBuild.V1_13_5_34911:
+                case ClientVersionBuild.V1_13_5_35000:
+                case ClientVersionBuild.V1_13_5_35186:
+                case ClientVersionBuild.V1_13_5_35395:
+                case ClientVersionBuild.V1_13_5_35663:
+                case ClientVersionBuild.V1_13_5_35705:
+                case ClientVersionBuild.V1_13_5_35753:
+                case ClientVersionBuild.V1_13_5_36035:
+                case ClientVersionBuild.V1_13_5_36307:
+                case ClientVersionBuild.V1_13_5_36325:
+                case ClientVersionBuild.V1_13_6_36149:
+                case ClientVersionBuild.V1_13_6_36231:
+                case ClientVersionBuild.V1_13_6_36310:
                 case ClientVersionBuild.V1_13_6_36324:
                 case ClientVersionBuild.V1_13_6_36497:
                 case ClientVersionBuild.V1_13_6_36524:
@@ -843,6 +843,7 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V2_5_3_41750:
                 case ClientVersionBuild.V2_5_3_41812:
                 case ClientVersionBuild.V2_5_3_42083:
+                    return ClientVersionBuild.V2_5_1_38707;
                 case ClientVersionBuild.V1_14_0_39802:
                 case ClientVersionBuild.V1_14_0_39958:
                 case ClientVersionBuild.V1_14_0_40140:
@@ -851,7 +852,6 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V1_14_0_40347:
                 case ClientVersionBuild.V1_14_0_40441:
                 case ClientVersionBuild.V1_14_0_40618:
-                    return ClientVersionBuild.V2_5_1_38707;
                 case ClientVersionBuild.V1_14_1_40487:
                 case ClientVersionBuild.V1_14_1_40594:
                 case ClientVersionBuild.V1_14_1_40666:
@@ -1073,24 +1073,24 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V1_13_4_33645:
                 case ClientVersionBuild.V1_13_4_33728:
                 case ClientVersionBuild.V1_13_4_33920:
-                case ClientVersionBuild.v1_13_4_34219:
-                case ClientVersionBuild.v1_13_4_34266:
-                case ClientVersionBuild.v1_13_4_34600:
-                case ClientVersionBuild.v1_13_4_34835:
-                case ClientVersionBuild.v1_13_5_34713:
-                case ClientVersionBuild.v1_13_5_34911:
-                case ClientVersionBuild.v1_13_5_35000:
-                case ClientVersionBuild.v1_13_5_35186:
-                case ClientVersionBuild.v1_13_5_35395:
-                case ClientVersionBuild.v1_13_5_35663:
-                case ClientVersionBuild.v1_13_5_35705:
-                case ClientVersionBuild.v1_13_5_35753:
-                case ClientVersionBuild.v1_13_5_36035:
-                case ClientVersionBuild.v1_13_5_36307:
-                case ClientVersionBuild.v1_13_5_36325:
-                case ClientVersionBuild.v1_13_6_36149:
-                case ClientVersionBuild.v1_13_6_36231:
-                case ClientVersionBuild.v1_13_6_36310:
+                case ClientVersionBuild.V1_13_4_34219:
+                case ClientVersionBuild.V1_13_4_34266:
+                case ClientVersionBuild.V1_13_4_34600:
+                case ClientVersionBuild.V1_13_4_34835:
+                case ClientVersionBuild.V1_13_5_34713:
+                case ClientVersionBuild.V1_13_5_34911:
+                case ClientVersionBuild.V1_13_5_35000:
+                case ClientVersionBuild.V1_13_5_35186:
+                case ClientVersionBuild.V1_13_5_35395:
+                case ClientVersionBuild.V1_13_5_35663:
+                case ClientVersionBuild.V1_13_5_35705:
+                case ClientVersionBuild.V1_13_5_35753:
+                case ClientVersionBuild.V1_13_5_36035:
+                case ClientVersionBuild.V1_13_5_36307:
+                case ClientVersionBuild.V1_13_5_36325:
+                case ClientVersionBuild.V1_13_6_36149:
+                case ClientVersionBuild.V1_13_6_36231:
+                case ClientVersionBuild.V1_13_6_36310:
                 case ClientVersionBuild.V1_13_6_36324:
                 case ClientVersionBuild.V1_13_6_36497:
                 case ClientVersionBuild.V1_13_6_36524:

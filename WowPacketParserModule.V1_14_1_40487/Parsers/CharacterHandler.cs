@@ -17,7 +17,9 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
             packet.ReadByteE<Gender>("Gender", idx);
             packet.ReadByte("Level", idx);
             packet.ReadTime64("LastLogin", idx);
-            packet.ReadUInt32("Unk", idx);
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V1_14_1_40666))
+                packet.ReadUInt32("Unk", idx);
 
             packet.ResetBitReader();
 

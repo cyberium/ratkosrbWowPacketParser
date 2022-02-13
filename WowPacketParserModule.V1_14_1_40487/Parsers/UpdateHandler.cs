@@ -176,12 +176,15 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
             {
                 packet.ResetBitReader();
                 packet.ReadPackedGuid128("MoverGUID", index);
-                moveInfo.Flags = (uint)packet.ReadUInt32E<V6_0_2_19033.Enums.MovementFlag>("MovementFlags", index);
 
-                packet.ResetBitReader();
-                moveInfo.FlagsExtra = (uint)packet.ReadBitsE<V8_0_1_27101.Enums.MovementFlags2>("ExtraMovementFlags", 26, index);
-                packet.ReadBits(6);
-                packet.ReadUInt32("Unk1", index);
+                if (ClientVersion.IsClassicVersionWithUpdatedMovementInfo())
+                {
+                    moveInfo.Flags = (uint)packet.ReadUInt32E<V6_0_2_19033.Enums.MovementFlag>("MovementFlags", index);
+                    packet.ResetBitReader();
+                    moveInfo.FlagsExtra = (uint)packet.ReadBitsE<V8_0_1_27101.Enums.MovementFlags2>("ExtraMovementFlags", 26, index);
+                    packet.ReadBits(6);
+                    packet.ReadUInt32("MovementFlags3", index);
+                } 
 
                 moveInfo.MoveTime = packet.ReadUInt32("MoveTime", index);
                 moveInfo.Position = packet.ReadVector3("Position", index);
@@ -195,6 +198,12 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
 
                 for (var i = 0; i < removeForcesIDsCount; i++)
                     packet.ReadPackedGuid128("RemoveForcesIDs", index, i);
+
+                if (!ClientVersion.IsClassicVersionWithUpdatedMovementInfo())
+                {
+                    moveInfo.Flags = (uint)packet.ReadBitsE<V6_0_2_19033.Enums.MovementFlag>("Movement Flags", 30, index);
+                    moveInfo.FlagsExtra = (uint)packet.ReadBitsE<V8_0_1_27101.Enums.MovementFlags2>("Extra Movement Flags", 18, index);
+                }
 
                 var hasTransport = packet.ReadBit("Has Transport Data", index);
                 var hasFall = packet.ReadBit("Has Fall Data", index);

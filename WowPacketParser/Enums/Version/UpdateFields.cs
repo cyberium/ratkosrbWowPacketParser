@@ -697,24 +697,24 @@ namespace WowPacketParser.Enums.Version
                 case ClientVersionBuild.V1_13_4_33645:
                 case ClientVersionBuild.V1_13_4_33728:
                 case ClientVersionBuild.V1_13_4_33920:
-                case ClientVersionBuild.v1_13_4_34219:
-                case ClientVersionBuild.v1_13_4_34266:
-                case ClientVersionBuild.v1_13_4_34600:
-                case ClientVersionBuild.v1_13_4_34835:
-                case ClientVersionBuild.v1_13_5_34713:
-                case ClientVersionBuild.v1_13_5_34911:
-                case ClientVersionBuild.v1_13_5_35000:
-                case ClientVersionBuild.v1_13_5_35186:
-                case ClientVersionBuild.v1_13_5_35395:
-                case ClientVersionBuild.v1_13_5_35663:
-                case ClientVersionBuild.v1_13_5_35705:
-                case ClientVersionBuild.v1_13_5_35753:
-                case ClientVersionBuild.v1_13_5_36035:
-                case ClientVersionBuild.v1_13_5_36307:
-                case ClientVersionBuild.v1_13_5_36325:
-                case ClientVersionBuild.v1_13_6_36149:
-                case ClientVersionBuild.v1_13_6_36231:
-                case ClientVersionBuild.v1_13_6_36310:
+                case ClientVersionBuild.V1_13_4_34219:
+                case ClientVersionBuild.V1_13_4_34266:
+                case ClientVersionBuild.V1_13_4_34600:
+                case ClientVersionBuild.V1_13_4_34835:
+                case ClientVersionBuild.V1_13_5_34713:
+                case ClientVersionBuild.V1_13_5_34911:
+                case ClientVersionBuild.V1_13_5_35000:
+                case ClientVersionBuild.V1_13_5_35186:
+                case ClientVersionBuild.V1_13_5_35395:
+                case ClientVersionBuild.V1_13_5_35663:
+                case ClientVersionBuild.V1_13_5_35705:
+                case ClientVersionBuild.V1_13_5_35753:
+                case ClientVersionBuild.V1_13_5_36035:
+                case ClientVersionBuild.V1_13_5_36307:
+                case ClientVersionBuild.V1_13_5_36325:
+                case ClientVersionBuild.V1_13_6_36149:
+                case ClientVersionBuild.V1_13_6_36231:
+                case ClientVersionBuild.V1_13_6_36310:
                 case ClientVersionBuild.V1_13_6_36324:
                 case ClientVersionBuild.V1_13_6_36497:
                 case ClientVersionBuild.V1_13_6_36524:

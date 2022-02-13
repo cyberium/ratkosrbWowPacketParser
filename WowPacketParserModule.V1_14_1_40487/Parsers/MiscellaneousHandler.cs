@@ -2,7 +2,7 @@
 using WowPacketParser.Misc;
 using WowPacketParser.Parsing;
 
-namespace WowPacketParserModule.V2_5_1_38707.Parsers
+namespace WowPacketParserModule.V1_14_1_40487.Parsers
 {
     public static class MiscellaneousHandler
     {
