@@ -129,9 +129,9 @@
         UNIT_FIELD_BOUNDINGRADIUS                                   = ObjectField.OBJECT_END + 0x05D, // Size: 1, Flags: PUBLIC
         UNIT_FIELD_COMBATREACH                                      = ObjectField.OBJECT_END + 0x05E, // Size: 1, Flags: PUBLIC
         UNIT_FIELD_DISPLAYID                                        = ObjectField.OBJECT_END + 0x05F, // Size: 1, Flags: DYNAMIC, URGENT
-        UNIT_FIELD_DISPLAYSCALE                                     = ObjectField.OBJECT_END + 0x060, // Size: 1, Flags: DYNAMIC, URGENT
+        UNIT_FIELD_DISPLAY_SCALE                                    = ObjectField.OBJECT_END + 0x060, // Size: 1, Flags: DYNAMIC, URGENT
         UNIT_FIELD_NATIVEDISPLAYID                                  = ObjectField.OBJECT_END + 0x061, // Size: 1, Flags: PUBLIC, URGENT
-        UNIT_FIELD_NATIVEXDISPLAYSCALE                              = ObjectField.OBJECT_END + 0x062, // Size: 1, Flags: PUBLIC, URGENT
+        UNIT_FIELD_NATIVE_X_DISPLAY_SCALE                           = ObjectField.OBJECT_END + 0x062, // Size: 1, Flags: PUBLIC, URGENT
         UNIT_FIELD_MOUNTDISPLAYID                                   = ObjectField.OBJECT_END + 0x063, // Size: 1, Flags: PUBLIC, URGENT
         UNIT_FIELD_MINDAMAGE                                        = ObjectField.OBJECT_END + 0x064, // Size: 1, Flags: PRIVATE, OWNER, SPECIAL_INFO
         UNIT_FIELD_MAXDAMAGE                                        = ObjectField.OBJECT_END + 0x065, // Size: 1, Flags: PRIVATE, OWNER, SPECIAL_INFO
@@ -363,7 +363,7 @@
     public enum GameObjectField
     {
         GAMEOBJECT_FIELD_CREATED_BY                                 = ObjectField.OBJECT_END + 0x000, // Size: 4, Flags: PUBLIC
-        GAMEOBJECT_GUILD                                            = ObjectField.OBJECT_END + 0x004, // Size: 4, Flags: PUBLIC
+        GAMEOBJECT_FIELD_GUILD_GUID                                 = ObjectField.OBJECT_END + 0x004, // Size: 4, Flags: PUBLIC
         GAMEOBJECT_DISPLAYID                                        = ObjectField.OBJECT_END + 0x008, // Size: 1, Flags: DYNAMIC, URGENT
         GAMEOBJECT_FLAGS                                            = ObjectField.OBJECT_END + 0x009, // Size: 1, Flags: PUBLIC, URGENT
         GAMEOBJECT_PARENTROTATION                                   = ObjectField.OBJECT_END + 0x00A, // Size: 4, Flags: PUBLIC
@@ -375,7 +375,7 @@
         GAMEOBJECT_STATE_ANIM_ID                                    = ObjectField.OBJECT_END + 0x013, // Size: 1, Flags: DYNAMIC, URGENT
         GAMEOBJECT_STATE_ANIM_KIT_ID                                = ObjectField.OBJECT_END + 0x014, // Size: 1, Flags: DYNAMIC, URGENT
         GAMEOBJECT_STATE_WORLD_EFFECT_ID                            = ObjectField.OBJECT_END + 0x015, // Size: 4, Flags: DYNAMIC, URGENT
-        GAMEOBJECT_CUSTOM_PARAM                                     = ObjectField.OBJECT_END + 0x019, // Size: 1, Flags: PUBLIC, URGENT
+        GAMEOBJECT_FIELD_CUSTOM_PARAM                               = ObjectField.OBJECT_END + 0x019, // Size: 1, Flags: PUBLIC, URGENT
         GAMEOBJECT_END                                              = ObjectField.OBJECT_END + 0x01A,
     }
 
