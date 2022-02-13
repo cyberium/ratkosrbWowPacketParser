@@ -424,6 +424,7 @@
     <Compile Include="Enums\Version\V1_13_4_33598\Opcodes.cs" />
     <Compile Include="Enums\Version\V1_13_5_34713\Opcodes.cs" />
     <Compile Include="Enums\Version\V1_13_6_36231\Opcodes.cs" />
+    <Compile Include="Enums\Version\V1_14_0_40237\UpdateFields.cs" />
     <Compile Include="Enums\Version\V1_14_1_40688\Opcodes.cs" />
     <Compile Include="Enums\Version\V1_14_1_40688\UpdateFields.cs" />
     <Compile Include="Enums\Version\V2_4_3_8606\Opcodes.cs" />

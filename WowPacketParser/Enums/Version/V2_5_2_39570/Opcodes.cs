@@ -1610,6 +1610,7 @@ namespace WowPacketParser.Enums.Version.V2_5_2_39570
             {Opcode.SMSG_CONNECT_TO, 0x304D},
             {Opcode.SMSG_PONG, 0x304E},
             {Opcode.SMSG_RESET_COMPRESSION_CONTEXT, 0x304F},
+            {Opcode.SMSG_UNK_DEBUG1, 0x2C3D},
         };
 
         private static readonly BiDictionary<Opcode, int> MiscOpcodes = new BiDictionary<Opcode, int>();

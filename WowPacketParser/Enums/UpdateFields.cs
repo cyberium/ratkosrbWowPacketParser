@@ -911,6 +911,10 @@ namespace WowPacketParser.Enums
         ACTIVE_PLAYER_FIELD_BYTES2,
         [UpdateField(UpdateFieldType.Bytes)]
         ACTIVE_PLAYER_FIELD_BYTES3,
+        [UpdateField(UpdateFieldType.Bytes)]
+        ACTIVE_PLAYER_FIELD_BYTES_4,
+        [UpdateField(UpdateFieldType.Bytes)]
+        ACTIVE_PLAYER_FIELD_BYTES_5,
         ACTIVE_PLAYER_FIELD_CHARACTER_POINTS,
         ACTIVE_PLAYER_FIELD_COINAGE,
         ACTIVE_PLAYER_FIELD_COMBAT_RATING,
