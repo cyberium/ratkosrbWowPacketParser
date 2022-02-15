@@ -209,7 +209,7 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
                     packet.ReadPackedGuid128("CastID", i);
                     aura.SpellId = (uint)packet.ReadInt32<SpellId>("SpellID", i);
                     aura.VisualId = (uint)packet.ReadInt32("SpellXSpellVisualID", i);
-                    aura.AuraFlags = (uint)packet.ReadUInt16E<AuraFlagMoP>("Flags", i);
+                    aura.AuraFlags = (uint)packet.ReadUInt16E<AuraFlagSoM>("Flags", i);
                     aura.ActiveFlags = packet.ReadUInt32("ActiveFlags", i);
                     aura.Level = packet.ReadUInt16("CastLevel", i);
                     aura.Charges = packet.ReadByte("Applications", i);

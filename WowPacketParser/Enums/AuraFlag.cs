@@ -34,4 +34,20 @@ namespace WowPacketParser.Enums
         Unk80    = 0x0080,
         MawPower = 0x0100
     }
+
+    [Flags]
+    public enum AuraFlagSoM
+    {
+        None       = 0x00,
+        NoCaster   = 0x01,
+        Cancelable = 0x02,
+        Duration   = 0x04,
+        Scalable   = 0x08,
+        Negative   = 0x10,
+        Unk20      = 0x20,
+        Unk40      = 0x40,
+        Unk80      = 0x80,
+        Positive   = 0x100,
+        Passive    = 0x200
+    }
 }
