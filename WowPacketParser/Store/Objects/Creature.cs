@@ -1051,10 +1051,10 @@ namespace WowPacketParser.Store.Objects
         public uint HitInfo;
 
         [DBFieldName("damage")]
-        public uint Damage;
+        public int Damage;
 
         [DBFieldName("original_damage")]
-        public uint OriginalDamage;
+        public int OriginalDamage;
 
         [DBFieldName("overkill_damage")]
         public int OverkillDamage;
@@ -1066,10 +1066,10 @@ namespace WowPacketParser.Store.Objects
         public uint TotalSchoolMask;
 
         [DBFieldName("total_absorbed_damage")]
-        public uint TotalAbsorbedDamage;
+        public int TotalAbsorbedDamage;
 
         [DBFieldName("total_resisted_damage")]
-        public uint TotalResistedDamage;
+        public int TotalResistedDamage;
 
         [DBFieldName("blocked_damage")]
         public int BlockedDamage;

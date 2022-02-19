@@ -806,9 +806,9 @@ namespace WowPacketParser.SQL.Builders
                     CreatureMeleeDamage meleeStats = GetDataForCreature(entryLevelPair);
                     meleeStats.IsDirty = false;
                     meleeStats.HitsCount = (uint)damageForLevel.Value.Count;
-                    meleeStats.DamageMin = (uint)damageForLevel.Value.Min();
-                    meleeStats.DamageAverage = (uint)damageForLevel.Value.Average();
-                    meleeStats.DamageMax = (uint)damageForLevel.Value.Max();
+                    meleeStats.DamageMin = (int)damageForLevel.Value.Min();
+                    meleeStats.DamageAverage = (int)damageForLevel.Value.Average();
+                    meleeStats.DamageMax = (int)damageForLevel.Value.Max();
                     Storage.CreatureMeleeAttackSchool.TryGetValue(creatureData.Key, out meleeStats.TotalSchoolMask);
                     mobsWithDamageData.Add(entryLevelPair);
                 }
@@ -825,9 +825,9 @@ namespace WowPacketParser.SQL.Builders
                         CreatureMeleeDamage meleeStats = GetDataForCreature(entryLevelPair);
                         meleeStats.IsDirty = true;
                         meleeStats.HitsCount = (uint)damageForLevel.Value.Count;
-                        meleeStats.DamageMin = (uint)damageForLevel.Value.Min();
-                        meleeStats.DamageAverage = (uint)damageForLevel.Value.Average();
-                        meleeStats.DamageMax = (uint)damageForLevel.Value.Max();
+                        meleeStats.DamageMin = (int)damageForLevel.Value.Min();
+                        meleeStats.DamageAverage = (int)damageForLevel.Value.Average();
+                        meleeStats.DamageMax = (int)damageForLevel.Value.Max();
                         Storage.CreatureMeleeAttackSchool.TryGetValue(creatureData.Key, out meleeStats.TotalSchoolMask);
                         mobsWithDamageData.Add(entryLevelPair);
                     }

@@ -1403,3 +1403,20 @@ ALTER TABLE `player`
 	CHANGE COLUMN `pvp_rank` `pvp_rank` TINYINT UNSIGNED NOT NULL DEFAULT '0' AFTER `player_flags`,
 	DROP COLUMN `xp`,
 	DROP COLUMN `money`;
+
+ALTER TABLE `creature_attack_log`
+	CHANGE COLUMN `damage` `damage` INT(10) NOT NULL DEFAULT '0' AFTER `hit_info`,
+	CHANGE COLUMN `original_damage` `original_damage` INT(10) NOT NULL DEFAULT '0' AFTER `damage`,
+	CHANGE COLUMN `total_absorbed_damage` `total_absorbed_damage` INT(11) NOT NULL DEFAULT '0' AFTER `total_school_mask`,
+	CHANGE COLUMN `total_resisted_damage` `total_resisted_damage` INT(11) NOT NULL DEFAULT '0' AFTER `total_absorbed_damage`;
+
+ALTER TABLE `player_attack_log`
+	CHANGE COLUMN `damage` `damage` INT(10) NOT NULL DEFAULT '0' AFTER `hit_info`,
+	CHANGE COLUMN `original_damage` `original_damage` INT(10) NOT NULL DEFAULT '0' AFTER `damage`,
+	CHANGE COLUMN `total_absorbed_damage` `total_absorbed_damage` INT(11) NOT NULL DEFAULT '0' AFTER `total_school_mask`,
+	CHANGE COLUMN `total_resisted_damage` `total_resisted_damage` INT(11) NOT NULL DEFAULT '0' AFTER `total_absorbed_damage`;
+
+ALTER TABLE `creature_melee_damage`
+	CHANGE COLUMN `damage_min` `damage_min` INT(10) NOT NULL DEFAULT '0' AFTER `hits_count`,
+	CHANGE COLUMN `damage_average` `damage_average` INT(10) NOT NULL DEFAULT '0' AFTER `damage_min`,
+	CHANGE COLUMN `damage_max` `damage_max` INT(10) NOT NULL DEFAULT '0' AFTER `damage_average`;

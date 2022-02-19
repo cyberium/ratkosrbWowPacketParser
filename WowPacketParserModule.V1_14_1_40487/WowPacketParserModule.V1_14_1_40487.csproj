@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Parsers\AuthenticationHandler.cs" />
     <Compile Include="Parsers\BattlePetHandler.cs" />
+    <Compile Include="Parsers\ChannelHandler.cs" />
     <Compile Include="Parsers\CharacterHandler.cs" />
     <Compile Include="Parsers\CombatLogHandler.cs" />
     <Compile Include="Parsers\GuildHandler.cs" />

@@ -146,7 +146,7 @@ namespace WowPacketParser.Parsing.Parsers
             attackData.HitInfo = (uint)hitInfo;
             attackData.Attacker = packet.ReadPackedGuid("AttackerGUID");
             attackData.Victim = packet.ReadPackedGuid("TargetGUID");
-            attackData.Damage = (uint)packet.ReadInt32("Damage");
+            attackData.Damage = packet.ReadInt32("Damage");
             attackData.OverkillDamage = packet.ReadInt32("OverDamage");
 
             attackData.SubDamageCount = packet.ReadByte("SubDamageCount");
@@ -157,10 +157,10 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadInt32("IntDamage", i);
 
                 if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_PARTIAL_ABSORB | SpellHitInfo.HITINFO_FULL_ABSORB))
-                    attackData.TotalAbsorbedDamage += (uint)packet.ReadInt32("DamageAbsorbed", i);
+                    attackData.TotalAbsorbedDamage += packet.ReadInt32("DamageAbsorbed", i);
 
                 if (hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_PARTIAL_RESIST | SpellHitInfo.HITINFO_FULL_RESIST))
-                    attackData.TotalResistedDamage += (uint)packet.ReadInt32("DamageResisted", i);
+                    attackData.TotalResistedDamage += packet.ReadInt32("DamageResisted", i);
             }
 
             attackData.VictimState = (uint)packet.ReadByteE<VictimStates>("VictimState");
@@ -207,7 +207,7 @@ namespace WowPacketParser.Parsing.Parsers
             attackData.HitInfo = (uint)hitInfo;
             attackData.Attacker = packet.ReadPackedGuid("AttackerGUID");
             attackData.Victim = packet.ReadPackedGuid("TargetGUID");
-            attackData.Damage = (uint)packet.ReadInt32("Damage");
+            attackData.Damage = packet.ReadInt32("Damage");
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_3_9183))
                 attackData.OverkillDamage = packet.ReadInt32("OverDamage");
@@ -221,11 +221,11 @@ namespace WowPacketParser.Parsing.Parsers
 
                 if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_3_9183) ||
                     hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_PARTIAL_ABSORB | SpellHitInfo.HITINFO_FULL_ABSORB))
-                    attackData.TotalAbsorbedDamage += (uint)packet.ReadInt32("Damage Absorbed", i);
+                    attackData.TotalAbsorbedDamage += packet.ReadInt32("Damage Absorbed", i);
 
                 if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_3_9183) ||
                     hitInfo.HasAnyFlag(SpellHitInfo.HITINFO_PARTIAL_RESIST | SpellHitInfo.HITINFO_FULL_RESIST))
-                    attackData.TotalResistedDamage += (uint)packet.ReadInt32("Damage Resisted", i);
+                    attackData.TotalResistedDamage += packet.ReadInt32("Damage Resisted", i);
             }
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_3_9183))

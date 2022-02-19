@@ -135,13 +135,13 @@ namespace WowPacketParser.Store.Objects
         public uint HitsCount;
 
         [DBFieldName("damage_min")]
-        public uint DamageMin;
+        public int DamageMin;
 
         [DBFieldName("damage_average")]
-        public uint DamageAverage;
+        public int DamageAverage;
 
         [DBFieldName("damage_max")]
-        public uint DamageMax;
+        public int DamageMax;
 
         [DBFieldName("total_school_mask")]
         public uint TotalSchoolMask;
