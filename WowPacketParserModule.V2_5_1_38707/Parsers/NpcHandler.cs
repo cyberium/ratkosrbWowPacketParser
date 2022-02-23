@@ -37,7 +37,7 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
 
             if (ClientVersion.IsBurningCrusadeClassicPhase3ClientVersionBuild(ClientVersion.Build) ||
                 ClientVersion.AddedInVersion(ClientVersionBuild.V2_5_3_41531))
-                packet.ReadUInt32("Unk", idx);
+                packet.ReadUInt32("Language", idx);
 
             packet.ResetBitReader();
             uint textLen = packet.ReadBits("TextLength", 12, idx);

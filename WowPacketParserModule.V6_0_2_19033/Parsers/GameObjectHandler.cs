@@ -153,6 +153,8 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         {
             packet.ReadPackedGuid128("GUID");
             packet.ReadInt32("UILink");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_2_0_42423))
+                packet.ReadInt32("UIItemInteractionID");
         }
 
         [Parser(Opcode.SMSG_FORCE_OBJECT_RELINK)]

@@ -8,6 +8,12 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
 {
     public static class QueryHandler
     {
+        [Parser(Opcode.CMSG_QUERY_PLAYER_NAME)]
+        public static void HandleNameQuery(Packet packet)
+        {
+            WowPacketParserModule.V6_0_2_19033.Parsers.CharacterHandler.HandleNameQuery(packet);
+        }
+
         [Parser(Opcode.SMSG_QUERY_PLAYER_NAME_RESPONSE)]
         public static void HandleQueryPlayerNameResponse(Packet packet)
         {

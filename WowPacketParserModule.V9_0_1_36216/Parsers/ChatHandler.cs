@@ -67,6 +67,9 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503))
             {
                 var count = packet.ReadUInt32("SpellVisualKitCount");
+                if (ClientVersion.AddedInVersion(9, 2, 0, 1, 14, 2, 2, 5, 3))
+                    packet.ReadInt32("SequenceVariation");
+
                 for (var i = 0; i < count; ++i)
                     packet.ReadUInt32("SpellVisualKitID", i);
             }
@@ -84,6 +87,9 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503))
             {
                 var count = packet.ReadUInt32("SpellVisualKitCount");
+                if (ClientVersion.AddedInVersion(9, 2, 0, 1, 14, 2, 2, 5, 3))
+                    packet.ReadInt32("SequenceVariation");
+
                 for (var i = 0; i < count; ++i)
                     packet.ReadUInt32("SpellVisualKitID", i);
             }

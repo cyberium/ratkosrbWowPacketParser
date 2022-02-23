@@ -37,7 +37,7 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
 
             if (ClientVersion.IsClassicSeasonOfMasteryPhase1ClientVersionBuild(ClientVersion.Build) ||
                 ClientVersion.AddedInVersion(ClientVersionBuild.V1_14_1_40666))
-                packet.ReadUInt32("Unk", idx);
+                packet.ReadUInt32("Language", idx);
 
             packet.ResetBitReader();
             uint textLen = packet.ReadBits("TextLength", 12, idx);

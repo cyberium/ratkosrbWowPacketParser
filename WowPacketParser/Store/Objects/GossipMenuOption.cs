@@ -35,6 +35,9 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("OptionNpcFlag", DbType = (TargetedDbType.TRINITY))]
         public uint NpcOptionNpcFlag = 0;
 
+        [DBFieldName("Language", TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.TRINITY))]
+        public Language? Language;
+
         [DBFieldName("sniff_build", DbType = (TargetedDbType.WPP))]
         [DBFieldName("VerifiedBuild", DbType = (TargetedDbType.TRINITY))]
         public int SniffBuild = ClientVersion.BuildInt;

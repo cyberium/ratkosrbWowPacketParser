@@ -33,6 +33,8 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             gossipOption.OptionIcon = (GossipOptionIcon?)packet.ReadByte("OptionNPC", idx);
             gossipMenuOptionBox.BoxCoded = packet.ReadByte("OptionFlags", idx) != 0;
             gossipMenuOptionBox.BoxMoney = (uint)packet.ReadInt32("OptionCost", idx);
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_2_0_42423))
+                gossipOption.Language = packet.ReadUInt32E<Language>("Language", idx);
 
             packet.ResetBitReader();
             uint textLen = packet.ReadBits(12);

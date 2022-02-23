@@ -19,11 +19,15 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
     {
         public static WowGuid ReadMovementStats(Packet packet, params object[] idx)
         {
-            if (ClientVersion.IsClassicVersionWithUpdatedMovementInfo())
-                return ReadMovementStatsClassicSoM(packet, idx);
-
             MovementInfo moveInfo = new MovementInfo();
             WowGuid moverGuid = packet.ReadPackedGuid128("MoverGUID", idx);
+
+            if (ClientVersion.IsVersionWithUpdatedMovementInfo())
+            {
+                moveInfo.Flags = (uint)packet.ReadUInt32E<MovementFlag>("MovementFlags", idx);
+                moveInfo.Flags2 = (uint)packet.ReadUInt32E<MovementFlag2>("MovementFlags2", idx);
+                moveInfo.Flags3 = (uint)packet.ReadUInt32E<MovementFlag3>("MovementFlags3", idx);
+            }
 
             moveInfo.MoveTime = packet.ReadUInt32("MoveTime", idx);
             moveInfo.Position = packet.ReadVector3("Position", idx);
@@ -40,50 +44,11 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
 
             packet.ResetBitReader();
 
-            moveInfo.Flags = (uint)packet.ReadBitsE<MovementFlag>("MovementFlags", 30, idx);
-            moveInfo.Flags2 = (uint)packet.ReadBitsE<MovementFlag2>("ExtraMovementFlags", 18, idx);
-
-            var hasTransport = packet.ReadBit("HasTransportData", idx);
-            var hasFall = packet.ReadBit("HasFallData", idx);
-            packet.ReadBit("HasSpline", idx);
-            packet.ReadBit("HeightChangeFailed", idx);
-            packet.ReadBit("RemoteTimeValid", idx);
-
-            if (hasTransport)
-                V6_0_2_19033.Parsers.MovementHandler.ReadTransportData(moveInfo, packet, idx, "TransportData");
-
-            if (hasFall)
-                V6_0_2_19033.Parsers.MovementHandler.ReadFallData(moveInfo, packet, idx, "FallData");
-
-            Storage.StorePlayerMovement(moverGuid, moveInfo, packet);
-            return moverGuid;
-        }
-
-        public static WowGuid ReadMovementStatsClassicSoM(Packet packet, params object[] idx)
-        {
-            MovementInfo moveInfo = new MovementInfo();
-            WowGuid moverGuid = packet.ReadPackedGuid128("MoverGUID", idx);
-            moveInfo.Flags = (uint)packet.ReadUInt32E<MovementFlag>("MovementFlags", idx);
-
-            packet.ResetBitReader();
-            moveInfo.Flags2 = (uint)packet.ReadBitsE<MovementFlag2>("ExtraMovementFlags", 26, idx);
-            packet.ReadBits(6);
-            packet.ReadUInt32("MovementFlags3", idx);
-
-            moveInfo.MoveTime = packet.ReadUInt32("MoveTime", idx);
-            moveInfo.Position = packet.ReadVector3("Position", idx);
-            moveInfo.Orientation = packet.ReadSingle("Orientation", idx);
-
-            moveInfo.SwimPitch = packet.ReadSingle("Pitch", idx);
-            moveInfo.SplineElevation = packet.ReadSingle("SplineElevation", idx);
-
-            var int152 = packet.ReadInt32("RemoveForcesCount", idx);
-            packet.ReadInt32("MoveIndex", idx);
-
-            for (var i = 0; i < int152; i++)
-                packet.ReadPackedGuid128("RemoveForcesIDs", idx, i);
-
-            packet.ResetBitReader();
+            if (!ClientVersion.IsVersionWithUpdatedMovementInfo())
+            {
+                moveInfo.Flags = (uint)packet.ReadBitsE<MovementFlag>("MovementFlags", 30, idx);
+                moveInfo.Flags2 = (uint)packet.ReadBitsE<MovementFlag2>("MovementFlags2", 18, idx);
+            }
 
             var hasTransport = packet.ReadBit("HasTransportData", idx);
             var hasFall = packet.ReadBit("HasFallData", idx);

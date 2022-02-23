@@ -1158,6 +1158,11 @@ namespace WowPacketParser.Misc
             return AddedInVersion(retailExpansion, retailMajor, retailMinor);
         }
 
+        public static bool RemovedInVersion(byte retailExpansion, byte retailMajor, byte retailMinor, byte classicExpansion, byte classicMajor, byte classicMinor, byte tbcExpansion, byte tbcMajor, byte tbcMinor)
+        {
+            return !AddedInVersion(retailExpansion, retailMajor, retailMinor, classicExpansion, classicMajor, classicMinor, tbcExpansion, tbcMajor, tbcMinor);
+        }
+
         public static bool IsClassicClientVersionBuild(ClientVersionBuild build)
         {
             return IsClassicVanillaClientVersionBuild(build) ||
@@ -1306,19 +1311,9 @@ namespace WowPacketParser.Misc
             return AddedInVersion(ClientVersionBuild.V9_0_5_37503);
         }
 
-        public static bool IsClassicVersionWithUpdatedMovementInfo()
+        public static bool IsVersionWithUpdatedMovementInfo()
         {
-            if (IsClassicSeasonOfMasteryClientVersionBuild(Build))
-            {
-                if (IsClassicSeasonOfMasteryPhase1ClientVersionBuild(Build) || AddedInVersion(ClientVersionBuild.V1_14_1_40666))
-                    return true;
-            }
-            else if (IsBurningCrusadeClassicClientVersionBuild(Build))
-            {
-                if (IsBurningCrusadeClassicPhase3ClientVersionBuild(Build) || AddedInVersion(ClientVersionBuild.V2_5_3_41531))
-                    return true;
-            }
-            return false;
+            return AddedInVersion(9, 2, 0, 1, 14, 1, 2, 5, 3);
         }
 
         public static bool IsBurningCrusadeClassicClientVersionBuild(ClientVersionBuild build)
@@ -1471,19 +1466,23 @@ namespace WowPacketParser.Misc
         {
             if (IsClassicSeasonOfMasteryClientVersionBuild(Build))
             {
-                if (AddedInVersion(ClientVersionBuild.V1_14_1_40688))
+                if (AddedInVersion(1, 14, 1))
                     return 13;
                 else
                     return 10;
             }
             else if (IsBurningCrusadeClassicClientVersionBuild(Build))
             {
-
+                if (AddedInVersion(2, 5, 3))
+                    return 13;
             }
             else
             {
                 if (AddedInVersion(ClientVersionBuild.V9_1_5_40772))
                     return 12;
+
+                if (AddedInVersion(ClientVersionBuild.V9_2_0_42423))
+                    return 13;
             }
 
             return 8;
