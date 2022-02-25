@@ -379,6 +379,7 @@
     <Compile Include="Parsers\MiscellaneousHandler.cs" />
     <Compile Include="Parsers\MythicPlusHandler.cs" />
     <Compile Include="Parsers\NpcHandler.cs" />
+    <Compile Include="Parsers\QueryHandler.cs" />
     <Compile Include="Parsers\ReputationHandler.cs" />
     <Compile Include="Parsers\ScenarioHandler.cs" />
     <Compile Include="Parsers\SceneHandler.cs" />
