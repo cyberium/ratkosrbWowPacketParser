@@ -230,8 +230,9 @@ namespace WowPacketParser.Loading
 
                             _reader.ReadBytes(additionalSize - 20);
                         }
-                        else if (_snifferId == 0x15 && additionalSize > 0)
+                        else if ((_snifferId == 0x15 || _snifferId == 0x16) && additionalSize > 0)
                         {
+                            // ymir
                             var unixMilliseconds = _reader.ReadDouble();
                             DateTime unixEpoch = Utilities.GetDateTimeFromUnixTime(0);
                             time = unixEpoch.AddMilliseconds(unixMilliseconds);
