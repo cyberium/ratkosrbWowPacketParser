@@ -230,7 +230,7 @@ namespace WowPacketParser.Loading
 
                             _reader.ReadBytes(additionalSize - 20);
                         }
-                        else if (_snifferId == 0x15)
+                        else if (_snifferId == 0x15 && additionalSize > 0)
                         {
                             var unixMilliseconds = _reader.ReadDouble();
                             DateTime unixEpoch = Utilities.GetDateTimeFromUnixTime(0);
