@@ -1878,10 +1878,15 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.CMSG_MOVE_SET_CAN_TRANSITION_BETWEEN_SWIM_AND_FLY_ACK, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleSpecialMoveAckMessages(Packet packet)
         {
-            var guid = ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180) ? packet.ReadPackedGuid("Guid") : packet.ReadGuid("Guid");
+            WowGuid guid;
+            if (ClientVersion.Build < ClientVersionBuild.V3_0_2_9056)
+                guid = packet.ReadGuid("Guid");
+            else
+                guid = packet.ReadPackedGuid("Guid");
+
             packet.ReadInt32("Movement Counter");
             ReadMovementInfo(packet, guid);
-            packet.ReadSingle("Unk float");
+            packet.ReadInt32("Apply");
         }
 
         [Parser(Opcode.CMSG_MOVE_KNOCK_BACK_ACK, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]

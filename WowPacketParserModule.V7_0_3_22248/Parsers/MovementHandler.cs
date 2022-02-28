@@ -31,10 +31,10 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             moveInfo.SwimPitch = packet.ReadSingle("Pitch", idx);
             moveInfo.SplineElevation = packet.ReadSingle("SplineElevation", idx);
 
-            var int152 = packet.ReadInt32("RemoveForcesCount", idx);
+            var removeForcesIDsCount = packet.ReadInt32("RemoveForcesCount", idx);
             packet.ReadInt32("MoveIndex", idx);
 
-            for (var i = 0; i < int152; i++)
+            for (var i = 0; i < removeForcesIDsCount; i++)
                 packet.ReadPackedGuid128("RemoveForcesIDs", idx, i);
 
             packet.ResetBitReader();

@@ -65,9 +65,9 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.ReadUInt32("Required Level");
                     break;
                 case InventoryResult.EventAutoEquipBindConfirm:
-                    packet.ReadUInt64("Unk UInt64 1");
-                    packet.ReadUInt32("Unk UInt32 1");
-                    packet.ReadUInt64("Unk UInt64 2");
+                    packet.ReadGuid("SrcContainer");
+                    packet.ReadUInt32("SrcSlot");
+                    packet.ReadGuid("DstContainer");
                     break;
                 case InventoryResult.ItemMaxLimitCategoryCountExceeded:
                 case InventoryResult.ItemMaxLimitCategorySocketedExceeded:
@@ -83,18 +83,22 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadSByte("Bag");
             packet.ReadByte("Slot");
             packet.ReadByte("Spell Count");
-            packet.ReadByte("Cast Count");
-            WowGuid guid = packet.ReadGuid("GUID");
 
-            if (Storage.Objects.ContainsKey(guid))
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
             {
-                ItemClientUse newItemuse = new ItemClientUse
+                packet.ReadByte("Cast Count");
+                WowGuid guid = packet.ReadGuid("GUID");
+
+                if (Storage.Objects.ContainsKey(guid))
                 {
-                    Entry = (uint)Storage.Objects[guid].Item1.ObjectData.EntryID,
-                    UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time),
-                };
-                Storage.ItemClientUseTimes.Add(newItemuse, packet.TimeSpan);
-            }
+                    ItemClientUse newItemuse = new ItemClientUse
+                    {
+                        Entry = (uint)Storage.Objects[guid].Item1.ObjectData.EntryID,
+                        UnixTimeMs = (ulong)Utilities.GetUnixTimeMsFromDateTime(packet.Time),
+                    };
+                    Storage.ItemClientUseTimes.Add(newItemuse, packet.TimeSpan);
+                }
+            } 
 
             SpellHandler.ReadSpellCastTargets(packet);
         }
@@ -402,7 +406,7 @@ namespace WowPacketParser.Parsing.Parsers
         {
             packet.ReadGuid("Vendor GUID");
             packet.ReadUInt32<ItemId>("Entry");
-            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V4_2_2_14545))
+            if (ClientVersion.InVersion(ClientVersionBuild.V2_0_1_6180, ClientVersionBuild.V4_2_2_14545))
                 packet.ReadInt32("Param");
             packet.ReadByteE<BuyResult>("Result");
         }
@@ -474,6 +478,10 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleItemQuerySingle(Packet packet)
         {
             packet.ReadUInt32<ItemId>("Entry");
+
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadGuid("Item Guid");
+
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_2_2_14545)) // Might be earlier
             {
                 packet.ReadByteE<UnknownFlags>("Unknown Byte");

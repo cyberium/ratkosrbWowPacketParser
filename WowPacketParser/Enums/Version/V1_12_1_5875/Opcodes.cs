@@ -118,7 +118,7 @@ namespace WowPacketParser.Enums.Version.V1_12_1_5875
             {Opcode.CMSG_DEL_FRIEND, 106},
             {Opcode.CMSG_DEL_IGNORE, 109},
             {Opcode.CMSG_DEL_PVP_MEDAL_CHEAT, 650},
-            {Opcode.CMSG_DESTROY_ITEMS, 273},
+            {Opcode.CMSG_DESTROY_ITEM, 273},
             {Opcode.CMSG_DESTROYMONSTER, 18},
             {Opcode.CMSG_DISABLE_PVP_CHEAT, 48},
             {Opcode.CMSG_DROP_ITEM, 272},

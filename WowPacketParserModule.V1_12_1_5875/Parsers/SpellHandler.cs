@@ -17,35 +17,6 @@ namespace WowPacketParser.Parsing.Parsers
         {
             packet.ReadUInt32<SpellId>("Spell Id");
         }
-        [Parser(Opcode.CMSG_CAST_SPELL)]
-        public static void HandleCastSpell(Packet packet)
-        {
-            packet.ReadInt32<SpellId>("Spell ID");
-
-            ReadSpellCastTargets(packet);
-        }
-        public static TargetFlag ReadSpellCastTargets(Packet packet)
-        {
-            var targetFlags = packet.ReadInt16E<TargetFlag>("Target Flags");
-
-            if (targetFlags.HasAnyFlag(TargetFlag.Unit | TargetFlag.CorpseEnemy | TargetFlag.GameObject |
-                TargetFlag.CorpseAlly | TargetFlag.UnitMinipet))
-                packet.ReadPackedGuid("Target GUID");
-
-            if (targetFlags.HasAnyFlag(TargetFlag.Item | TargetFlag.TradeItem))
-                packet.ReadPackedGuid("Item Target GUID");
-
-            if (targetFlags.HasAnyFlag(TargetFlag.SourceLocation))
-                packet.ReadVector3("Source Position");
-
-            if (targetFlags.HasAnyFlag(TargetFlag.DestinationLocation))
-                packet.ReadVector3("Destination Position");
-
-            if (targetFlags.HasAnyFlag(TargetFlag.NameString))
-                packet.ReadCString("Target String");
-
-            return targetFlags;
-        }
 
         [Parser(Opcode.SMSG_CAST_FAILED)]
         public static void HandleCastFailed(Packet packet)

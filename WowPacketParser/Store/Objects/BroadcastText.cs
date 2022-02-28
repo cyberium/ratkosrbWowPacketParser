@@ -57,6 +57,10 @@ namespace WowPacketParser.Store.Objects
         [DBFieldName("ChatBubbleDurationMs", TargetedDbExpansion.BattleForAzeroth, DbType = (TargetedDbType.TRINITY))]
         public uint? ChatBubbleDurationMs;
 
+        [DBFieldName("voice_over_priority_id", TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.WPP))]
+        [DBFieldName("VoiceOverPriorityID", TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.TRINITY))]
+        public uint? VoiceOverPriorityID;
+
         [DBFieldName("sound_id1", DbType = (TargetedDbType.WPP))]
         [DBFieldName("sound_id", DbType = (TargetedDbType.VMANGOS))]
         [DBFieldName("SoundEntriesID1", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]

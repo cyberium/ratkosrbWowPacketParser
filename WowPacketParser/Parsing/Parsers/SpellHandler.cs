@@ -300,13 +300,21 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.CMSG_CAST_SPELL)]
         public static void HandleCastSpell(Packet packet)
         {
-            packet.ReadByte("Cast Count");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+                packet.ReadByte("Cast Count");
+
             packet.ReadInt32<SpellId>("Spell ID");
+
+            if (ClientVersion.InVersion(ClientVersionBuild.V2_0_1_6180, ClientVersionBuild.V3_0_2_9056))
+                packet.ReadByte("Cast Count");
 
             if (ClientVersion.AddedInVersion(ClientType.Cataclysm))
                 packet.ReadInt32("Glyph Index");
 
-            var castFlags = packet.ReadByteE<CastFlag>("Cast Flags");
+            CastFlag castFlags = CastFlag.None;
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+                packet.ReadByteE<CastFlag>("Cast Flags");
+
             if (castFlags.HasAnyFlag(CastFlag.HasTrajectory))
             {
                 ReadSpellCastTargets(packet);
@@ -324,7 +332,11 @@ namespace WowPacketParser.Parsing.Parsers
 
         public static TargetFlag ReadSpellCastTargets(Packet packet)
         {
-            var targetFlags = packet.ReadInt32E<TargetFlag>("Target Flags");
+            TargetFlag targetFlags;
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                targetFlags = packet.ReadInt32E<TargetFlag>("Target Flags");
+            else
+                targetFlags = packet.ReadInt16E<TargetFlag>("Target Flags");
 
             if (targetFlags.HasAnyFlag(TargetFlag.Unit | TargetFlag.CorpseEnemy | TargetFlag.GameObject |
                 TargetFlag.CorpseAlly | TargetFlag.UnitMinipet))
@@ -1136,7 +1148,10 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleSpellChannelUpdate(Packet packet)
         {
             SpellChannelUpdate channel = new SpellChannelUpdate();
-            channel.Guid = packet.ReadPackedGuid("GUID");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                channel.Guid = packet.ReadPackedGuid("GUID");
+            else
+                channel.Guid = Storage.CurrentActivePlayer;
             channel.Duration = (int)packet.ReadUInt32("Timestamp");
             channel.Time = packet.Time;
             Storage.SpellChannelUpdate.Add(channel);
@@ -1146,7 +1161,10 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleSpellChannelStart(Packet packet)
         {
             SpellChannelStart channel = new SpellChannelStart();
-            channel.Guid = packet.ReadPackedGuid("GUID");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                channel.Guid = packet.ReadPackedGuid("GUID");
+            else
+                channel.Guid = Storage.CurrentActivePlayer;
             channel.SpellId = packet.ReadUInt32<SpellId>("Spell ID");
             channel.Duration = packet.ReadInt32("Duration");
 
