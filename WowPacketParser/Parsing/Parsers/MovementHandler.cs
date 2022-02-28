@@ -1879,7 +1879,7 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleSpecialMoveAckMessages(Packet packet)
         {
             WowGuid guid;
-            if (ClientVersion.Build < ClientVersionBuild.V3_0_2_9056)
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056))
                 guid = packet.ReadGuid("Guid");
             else
                 guid = packet.ReadPackedGuid("Guid");
