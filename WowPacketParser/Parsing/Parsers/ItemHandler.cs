@@ -345,7 +345,8 @@ namespace WowPacketParser.Parsing.Parsers
         {
             packet.ReadGuid("Vendor GUID");
             packet.ReadGuid("Item GUID");
-            packet.ReadBool("Use guild money");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadBool("Use guild money");
         }
 
         [Parser(Opcode.CMSG_SELL_ITEM)]

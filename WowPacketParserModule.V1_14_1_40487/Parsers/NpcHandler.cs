@@ -35,7 +35,8 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
             gossipMenuOptionBox.BoxCoded = packet.ReadByte("OptionFlags", idx) != 0;
             gossipMenuOptionBox.BoxMoney = (uint)packet.ReadInt32("OptionCost", idx);
 
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V1_14_1_40666))
+            if (ClientVersion.IsClassicSeasonOfMasteryPhase1ClientVersionBuild(ClientVersion.Build) ||
+                ClientVersion.AddedInVersion(ClientVersionBuild.V1_14_1_40666))
                 packet.ReadUInt32("Unk", idx);
 
             packet.ResetBitReader();

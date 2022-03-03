@@ -1034,7 +1034,9 @@ namespace WowPacketParser.Parsing.Parsers
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_3_3_11685))
                 packet.ReadUInt32E<QuestFlags>("Quest Flags");
 
-            packet.ReadUInt32("Suggested Players");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadUInt32("Suggested Players");
+
             packet.ReadUInt32("Money");
 
             uint count = packet.ReadUInt32("Number of Required Items");
@@ -1045,18 +1047,22 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadUInt32("Required Item Display Id", i);
             }
 
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadUInt32("UnkInt"); // unknown meaning, mangos sends always 2
+
             // flags
-            var flags = packet.ReadUInt32("Unk flags 1");
+            packet.ReadUInt32("Unk flags 1");
             packet.ReadUInt32("Unk flags 2");
             packet.ReadUInt32("Unk flags 3");
-            packet.ReadUInt32("Unk flags 4");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadUInt32("Unk flags 4");
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_0_1_13164))
             {
                 packet.ReadUInt32("Unk flags 5");
                 packet.ReadUInt32("Unk flags 6");
             }
-            requestItems.EmoteOnCompleteDelay = 0;
 
             QuestEnder questEnder = new QuestEnder
             {
@@ -1274,30 +1280,35 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadUInt32E<QuestReasonType>("Reason");
         }
 
-        [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_COMPLETE, ClientVersionBuild.Zero, ClientVersionBuild.V2_0_1_6180)]
+        [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_COMPLETE, ClientVersionBuild.Zero, ClientVersionBuild.V4_0_6a_13623)]
         public static void HandleQuestCompletedVanilla(Packet packet)
         {
             packet.ReadUInt32<QuestId>("Quest ID");
-            packet.ReadUInt32("UnkInt");
+
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056))
+                packet.ReadUInt32("UnkInt"); // mangos sends always 3
+
             packet.ReadUInt32("XP");
             packet.ReadUInt32("Money");
-            uint items = packet.ReadUInt32("Reward Items Count");
-            for (uint i = 0; i < items; ++i)
-            {
-                packet.ReadInt32("Item Id", i);
-                packet.ReadInt32("Item Count", i);
-            }  
-        }
 
-        [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_COMPLETE, ClientVersionBuild.V2_0_1_6180, ClientVersionBuild.V4_0_6a_13623)]
-        public static void HandleQuestCompleted(Packet packet)
-        {
-            packet.ReadInt32<QuestId>("Quest ID");
-            packet.ReadInt32("Reward");
-            packet.ReadInt32("Money");
-            packet.ReadInt32("Honor");
-            packet.ReadInt32("Talents");
-            packet.ReadInt32("Arena Points");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_3_0_7561))
+                packet.ReadInt32("Honor");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+            {
+                packet.ReadInt32("Talents");
+                packet.ReadInt32("Arena Points");
+            }
+
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056))
+            {
+                uint items = packet.ReadUInt32("Reward Items Count");
+                for (uint i = 0; i < items; ++i)
+                {
+                    packet.ReadInt32("Item Id", i);
+                    packet.ReadInt32("Item Count", i);
+                }
+            }
         }
 
         [Parser(Opcode.SMSG_QUEST_GIVER_QUEST_COMPLETE, ClientVersionBuild.V4_0_6a_13623, ClientVersionBuild.V4_2_2_14545)]

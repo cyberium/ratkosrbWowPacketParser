@@ -137,17 +137,27 @@ namespace WowPacketParser.Parsing.Parsers
         {
             var info = new MovementInfo();
 
+            bool hasPitch;
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
-                info.Flags = (uint)packet.ReadInt32E<MovementFlag>("Movement Flags", index);
-            else if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
-                info.Flags = (uint)ConvertTBCMovementFlags(packet.ReadInt32E<MovementFlagTBC>("Movement Flags", index));
-            else
-                info.Flags = (uint)ConvertVanillaMovementFlags(packet.ReadInt32E<MovementFlagVanilla>("Movement Flags", index));
-
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+            {
+                MovementFlag flags = packet.ReadInt32E<MovementFlag>("Movement Flags", index);
+                info.Flags = (uint)flags;
                 info.FlagsExtra = (uint)packet.ReadInt16E<MovementFlagExtra>("Extra Movement Flags", index);
+                hasPitch = flags.HasAnyFlag(MovementFlag.Swimming | MovementFlag.Flying) || info.FlagsExtra.HasAnyFlag(MovementFlagExtra.AlwaysAllowPitching);
+            }
             else if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+            {
+                MovementFlagTBC flags = packet.ReadInt32E<MovementFlagTBC>("Movement Flags", index);
+                info.Flags = (uint)ConvertTBCMovementFlags(flags);
                 info.FlagsExtra = (uint)packet.ReadByteE<MovementFlagExtra>("Extra Movement Flags", index);
+                hasPitch = flags.HasAnyFlag(MovementFlagTBC.Swimming | MovementFlagTBC.Flying2);
+            }
+            else
+            {
+                MovementFlagVanilla flags = packet.ReadInt32E<MovementFlagVanilla>("Movement Flags", index);
+                info.Flags = (uint)ConvertVanillaMovementFlags(flags);
+                hasPitch = flags.HasAnyFlag(MovementFlagVanilla.Swimming);
+            }
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_2_2_14545))
                 if (packet.ReadGuid("Guid 2", index) != guid)
@@ -175,8 +185,7 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.ReadInt32("Transport Time", index);
             }
 
-            if (info.Flags.HasAnyFlag(MovementFlag.Swimming | MovementFlag.Flying) ||
-                info.FlagsExtra.HasAnyFlag(MovementFlagExtra.AlwaysAllowPitching))
+            if (hasPitch)
                 info.SwimPitch = packet.ReadSingle("Swim Pitch", index);
 
             if (ClientVersion.AddedInVersion(ClientType.Cataclysm))
