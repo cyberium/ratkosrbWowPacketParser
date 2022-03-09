@@ -380,11 +380,11 @@ namespace WowPacketParser.SQL.Builders
                         gossipOption.OptionId = 5;
                         gossipOption.NpcOptionNpcFlag = 16;
                         break;
-                    case GossipOptionIcon.Healer:
+                    case GossipOptionIcon.SpiritHealer:
                         gossipOption.OptionId = 6;
                         gossipOption.NpcOptionNpcFlag = 32;
                         break;
-                    case GossipOptionIcon.Binder:
+                    case GossipOptionIcon.Innkeeper:
                         gossipOption.OptionId = 8;
                         gossipOption.NpcOptionNpcFlag = 128;
                         break;
@@ -430,11 +430,11 @@ namespace WowPacketParser.SQL.Builders
                         gossipOption.OptionId = 5;
                         gossipOption.NpcOptionNpcFlag = 16;
                         break;
-                    case GossipOptionIcon.Healer:
+                    case GossipOptionIcon.SpiritHealer:
                         gossipOption.OptionId = 6;
                         gossipOption.NpcOptionNpcFlag = 16384;
                         break;
-                    case GossipOptionIcon.Binder:
+                    case GossipOptionIcon.Innkeeper:
                         gossipOption.OptionId = 8;
                         gossipOption.NpcOptionNpcFlag = 65536;
                         break;

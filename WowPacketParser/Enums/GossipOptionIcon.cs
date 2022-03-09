@@ -7,7 +7,7 @@
         Taxi                        = 2,  // flightmarker (paperplane)
         Trainer                     = 3,  // brown book (trainer)
         SpiritHealer                = 4,  // golden interaction wheel
-        Inkeeper                    = 5,  // golden interaction wheel
+        Innkeeper                   = 5,  // golden interaction wheel
         Banker                      = 6,  // brown bag (with gold coin in lower corner)
         Petition                    = 7,  // white chat bubble (with "..." inside)
         Tabard                      = 8,  // white tabard
