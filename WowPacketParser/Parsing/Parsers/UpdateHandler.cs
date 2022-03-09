@@ -96,25 +96,11 @@ namespace WowPacketParser.Parsing.Parsers
             }
             else
             {
-                WoWObject obj;
-                switch (objType)
-                {
-                    case ObjectType.Unit:          obj = new Unit(); break;
-                    case ObjectType.GameObject:    obj = new GameObject(); break;
-                    case ObjectType.DynamicObject: obj = new DynamicObject(); break;
-                    case ObjectType.Player:        obj = new Player(); break;
-                    case ObjectType.AreaTrigger:   obj = new AreaTriggerCreateProperties(); break;
-                    default:                       obj = new WoWObject(); break;
-                }
+                WoWObject obj = CreateObject(objType, map);
 
-                obj.Type = objType;
                 obj.Movement = moves;
                 obj.UpdateFields = updates;
                 obj.DynamicUpdateFields = dynamicUpdates;
-                obj.Map = map;
-                obj.Area = WorldStateHandler.CurrentAreaId;
-                obj.Zone = WorldStateHandler.CurrentZoneId;
-                obj.PhaseMask = (uint)MovementHandler.CurrentPhaseMask;
                 Storage.StoreNewObject(guid, obj, type, packet);
 
                 // Must be after unit has been added to store.
@@ -124,6 +110,50 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (guid.HasEntry() && (objType == ObjectType.Unit || objType == ObjectType.GameObject))
                 packet.AddSniffData(Utilities.ObjectTypeToStore(objType), (int)guid.GetEntry(), "SPAWN");
+        }
+
+        public static WoWObject CreateObject(ObjectType objType, uint map)
+        {
+            WoWObject obj;
+            switch (objType)
+            {
+                case ObjectType.Unit:
+                    obj = new Unit();
+                    break;
+                case ObjectType.GameObject:
+                    obj = new GameObject();
+                    break;
+                case ObjectType.DynamicObject:
+                    obj = new DynamicObject();
+                    break;
+                case ObjectType.Player:
+                    obj = new Player();
+                    break;
+                case ObjectType.ActivePlayer:
+                    Player me = new Player();
+                    me.IsActivePlayer = true;
+                    obj = me;
+                    break;
+                case ObjectType.AreaTrigger:
+                    obj = new AreaTriggerCreateProperties();
+                    break;
+                case ObjectType.Conversation:
+                    obj = new ConversationTemplate();
+                    break;
+                default:
+                    obj = new WoWObject();
+                    break;
+            }
+
+            obj.Type = objType;
+            obj.Map = map;
+            obj.Area = WorldStateHandler.CurrentAreaId;
+            obj.Zone = WorldStateHandler.CurrentZoneId;
+            obj.PhaseMask = (uint)MovementHandler.CurrentPhaseMask;
+            obj.Phases = new HashSet<ushort>(MovementHandler.ActivePhases.Keys);
+            obj.DifficultyID = MovementHandler.CurrentDifficultyID;
+
+            return obj;
         }
 
         public static Dictionary<int, UpdateField> ReadValuesUpdateBlockOnCreate(Packet packet, ObjectType type, object index, out BitArray outUpdateMaskArray)

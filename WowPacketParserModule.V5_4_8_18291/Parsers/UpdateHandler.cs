@@ -94,35 +94,11 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             }
             else
             {
-                WoWObject obj;
-                switch (objType)
-                {
-                    case ObjectType.Unit:
-                        obj = new Unit();
-                        break;
-                    case ObjectType.GameObject:
-                        obj = new GameObject();
-                        break;
-                    case ObjectType.DynamicObject:
-                        obj = new DynamicObject();
-                        break;
-                    case ObjectType.Player:
-                        obj = new Player();
-                        break;
-                    default:
-                        obj = new WoWObject();
-                        break;
-                }
+                WoWObject obj = CoreParsers.UpdateHandler.CreateObject(objType, map);
 
-                obj.Type = objType;
                 obj.Movement = moves;
                 obj.UpdateFields = updates;
                 obj.DynamicUpdateFields = dynamicUpdates;
-                obj.Map = map;
-                obj.Area = CoreParsers.WorldStateHandler.CurrentAreaId;
-                obj.Zone = CoreParsers.WorldStateHandler.CurrentZoneId;
-                obj.PhaseMask = (uint)CoreParsers.MovementHandler.CurrentPhaseMask;
-                obj.Phases = new HashSet<ushort>(CoreParsers.MovementHandler.ActivePhases.Keys);
                 Storage.StoreNewObject(guid, obj, type, packet);
             }
                 

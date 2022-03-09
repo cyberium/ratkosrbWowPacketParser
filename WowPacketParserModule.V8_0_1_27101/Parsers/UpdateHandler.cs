@@ -549,37 +549,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             if (isExistingObject)
                 obj = Storage.Objects[guid].Item1;
             else
-            {
-                switch (objType)
-                {
-                    case ObjectType.Unit:
-                        obj = new Unit();
-                        break;
-                    case ObjectType.GameObject:
-                        obj = new GameObject();
-                        break;
-                    case ObjectType.DynamicObject:
-                        obj = new DynamicObject();
-                        break;
-                    case ObjectType.Player:
-                        obj = new Player();
-                        break;
-                    case ObjectType.ActivePlayer:
-                        Player me = new Player();
-                        me.IsActivePlayer = true;
-                        obj = me;
-                        break;
-                    case ObjectType.AreaTrigger:
-                        obj = new AreaTriggerCreateProperties();
-                        break;
-                    case ObjectType.Conversation:
-                        obj = new ConversationTemplate();
-                        break;
-                    default:
-                        obj = new WoWObject();
-                        break;
-                }
-            }
+                obj = CoreParsers.UpdateHandler.CreateObject(objType, map);
 
             BitArray updateMaskArray = null;
             var moves = ReadMovementUpdateBlock(packet, guid, obj, index);
@@ -698,14 +668,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 obj.DynamicUpdateFields = dynamicUpdates;
             }
 
-            obj.Type = objType;
             obj.Movement = moves;
-            obj.Map = map;
-            obj.Area = CoreParsers.WorldStateHandler.CurrentAreaId;
-            obj.Zone = CoreParsers.WorldStateHandler.CurrentZoneId;
-            obj.PhaseMask = (uint)CoreParsers.MovementHandler.CurrentPhaseMask;
-            obj.Phases = new HashSet<ushort>(CoreParsers.MovementHandler.ActivePhases.Keys);
-            obj.DifficultyID = CoreParsers.MovementHandler.CurrentDifficultyID;
 
             // If this is the second time we see the same object (same guid,
             // same position) update its phasemask

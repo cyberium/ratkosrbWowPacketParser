@@ -80,37 +80,7 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
             if (Storage.Objects.ContainsKey(guid))
                 obj = Storage.Objects[guid].Item1;
             else
-            {
-                switch (objType)
-                {
-                    case ObjectType.Unit:
-                        obj = new Unit();
-                        break;
-                    case ObjectType.GameObject:
-                        obj = new GameObject();
-                        break;
-                    case ObjectType.DynamicObject:
-                        obj = new DynamicObject();
-                        break;
-                    case ObjectType.Player:
-                        obj = new Player();
-                        break;
-                    case ObjectType.ActivePlayer:
-                        Player me = new Player();
-                        me.IsActivePlayer = true;
-                        obj = me;
-                        break;
-                    case ObjectType.AreaTrigger:
-                        obj = new AreaTriggerCreateProperties();
-                        break;
-                    case ObjectType.Conversation:
-                        obj = new ConversationTemplate();
-                        break;
-                    default:
-                        obj = new WoWObject();
-                        break;
-                }
-            }
+                obj = CoreParsers.UpdateHandler.CreateObject(objType, map);
 
             var moves = ReadMovementUpdateBlock(packet, guid, obj, index);
             Storage.StoreObjectCreateTime(guid, map, moves, packet.Time, type);
@@ -127,16 +97,9 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
             }
             else
             {
-                obj.Type = objType;
                 obj.Movement = moves;
                 obj.UpdateFields = updates;
                 obj.DynamicUpdateFields = dynamicUpdates;
-                obj.Map = map;
-                obj.Area = CoreParsers.WorldStateHandler.CurrentAreaId;
-                obj.Zone = CoreParsers.WorldStateHandler.CurrentZoneId;
-                obj.PhaseMask = (uint)CoreParsers.MovementHandler.CurrentPhaseMask;
-                obj.Phases = new HashSet<ushort>(CoreParsers.MovementHandler.ActivePhases.Keys);
-                obj.DifficultyID = CoreParsers.MovementHandler.CurrentDifficultyID;
                 Storage.StoreNewObject(guid, obj, type, packet);
             }  
 
