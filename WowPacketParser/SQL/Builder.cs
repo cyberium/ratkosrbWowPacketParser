@@ -102,38 +102,7 @@ namespace WowPacketParser.SQL
 
                     if (attr.CheckVersionMismatch)
                     {
-                        if (!((ClientVersion.Expansion == ClientType.WorldOfWarcraft &&
-                               Settings.TargetedDbExpansion == TargetedDbExpansion.Zero)
-                              ||
-                              (ClientVersion.Expansion == ClientType.TheBurningCrusade &&
-                               Settings.TargetedDbExpansion == TargetedDbExpansion.TheBurningCrusade)
-                              ||
-                              (ClientVersion.Expansion == ClientType.WrathOfTheLichKing &&
-                               Settings.TargetedDbExpansion == TargetedDbExpansion.WrathOfTheLichKing)
-                              ||
-                              (ClientVersion.Expansion == ClientType.Cataclysm &&
-                               Settings.TargetedDbExpansion == TargetedDbExpansion.Cataclysm)
-                              ||
-                              (ClientVersion.Expansion == ClientType.WarlordsOfDraenor &&
-                               Settings.TargetedDbExpansion == TargetedDbExpansion.WarlordsOfDraenor)
-                              ||
-                              (ClientVersion.Expansion == ClientType.Legion &&
-                               Settings.TargetedDbExpansion == TargetedDbExpansion.Legion)
-                              ||
-                              (ClientVersion.Expansion == ClientType.BattleForAzeroth &&
-                               Settings.TargetedDbExpansion == TargetedDbExpansion.BattleForAzeroth)
-                              ||
-                              (ClientVersion.Expansion == ClientType.Shadowlands &&
-                               Settings.TargetedDbExpansion == TargetedDbExpansion.Shadowlands)
-                              ||
-                              (ClientVersion.Expansion == ClientType.Classic &&
-                               Settings.TargetedDbExpansion == TargetedDbExpansion.Classic)
-                               ||
-                              (ClientVersion.Expansion == ClientType.Classic &&
-                              (Settings.TargetedDbExpansion == TargetedDbExpansion.Classic || Settings.TargetedDbExpansion == TargetedDbExpansion.BurningCrusadeClassic))
-                               ||
-                              (ClientVersion.Expansion == ClientType.BurningCrusadeClassic &&
-                               Settings.TargetedDbExpansion == TargetedDbExpansion.BurningCrusadeClassic)))
+                        if (!GetExpectedTargetDatabasesForExpansion(ClientVersion.Expansion).Contains(Settings.TargetedDbExpansion))
                         {
                             Trace.WriteLine(
                                 $"{i}/{builderMethods.Count} - Error: Couldn't generate SQL output of {method.Name} since the targeted database and the sniff version don't match.");
@@ -166,6 +135,31 @@ namespace WowPacketParser.SQL
                 var endTime = DateTime.Now;
                 var span = endTime.Subtract(startTime);
                 Trace.WriteLine($"Finished SQL file in {span.ToFormattedString()}.");
+            }
+        }
+
+        private static List<TargetedDbExpansion> GetExpectedTargetDatabasesForExpansion(ClientType expansion)
+        {
+            switch (expansion)
+            {
+                case ClientType.WorldOfWarcraft:
+                    return new List<TargetedDbExpansion> { TargetedDbExpansion.Zero };
+                case ClientType.TheBurningCrusade:
+                    return new List<TargetedDbExpansion> { TargetedDbExpansion.TheBurningCrusade };
+                case ClientType.WrathOfTheLichKing:
+                    return new List<TargetedDbExpansion> { TargetedDbExpansion.WrathOfTheLichKing };
+                case ClientType.Cataclysm:
+                    return new List<TargetedDbExpansion> { TargetedDbExpansion.Cataclysm };
+                case ClientType.WarlordsOfDraenor:
+                    return new List<TargetedDbExpansion> { TargetedDbExpansion.WarlordsOfDraenor };
+                case ClientType.Legion:
+                    return new List<TargetedDbExpansion> { TargetedDbExpansion.Legion };
+                case ClientType.BattleForAzeroth: // == ClientType.Classic
+                    return new List<TargetedDbExpansion> { TargetedDbExpansion.BattleForAzeroth, TargetedDbExpansion.Classic };
+                case ClientType.Shadowlands: // == ClientType.BurningCrusadeClassic
+                    return new List<TargetedDbExpansion> { TargetedDbExpansion.Shadowlands, TargetedDbExpansion.BurningCrusadeClassic };
+                default:
+                    return new List<TargetedDbExpansion>();
             }
         }
     }
