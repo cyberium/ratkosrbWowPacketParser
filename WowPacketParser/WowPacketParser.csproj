@@ -290,6 +290,7 @@
     <Compile Include="Enums\MountResult.cs" />
     <Compile Include="Enums\RaidSummonFail.cs" />
     <Compile Include="Enums\ReportPvPAFKResult.cs" />
+    <Compile Include="Enums\SceneType.cs" />
     <Compile Include="Enums\SecureAddonStatus.cs" />
     <Compile Include="Enums\SkillType.cs" />
     <Compile Include="Enums\SplineFlagTBC.cs" />
@@ -675,6 +676,7 @@
     <Compile Include="Store\Objects\LootTemplate.cs" />
     <Compile Include="Store\Objects\MailTemplate.cs" />
     <Compile Include="Store\Objects\ObjectCreate.cs" />
+    <Compile Include="Store\Objects\SceneObject.cs" />
     <Compile Include="Store\Objects\Sounds.cs" />
     <Compile Include="Store\Objects\SpellCastData.cs" />
     <Compile Include="Store\Objects\UpdateFields\IQuestSession.cs" />
@@ -686,6 +688,7 @@
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\ConversationData.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\DynamicObjectData.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\PlayerData.cs" />
+    <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\SceneObjectData.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\UnitData.cs" />
     <Compile Include="Store\Objects\UpdateFields\LegacyImplementation\UpdateFieldExtensions.cs" />
     <Compile Include="Store\Objects\GameObjectAddon.cs" />

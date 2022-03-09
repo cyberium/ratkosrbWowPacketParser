@@ -137,6 +137,9 @@ namespace WowPacketParser.Parsing.Parsers
                 case ObjectType.AreaTrigger:
                     obj = new AreaTriggerCreateProperties();
                     break;
+                case ObjectType.SceneObject:
+                    obj = new SceneObject();
+                    break;
                 case ObjectType.Conversation:
                     obj = new ConversationTemplate();
                     break;

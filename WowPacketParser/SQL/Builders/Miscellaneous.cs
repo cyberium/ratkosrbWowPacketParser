@@ -153,10 +153,25 @@ namespace WowPacketParser.SQL.Builders
         [BuilderMethod]
         public static string SceneTemplates()
         {
-            if (Storage.Scenes.IsEmpty())
+            if (!Settings.SqlTables.scene_template)
                 return string.Empty;
 
-            if (!Settings.SqlTables.scene_template)
+            var sceneTemplatesFromObjects = new List<Tuple<SceneTemplate, TimeSpan?>>();
+
+            foreach (var itr in Storage.Objects)
+            {
+                SceneObject obj = itr.Value.Item1 as SceneObject;
+                if (obj == null)
+                    continue;
+
+                if (obj.CanBeSaved())
+                    sceneTemplatesFromObjects.Add(new Tuple<SceneTemplate, TimeSpan?>(obj.CreateSceneTemplate(), itr.Value.Item2));
+            }
+
+            foreach (var scene in sceneTemplatesFromObjects)
+                Storage.Scenes.Add(scene.Item1, scene.Item2);
+
+            if (Storage.Scenes.IsEmpty())
                 return string.Empty;
 
             var templateDb = SQLDatabase.Get(Storage.Scenes, Settings.TDBDatabase);
