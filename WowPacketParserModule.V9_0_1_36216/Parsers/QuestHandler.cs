@@ -724,7 +724,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
 
             for (int i = 0; i < count; i++)
             {
-                if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503))
+                if (ClientVersion.IsVersionWith64BitTime())
                     packet.ReadTime64("LastUpdate", i);
                 else
                     packet.ReadTime("LastUpdate", i);
