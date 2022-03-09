@@ -389,6 +389,7 @@
     <Compile Include="Parsers\UpdateFieldsHandler902.cs" />
     <Compile Include="Parsers\UpdateFieldsHandler905.cs" />
     <Compile Include="Parsers\UpdateFieldsHandler910.cs" />
+    <Compile Include="Parsers\UpdateFieldsHandler915.cs" />
     <Compile Include="UpdateFields\V9_0_1_36216\ActivePlayerData.cs" />
     <Compile Include="UpdateFields\V9_0_1_36216\ActivePlayerUnk901.cs" />
     <Compile Include="UpdateFields\V9_0_1_36216\AreaTriggerData.cs" />
