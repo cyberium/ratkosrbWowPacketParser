@@ -82,7 +82,8 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ResetBitReader();
             var hasPet = packet.ReadBit("HasPet");
 
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_1_0_39185))
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_1_0_39185) &&
+               !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
                 Substructures.MythicPlusHandler.ReadDungeonScoreSummary(packet, "DungeonScoreSummary");
 
             if (hasPet) // Pet

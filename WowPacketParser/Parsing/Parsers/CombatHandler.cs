@@ -110,7 +110,8 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_CANCEL_AUTO_REPEAT)]
         public static void HandleCancelAutoRepeat(Packet packet)
         {
-            packet.ReadPackedGuid("Target GUID");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+                packet.ReadPackedGuid("Target GUID");
         }
 
         [Parser(Opcode.SMSG_ATTACK_START)]

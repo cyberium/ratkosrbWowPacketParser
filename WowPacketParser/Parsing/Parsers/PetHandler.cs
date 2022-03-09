@@ -333,10 +333,14 @@ namespace WowPacketParser.Parsing.Parsers
         {
             packet.ReadGuid("Pet Guid");
             packet.ReadCString("Name");
-            var declined = packet.ReadBool("Is Declined");
-            if (declined)
-                for (var i = 0; i < 5; ++i)
-                    packet.ReadCString("Declined Name", i);
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+            {
+                var declined = packet.ReadBool("Is Declined");
+                if (declined)
+                    for (var i = 0; i < 5; ++i)
+                        packet.ReadCString("Declined Name", i);
+            }
         }
 
         [Parser(Opcode.CMSG_PET_SPELL_AUTOCAST)]

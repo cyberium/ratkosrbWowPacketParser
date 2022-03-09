@@ -1297,7 +1297,9 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleSpellCooldown(Packet packet)
         {
             WowGuid casterGuid = packet.ReadGuid("GUID");
-            byte flags = packet.ReadByte("Unk mask");
+            byte flags = 0;
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                flags = packet.ReadByte("Flags");
             byte i = 0;
             while (packet.CanRead())
             {
@@ -1398,7 +1400,11 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_SPELL_DELAYED)]
         public static void HandleSpellDelayed(Packet packet)
         {
-            packet.ReadPackedGuid("Caster GUID");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadPackedGuid("Caster GUID");
+            else
+                packet.ReadGuid("Caster GUID");
+
             packet.ReadInt32("Delay Time");
         }
 

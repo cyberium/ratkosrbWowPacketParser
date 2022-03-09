@@ -383,7 +383,7 @@ namespace WowPacketParser.Parsing.Parsers
                         if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
                             packet.ReadUInt32("Over damage", index);
 
-                        packet.ReadUInt32("Spell Proto", index);
+                        packet.ReadUInt32("School", index);
                         packet.ReadUInt32("Absorb", index);
                         packet.ReadInt32("Resist", index);
 
@@ -437,7 +437,11 @@ namespace WowPacketParser.Parsing.Parsers
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_3_9183))
                 packet.ReadInt32("Overkill", index);
 
-            packet.ReadByte("SchoolMask", index);
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadByte("SchoolMask", index);
+            else
+                packet.ReadByte("School", index);
+
             packet.ReadUInt32("Absorb", index);
             packet.ReadInt32("Resist", index);
             packet.ReadBool("Show spellname in log", index);
@@ -447,28 +451,28 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (packet.ReadBool("Debug output", index))
             {
-                if (!type.HasAnyFlag(SpellHitType.SPELL_HIT_TYPE_UNK4))
+                if (!type.HasAnyFlag(SpellHitType.Split))
                 {
-                    if (type.HasAnyFlag(SpellHitType.SPELL_HIT_TYPE_UNK1))
+                    if (type.HasAnyFlag(SpellHitType.CritDebug))
                     {
-                        packet.ReadSingle("Unk float 1 1");
-                        packet.ReadSingle("Unk float 1 2");
+                        packet.ReadSingle("Roll");
+                        packet.ReadSingle("Needed");
                     }
 
-                    if (type.HasAnyFlag(SpellHitType.SPELL_HIT_TYPE_UNK3))
+                    if (type.HasAnyFlag(SpellHitType.HitDebug))
                     {
-                        packet.ReadSingle("Unk float 3 1");
-                        packet.ReadSingle("Unk float 3 2");
+                        packet.ReadSingle("Roll");
+                        packet.ReadSingle("Needed");
                     }
 
-                    if (type.HasAnyFlag(SpellHitType.SPELL_HIT_TYPE_UNK6))
+                    if (type.HasAnyFlag(SpellHitType.AttackTableDebug))
                     {
-                        packet.ReadSingle("Unk float 6 1");
-                        packet.ReadSingle("Unk float 6 2");
-                        packet.ReadSingle("Unk float 6 3");
-                        packet.ReadSingle("Unk float 6 4");
-                        packet.ReadSingle("Unk float 6 5");
-                        packet.ReadSingle("Unk float 6 6");
+                        packet.ReadSingle("Miss Chance");
+                        packet.ReadSingle("Dodge Chance");
+                        packet.ReadSingle("Parry Chance");
+                        packet.ReadSingle("Block Chance");
+                        packet.ReadSingle("Glance Chance");
+                        packet.ReadSingle("Crush Chance");
                     }
                 }
             }
@@ -532,10 +536,19 @@ namespace WowPacketParser.Parsing.Parsers
         {
             packet.ReadGuid("Victim");
             packet.ReadGuid("Caster");
-            packet.ReadUInt32<SpellId>("Spell Id");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadUInt32<SpellId>("Spell Id");
+
             packet.ReadInt32("Damage");
-            packet.ReadInt32("Overkill");
-            packet.ReadInt32("SpellSchoolMask");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+                packet.ReadInt32("Overkill");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadInt32("SpellSchoolMask");
+            else
+                packet.ReadInt32("SpellSchool");
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_0_6_13596))
                 packet.ReadInt32("Resisted Damage");

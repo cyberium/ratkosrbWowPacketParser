@@ -386,11 +386,38 @@ namespace WowPacketParser.Parsing.Parsers
                 return;
             }
 
-            var flags = packet.ReadInt32E<SplineFlag>("Spline Flags");
-            if (monsterMove != null)
-                monsterMove.SplineFlags = (uint)flags;
+            bool hasAnimTier;
+            bool hasTrajectory;
+            bool hasCatmullRom;
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V2_0_1_6180))
+            {
+                var splineFlags = packet.ReadUInt32E<SplineFlagVanilla>("Spline Flags");
+                hasAnimTier = false;
+                hasTrajectory = false;
+                hasCatmullRom = splineFlags.HasAnyFlag(SplineFlagVanilla.Flying);
+                if (monsterMove != null)
+                    monsterMove.SplineFlags = (uint)splineFlags;
+            }
+            else if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056))
+            {
+                var splineFlags = packet.ReadUInt32E<SplineFlagTBC>("Spline Flags");
+                hasAnimTier = false;
+                hasTrajectory = false;
+                hasCatmullRom = splineFlags.HasAnyFlag(SplineFlagTBC.Flying);
+                if (monsterMove != null)
+                    monsterMove.SplineFlags = (uint)splineFlags;
+            }
+            else
+            {
+                var splineFlags = packet.ReadUInt32E<SplineFlag>("Spline Flags");
+                hasAnimTier = splineFlags.HasAnyFlag(SplineFlag.AnimationTier);
+                hasTrajectory = splineFlags.HasAnyFlag(SplineFlag.Trajectory);
+                hasCatmullRom = splineFlags.HasAnyFlag(SplineFlag.Flying | SplineFlag.CatmullRom);
+                if (monsterMove != null)
+                    monsterMove.SplineFlags = (uint)splineFlags;
+            }
 
-            if (flags.HasAnyFlag(SplineFlag.AnimationTier))
+            if (hasAnimTier)
             {
                 packet.ReadByteE<MovementAnimationState>("Animation State");
                 packet.ReadInt32("Async-time in ms");
@@ -400,7 +427,7 @@ namespace WowPacketParser.Parsing.Parsers
             if (monsterMove != null)
                 monsterMove.MoveTime = (uint)moveTime;
 
-            if (flags.HasAnyFlag(SplineFlag.Trajectory))
+            if (hasTrajectory)
             {
                 packet.ReadSingle("Vertical Speed");
                 packet.ReadInt32("Async-time in ms");
@@ -414,7 +441,7 @@ namespace WowPacketParser.Parsing.Parsers
                     monsterMove.SplinePoints = new List<Vector3>();
             }
 
-            if (flags.HasAnyFlag(SplineFlag.Flying | SplineFlag.CatmullRom))
+            if (hasCatmullRom)
             {
                 for (var i = 0; i < waypoints; i++)
                 {
