@@ -276,6 +276,7 @@ namespace WowPacketParser.Misc
             
             public static readonly bool hotfix_data = Conf.GetBoolean("hotfix_data", false);
             public static readonly bool hotfix_blob = Conf.GetBoolean("hotfix_blob", false);
+            public static readonly bool hotfix_optional_data = Conf.GetBoolean("hotfix_optional_data", false);
         }
     }
 }

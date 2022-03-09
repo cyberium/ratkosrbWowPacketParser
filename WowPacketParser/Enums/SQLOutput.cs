@@ -182,7 +182,8 @@
         vehicle_template_accessory,
 
         hotfix_data,
-        hotfix_blob
+        hotfix_blob,
+        hotfix_optional_data
         // ReSharper restore InconsistentNaming
     }
 }
