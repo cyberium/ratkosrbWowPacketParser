@@ -7,6 +7,6 @@
         uint TimeToTargetScale { get; }
         uint DecalPropertiesID { get; }
 
-        IVisualAnim VisualAnim { get { return null; } }
+        IVisualAnim VisualAnim { get; }
     }
 }

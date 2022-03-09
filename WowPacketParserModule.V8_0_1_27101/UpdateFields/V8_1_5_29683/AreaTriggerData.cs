@@ -18,6 +18,7 @@ namespace WowPacketParserModule.V8_0_1_27101.UpdateFields.V8_1_5_29683
         public float BoundsRadius2D { get; set; }
         public uint DecalPropertiesID { get; set; }
         public WowGuid CreatingEffectGUID { get; set; }
+        public IVisualAnim VisualAnim => null;
     }
 }
 
