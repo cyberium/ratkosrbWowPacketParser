@@ -311,6 +311,7 @@
     <Compile Include="Hotfix\SpellProcsPerMinuteModEntry.cs" />
     <Compile Include="Hotfix\SpellRadiusEntry.cs" />
     <Compile Include="Hotfix\SpellRangeEntry.cs" />
+    <Compile Include="Hotfix\SpellReagentsCurrencyEntry.cs" />
     <Compile Include="Hotfix\SpellReagentsEntry.cs" />
     <Compile Include="Hotfix\SpellScalingEntry.cs" />
     <Compile Include="Hotfix\SpellShapeshiftEntry.cs" />
