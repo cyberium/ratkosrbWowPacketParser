@@ -101,7 +101,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadPackedGuid128("BattlePetID");
 
             packet.ReadInt32("CreatureID");
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503))
+            if (ClientVersion.IsVersionWith64BitTime())
                 packet.ReadTime64("Timestamp");
             else
                 packet.ReadTime("Timestamp");
