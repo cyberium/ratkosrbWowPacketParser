@@ -83,7 +83,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ReadInt32E<GarrisonFollowerStatus>("FollowerStatus", indexes);
             packet.ReadInt32("Health", indexes);
             packet.ReadSByte("BoardIndex", indexes);
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503))
+            if (ClientVersion.IsVersionWith64BitTime())
                 packet.ReadInt64("HealingTimestamp", indexes);
             else
                 packet.ReadInt32("HealingTimestamp", indexes);
@@ -125,7 +125,7 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             packet.ResetBitReader();
             packet.ReadInt32("GarrTalentID", indexes);
             packet.ReadInt32("Rank", indexes);
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503))
+            if (ClientVersion.IsVersionWith64BitTime())
                 packet.ReadInt64("ResearchStartTime", indexes);
             else
                 packet.ReadInt32("ResearchStartTime", indexes);
