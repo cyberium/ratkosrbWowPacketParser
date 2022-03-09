@@ -40,6 +40,6 @@ namespace WowPacketParser.Enums
         Immune                           = 0x80000000,
 
         IsInCombat                       = PetIsAttackingTarget | AffectingCombat,
-        IsCrowdControlled                = Silenced | Pacified | Stunned | MainHandDisarmed | Confused | Feared | PossessedByPlayer,
+        IsCrowdControlled                = Silenced | Pacified | Stunned | Disarmed | Confused | Feared | PossessedByPlayer,
     }
 }

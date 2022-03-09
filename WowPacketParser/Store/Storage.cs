@@ -945,7 +945,7 @@ namespace WowPacketParser.Store
                                    ((attackData.HitInfo & allowedHitInfoFlags) == attackData.HitInfo) &&
                                      attackData.TotalAbsorbedDamage == 0 && attackData.TotalResistedDamage == 0 &&
                                      attackData.BlockedDamage <= 0 && attackData.OverkillDamage <= 0 &&
-                                    (attacker.UnitData.Flags & (uint)UnitFlags.MainHandDisarmed) == 0;
+                                    (attacker.UnitData.Flags & (uint)UnitFlags.Disarmed) == 0;
 
                 if (saveCreatureDamage)
                 {
