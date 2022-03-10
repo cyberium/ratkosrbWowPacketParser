@@ -29,7 +29,7 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("option_id", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("OptionType", DbType = (TargetedDbType.TRINITY))]
-        public uint OptionId = 0;
+        public GossipOptionType OptionId = 0;
 
         [DBFieldName("npc_option_npcflag", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS | TargetedDbType.CMANGOS))]
         [DBFieldName("OptionNpcFlag", DbType = (TargetedDbType.TRINITY))]
@@ -40,5 +40,111 @@ namespace WowPacketParser.Store.Objects
         public int SniffBuild = ClientVersion.BuildInt;
 
         public string BroadcastTextIDHelper;
+
+        public void FillOptionType()
+        {
+            var gossipOption = this;
+            if (Settings.TargetedDbExpansion == TargetedDbExpansion.Zero ||
+                Settings.TargetedDbExpansion == TargetedDbExpansion.Classic)
+            {
+                switch (gossipOption.OptionIcon)
+                {
+                    case GossipOptionIcon.Gossip:
+                        gossipOption.OptionId = GossipOptionType.Gossip;
+                        gossipOption.NpcOptionNpcFlag = 1;
+                        break;
+                    case GossipOptionIcon.Vendor:
+                        gossipOption.OptionId = GossipOptionType.Vendor;
+                        gossipOption.NpcOptionNpcFlag = 4;
+                        break;
+                    case GossipOptionIcon.Taxi:
+                        gossipOption.OptionId = GossipOptionType.Taxivendor;
+                        gossipOption.NpcOptionNpcFlag = 8;
+                        break;
+                    case GossipOptionIcon.Trainer:
+                        gossipOption.OptionId = GossipOptionType.Trainer;
+                        gossipOption.NpcOptionNpcFlag = 16;
+                        break;
+                    case GossipOptionIcon.SpiritHealer:
+                        gossipOption.OptionId = GossipOptionType.Spirithealer;
+                        gossipOption.NpcOptionNpcFlag = 32;
+                        break;
+                    case GossipOptionIcon.Innkeeper:
+                        gossipOption.OptionId = GossipOptionType.Innkeeper;
+                        gossipOption.NpcOptionNpcFlag = 128;
+                        break;
+                    case GossipOptionIcon.Banker:
+                        gossipOption.OptionId = GossipOptionType.Banker;
+                        gossipOption.NpcOptionNpcFlag = 256;
+                        break;
+                    case GossipOptionIcon.Petition:
+                        gossipOption.OptionId = GossipOptionType.Petitioner;
+                        gossipOption.NpcOptionNpcFlag = 512;
+                        break;
+                    case GossipOptionIcon.Tabard:
+                        gossipOption.OptionId = GossipOptionType.TabardDesigner;
+                        gossipOption.NpcOptionNpcFlag = 1024;
+                        break;
+                    case GossipOptionIcon.Battlemaster:
+                        gossipOption.OptionId = GossipOptionType.Battlefield;
+                        gossipOption.NpcOptionNpcFlag = 2048;
+                        break;
+                    case GossipOptionIcon.Auctioneer:
+                        gossipOption.OptionId = GossipOptionType.Auctioneer;
+                        gossipOption.NpcOptionNpcFlag = 4096;
+                        break;
+                }
+            }
+            else // tbc+
+            {
+                switch (gossipOption.OptionIcon)
+                {
+                    case GossipOptionIcon.Gossip:
+                        gossipOption.OptionId = GossipOptionType.Gossip;
+                        gossipOption.NpcOptionNpcFlag = 1;
+                        break;
+                    case GossipOptionIcon.Vendor:
+                        gossipOption.OptionId = GossipOptionType.Vendor;
+                        gossipOption.NpcOptionNpcFlag = 128;
+                        break;
+                    case GossipOptionIcon.Taxi:
+                        gossipOption.OptionId = GossipOptionType.Taxivendor;
+                        gossipOption.NpcOptionNpcFlag = 8192;
+                        break;
+                    case GossipOptionIcon.Trainer:
+                        gossipOption.OptionId = GossipOptionType.Trainer;
+                        gossipOption.NpcOptionNpcFlag = 16;
+                        break;
+                    case GossipOptionIcon.SpiritHealer:
+                        gossipOption.OptionId = GossipOptionType.Spirithealer;
+                        gossipOption.NpcOptionNpcFlag = 16384;
+                        break;
+                    case GossipOptionIcon.Innkeeper:
+                        gossipOption.OptionId = GossipOptionType.Innkeeper;
+                        gossipOption.NpcOptionNpcFlag = 65536;
+                        break;
+                    case GossipOptionIcon.Banker:
+                        gossipOption.OptionId = GossipOptionType.Banker;
+                        gossipOption.NpcOptionNpcFlag = 131072;
+                        break;
+                    case GossipOptionIcon.Petition:
+                        gossipOption.OptionId = GossipOptionType.Petitioner;
+                        gossipOption.NpcOptionNpcFlag = 262144;
+                        break;
+                    case GossipOptionIcon.Tabard:
+                        gossipOption.OptionId = GossipOptionType.TabardDesigner;
+                        gossipOption.NpcOptionNpcFlag = 524288;
+                        break;
+                    case GossipOptionIcon.Battlemaster:
+                        gossipOption.OptionId = GossipOptionType.Battlefield;
+                        gossipOption.NpcOptionNpcFlag = 1048576;
+                        break;
+                    case GossipOptionIcon.Auctioneer:
+                        gossipOption.OptionId = GossipOptionType.Auctioneer;
+                        gossipOption.NpcOptionNpcFlag = 2097152;
+                        break;
+                }
+            }
+        }
     }
 }

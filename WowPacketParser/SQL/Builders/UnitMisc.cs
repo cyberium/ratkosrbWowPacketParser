@@ -357,111 +357,6 @@ namespace WowPacketParser.SQL.Builders
             }
         }
 
-        public static void AssignNpcFlagsToGossipOption(GossipMenuOption gossipOption)
-        {
-            if (Settings.TargetedDbExpansion == TargetedDbExpansion.Zero ||
-                Settings.TargetedDbExpansion == TargetedDbExpansion.Classic)
-            {
-                switch (gossipOption.OptionIcon)
-                {
-                    case GossipOptionIcon.Gossip:
-                        gossipOption.OptionId = 1;
-                        gossipOption.NpcOptionNpcFlag = 1;
-                        break;
-                    case GossipOptionIcon.Vendor:
-                        gossipOption.OptionId = 3;
-                        gossipOption.NpcOptionNpcFlag = 4;
-                        break;
-                    case GossipOptionIcon.Taxi:
-                        gossipOption.OptionId = 4;
-                        gossipOption.NpcOptionNpcFlag = 8;
-                        break;
-                    case GossipOptionIcon.Trainer:
-                        gossipOption.OptionId = 5;
-                        gossipOption.NpcOptionNpcFlag = 16;
-                        break;
-                    case GossipOptionIcon.SpiritHealer:
-                        gossipOption.OptionId = 6;
-                        gossipOption.NpcOptionNpcFlag = 32;
-                        break;
-                    case GossipOptionIcon.Innkeeper:
-                        gossipOption.OptionId = 8;
-                        gossipOption.NpcOptionNpcFlag = 128;
-                        break;
-                    case GossipOptionIcon.Banker:
-                        gossipOption.OptionId = 9;
-                        gossipOption.NpcOptionNpcFlag = 256;
-                        break;
-                    case GossipOptionIcon.Petition:
-                        gossipOption.OptionId = 10;
-                        gossipOption.NpcOptionNpcFlag = 512;
-                        break;
-                    case GossipOptionIcon.Tabard:
-                        gossipOption.OptionId = 11;
-                        gossipOption.NpcOptionNpcFlag = 1024;
-                        break;
-                    case GossipOptionIcon.Battlemaster:
-                        gossipOption.OptionId = 12;
-                        gossipOption.NpcOptionNpcFlag = 2048;
-                        break;
-                    case GossipOptionIcon.Auctioneer:
-                        gossipOption.OptionId = 13;
-                        gossipOption.NpcOptionNpcFlag = 4096;
-                        break;
-                }
-            }
-            else // tbc+
-            {
-                switch (gossipOption.OptionIcon)
-                {
-                    case GossipOptionIcon.Gossip:
-                        gossipOption.OptionId = 1;
-                        gossipOption.NpcOptionNpcFlag = 1;
-                        break;
-                    case GossipOptionIcon.Vendor:
-                        gossipOption.OptionId = 3;
-                        gossipOption.NpcOptionNpcFlag = 128;
-                        break;
-                    case GossipOptionIcon.Taxi:
-                        gossipOption.OptionId = 4;
-                        gossipOption.NpcOptionNpcFlag = 8192;
-                        break;
-                    case GossipOptionIcon.Trainer:
-                        gossipOption.OptionId = 5;
-                        gossipOption.NpcOptionNpcFlag = 16;
-                        break;
-                    case GossipOptionIcon.SpiritHealer:
-                        gossipOption.OptionId = 6;
-                        gossipOption.NpcOptionNpcFlag = 16384;
-                        break;
-                    case GossipOptionIcon.Innkeeper:
-                        gossipOption.OptionId = 8;
-                        gossipOption.NpcOptionNpcFlag = 65536;
-                        break;
-                    case GossipOptionIcon.Banker:
-                        gossipOption.OptionId = 9;
-                        gossipOption.NpcOptionNpcFlag = 131072;
-                        break;
-                    case GossipOptionIcon.Petition:
-                        gossipOption.OptionId = 10;
-                        gossipOption.NpcOptionNpcFlag = 262144;
-                        break;
-                    case GossipOptionIcon.Tabard:
-                        gossipOption.OptionId = 11;
-                        gossipOption.NpcOptionNpcFlag = 524288;
-                        break;
-                    case GossipOptionIcon.Battlemaster:
-                        gossipOption.OptionId = 12;
-                        gossipOption.NpcOptionNpcFlag = 1048576;
-                        break;
-                    case GossipOptionIcon.Auctioneer:
-                        gossipOption.OptionId = 13;
-                        gossipOption.NpcOptionNpcFlag = 2097152;
-                        break;
-                }
-            }
-        }
-
         [BuilderMethod]
         public static string Gossip()
         {
@@ -494,8 +389,7 @@ namespace WowPacketParser.SQL.Builders
                 foreach (var gossip_pair in Storage.GossipMenuOptions)
                 {
                     var gossipOption = gossip_pair.Item1;
-
-                    AssignNpcFlagsToGossipOption(gossipOption);
+                    gossipOption.FillOptionType();
                 }
 
                 if (Settings.TargetedDbType == TargetedDbType.WPP)

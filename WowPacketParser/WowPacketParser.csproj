@@ -233,6 +233,7 @@
     <Compile Include="Enums\GarrisonSite.cs" />
     <Compile Include="Enums\GarrisonSiteLevel.cs" />
     <Compile Include="Enums\GarrisonType.cs" />
+    <Compile Include="Enums\GossipOptionType.cs" />
     <Compile Include="Enums\ItemFieldFlags.cs" />
     <Compile Include="Enums\ItemModifier.cs" />
     <Compile Include="Enums\LfgListApplicationStatus.cs" />
