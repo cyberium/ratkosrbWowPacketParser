@@ -25,6 +25,26 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
             packet.ReadByte("TeamSize");
         }
 
+        [Parser(Opcode.SMSG_PVP_MATCH_INITIALIZE)]
+        public static void HandlePvPMatchInitialize(Packet packet)
+        {
+            packet.ReadUInt32("UnkUInt32");
+            packet.ReadByte("UnkByte");
+            packet.ReadTime64("Time");
+            packet.ReadInt64("UnkInt64");
+            packet.ReadByte("UnkByte");
+            packet.ReadUInt32("UnkUInt32");
+            packet.ReadBit("UnkBit");
+            packet.ReadBit("UnkBit");
+        }
+
+        [Parser(Opcode.SMSG_BATTLEGROUND_INIT)]
+        public static void HandleBattlegroundInit(Packet packet)
+        {
+            packet.ReadUInt32("Milliseconds"); // dword_14387B250 = OsGetAsyncTimeMs() - **(_DWORD **)(a1 + 32);
+            packet.ReadUInt16("BattlegroundPoints");
+        }
+
         public static void ReadPvPMatchPlayerStatistics(Packet packet, params object[] idx)
         {
             packet.ReadPackedGuid128("PlayerGUID", idx);
