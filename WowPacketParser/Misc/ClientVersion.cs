@@ -1114,15 +1114,43 @@ namespace WowPacketParser.Misc
             return Build == ClientVersionBuild.Zero;
         }
 
+        public static bool AddedInVersion(byte expansion, byte major, byte minor)
+        {
+            if (ExpansionVersion < expansion)
+                return false;
+
+            if (ExpansionVersion > expansion)
+                return true;
+
+            if (MajorVersion < major)
+                return false;
+
+            if (MajorVersion > major)
+                return true;
+
+            return MinorVersion >= minor;
+        }
+
+        public static bool AddedInClassicVersion(byte classicExpansion, byte classicMajor, byte classicMinor, byte tbcExpansion, byte tbcMajor, byte tbcMinor)
+        {
+            if (IsClassicVanillaClientVersionBuild(Build) || IsClassicSeasonOfMasteryClientVersionBuild(Build))
+                return AddedInVersion(classicExpansion, classicMajor, classicMinor);
+
+            if (IsBurningCrusadeClassicClientVersionBuild(Build))
+                return AddedInVersion(tbcExpansion, tbcMajor, tbcMinor);
+
+            return false;
+        }
+
         public static bool AddedInVersion(byte retailExpansion, byte retailMajor, byte retailMinor, byte classicExpansion, byte classicMajor, byte classicMinor, byte tbcExpansion, byte tbcMajor, byte tbcMinor)
         {
             if (IsClassicVanillaClientVersionBuild(Build) || IsClassicSeasonOfMasteryClientVersionBuild(Build))
-                return classicExpansion >= ExpansionVersion && classicMajor >= MajorVersion && classicMinor >= MinorVersion;
+                return AddedInVersion(classicExpansion, classicMajor, classicMinor);
 
             if (IsBurningCrusadeClassicClientVersionBuild(Build))
-                return tbcExpansion >= ExpansionVersion && tbcMajor >= MajorVersion && tbcMinor >= MinorVersion;
+                return AddedInVersion(tbcExpansion, tbcMajor, tbcMinor);
 
-            return retailExpansion >= ExpansionVersion && retailMajor >= MajorVersion && retailMinor >= MinorVersion;
+            return AddedInVersion(retailExpansion, retailMajor, retailMinor);
         }
 
         public static bool IsClassicClientVersionBuild(ClientVersionBuild build)

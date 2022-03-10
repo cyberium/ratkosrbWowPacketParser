@@ -87,13 +87,13 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         }
 
         [Parser(Opcode.SMSG_GUILD_RANKS)]
-        public static void HandleGuildRankServer434(Packet packet)
+        public static void HandleGuildRankServer(Packet packet)
         {
             var count = packet.ReadUInt32("Count");
 
             for (var i = 0; i < count; ++i)
             {
-                if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_2_5_31921))
+                if (ClientVersion.AddedInVersion(8, 2, 5, 1, 14, 0, 2, 5, 1))
                     packet.ReadByte("RankID", i);
                 else
                     packet.ReadInt32("RankID", i);
@@ -102,7 +102,9 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 packet.ReadInt32("Flags", i);
                 packet.ReadInt32("WithdrawGoldLimit", i);
 
-                for (var j = 0; j < 8; ++j)
+                int tabsCount = ClientVersion.AddedInClassicVersion(1, 14, 0, 2, 5, 2) ? 6 : 8;
+
+                for (var j = 0; j < tabsCount; ++j)
                 {
                     packet.ReadInt32E<GuildBankRightsFlag>("TabFlags", i, j);
                     packet.ReadInt32("TabWithdrawItemLimit", i, j);

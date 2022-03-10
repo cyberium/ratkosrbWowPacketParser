@@ -13,5 +13,11 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
         {
             WowPacketParserModule.V8_0_1_27101.Parsers.GuildHandler.HandleGuildQueryResponse(packet);
         }
+
+        [Parser(Opcode.SMSG_GUILD_ROSTER)]
+        public static void HandleGuildRoster(Packet packet)
+        {
+            WowPacketParserModule.V8_0_1_27101.Parsers.GuildHandler.HandleGuildRoster(packet);
+        }
     }
 }

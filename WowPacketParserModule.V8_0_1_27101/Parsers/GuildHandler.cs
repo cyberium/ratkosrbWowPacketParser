@@ -51,7 +51,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
 
             packet.ResetBitReader();
             uint welcomeTextLen = 0;
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_2_0_30898))
+            if (ClientVersion.AddedInVersion(8, 2, 0, 1, 14, 0, 2, 5, 1))
                 welcomeTextLen = packet.ReadBits(11);
             else
                 welcomeTextLen = packet.ReadBits(10);
