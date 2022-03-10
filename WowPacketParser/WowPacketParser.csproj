@@ -249,7 +249,6 @@
     <Compile Include="Enums\CreatureTypeFlag.cs" />
     <Compile Include="Enums\CustomizationFlag.cs" />
     <Compile Include="Enums\DamageType.cs" />
-    <Compile Include="Enums\DifficultyChangeType.cs" />
     <Compile Include="Enums\Direction.cs" />
     <Compile Include="Enums\DismountResult.cs" />
     <Compile Include="Enums\DrunkenState.cs" />
@@ -293,6 +292,7 @@
     <Compile Include="Enums\ReportPvPAFKResult.cs" />
     <Compile Include="Enums\SceneType.cs" />
     <Compile Include="Enums\SecureAddonStatus.cs" />
+    <Compile Include="Enums\SetPlayerDifficultyResults.cs" />
     <Compile Include="Enums\SkillType.cs" />
     <Compile Include="Enums\SplineFlagTBC.cs" />
     <Compile Include="Enums\SplineFlagVanilla.cs" />
