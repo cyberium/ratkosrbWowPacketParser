@@ -240,7 +240,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
         [Parser(Opcode.SMSG_WHO)]
         public static void HandleWho(Packet packet)
         {
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_3_7_35249) || ClientVersion.IsBurningCrusadeClassicClientVersionBuild(ClientVersion.Build))
+            if (ClientVersion.AddedInVersion(8, 3, 7, 1, 14, 0, 2, 5, 1))
                 packet.ReadUInt32("RequestID");
 
             var bits568 = packet.ReadBits("List count", 6);

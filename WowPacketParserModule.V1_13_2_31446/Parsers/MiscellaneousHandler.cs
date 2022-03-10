@@ -232,6 +232,9 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 packet.ReadInt32("RequesterVirtualRealmAddress");
             }
 
+            if (ClientVersion.AddedInClassicVersion(1, 14, 0, 2, 5, 1))
+                packet.ReadUInt32("RequestID");
+
             for (var i = 0; i < areaCount; ++i)
                 packet.ReadUInt32<AreaId>("Area", i);
         }
