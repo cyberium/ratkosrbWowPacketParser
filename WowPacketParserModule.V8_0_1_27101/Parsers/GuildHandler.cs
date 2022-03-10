@@ -182,7 +182,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             packet.ReadWoWString("MotdText", motdLen);
         }
 
-        [Parser(Opcode.CMSG_GUILD_SET_RANK_PERMISSIONS, ClientVersionBuild.V8_2_5_31921)]
+        [Parser(Opcode.CMSG_GUILD_SET_RANK_PERMISSIONS, 8, 2, 5, 1, 14, 0, 2, 5, 1)]
         public static void HandlelGuildSetRankPermissions(Packet packet)
         {
             packet.ReadByte("RankID");
@@ -190,7 +190,9 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             packet.ReadUInt32E<GuildRankRightsFlag>("Flags");
             packet.ReadInt32("WithdrawGoldLimit");
 
-            for (var i = 0; i < 8; ++i)
+            int tabsCount = ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build) ? 6 : 8;
+
+            for (var i = 0; i < tabsCount; ++i)
             {
                 packet.ReadInt32E<GuildBankRightsFlag>("TabFlags", i);
                 packet.ReadInt32("TabWithdrawItemLimit", i);

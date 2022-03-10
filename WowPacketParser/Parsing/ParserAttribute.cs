@@ -23,6 +23,12 @@ namespace WowPacketParser.Parsing
                 Opcode = opcode;
         }
 
+        public ParserAttribute(Opcode opcode, byte retailExpansion, byte retailMajor, byte retailMinor, byte classicExpansion, byte classicMajor, byte classicMinor, byte tbcExpansion, byte tbcMajor, byte tbcMinor)
+        {
+            if (ClientVersion.AddedInVersion(retailExpansion, retailMajor, retailMinor, classicExpansion, classicMajor, classicMinor, tbcExpansion, tbcMajor, tbcMinor))
+                Opcode = opcode;
+        }
+        
         /// <summary>
         /// [addedInVersion, removedInVersion[
         /// </summary>
