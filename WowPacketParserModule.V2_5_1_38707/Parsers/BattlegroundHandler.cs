@@ -12,8 +12,6 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
         public static void HandleBattlefieldStatusd(Packet packet) // probably not correct
         {
             LfgHandler.ReadCliRideTicket(packet);
-
-            packet.ReadInt32("Unknown");
             packet.ReadInt32("Unknown2");
             packet.ReadInt16("Unknown3");
             packet.ReadByte("Unknown4");
@@ -24,7 +22,6 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
             packet.ReadByte("UnkByte");
             packet.ReadInt32("AverageWaitTime");
             packet.ReadInt32("WaitTime");
-
             packet.ReadByte("TeamSize");
         }
 
