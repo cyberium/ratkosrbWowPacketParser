@@ -63,11 +63,15 @@ namespace WowPacketParser.Store.Objects
 
         [DBFieldName("sound_id1", DbType = (TargetedDbType.WPP))]
         [DBFieldName("sound_id", DbType = (TargetedDbType.VMANGOS))]
-        [DBFieldName("SoundEntriesID1", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
+        [DBFieldName("SoundEntriesID1", DbType = (TargetedDbType.CMANGOS))]
+        [DBFieldName("SoundEntriesID1", TargetedDbExpansion.Zero, TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("SoundKitID1", TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.TRINITY))]
         public uint? SoundEntriesID1;
 
         [DBFieldName("sound_id2", DbType = (TargetedDbType.WPP))]
-        [DBFieldName("SoundEntriesID2", DbType = (TargetedDbType.TRINITY | TargetedDbType.CMANGOS))]
+        [DBFieldName("SoundEntriesID2", DbType = (TargetedDbType.CMANGOS))]
+        [DBFieldName("SoundEntriesID2", TargetedDbExpansion.Zero, TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.TRINITY))]
+        [DBFieldName("SoundKitID2", TargetedDbExpansion.Shadowlands, DbType = (TargetedDbType.TRINITY))]
         public uint? SoundEntriesID2;
 
         [DBFieldName("emote_id1", DbType = (TargetedDbType.WPP | TargetedDbType.VMANGOS))]
