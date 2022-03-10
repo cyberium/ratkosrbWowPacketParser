@@ -45,6 +45,9 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             gossipPOI.Icon = packet.ReadInt32E<GossipPOIIcon>("Icon");
             gossipPOI.Importance = (uint)packet.ReadInt32("Importance");
 
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_0_5_37503))
+                packet.ReadInt32("Unknown905");
+
             packet.ResetBitReader();
             gossipPOI.Flags = packet.ReadBits("Flags", 14);
             uint bit84 = packet.ReadBits(6);

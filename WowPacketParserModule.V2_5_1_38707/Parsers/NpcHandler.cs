@@ -183,7 +183,7 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
 
             gossipPOI.Icon = packet.ReadInt32E<GossipPOIIcon>("Icon");
             gossipPOI.Importance = (uint)packet.ReadInt32("Importance");
-            packet.ReadInt32("Unk");
+            packet.ReadInt32("Unknown905");
 
             packet.ResetBitReader();
             gossipPOI.Flags = packet.ReadBits("Flags", 14);
