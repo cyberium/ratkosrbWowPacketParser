@@ -2853,7 +2853,7 @@ namespace WowPacketParser.SQL.Builders
                             }
                             create1Row.Data.MoveTime = createTime.MoveInfo.MoveTime;
                             create1Row.Data.MoveFlags = createTime.MoveInfo.Flags;
-                            create1Row.Data.MoveFlags2 = createTime.MoveInfo.FlagsExtra;
+                            create1Row.Data.MoveFlags2 = createTime.MoveInfo.Flags2;
                             create1Row.Data.SwimPitch = createTime.MoveInfo.SwimPitch;
                             create1Row.Data.FallTime = createTime.MoveInfo.FallTime;
                             create1Row.Data.JumpHorizontalSpeed = createTime.MoveInfo.JumpHorizontalSpeed;
@@ -2894,7 +2894,7 @@ namespace WowPacketParser.SQL.Builders
                             }
                             create2Row.Data.MoveTime = createTime.MoveInfo.MoveTime;
                             create2Row.Data.MoveFlags = createTime.MoveInfo.Flags;
-                            create2Row.Data.MoveFlags2 = createTime.MoveInfo.FlagsExtra;
+                            create2Row.Data.MoveFlags2 = createTime.MoveInfo.Flags2;
                             create2Row.Data.SwimPitch = createTime.MoveInfo.SwimPitch;
                             create2Row.Data.FallTime = createTime.MoveInfo.FallTime;
                             create2Row.Data.JumpHorizontalSpeed = createTime.MoveInfo.JumpHorizontalSpeed;
@@ -3317,7 +3317,7 @@ namespace WowPacketParser.SQL.Builders
                     Row<ClientSideMovement> row = new Row<ClientSideMovement>();
                     row.Data.Guid = "@PGUID+" + player.DbGuid;
                     row.Data.MoveFlags = movement.MoveInfo.Flags;
-                    row.Data.MoveFlags2 = movement.MoveInfo.FlagsExtra;
+                    row.Data.MoveFlags2 = movement.MoveInfo.Flags2;
                     row.Data.MoveTime = movement.MoveInfo.MoveTime;
                     row.Data.Map = movement.Map;
                     row.Data.PositionX = movement.MoveInfo.Position.X;

@@ -17,7 +17,9 @@ namespace WowPacketParser.Misc
         // NOTE: Do not use flag fields in a generic way to handle anything for producing spawns - different versions have different flags
         public uint Flags;
 
-        public uint FlagsExtra;
+        public uint Flags2;
+
+        public uint Flags3;
 
         public uint MoveTime;
 
@@ -79,11 +81,14 @@ namespace WowPacketParser.Misc
 
         public bool HasWpsOrRandMov; // waypoints or random movement
 
+        public Vector4 PositionAsVector4 => new Vector4(Position, Orientation);
+
         public MovementInfo CopyFromMe()
         {
             MovementInfo copy = new MovementInfo();
             copy.Flags = this.Flags;
-            copy.FlagsExtra = this.FlagsExtra;
+            copy.Flags2 = this.Flags2;
+            copy.Flags3 = this.Flags3;
             copy.SwimPitch = this.SwimPitch;
             copy.FallTime = this.FallTime;
             copy.JumpHorizontalSpeed = this.JumpHorizontalSpeed;

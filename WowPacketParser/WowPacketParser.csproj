@@ -240,6 +240,8 @@
     <Compile Include="Enums\LfgListFilter.cs" />
     <Compile Include="Enums\LfgLockStatus.cs" />
     <Compile Include="Enums\LootError.cs" />
+    <Compile Include="Enums\MovementFlag2.cs" />
+    <Compile Include="Enums\MovementFlag3.cs" />
     <Compile Include="Enums\QuestFlagsEx.cs" />
     <Compile Include="Enums\QuestFlagsEx2.cs" />
     <Compile Include="Enums\QuestPushReason.cs" />
@@ -339,7 +341,6 @@
     <Compile Include="Enums\MirrorTimerType.cs" />
     <Compile Include="Enums\MovementAnimationState.cs" />
     <Compile Include="Enums\MovementFlag.cs" />
-    <Compile Include="Enums\MovementFlagExtra.cs" />
     <Compile Include="Enums\NPCFlags.cs" />
     <Compile Include="Enums\ObjectType.cs" />
     <Compile Include="Enums\Opcode.cs" />

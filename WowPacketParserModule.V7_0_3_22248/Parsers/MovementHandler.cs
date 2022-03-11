@@ -8,7 +8,8 @@ using WowPacketParser.Store;
 using WowPacketParser.Store.Objects;
 using WowPacketParserModule.V7_0_3_22248.Enums;
 using CoreParsers = WowPacketParser.Parsing.Parsers;
-using MovementFlag = WowPacketParserModule.V6_0_2_19033.Enums.MovementFlag;
+using MovementFlag = WowPacketParser.Enums.v4.MovementFlag;
+using MovementFlag2 = WowPacketParser.Enums.v7.MovementFlag2;
 using SplineFacingType = WowPacketParserModule.V6_0_2_19033.Enums.SplineFacingType;
 using SplineFlag = WowPacketParserModule.V7_0_3_22248.Enums.SplineFlag;
 
@@ -40,7 +41,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ResetBitReader();
 
             moveInfo.Flags = (uint)packet.ReadBitsE<MovementFlag>("MovementFlags", 30, idx);
-            moveInfo.FlagsExtra = (uint)packet.ReadBitsE<MovementFlags2>("ExtraMovementFlags", 18, idx);
+            moveInfo.Flags2 = (uint)packet.ReadBitsE<MovementFlag2>("ExtraMovementFlags", 18, idx);
 
             var hasTransport = packet.ReadBit("HasTransportData", idx);
             var hasFall = packet.ReadBit("HasFallData", idx);
@@ -65,7 +66,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             moveInfo.Flags = (uint)packet.ReadUInt32E<MovementFlag>("MovementFlags", idx);
 
             packet.ResetBitReader();
-            moveInfo.FlagsExtra = (uint)packet.ReadBitsE<MovementFlags2>("ExtraMovementFlags", 26, idx);
+            moveInfo.Flags2 = (uint)packet.ReadBitsE<MovementFlag2>("ExtraMovementFlags", 26, idx);
             packet.ReadBits(6);
             packet.ReadUInt32("MovementFlags3", idx);
 

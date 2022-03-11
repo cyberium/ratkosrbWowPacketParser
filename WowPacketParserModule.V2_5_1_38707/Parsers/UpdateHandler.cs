@@ -8,6 +8,8 @@ using WowPacketParser.Store;
 using WowPacketParser.Store.Objects;
 using WowPacketParserModule.V7_0_3_22248.Parsers;
 using CoreParsers = WowPacketParser.Parsing.Parsers;
+using MovementFlag = WowPacketParser.Enums.v4.MovementFlag;
+using MovementFlag2 = WowPacketParser.Enums.v7.MovementFlag2;
 using SplineFlag = WowPacketParserModule.V7_0_3_22248.Enums.SplineFlag;
 
 namespace WowPacketParserModule.V2_5_1_38707.Parsers
@@ -144,10 +146,9 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
 
                 if (ClientVersion.IsClassicVersionWithUpdatedMovementInfo())
                 {
-                    moveInfo.Flags = (uint)packet.ReadUInt32E<V6_0_2_19033.Enums.MovementFlag>("Movement Flags", index);
-                    moveInfo.FlagsExtra = (uint)packet.ReadUInt32E<V8_0_1_27101.Enums.MovementFlags2>("Extra Movement Flags", index);
-
-                    packet.ReadUInt32("MovementFlags3", index);
+                    moveInfo.Flags = (uint)packet.ReadUInt32E<MovementFlag>("Movement Flags", index);
+                    moveInfo.Flags2 = (uint)packet.ReadUInt32E<MovementFlag2>("Movement Flags 2", index);
+                    moveInfo.Flags3 = (uint)packet.ReadUInt32E<MovementFlag3>("Movement Flags 3", index);
                 }
 
                 moveInfo.MoveTime = packet.ReadUInt32("MoveTime", index);
@@ -165,8 +166,8 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
 
                 if (!ClientVersion.IsClassicVersionWithUpdatedMovementInfo())
                 {
-                    moveInfo.Flags = (uint)packet.ReadBitsE<V6_0_2_19033.Enums.MovementFlag>("Movement Flags", 30, index);
-                    moveInfo.FlagsExtra = (uint)packet.ReadBitsE<V8_0_1_27101.Enums.MovementFlags2>("Extra Movement Flags", 18, index);
+                    moveInfo.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30, index);
+                    moveInfo.Flags2 = (uint)packet.ReadBitsE<MovementFlag2>("Extra Movement Flags", 18, index);
                 }
 
                 var hasTransport = packet.ReadBit("Has Transport Data", index);
@@ -174,9 +175,17 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
                 packet.ReadBit("HasSpline", index);
                 packet.ReadBit("HeightChangeFailed", index);
                 packet.ReadBit("RemoteTimeValid", index);
+                var hasInertia = ClientVersion.IsClassicVersionWithUpdatedMovementInfo() && packet.ReadBit("Has Inertia", index);
 
                 if (hasTransport)
                     V8_0_1_27101.Parsers.UpdateHandler.ReadTransportData(moveInfo, guid, packet, index);
+
+                if (hasInertia)
+                {
+                    packet.ReadPackedGuid128("GUID", index, "Inertia");
+                    packet.ReadVector3("Force", index, "Inertia");
+                    packet.ReadUInt32("Lifetime", index, "Inertia");
+                }
 
                 if (hasFall)
                 {

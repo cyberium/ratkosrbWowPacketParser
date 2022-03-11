@@ -29,106 +29,106 @@ namespace WowPacketParser.Parsing.Parsers
             return ReadMovementInfoGen(packet, guid, index);
         }
 
-        public static MovementFlag ConvertVanillaMovementFlags(MovementFlagVanilla flags)
+        public static Enums.v3.MovementFlag ConvertVanillaMovementFlags(Enums.v1.MovementFlag flags)
         {
-            MovementFlag newFlags = MovementFlag.None;
+            Enums.v3.MovementFlag newFlags = Enums.v3.MovementFlag.None;
 
-            if (flags.HasAnyFlag(MovementFlagVanilla.Forward))
-                newFlags |= MovementFlag.Forward;
-            if (flags.HasAnyFlag(MovementFlagVanilla.Backward))
-                newFlags |= MovementFlag.Backward;
-            if (flags.HasAnyFlag(MovementFlagVanilla.StrafeLeft))
-                newFlags |= MovementFlag.StrafeLeft;
-            if (flags.HasAnyFlag(MovementFlagVanilla.StrafeRight))
-                newFlags |= MovementFlag.StrafeRight;
-            if (flags.HasAnyFlag(MovementFlagVanilla.TurnLeft))
-                newFlags |= MovementFlag.TurnLeft;
-            if (flags.HasAnyFlag(MovementFlagVanilla.TurnRight))
-                newFlags |= MovementFlag.TurnRight;
-            if (flags.HasAnyFlag(MovementFlagVanilla.PitchUp))
-                newFlags |= MovementFlag.PitchUp;
-            if (flags.HasAnyFlag(MovementFlagVanilla.PitchDown))
-                newFlags |= MovementFlag.PitchDown;
-            if (flags.HasAnyFlag(MovementFlagVanilla.WalkMode))
-                newFlags |= MovementFlag.WalkMode;
-            if (flags.HasAnyFlag(MovementFlagVanilla.OnTransport))
-                newFlags |= MovementFlag.OnTransport;
-            if (flags.HasAnyFlag(MovementFlagVanilla.Levitating))
-                newFlags |= MovementFlag.DisableGravity;
-            if (flags.HasAnyFlag(MovementFlagVanilla.Root))
-                newFlags |= MovementFlag.Root;
-            if (flags.HasAnyFlag(MovementFlagVanilla.Falling))
-                newFlags |= MovementFlag.Falling;
-            if (flags.HasAnyFlag(MovementFlagVanilla.FallingFar))
-                newFlags |= MovementFlag.FallingFar;
-            if (flags.HasAnyFlag(MovementFlagVanilla.Swimming))
-                newFlags |= MovementFlag.Swimming;
-            if (flags.HasAnyFlag(MovementFlagVanilla.SplineEnabled))
-                newFlags |= MovementFlag.SplineEnabled;
-            if (flags.HasAnyFlag(MovementFlagVanilla.CanFly))
-                newFlags |= MovementFlag.CanFly;
-            if (flags.HasAnyFlag(MovementFlagVanilla.Flying))
-                newFlags |= MovementFlag.Flying;
-            if (flags.HasAnyFlag(MovementFlagVanilla.SplineElevation))
-                newFlags |= MovementFlag.SplineElevation;
-            if (flags.HasAnyFlag(MovementFlagVanilla.Waterwalking))
-                newFlags |= MovementFlag.Waterwalking;
-            if (flags.HasAnyFlag(MovementFlagVanilla.CanSafeFall))
-                newFlags |= MovementFlag.CanSafeFall;
-            if (flags.HasAnyFlag(MovementFlagVanilla.Hover))
-                newFlags |= MovementFlag.Hover;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.Forward))
+                newFlags |= Enums.v3.MovementFlag.Forward;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.Backward))
+                newFlags |= Enums.v3.MovementFlag.Backward;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.StrafeLeft))
+                newFlags |= Enums.v3.MovementFlag.StrafeLeft;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.StrafeRight))
+                newFlags |= Enums.v3.MovementFlag.StrafeRight;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.Left))
+                newFlags |= Enums.v3.MovementFlag.Left;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.Right))
+                newFlags |= Enums.v3.MovementFlag.Right;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.PitchUp))
+                newFlags |= Enums.v3.MovementFlag.PitchUp;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.PitchDown))
+                newFlags |= Enums.v3.MovementFlag.PitchDown;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.Walking))
+                newFlags |= Enums.v3.MovementFlag.Walking;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.OnTransport))
+                newFlags |= Enums.v3.MovementFlag.OnTransport;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.Levitating))
+                newFlags |= Enums.v3.MovementFlag.DisableGravity;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.Root))
+                newFlags |= Enums.v3.MovementFlag.Root;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.Falling))
+                newFlags |= Enums.v3.MovementFlag.Falling;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.FallingFar))
+                newFlags |= Enums.v3.MovementFlag.FallingFar;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.Swimming))
+                newFlags |= Enums.v3.MovementFlag.Swimming;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.SplineEnabled))
+                newFlags |= Enums.v3.MovementFlag.SplineEnabled;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.CanFly))
+                newFlags |= Enums.v3.MovementFlag.CanFly;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.Flying))
+                newFlags |= Enums.v3.MovementFlag.Flying;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.SplineElevation))
+                newFlags |= Enums.v3.MovementFlag.SplineElevation;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.Waterwalking))
+                newFlags |= Enums.v3.MovementFlag.Waterwalking;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.FallingSlow))
+                newFlags |= Enums.v3.MovementFlag.FallingSlow;
+            if (flags.HasAnyFlag(Enums.v1.MovementFlag.Hover))
+                newFlags |= Enums.v3.MovementFlag.Hover;
 
             return newFlags;
         }
 
-        public static MovementFlag ConvertTBCMovementFlags(MovementFlagTBC flags)
+        public static Enums.v3.MovementFlag ConvertTBCMovementFlags(Enums.v2.MovementFlag flags)
         {
-            MovementFlag newFlags = MovementFlag.None;
+            Enums.v3.MovementFlag newFlags = Enums.v3.MovementFlag.None;
 
-            if (flags.HasAnyFlag(MovementFlagTBC.Forward))
-                newFlags |= MovementFlag.Forward;
-            if (flags.HasAnyFlag(MovementFlagTBC.Backward))
-                newFlags |= MovementFlag.Backward;
-            if (flags.HasAnyFlag(MovementFlagTBC.StrafeLeft))
-                newFlags |= MovementFlag.StrafeLeft;
-            if (flags.HasAnyFlag(MovementFlagTBC.StrafeRight))
-                newFlags |= MovementFlag.StrafeRight;
-            if (flags.HasAnyFlag(MovementFlagTBC.TurnLeft))
-                newFlags |= MovementFlag.TurnLeft;
-            if (flags.HasAnyFlag(MovementFlagTBC.TurnRight))
-                newFlags |= MovementFlag.TurnRight;
-            if (flags.HasAnyFlag(MovementFlagTBC.PitchUp))
-                newFlags |= MovementFlag.PitchUp;
-            if (flags.HasAnyFlag(MovementFlagTBC.PitchDown))
-                newFlags |= MovementFlag.PitchDown;
-            if (flags.HasAnyFlag(MovementFlagTBC.WalkMode))
-                newFlags |= MovementFlag.WalkMode;
-            if (flags.HasAnyFlag(MovementFlagTBC.OnTransport))
-                newFlags |= MovementFlag.OnTransport;
-            if (flags.HasAnyFlag(MovementFlagTBC.DisableGravity))
-                newFlags |= MovementFlag.DisableGravity;
-            if (flags.HasAnyFlag(MovementFlagTBC.Root))
-                newFlags |= MovementFlag.Root;
-            if (flags.HasAnyFlag(MovementFlagTBC.Falling))
-                newFlags |= MovementFlag.Falling;
-            if (flags.HasAnyFlag(MovementFlagTBC.FallingFar))
-                newFlags |= MovementFlag.FallingFar;
-            if (flags.HasAnyFlag(MovementFlagTBC.Swimming))
-                newFlags |= MovementFlag.Swimming;
-            if (flags.HasAnyFlag(MovementFlagTBC.SplineEnabled))
-                newFlags |= MovementFlag.SplineEnabled;
-            if (flags.HasAnyFlag(MovementFlagTBC.CanFly))
-                newFlags |= MovementFlag.CanFly;
-            if (flags.HasAnyFlag(MovementFlagTBC.Flying) || flags.HasAnyFlag(MovementFlagTBC.Flying2))
-                newFlags |= MovementFlag.Flying;
-            if (flags.HasAnyFlag(MovementFlagTBC.SplineElevation))
-                newFlags |= MovementFlag.SplineElevation;
-            if (flags.HasAnyFlag(MovementFlagTBC.Waterwalking))
-                newFlags |= MovementFlag.Waterwalking;
-            if (flags.HasAnyFlag(MovementFlagTBC.CanSafeFall))
-                newFlags |= MovementFlag.CanSafeFall;
-            if (flags.HasAnyFlag(MovementFlagTBC.Hover))
-                newFlags |= MovementFlag.Hover;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.Forward))
+                newFlags |= Enums.v3.MovementFlag.Forward;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.Backward))
+                newFlags |= Enums.v3.MovementFlag.Backward;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.StrafeLeft))
+                newFlags |= Enums.v3.MovementFlag.StrafeLeft;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.StrafeRight))
+                newFlags |= Enums.v3.MovementFlag.StrafeRight;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.Left))
+                newFlags |= Enums.v3.MovementFlag.Left;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.Right))
+                newFlags |= Enums.v3.MovementFlag.Right;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.PitchUp))
+                newFlags |= Enums.v3.MovementFlag.PitchUp;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.PitchDown))
+                newFlags |= Enums.v3.MovementFlag.PitchDown;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.Walking))
+                newFlags |= Enums.v3.MovementFlag.Walking;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.OnTransport))
+                newFlags |= Enums.v3.MovementFlag.OnTransport;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.DisableGravity))
+                newFlags |= Enums.v3.MovementFlag.DisableGravity;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.Root))
+                newFlags |= Enums.v3.MovementFlag.Root;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.Falling))
+                newFlags |= Enums.v3.MovementFlag.Falling;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.FallingFar))
+                newFlags |= Enums.v3.MovementFlag.FallingFar;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.Swimming))
+                newFlags |= Enums.v3.MovementFlag.Swimming;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.SplineEnabled))
+                newFlags |= Enums.v3.MovementFlag.SplineEnabled;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.CanFly))
+                newFlags |= Enums.v3.MovementFlag.CanFly;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.Flying) || flags.HasAnyFlag(Enums.v2.MovementFlag.Flying2))
+                newFlags |= Enums.v3.MovementFlag.Flying;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.SplineElevation))
+                newFlags |= Enums.v3.MovementFlag.SplineElevation;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.Waterwalking))
+                newFlags |= Enums.v3.MovementFlag.Waterwalking;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.FallingSlow))
+                newFlags |= Enums.v3.MovementFlag.FallingSlow;
+            if (flags.HasAnyFlag(Enums.v2.MovementFlag.Hover))
+                newFlags |= Enums.v3.MovementFlag.Hover;
 
             return newFlags;
         }
@@ -140,23 +140,23 @@ namespace WowPacketParser.Parsing.Parsers
             bool hasPitch;
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
             {
-                MovementFlag flags = packet.ReadInt32E<MovementFlag>("Movement Flags", index);
+                Enums.v3.MovementFlag flags = packet.ReadInt32E<Enums.v3.MovementFlag>("Movement Flags", index);
                 info.Flags = (uint)flags;
-                info.FlagsExtra = (uint)packet.ReadInt16E<MovementFlagExtra>("Extra Movement Flags", index);
-                hasPitch = flags.HasAnyFlag(MovementFlag.Swimming | MovementFlag.Flying) || info.FlagsExtra.HasAnyFlag(MovementFlagExtra.AlwaysAllowPitching);
+                info.Flags2 = (uint)packet.ReadInt16E<MovementFlag2>("Extra Movement Flags", index);
+                hasPitch = flags.HasAnyFlag(Enums.v3.MovementFlag.Swimming | Enums.v3.MovementFlag.Flying) || info.Flags2.HasAnyFlag(MovementFlag2.AlwaysAllowPitching);
             }
             else if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
             {
-                MovementFlagTBC flags = packet.ReadInt32E<MovementFlagTBC>("Movement Flags", index);
+                Enums.v2.MovementFlag flags = packet.ReadInt32E<Enums.v2.MovementFlag>("Movement Flags", index);
                 info.Flags = (uint)ConvertTBCMovementFlags(flags);
-                info.FlagsExtra = (uint)packet.ReadByteE<MovementFlagExtra>("Extra Movement Flags", index);
-                hasPitch = flags.HasAnyFlag(MovementFlagTBC.Swimming | MovementFlagTBC.Flying2);
+                info.Flags2 = (uint)packet.ReadByteE<MovementFlag2>("Extra Movement Flags", index);
+                hasPitch = flags.HasAnyFlag(Enums.v2.MovementFlag.Swimming | Enums.v2.MovementFlag.Flying2);
             }
             else
             {
-                MovementFlagVanilla flags = packet.ReadInt32E<MovementFlagVanilla>("Movement Flags", index);
+                Enums.v1.MovementFlag flags = packet.ReadInt32E<Enums.v1.MovementFlag>("Movement Flags", index);
                 info.Flags = (uint)ConvertVanillaMovementFlags(flags);
-                hasPitch = flags.HasAnyFlag(MovementFlagVanilla.Swimming);
+                hasPitch = flags.HasAnyFlag(Enums.v1.MovementFlag.Swimming);
             }
 
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_2_2_14545))
@@ -168,7 +168,7 @@ namespace WowPacketParser.Parsing.Parsers
             info.Position = packet.ReadVector3("Position", index);
             info.Orientation = packet.ReadSingle("Orientation", index);
 
-            if (info.Flags.HasAnyFlag(MovementFlag.OnTransport))
+            if (info.Flags.HasAnyFlag(Enums.v3.MovementFlag.OnTransport))
             {
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_1_0_9767))
                     info.TransportGuid = packet.ReadPackedGuid("Transport GUID", index);
@@ -181,7 +181,7 @@ namespace WowPacketParser.Parsing.Parsers
                 if (ClientVersion.AddedInVersion(ClientType.WrathOfTheLichKing))
                     info.TransportSeat = packet.ReadSByte("Transport Seat", index);
 
-                if (info.FlagsExtra.HasAnyFlag(MovementFlagExtra.InterpolateMove))
+                if (info.Flags2.HasAnyFlag(MovementFlag2.InterpolateMove))
                     packet.ReadInt32("Transport Time", index);
             }
 
@@ -190,12 +190,12 @@ namespace WowPacketParser.Parsing.Parsers
 
             if (ClientVersion.AddedInVersion(ClientType.Cataclysm))
             {
-                if (info.FlagsExtra.HasAnyFlag(MovementFlagExtra.InterpolateTurning))
+                if (info.Flags2.HasAnyFlag(MovementFlag2.InterpolateTurning))
                 {
                     info.FallTime = packet.ReadUInt32("Jump Fall Time", index);
                     info.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed", index);
 
-                    if (info.Flags.HasAnyFlag(MovementFlag.Falling))
+                    if (info.Flags.HasAnyFlag(Enums.v3.MovementFlag.Falling))
                     {
                         info.JumpSinAngle = packet.ReadSingle("Jump Sin Angle", index);
                         info.JumpCosAngle = packet.ReadSingle("Jump Cos Angle", index);
@@ -206,7 +206,7 @@ namespace WowPacketParser.Parsing.Parsers
             else
             {
                 info.FallTime = packet.ReadUInt32("Jump Fall Time", index);
-                if (info.Flags.HasAnyFlag(MovementFlag.Falling))
+                if (info.Flags.HasAnyFlag(Enums.v3.MovementFlag.Falling))
                 {
                     info.JumpVerticalSpeed = packet.ReadSingle("Jump Vertical Speed", index);
                     info.JumpSinAngle = packet.ReadSingle("Jump Sin Angle", index);
@@ -216,7 +216,7 @@ namespace WowPacketParser.Parsing.Parsers
             }
 
             // HACK: "generic" movement flags are wrong for 4.2.2
-            if (info.Flags.HasAnyFlag(MovementFlag.SplineElevation) && ClientVersion.Build != ClientVersionBuild.V4_2_2_14545)
+            if (info.Flags.HasAnyFlag(Enums.v3.MovementFlag.SplineElevation) && ClientVersion.Build != ClientVersionBuild.V4_2_2_14545)
                 info.SplineElevation = packet.ReadSingle("Spline Elevation", index);
 
             return info;
@@ -226,8 +226,8 @@ namespace WowPacketParser.Parsing.Parsers
         {
             var info = new MovementInfo
             {
-                Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30, index),
-                FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12, index)
+                Flags = (uint)packet.ReadBitsE<Enums.v4.MovementFlag>("Movement Flags", 30, index),
+                Flags2 = (uint)packet.ReadBitsE<Enums.v4.MovementFlag2>("Extra Movement Flags", 12, index)
             };
 
             var onTransport = packet.ReadBit("OnTransport", index);
@@ -759,7 +759,7 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleMovementHeartbeat422(Packet packet)
         {
             MovementInfo info = new MovementInfo();
-            info.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement flags", 30);
+            info.Flags = (uint)packet.ReadBitsE<Enums.v4.MovementFlag>("Movement flags", 30);
 
             packet.ReadBit("HasSplineData");
 
@@ -772,7 +772,7 @@ namespace WowPacketParser.Parsing.Parsers
             guidBytes[4] = packet.ReadBit();
             guidBytes[3] = packet.ReadBit();
 
-            info.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Movement flags extra", 12);
+            info.Flags2 = (uint)packet.ReadBitsE<Enums.v4.MovementFlag2>("Movement flags extra", 12);
 
             guidBytes[5] = packet.ReadBit();
             var splineElevation = packet.ReadBit("SplineElevation"); // OR Swimming
@@ -863,7 +863,7 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleMovementHeartbeat433(Packet packet)
         {
             MovementInfo info = new MovementInfo();
-            info.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement flags", 30);
+            info.Flags = (uint)packet.ReadBitsE<Enums.v4.MovementFlag>("Movement flags", 30);
 
             packet.ReadBit("HasSplineData");
 
@@ -876,7 +876,7 @@ namespace WowPacketParser.Parsing.Parsers
             guidBytes[4] = packet.ReadBit();
             guidBytes[3] = packet.ReadBit();
 
-            info.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Movement flags extra", 12);
+            info.Flags2 = (uint)packet.ReadBitsE<Enums.v4.MovementFlag2>("Movement flags extra", 12);
 
             guidBytes[5] = packet.ReadBit();
             var splineElevation = packet.ReadBit("SplineElevation"); // OR Swimming
@@ -974,7 +974,7 @@ namespace WowPacketParser.Parsing.Parsers
             guidBytes[3] = packet.ReadBit();
 
             MovementInfo info = new MovementInfo();
-            info.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement flags", 30);
+            info.Flags = (uint)packet.ReadBitsE<Enums.v4.MovementFlag>("Movement flags", 30);
 
             guidBytes[5] = packet.ReadBit();
             guidBytes[2] = packet.ReadBit();
@@ -984,7 +984,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             guidBytes[4] = packet.ReadBit();
 
-            info.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Movement flags extra", 12);
+            info.Flags2 = (uint)packet.ReadBitsE<Enums.v4.MovementFlag2>("Movement flags extra", 12);
 
             var splineElevation = packet.ReadBit("SplineElevation"); // OR Swimming
             var onTransport = packet.ReadBit("OnTransport");
@@ -1077,7 +1077,7 @@ namespace WowPacketParser.Parsing.Parsers
             var guidBytes = new byte[8];
             var transportGuidBytes = new byte[8];
 
-            info.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30);
+            info.Flags = (uint)packet.ReadBitsE<Enums.v4.MovementFlag>("Movement Flags", 30);
 
             guidBytes[4] = packet.ReadBit();
             guidBytes[2] = packet.ReadBit();
@@ -1087,7 +1087,7 @@ namespace WowPacketParser.Parsing.Parsers
             guidBytes[3] = packet.ReadBit();
             guidBytes[5] = packet.ReadBit();
 
-            info.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12);
+            info.Flags2 = (uint)packet.ReadBitsE<Enums.v4.MovementFlag2>("Extra Movement Flags", 12);
 
             guidBytes[0] = packet.ReadBit();
             guidBytes[7] = packet.ReadBit();
@@ -1288,7 +1288,7 @@ namespace WowPacketParser.Parsing.Parsers
 
             info.HasSplineData = packet.ReadBit("HasSplineData");
 
-            info.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30);
+            info.Flags = (uint)packet.ReadBitsE<Enums.v4.MovementFlag>("Movement Flags", 30);
 
             guidBytes[4] = packet.ReadBit();
             guidBytes[6] = packet.ReadBit();
@@ -1296,7 +1296,7 @@ namespace WowPacketParser.Parsing.Parsers
             guidBytes[5] = packet.ReadBit();
             guidBytes[7] = packet.ReadBit();
 
-            info.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12);
+            info.Flags2 = (uint)packet.ReadBitsE<Enums.v4.MovementFlag2>("Extra Movement Flags", 12);
 
             guidBytes[1] = packet.ReadBit();
 
@@ -1417,10 +1417,10 @@ namespace WowPacketParser.Parsing.Parsers
             guidBytes[1] = packet.ReadBit();
             guidBytes[4] = packet.ReadBit();
             guidBytes[0] = packet.ReadBit();
-            info.Flags = (uint)packet.ReadBitsE<MovementFlag>("Movement Flags", 30);
+            info.Flags = (uint)packet.ReadBitsE<Enums.v4.MovementFlag>("Movement Flags", 30);
             var havePitch = packet.ReadBit("HavePitch");
             guidBytes[2] = packet.ReadBit();
-            info.FlagsExtra = (uint)packet.ReadBitsE<MovementFlagExtra>("Extra Movement Flags", 12);
+            info.Flags2 = (uint)packet.ReadBitsE<Enums.v4.MovementFlag2>("Extra Movement Flags", 12);
             guidBytes[6] = packet.ReadBit();
 
             var haveFallData = packet.ReadBit("HaveFallData");
