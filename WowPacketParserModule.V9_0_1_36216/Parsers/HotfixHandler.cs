@@ -50,84 +50,86 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             switch (status)
             {
                 case HotfixStatus.Valid:
+                {
+                    switch (type)
                     {
-                        switch (type)
+                        case DB2Hash.BroadcastText:
                         {
-                            case DB2Hash.BroadcastText:
+                            packet.AddSniffData(StoreNameType.BroadcastText, entry, "DB_REPLY");
+
+                            var bct = new BroadcastText()
+                            {
+                                Text = db2File.ReadCString("Text"),
+                                Text1 = db2File.ReadCString("Text1"),
+                            };
+
+                            bct.ID = db2File.ReadUInt32("ID");
+                            bct.LanguageID = db2File.ReadInt32("LanguageID");
+                            bct.ConditionID = db2File.ReadUInt32("ConditionID");
+                            bct.EmotesID = db2File.ReadUInt16("EmotesID");
+                            bct.Flags = db2File.ReadByte("Flags");
+                            bct.ChatBubbleDurationMs = db2File.ReadUInt32("ChatBubbleDurationMs");
+                            if (ClientVersion.AddedInVersion(9, 2, 0, 1, 14, 1, 2, 5, 3))
+                                bct.VoiceOverPriorityID = db2File.ReadUInt32("VoiceOverPriorityID");
+
+                            bct.SoundEntriesID = new uint?[2];
+                            for (int i = 0; i < 2; ++i)
+                                bct.SoundEntriesID[i] = db2File.ReadUInt32("SoundEntriesID", i);
+
+                            bct.EmoteID = new ushort?[3];
+                            bct.EmoteDelay = new ushort?[3];
+                            for (int i = 0; i < 3; ++i)
+                                bct.EmoteID[i] = db2File.ReadUInt16("EmoteID", i);
+                            for (int i = 0; i < 3; ++i)
+                                bct.EmoteDelay[i] = db2File.ReadUInt16("EmoteDelay", i);
+
+                            Storage.BroadcastTexts.Add(bct, packet.TimeSpan);
+
+                            if (ClientLocale.PacketLocale != LocaleConstant.enUS)
+                            {
+                                BroadcastTextLocale lbct = new BroadcastTextLocale
                                 {
-                                    packet.AddSniffData(StoreNameType.BroadcastText, entry, "DB_REPLY");
-
-                                    var bct = new BroadcastText()
-                                    {
-                                        Text = db2File.ReadCString("Text"),
-                                        Text1 = db2File.ReadCString("Text1"),
-                                    };
-
-                                    bct.ID = db2File.ReadUInt32("ID");
-                                    bct.LanguageID = db2File.ReadInt32("LanguageID");
-                                    bct.ConditionID = db2File.ReadUInt32("ConditionID");
-                                    bct.EmotesID = db2File.ReadUInt16("EmotesID");
-                                    bct.Flags = db2File.ReadByte("Flags");
-                                    bct.ChatBubbleDurationMs = db2File.ReadUInt32("ChatBubbleDurationMs");
-
-                                    bct.SoundEntriesID = new uint?[2];
-                                    for (int i = 0; i < 2; ++i)
-                                        bct.SoundEntriesID[i] = db2File.ReadUInt32("SoundEntriesID", i);
-
-                                    bct.EmoteID = new ushort?[3];
-                                    bct.EmoteDelay = new ushort?[3];
-                                    for (int i = 0; i < 3; ++i)
-                                        bct.EmoteID[i] = db2File.ReadUInt16("EmoteID", i);
-                                    for (int i = 0; i < 3; ++i)
-                                        bct.EmoteDelay[i] = db2File.ReadUInt16("EmoteDelay", i);
-
-                                    Storage.BroadcastTexts.Add(bct, packet.TimeSpan);
-
-                                    if (ClientLocale.PacketLocale != LocaleConstant.enUS)
-                                    {
-                                        BroadcastTextLocale lbct = new BroadcastTextLocale
-                                        {
-                                            ID = bct.ID,
-                                            TextLang = bct.Text,
-                                            Text1Lang = bct.Text1
-                                        };
-                                        Storage.BroadcastTextLocales.Add(lbct, packet.TimeSpan);
-                                    }
-                                    break;
-                                }
-                            default:
-                                HotfixStoreMgr.AddRecord(type, entry, db2File);
-                                break;
+                                    ID = bct.ID,
+                                    TextLang = bct.Text,
+                                    Text1Lang = bct.Text1
+                                };
+                                Storage.BroadcastTextLocales.Add(lbct, packet.TimeSpan);
+                            }
+                            break;
                         }
-
-                        if (db2File.Position != db2File.Length)
-                            HandleHotfixOptionalData(packet, type, entry, db2File);
-
-                        db2File.ClosePacket(false);
-                        break;
+                        default:
+                            HotfixStoreMgr.AddRecord(type, entry, db2File);
+                            break;
                     }
+
+                    if (db2File.Position != db2File.Length)
+                        HandleHotfixOptionalData(packet, type, entry, db2File);
+
+                    db2File.ClosePacket(false);
+                    break;
+                }
                 case HotfixStatus.RecordRemoved:
-                    {
-                        packet.WriteLine($"Row {entry} has been removed.");
-                        HotfixStoreMgr.RemoveRecord(type, entry);
-                        break;
-                    }
+                {
+                    packet.WriteLine($"Row {entry} has been removed.");
+                    HotfixStoreMgr.RemoveRecord(type, entry);
+                    break;
+                }
                 case HotfixStatus.Invalid:
-                    {
-                        // sniffs from others may have the data
-                        packet.WriteLine($"Row {entry} is invalid.");
-                        break;
-                    }
+                {
+                    // sniffs from others may have the data
+                    packet.WriteLine($"Row {entry} is invalid.");
+                    break;
+                }
                 case HotfixStatus.NotPublic:
-                    {
-                        packet.WriteLine($"Row {entry} is not public.");
-                        break;
-                    }
+                {
+                    packet.WriteLine($"Row {entry} is not public.");
+                    break;
+                }
                 default:
-                    {
-                        packet.WriteLine($"Unhandled status: {status}");
-                        break;
-                    }
+                {
+                    packet.WriteLine($"Unhandled status: {status}");
+                    break;
+                }
             }
         }
 
