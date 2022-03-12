@@ -437,23 +437,26 @@ namespace WowPacketParser.Loading
             }
         }
 
-        public static string GetHeader(string fileName)
+        public static string GetHeader(string fileName, bool forSql = false)
         {
-            return "# TrinityCore - WowPacketParser" + Environment.NewLine +
-                   "# File name: " + Path.GetFileName(fileName) + Environment.NewLine +
-                   "# Detected build: " + ClientVersion.Build + Environment.NewLine +
-                   "# Detected locale: " + ClientLocale.ClientLocaleString + Environment.NewLine +
-                   "# Targeted database: " + Settings.TargetedDbExpansion + Environment.NewLine +
-                   "# Parsing date: " + DateTime.Now.ToString(CultureInfo.InvariantCulture) + Environment.NewLine + Environment.NewLine +
-                   "SET @ACCID = 0; " + Environment.NewLine +
-                   "SET @CGUID = 0; " + Environment.NewLine +
-                   "SET @DGUID = 0;" + Environment.NewLine +
-                   "SET @IGUID = 0; " + Environment.NewLine +
-                   "SET @OGUID = 0; " + Environment.NewLine +
-                   "SET @PGUID = 0; " + Environment.NewLine +
-                   "SET @POIID = 0; " + Environment.NewLine +
-                   "SET @LOOTID = 0; " + Environment.NewLine +
-                   "SET @SNIFFID = 0; " + Environment.NewLine;
+            string txt = "# TrinityCore - WowPacketParser" + Environment.NewLine +
+                         "# File name: " + Path.GetFileName(fileName) + Environment.NewLine +
+                         "# Detected build: " + ClientVersion.Build + Environment.NewLine +
+                         "# Detected locale: " + ClientLocale.ClientLocaleString + Environment.NewLine +
+                         "# Targeted database: " + Settings.TargetedDbExpansion + Environment.NewLine +
+                         "# Parsing date: " + DateTime.Now.ToString(CultureInfo.InvariantCulture) + Environment.NewLine;
+            if (forSql)
+                txt += Environment.NewLine +
+                       "SET @ACCID = 0; " + Environment.NewLine +
+                       "SET @CGUID = 0; " + Environment.NewLine +
+                       "SET @DGUID = 0;" + Environment.NewLine +
+                       "SET @IGUID = 0; " + Environment.NewLine +
+                       "SET @OGUID = 0; " + Environment.NewLine +
+                       "SET @PGUID = 0; " + Environment.NewLine +
+                       "SET @POIID = 0; " + Environment.NewLine +
+                       "SET @LOOTID = 0; " + Environment.NewLine +
+                       "SET @SNIFFID = 0; " + Environment.NewLine;
+            return txt;
         }
 
         private static long _lastPercent;
@@ -533,7 +536,7 @@ namespace WowPacketParser.Loading
 
             var sqlFileName = Settings.PrefixSqlWithDateTime ? $"{Utilities.FormattedDateTimeForFiles()}_{Path.GetFileName(FileName)}.sql" : $"{Path.GetFileName(FileName)}.sql";
 
-            Builder.DumpSQL($"{_logPrefix}: Dumping sql", sqlFileName, GetHeader(FileName));
+            Builder.DumpSQL($"{_logPrefix}: Dumping sql", sqlFileName, GetHeader(FileName, true));
             Storage.ClearContainers();
         }
 

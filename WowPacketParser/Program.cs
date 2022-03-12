@@ -92,7 +92,7 @@ namespace WowPacketParser
 
             if (!string.IsNullOrWhiteSpace(Settings.SQLFileName) && Settings.DumpFormatWithSQL())
             {
-                Builder.DumpSQL("Dumping global sql", Settings.SQLFileName, SniffFile.GetHeader("multi"));
+                Builder.DumpSQL("Dumping global sql", Settings.SQLFileName, SniffFile.GetHeader("multi", true));
 
                 if (File.Exists(Settings.SQLFileName))
                 {

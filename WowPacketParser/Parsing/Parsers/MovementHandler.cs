@@ -2152,30 +2152,34 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_TRANSFER_ABORTED)]
         public static void HandleTransferAborted(Packet packet)
         {
-            packet.ReadInt32<MapId>("Map ID");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadInt32<MapId>("Map ID");
 
             var reason = packet.ReadByteE<TransferAbortReason>("Reason");
 
-            switch (reason)
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
             {
-                case TransferAbortReason.DifficultyUnavailable:
+                switch (reason)
                 {
-                    packet.ReadByteE<MapDifficulty>("Difficulty");
-                    break;
+                    case TransferAbortReason.DifficultyUnavailable:
+                    {
+                        packet.ReadByteE<MapDifficulty>("Difficulty");
+                        break;
+                    }
+                    case TransferAbortReason.InsufficientExpansion:
+                    {
+                        packet.ReadByteE<ClientType>("Expansion");
+                        break;
+                    }
+                    case TransferAbortReason.UniqueMessage:
+                    {
+                        packet.ReadByte("Message ID");
+                        break;
+                    }
+                    default:
+                        packet.ReadByte(); // Does nothing
+                        break;
                 }
-                case TransferAbortReason.InsufficientExpansion:
-                {
-                    packet.ReadByteE<ClientType>("Expansion");
-                    break;
-                }
-                case TransferAbortReason.UniqueMessage:
-                {
-                    packet.ReadByte("Message ID");
-                    break;
-                }
-                default:
-                    packet.ReadByte(); // Does nothing
-                    break;
             }
         }
 
