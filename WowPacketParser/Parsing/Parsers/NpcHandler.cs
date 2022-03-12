@@ -603,7 +603,7 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_GOSSIP_COMPLETE)]
         public static void HandleGossipComplete(Packet packet)
         {
-            if (ClientVersion.AddedInVersion(9, 2, 0, 1, 4, 2, 2, 5, 3))
+            if (ClientVersion.AddedInVersion(9, 2, 0, 1, 14, 2, 2, 5, 3))
                 packet.ReadBit("SuppressSound");
         }
 
