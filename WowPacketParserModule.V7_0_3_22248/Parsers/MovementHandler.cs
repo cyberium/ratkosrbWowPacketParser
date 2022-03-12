@@ -824,7 +824,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadInt32<MapId>("MapID");
             packet.ReadByte("Arg");
             packet.ReadInt32("MapDifficultyXConditionID");
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_1_0_39185))
+            if (ClientVersion.AddedInVersion(9, 1, 0, 1, 14, 0, 2, 5, 1))
                 packet.ReadBitsE<TransferAbortReason>("TransfertAbort", 6);
             else
                 packet.ReadBitsE<TransferAbortReason>("TransfertAbort", 5);
