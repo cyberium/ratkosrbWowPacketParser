@@ -394,7 +394,7 @@ namespace WowPacketParser.Enums.Version.V4_0_3_13329
             {Opcode.CMSG_PARTY_SILENCE, 0xF755}, // (0x6BF0)(0x03DD) //
             {Opcode.CMSG_PARTY_UNSILENCE, 0x2F7D}, // (0xAA19)(0x03DE) //
             {Opcode.CMSG_PETITION_BUY, 0x01BD}, // NF()(0x01BD) //
-            {Opcode.CMSG_PETITION_QUERY, 0xFFD3}, // NF(0x6255)(0x01C6) //
+            {Opcode.CMSG_QUERY_PETITION, 0xFFD3}, // NF(0x6255)(0x01C6) //
             {Opcode.CMSG_PETITION_SHOW_LIST, 0x01BB}, // NF()(0x01BB) //
             {Opcode.CMSG_PETITION_SHOW_SIGNATURES, 0x01BE}, // NF()(0x01BE) //
             {Opcode.CMSG_PETITION_SIGN, 0x01C0}, // NF()(0x01C0) //
@@ -953,7 +953,7 @@ namespace WowPacketParser.Enums.Version.V4_0_3_13329
             {Opcode.SMSG_PAUSE_MIRROR_TIMER, 0xBE76}, // (0x0A55)(0x01DA) //
             {Opcode.SMSG_SPELL_PERIODIC_AURA_LOG, 0xF557}, // (0xC35C)(0x024E) //
             {Opcode.SMSG_PETGODMODE, 0x2C54}, // (0x8B99)(0x001D) //
-            {Opcode.SMSG_PETITION_QUERY_RESPONSE, 0x7301}, // (0x286D)(0x01C7) //
+            {Opcode.SMSG_QUERY_PETITION_RESPONSE, 0x7301}, // (0x286D)(0x01C7) //
             {Opcode.SMSG_PETITION_SHOW_LIST, 0x5E5C}, // (0x6BB9)(0x01BC) //
             {Opcode.SMSG_PETITION_SHOW_SIGNATURES, 0x747C}, // (0x0B9D)(0x01BF) //
             {Opcode.SMSG_PETITION_SIGN_RESULTS, 0xAF56}, // (0x4B1C)(0x01C1) //

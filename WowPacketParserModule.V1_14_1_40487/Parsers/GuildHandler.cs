@@ -19,5 +19,24 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
         {
             WowPacketParserModule.V8_0_1_27101.Parsers.GuildHandler.HandleGuildRoster(packet);
         }
+
+
+        [Parser(Opcode.CMSG_PETITION_BUY)]
+        public static void HandlePetitionBuy(Packet packet)
+        {
+            int length = (int)packet.ReadBits(7);
+
+            packet.ReadPackedGuid128("Unit");
+            packet.ReadUInt32("Unused910");
+            packet.ReadWoWString("Name", length);
+        }
+
+        [Parser(Opcode.CMSG_OFFER_PETITION)]
+        public static void HandlePetitionOffer(Packet packet)
+        {
+            packet.ReadUInt32("UnkInt");
+            packet.ReadPackedGuid128("Item GUID");
+            packet.ReadPackedGuid128("Target GUID");
+        }
     }
 }

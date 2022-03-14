@@ -1032,7 +1032,8 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadUInt32("Charter Display");
                 packet.ReadUInt32("Charter Cost");
                 packet.ReadUInt32("Unk Uint32 1");
-                packet.ReadUInt32("Required signs");
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                    packet.ReadUInt32("Required signs");
             }
         }
 
@@ -1124,14 +1125,14 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadUInt32E<PetitionResultType>("Result");
         }
 
-        [Parser(Opcode.CMSG_PETITION_QUERY)]
+        [Parser(Opcode.CMSG_QUERY_PETITION)]
         public static void HandlePetitionQuery(Packet packet)
         {
             packet.ReadUInt32("Guild/Team GUID");
             packet.ReadGuid("Petition GUID");
         }
 
-        [Parser(Opcode.SMSG_PETITION_QUERY_RESPONSE)]
+        [Parser(Opcode.SMSG_QUERY_PETITION_RESPONSE)]
         public static void HandlePetitionQueryResponse(Packet packet)
         {
             packet.ReadUInt32("Guild/Team GUID");

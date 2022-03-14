@@ -47,5 +47,11 @@ namespace WowPacketParserModule.V1_13_2_31446.Parsers
                 Storage.Guild.Add(guild);
             }
         }
+
+        [Parser(Opcode.CMSG_PETITION_SHOW_SIGNATURES)]
+        public static void HandlePetitionShowSignatures(Packet packet)
+        {
+            packet.ReadPackedGuid128("Petition GUID");
+        }
     }
 }

@@ -162,7 +162,7 @@ namespace WowPacketParser.Enums.Version.V4_1_0_13914
             {Opcode.SMSG_PARTY_COMMAND_RESULT, 0x0E92F}, // 4.1.0 13914
             {Opcode.SMSG_PARTY_KILL_LOG, 0x0982F}, // 4.1.0 13914
             {Opcode.SMSG_SPELL_PERIODIC_AURA_LOG, 0x04C3E}, // 4.1.0 13914
-            {Opcode.SMSG_PETITION_QUERY_RESPONSE, 0x0CA2C}, // 4.1.0 13914
+            {Opcode.SMSG_QUERY_PETITION_RESPONSE, 0x0CA2C}, // 4.1.0 13914
             {Opcode.SMSG_PET_ACTION_FEEDBACK, 0x0997C}, // 4.1.0 13914
             {Opcode.SMSG_PET_ACTION_SOUND, 0x04C3C}, // 4.1.0 13914
             {Opcode.SMSG_PET_BROKEN, 0x08B3C}, // 4.1.0 13914
