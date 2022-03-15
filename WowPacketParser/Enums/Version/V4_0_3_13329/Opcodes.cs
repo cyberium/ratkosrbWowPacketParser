@@ -258,7 +258,7 @@ namespace WowPacketParser.Enums.Version.V4_0_3_13329
             {Opcode.CMSG_GROUP_SWAP_SUB_GROUP, 0x677F}, // (0x6231)(0x0280) //
             //{Opcode.CMSG_GROUP_UNINVITE, 0x4F74}, // (0x0ABD)(0x0075) //
             //{Opcode.CMSG_GROUP_UNINVITE_GUID, 0x4F74}, // (0x0ABD)(0x0076) //
-            {Opcode.CMSG_GUILD_ACCEPT, 0x0084}, // NF()(0x0084) //
+            {Opcode.CMSG_ACCEPT_GUILD_INVITE, 0x0084}, // NF()(0x0084) //
             {Opcode.CMSG_GUILD_ADD_RANK, 0x0232}, // NF()(0x0232) //
             {Opcode.CMSG_GUILD_BANK_ACTIVATE, 0x03E6}, // NF()(0x03E6) //
             {Opcode.CMSG_GUILD_BANK_BUY_TAB, 0x03EA}, // NF()(0x03EA) //
@@ -272,14 +272,14 @@ namespace WowPacketParser.Enums.Version.V4_0_3_13329
             {Opcode.CMSG_GUILD_DECLINE_INVITATION, 0x0085}, // NF()(0x0085) //
             {Opcode.CMSG_GUILD_DELETE_RANK, 0xFFC6}, // NF(0x4205)(0x0233) //
             {Opcode.CMSG_GUILD_DEMOTE_MEMBER, 0xFFE4}, // NF(0x4200)(0x008C) //
-            {Opcode.CMSG_GUILD_DISBAND, 0x0982}, // (0x0205)(0x008F) //
+            {Opcode.CMSG_GUILD_DELETE, 0x0982}, // (0x0205)(0x008F) //
             {Opcode.CMSG_GUILD_GET_ROSTER, 0x0757}, // (0x22FD)(0x0089) //
             {Opcode.CMSG_GUILD_INFO, 0xAF5E}, // (0x6B75)(0x0087) //
-            {Opcode.CMSG_GUILD_INFO_TEXT, 0x02FC}, // NF()(0x02FC) //
-            {Opcode.CMSG_GUILD_INVITE, 0x277C}, // (0xCAB9)(0x0082) //
-            {Opcode.CMSG_GUILD_LEADER, 0xFFE1}, // NF(0x9900)(0x0090) //
+            {Opcode.CMSG_GUILD_UPDATE_INFO_TEXT, 0x02FC}, // NF()(0x02FC) //
+            {Opcode.CMSG_GUILD_INVITE_BY_NAME, 0x277C}, // (0xCAB9)(0x0082) //
+            {Opcode.CMSG_GUILD_SET_GUILD_MASTER, 0xFFE1}, // NF(0x9900)(0x0090) //
             {Opcode.CMSG_GUILD_LEAVE, 0xFFE3}, // NF(0x0A80)(0x008D) //
-            {Opcode.CMSG_GUILD_MOTD, 0xFFE0}, // NF(0x4A05)(0x0091) //
+            {Opcode.CMSG_GUILD_UPDATE_MOTD_TEXT, 0xFFE0}, // NF(0x4A05)(0x0091) //
             {Opcode.CMSG_GUILD_OFFICER_REMOVE_MEMBER, 0xFFE2}, // NF(0x4281)(0x008E) //
             {Opcode.CMSG_GUILD_PROMOTE_MEMBER, 0xFFE5}, // NF(0x4A00)(0x008B) //
             {Opcode.CMSG_QUERY_GUILD_INFO, 0xFF88}, // NF(0x4B18)(0x0054) //

@@ -267,7 +267,7 @@ namespace WowPacketParser.Enums.Version.V4_0_6_13596
             {Opcode.CMSG_GROUP_SWAP_SUB_GROUP, 0x031C8},
             {Opcode.CMSG_GROUP_UNINVITE, 0x04F74},
             {Opcode.CMSG_GROUP_UNINVITE_GUID, 0x0E3C8},
-            {Opcode.CMSG_GUILD_ACCEPT, 0x03729},
+            {Opcode.CMSG_ACCEPT_GUILD_INVITE, 0x03729},
             {Opcode.CMSG_GUILD_ACHIEVEMENT_MEMBERS, 0x02509},
             {Opcode.CMSG_GUILD_ADD_RANK, 0x02309},
             {Opcode.CMSG_GUILD_BANK_ACTIVATE, 0x0FFC4},
@@ -283,14 +283,14 @@ namespace WowPacketParser.Enums.Version.V4_0_6_13596
             {Opcode.CMSG_GUILD_DECLINE_INVITATION, 0x0352D},
             {Opcode.CMSG_GUILD_DELETE_RANK, 0x02129},
             {Opcode.CMSG_GUILD_DEMOTE_MEMBER, 0x0330D},
-            {Opcode.CMSG_GUILD_DISBAND, 0x0372D}, //opcode14125
+            {Opcode.CMSG_GUILD_DELETE, 0x0372D}, //opcode14125
             {Opcode.CMSG_GUILD_GET_ROSTER, 0x0B2A4},
             {Opcode.CMSG_GUILD_INFO, 0x06884},
-            {Opcode.CMSG_GUILD_INFO_TEXT, 0x0270D},
-            {Opcode.CMSG_GUILD_INVITE, 0x02DA8}, //opcode11688
-            {Opcode.CMSG_GUILD_LEADER, 0x02650}, //opcode9808
+            {Opcode.CMSG_GUILD_UPDATE_INFO_TEXT, 0x0270D},
+            {Opcode.CMSG_GUILD_INVITE_BY_NAME, 0x02DA8}, //opcode11688
+            {Opcode.CMSG_GUILD_SET_GUILD_MASTER, 0x02650}, //opcode9808
             {Opcode.CMSG_GUILD_LEAVE, 0x03329}, //opcode13097
-            {Opcode.CMSG_GUILD_MOTD, 0x0272D}, //opcode10029
+            {Opcode.CMSG_GUILD_UPDATE_MOTD_TEXT, 0x0272D}, //opcode10029
             //{Opcode.CMSG_GUILD_NEWS_SET_STICKY, 0x0252D},
             {Opcode.CMSG_GUILD_OFFICER_REMOVE_MEMBER, 0x0312D}, //opcode12589
             {Opcode.CMSG_GUILD_PROMOTE_MEMBER, 0x02109},

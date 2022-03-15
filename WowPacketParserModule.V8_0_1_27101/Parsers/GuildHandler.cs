@@ -186,7 +186,11 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
         [Parser(Opcode.CMSG_GUILD_SET_RANK_PERMISSIONS, 8, 2, 5, 1, 14, 0, 2, 5, 1)]
         public static void HandlelGuildSetRankPermissions(Packet packet)
         {
-            packet.ReadByte("RankID");
+            if (!ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+                packet.ReadByte("RankID");
+            else
+                packet.ReadInt32("RankID");
+
             packet.ReadInt32("RankOrder");
             packet.ReadUInt32E<GuildRankRightsFlag>("Flags");
             packet.ReadInt32("WithdrawGoldLimit");
@@ -199,12 +203,15 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 packet.ReadInt32("TabWithdrawItemLimit", i);
             }
 
+            if (ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+                packet.ReadUInt32E<GuildRankRightsFlag>("OldFlags");
+
             packet.ResetBitReader();
             var rankNameLen = packet.ReadBits(7);
-
             packet.ReadWoWString("RankName", rankNameLen);
 
-            packet.ReadUInt32E<GuildRankRightsFlag>("OldFlags");
+            if (!ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
+                packet.ReadUInt32E<GuildRankRightsFlag>("OldFlags");
         }
     }
 }

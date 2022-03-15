@@ -16,7 +16,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             }
         }
 
-        [Parser(Opcode.CMSG_GUILD_INVITE)]
+        [Parser(Opcode.CMSG_GUILD_INVITE_BY_NAME)]
         public static void HandleGuildInviteByName(Packet packet)
         {
             var count = packet.ReadBits("String Length", 7);
@@ -470,13 +470,13 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
             packet.WriteGuid("Old Guild Guid", oldGuildGuid);
         }
 
-        [Parser(Opcode.CMSG_GUILD_MOTD)]
+        [Parser(Opcode.CMSG_GUILD_UPDATE_MOTD_TEXT)]
         public static void HandleGuildMOTD434(Packet packet)
         {
             packet.ReadWoWString("MOTD", (int)packet.ReadBits(11));
         }
 
-        [Parser(Opcode.CMSG_GUILD_INFO_TEXT)]
+        [Parser(Opcode.CMSG_GUILD_UPDATE_INFO_TEXT)]
         public static void HandleGuildInfo434(Packet packet)
         {
             packet.ReadWoWString("Text", (int)packet.ReadBits(12));

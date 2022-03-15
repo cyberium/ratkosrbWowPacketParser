@@ -196,7 +196,7 @@ namespace WowPacketParser.Enums.Version.V4_2_0_14480
             {Opcode.CMSG_GUILD_BANK_UPDATE_TAB, 0x727B},
             {Opcode.CMSG_GUILD_BANK_WITHDRAW_MONEY, 0x22EE},
             {Opcode.CMSG_GUILD_INFO, 0x226E},
-            {Opcode.CMSG_GUILD_INVITE, 0xF232},
+            {Opcode.CMSG_GUILD_INVITE_BY_NAME, 0xF232},
             {Opcode.CMSG_QUERY_GUILD_INFO, 0xA26A},
             {Opcode.CMSG_HEARTH_AND_RESURRECT, 0x7E66},
             {Opcode.CMSG_INSPECT, 0x6AAF},

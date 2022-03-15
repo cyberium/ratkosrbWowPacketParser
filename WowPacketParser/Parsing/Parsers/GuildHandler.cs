@@ -340,11 +340,14 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadUInt32("Rank Id");
             packet.ReadUInt32E<GuildRankRightsFlag>("Rights");
             packet.ReadCString("Name");
-            packet.ReadInt32("Money Per Day");
-            for (var i = 0; i < 6; i++)
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
             {
-                packet.ReadUInt32E<GuildBankRightsFlag>("Tab Rights", i);
-                packet.ReadInt32("Tab Slots", i);
+                packet.ReadInt32("Money Per Day");
+                for (var i = 0; i < 6; i++)
+                {
+                    packet.ReadUInt32E<GuildBankRightsFlag>("Tab Rights", i);
+                    packet.ReadInt32("Tab Slots", i);
+                }
             }
         }
 
@@ -458,11 +461,11 @@ namespace WowPacketParser.Parsing.Parsers
         }
 
         [Parser(Opcode.CMSG_GUILD_CREATE)]
-        [Parser(Opcode.CMSG_GUILD_INVITE)]
+        [Parser(Opcode.CMSG_GUILD_INVITE_BY_NAME)]
         [Parser(Opcode.CMSG_GUILD_PROMOTE_MEMBER)]
         [Parser(Opcode.CMSG_GUILD_DEMOTE_MEMBER)]
         [Parser(Opcode.CMSG_GUILD_OFFICER_REMOVE_MEMBER, ClientVersionBuild.Zero, ClientVersionBuild.V4_0_6_13596)]
-        [Parser(Opcode.CMSG_GUILD_LEADER)]
+        [Parser(Opcode.CMSG_GUILD_SET_GUILD_MASTER)]
         [Parser(Opcode.CMSG_GUILD_ADD_RANK, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleGuildCreate(Packet packet)
         {
@@ -504,18 +507,25 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleGuildInfo(Packet packet)
         {
             packet.ReadCString("Name");
-            packet.ReadPackedTime("Creation Date");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+                packet.ReadPackedTime("Creation Date");
+            else
+            {
+                packet.ReadInt32("Creation Day");
+                packet.ReadInt32("Creation Month");
+                packet.ReadInt32("Creation Year");
+            }
             packet.ReadUInt32("Number of Players");
             packet.ReadUInt32("Number of Accounts");
         }
 
-        [Parser(Opcode.CMSG_GUILD_MOTD, ClientVersionBuild.Zero, ClientVersionBuild.V4_0_6_13596)]
+        [Parser(Opcode.CMSG_GUILD_UPDATE_MOTD_TEXT, ClientVersionBuild.Zero, ClientVersionBuild.V4_0_6_13596)]
         public static void HandleGuildMOTD(Packet packet)
         {
             packet.ReadCString("MOTD");
         }
 
-        [Parser(Opcode.CMSG_GUILD_MOTD, ClientVersionBuild.V4_0_6_13596, ClientVersionBuild.V4_3_4_15595)]
+        [Parser(Opcode.CMSG_GUILD_UPDATE_MOTD_TEXT, ClientVersionBuild.V4_0_6_13596, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleGuildMOTD406(Packet packet)
         {
             packet.ReadGuid("Guild GUID");
@@ -523,13 +533,13 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadCString("MOTD");
         }
 
-        [Parser(Opcode.CMSG_GUILD_INFO_TEXT, ClientVersionBuild.Zero, ClientVersionBuild.V4_0_6_13596)]
+        [Parser(Opcode.CMSG_GUILD_UPDATE_INFO_TEXT, ClientVersionBuild.Zero, ClientVersionBuild.V4_0_6_13596)]
         public static void HandleSetGuildInfo(Packet packet)
         {
             packet.ReadCString("Text");
         }
 
-        [Parser(Opcode.CMSG_GUILD_INFO_TEXT, ClientVersionBuild.V4_0_6_13596, ClientVersionBuild.V4_3_4_15595)]
+        [Parser(Opcode.CMSG_GUILD_UPDATE_INFO_TEXT, ClientVersionBuild.V4_0_6_13596, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleGuildInfo406(Packet packet)
         {
             packet.ReadGuid("Player GUID");
@@ -1295,11 +1305,11 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_GUILD_MEMBER_DAILY_RESET)]
         [Parser(Opcode.CMSG_GUILD_REQUEST_CHALLENGE_UPDATE)]
         [Parser(Opcode.CMSG_GUILD_GET_ROSTER, ClientVersionBuild.Zero, ClientVersionBuild.V4_0_6_13596)]
-        [Parser(Opcode.CMSG_GUILD_ACCEPT)]
+        [Parser(Opcode.CMSG_ACCEPT_GUILD_INVITE)]
         [Parser(Opcode.CMSG_GUILD_DECLINE_INVITATION)]
         [Parser(Opcode.CMSG_GUILD_INFO)]
         [Parser(Opcode.CMSG_GUILD_LEAVE)]
-        [Parser(Opcode.CMSG_GUILD_DISBAND)]
+        [Parser(Opcode.CMSG_GUILD_DELETE)]
         [Parser(Opcode.CMSG_GUILD_DELETE_RANK, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]
         [Parser(Opcode.CMSG_GUILD_EVENT_LOG_QUERY)]
         [Parser(Opcode.SMSG_GUILD_CANCEL)] // Fires GUILD_INVITE_CANCEL
