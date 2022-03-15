@@ -34,7 +34,7 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
         [Parser(Opcode.CMSG_OFFER_PETITION)]
         public static void HandlePetitionOffer(Packet packet)
         {
-            packet.ReadUInt32("UnkInt");
+            packet.ReadUInt32("Junk"); // uninitialized variable
             packet.ReadPackedGuid128("Item GUID");
             packet.ReadPackedGuid128("Target GUID");
         }

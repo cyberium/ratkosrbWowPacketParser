@@ -279,7 +279,7 @@ namespace WowPacketParser.Enums.Version.V4_3_0_15005
             {Opcode.CMSG_PETITION_BUY, 23714},
             {Opcode.CMSG_QUERY_PETITION, 30848},
             {Opcode.CMSG_PETITION_SHOW_SIGNATURES, 24192},
-            {Opcode.CMSG_PETITION_SIGN, 22532},
+            {Opcode.CMSG_SIGN_PETITION, 22532},
             {Opcode.CMSG_PET_ACTION, 7298},
             {Opcode.CMSG_PET_CANCEL_AURA, 9888},
             {Opcode.CMSG_PET_CAST_SPELL, 5122},

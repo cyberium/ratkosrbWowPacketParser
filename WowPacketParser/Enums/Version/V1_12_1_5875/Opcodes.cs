@@ -274,7 +274,7 @@ namespace WowPacketParser.Enums.Version.V1_12_1_5875
             {Opcode.CMSG_QUERY_PETITION, 454},
             {Opcode.CMSG_PETITION_SHOW_LIST, 443},
             {Opcode.CMSG_PETITION_SHOW_SIGNATURES, 446},
-            {Opcode.CMSG_PETITION_SIGN, 448},
+            {Opcode.CMSG_SIGN_PETITION, 448},
             {Opcode.CMSG_PET_ABANDON, 374},
             {Opcode.CMSG_PET_ACTION, 373},
             {Opcode.CMSG_PET_CANCEL_AURA, 619},

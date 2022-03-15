@@ -238,7 +238,7 @@ namespace WowPacketParser.Enums.Version.V4_2_2_14545
             {Opcode.CMSG_PETITION_BUY, 0x8E4E},
             {Opcode.CMSG_QUERY_PETITION, 0xCEF3},
             {Opcode.CMSG_PETITION_SHOW_SIGNATURES, 0x1E66},
-            {Opcode.CMSG_PETITION_SIGN, 0x4A5E},
+            {Opcode.CMSG_SIGN_PETITION, 0x4A5E},
             {Opcode.CMSG_PET_ACTION, 0x1AEA},
             {Opcode.CMSG_PET_LEARN_TALENT, 0x48E6},
             {Opcode.CMSG_QUERY_PET_NAME, 0xDA76},

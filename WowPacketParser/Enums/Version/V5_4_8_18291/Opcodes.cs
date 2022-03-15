@@ -172,7 +172,7 @@ namespace WowPacketParser.Enums.Version.V5_4_8_18291
             {Opcode.CMSG_PETITION_RENAME, 0x1F9A},
             {Opcode.CMSG_PETITION_SHOW_LIST, 0x037B},
             {Opcode.CMSG_PETITION_SHOW_SIGNATURES, 0x136B},
-            {Opcode.CMSG_PETITION_SIGN, 0x06DA},
+            {Opcode.CMSG_SIGN_PETITION, 0x06DA},
             {Opcode.CMSG_PET_ABANDON, 0x07D0},
             {Opcode.CMSG_PET_ACTION, 0x025B},
             {Opcode.CMSG_PET_CAST_SPELL, 0x044D},

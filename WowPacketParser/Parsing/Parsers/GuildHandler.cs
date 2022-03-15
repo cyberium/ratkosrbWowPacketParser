@@ -127,12 +127,15 @@ namespace WowPacketParser.Parsing.Parsers
             for (var i = 0; i < numFields; i++)
             {
                 packet.ReadUInt32E<GuildRankRightsFlag>("Rights", i);
-                packet.ReadInt32("Money Per Day", i);
-
-                for (var j = 0; j < 6; j++)
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
                 {
-                    packet.ReadUInt32E<GuildBankRightsFlag>("Tab Rights", i, j);
-                    packet.ReadInt32("Tab Slots", i, j);
+                    packet.ReadInt32("Money Per Day", i);
+
+                    for (var j = 0; j < 6; j++)
+                    {
+                        packet.ReadUInt32E<GuildBankRightsFlag>("Tab Rights", i, j);
+                        packet.ReadInt32("Tab Slots", i, j);
+                    }
                 }
             }
 
@@ -145,7 +148,8 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadUInt32("Rank Id", i);
                 packet.ReadByte("Level", i);
                 packet.ReadByte("Class", i);
-                packet.ReadByte("Gender", i);
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_4_0_8089))
+                    packet.ReadByte("Gender", i);
                 packet.ReadInt32<ZoneId>("Zone Id", i);
 
                 if (!online)
@@ -1084,7 +1088,7 @@ namespace WowPacketParser.Parsing.Parsers
             }
         }
 
-        [Parser(Opcode.CMSG_PETITION_SIGN)]
+        [Parser(Opcode.CMSG_SIGN_PETITION)]
         public static void HandlePetitionSign(Packet packet)
         {
             packet.ReadGuid("Petition GUID");

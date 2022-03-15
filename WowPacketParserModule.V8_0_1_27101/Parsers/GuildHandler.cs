@@ -64,8 +64,8 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
 
                 packet.ReadUInt32("RankID", i);
                 packet.ReadUInt32<AreaId>("AreaID", i);
-                packet.ReadUInt32("PersonalAchievementPoints", i);
-                packet.ReadUInt32("GuildReputation", i);
+                packet.ReadInt32("PersonalAchievementPoints", i);
+                packet.ReadInt32("GuildReputation", i);
 
                 packet.ReadSingle("LastSave", i);
 

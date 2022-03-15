@@ -240,7 +240,7 @@ namespace WowPacketParser.Enums.Version.V3_3_5a_12340
             {Opcode.CMSG_PETITION_SHOW_LIST, 0x1BB},
             {Opcode.CMSG_PETITION_BUY, 0x1BD},
             {Opcode.CMSG_PETITION_SHOW_SIGNATURES, 0x1BE},
-            {Opcode.CMSG_PETITION_SIGN, 0x1C0},
+            {Opcode.CMSG_SIGN_PETITION, 0x1C0},
             {Opcode.CMSG_OFFER_PETITION, 0x1C3},
             {Opcode.CMSG_TURN_IN_PETITION, 0x1C4},
             {Opcode.CMSG_QUERY_PETITION, 0x1C6},
