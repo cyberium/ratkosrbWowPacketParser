@@ -1122,7 +1122,8 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.CMSG_OFFER_PETITION)]
         public static void HandlePetitionOffer(Packet packet)
         {
-            packet.ReadUInt32("Unk UInt3 1");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadUInt32("Junk");
             packet.ReadGuid("Petition GUID");
             packet.ReadGuid("Target GUID");
         }
