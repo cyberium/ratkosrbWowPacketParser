@@ -8,7 +8,7 @@ namespace WowPacketParserModule.V4_3_4_15595.Parsers
 {
     public static class MiscellaneousHandler
     {
-        [Parser(Opcode.SMSG_NOTIFICATION)]
+        [Parser(Opcode.SMSG_PRINT_NOTIFICATION)]
         public static void HandleNotification(Packet packet)
         {
             var length = packet.ReadBits(13);

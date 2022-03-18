@@ -176,7 +176,9 @@ namespace WowPacketParser.Parsing.Parsers
                     info.TransportGuid = packet.ReadGuid("Transport GUID", index);
 
                 info.TransportOffset = packet.ReadVector4("Transport Position", index);
-                info.TransportTime = packet.ReadUInt32("Transport Time", index);
+
+                if (ClientVersion.AddedInVersion(ClientType.TheBurningCrusade))
+                    info.TransportTime = packet.ReadUInt32("Transport Time", index);
 
                 if (ClientVersion.AddedInVersion(ClientType.WrathOfTheLichKing))
                     info.TransportSeat = packet.ReadSByte("Transport Seat", index);

@@ -1024,5 +1024,13 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadPackedGuid128("Item GUID");
             packet.ReadPackedGuid128("Target GUID");
         }
+
+        [Parser(Opcode.CMSG_GUILD_SET_GUILD_MASTER)]
+        public static void HandleGuildSetGuildMaster(Packet packet)
+        {
+            var nameLength = packet.ReadBits(7);
+            packet.ReadBit("Is Dethroned"); // Most probably related to guild finder inactivity
+            packet.ReadWoWString("New GuildMaster name", nameLength);
+        }
     }
 }

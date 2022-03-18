@@ -404,7 +404,8 @@ namespace WowPacketParser.Parsing.Parsers
             };
             Storage.CinematicBeginTimes.Add(cinematic);
 
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_1_5_40772))
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V9_1_5_40772) &&
+               !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build))
                 packet.ReadPackedGuid128("ConversationGuid");
         }
 
@@ -1117,7 +1118,7 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadUInt32("CurrencyId");
         }
 
-        [Parser(Opcode.SMSG_NOTIFICATION)]
+        [Parser(Opcode.SMSG_PRINT_NOTIFICATION)]
         [Parser(Opcode.SMSG_NOTIFICATION_2)]
         public static void HandleNotification(Packet packet)
         {

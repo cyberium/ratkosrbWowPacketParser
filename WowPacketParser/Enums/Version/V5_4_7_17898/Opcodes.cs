@@ -276,7 +276,7 @@ namespace WowPacketParser.Enums.Version.V5_4_7_17898
             {Opcode.SMSG_FLIGHT_SPLINE_SYNC, 0x0992},
             {Opcode.SMSG_FRIEND_STATUS, 0x0707},
             {Opcode.SMSG_GAME_OBJECT_CUSTOM_ANIM, 0x1E52},
-            {Opcode.SMSG_GAMEOBJECT_DESPAWN_ANIM, 0x0609},
+            {Opcode.SMSG_GAME_OBJECT_DESPAWN, 0x0609},
             {Opcode.SMSG_QUERY_GAME_OBJECT_RESPONSE, 0x066A},
             {Opcode.SMSG_GAME_STORE_AUTH_BUY_FAILED, 0x0C40}, // CORRECT NAME?
             {Opcode.SMSG_GAME_STORE_BUY_RESULT, 0x12AB}, // CORRECT NAME?

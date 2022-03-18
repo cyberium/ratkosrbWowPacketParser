@@ -1265,7 +1265,7 @@ namespace WowPacketParser.Enums.Version.V6_0_3_19103
             {Opcode.SMSG_NEUTRAL_PLAYER_FACTION_SELECT_RESULT, 0x0D0D},
             {Opcode.SMSG_NEW_TAXI_PATH, 0x080F},
             {Opcode.SMSG_NEW_WORLD, 0x0206},
-            {Opcode.SMSG_NOTIFICATION, 0x0B22},
+            {Opcode.SMSG_PRINT_NOTIFICATION, 0x0B22},
             {Opcode.SMSG_NOTIFY_DEST_LOC_SPELL_CAST, 0x01F1},
             {Opcode.SMSG_NOTIFY_MISSILE_TRAJECTORY_COLLISION, 0x0B84},
             {Opcode.SMSG_NOTIFY_MONEY, 0x19AC},

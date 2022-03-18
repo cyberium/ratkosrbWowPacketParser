@@ -415,7 +415,7 @@ namespace WowPacketParser.Enums.Version.V5_4_8_18291
             {Opcode.SMSG_MOVE_UPDATE, 0x1A32},
             {Opcode.SMSG_QUERY_PLAYER_NAME_RESPONSE, 0x169B},
             {Opcode.SMSG_NEW_WORLD, 0x1C3B},
-            {Opcode.SMSG_NOTIFICATION, 0x0C2A},
+            {Opcode.SMSG_PRINT_NOTIFICATION, 0x0C2A},
             {Opcode.SMSG_QUERY_NPC_TEXT_RESPONSE, 0x140A},
             {Opcode.SMSG_ON_MONSTER_MOVE, 0x1A07},
             {Opcode.SMSG_QUERY_PAGE_TEXT_RESPONSE, 0x081E},

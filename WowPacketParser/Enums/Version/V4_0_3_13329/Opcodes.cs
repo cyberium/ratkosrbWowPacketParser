@@ -764,7 +764,7 @@ namespace WowPacketParser.Enums.Version.V4_0_3_13329
             {Opcode.SMSG_FORCE_WALK_SPEED_CHANGE, 0x02DA}, // NF()(0x02DA) //
             {Opcode.SMSG_FRIEND_STATUS, 0xBB22}, // (0xAB14)(0x0068) //
             {Opcode.SMSG_GAME_OBJECT_CUSTOM_ANIM, 0xA655}, // (0x8230)(0x00B3) //
-            {Opcode.SMSG_GAMEOBJECT_DESPAWN_ANIM, 0x1E54}, // (0x62D4)(0x0215) //
+            {Opcode.SMSG_GAME_OBJECT_DESPAWN, 0x1E54}, // (0x62D4)(0x0215) //
             {Opcode.SMSG_QUERY_GAME_OBJECT_RESPONSE, 0x0577}, // (0x0231)(0x005F) //
             {Opcode.SMSG_GAME_OBJECT_RESET_STATE, 0x4655}, // (0x0274)(0x02A7) //
             {Opcode.SMSG_GAME_SPEED_SET, 0xFF75}, // (0x2354)(0x0047) //
@@ -933,7 +933,7 @@ namespace WowPacketParser.Enums.Version.V4_0_3_13329
             {Opcode.SMSG_QUERY_PLAYER_NAME_RESPONSE, 0x4D5E}, // (0x0A14)(0x0051) //
             {Opcode.SMSG_NEW_TAXI_PATH, 0xAE5E}, // (0xA259)(0x01AF) //
             {Opcode.SMSG_NEW_WORLD, 0x38C8}, // (0xA094)(0x003E) //
-            {Opcode.SMSG_NOTIFICATION, 0x620A}, // (0x0A31)(0x01CB) //
+            {Opcode.SMSG_PRINT_NOTIFICATION, 0x620A}, // (0x0A31)(0x01CB) //
             {Opcode.SMSG_NOTIFY_DANCE, 0xE308}, // (0x223D)(0x044A) //
             {Opcode.SMSG_NOTIFY_DEST_LOC_SPELL_CAST, 0x757C}, // (0x027C)(0x048E) //
             {Opcode.SMSG_QUERY_NPC_TEXT_RESPONSE, 0x365E}, // (0x8310)(0x0180) //

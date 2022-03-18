@@ -764,7 +764,7 @@ namespace WowPacketParser.Enums.Version.V5_1_0_16309
             {Opcode.SMSG_NEW_TAXI_PATH, 0x016C},
             {Opcode.SMSG_NEW_WORLD, 0x081D},
             {Opcode.SMSG_NEW_WORLD_ABORT, 0x0295},
-            {Opcode.SMSG_NOTIFICATION, 0x0218},
+            {Opcode.SMSG_PRINT_NOTIFICATION, 0x0218},
             {Opcode.SMSG_NOTIFY_DANCE, 0x018D},
             {Opcode.SMSG_QUERY_NPC_TEXT_RESPONSE, 0x0544},
             {Opcode.SMSG_OFFER_PETITION_ERROR, 0x050D},

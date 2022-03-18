@@ -174,7 +174,7 @@ namespace WowPacketParser.Enums.Version.V5_3_0_16981
             {Opcode.SMSG_FAILED_PLAYER_CONDITION, 0x02CD},
             {Opcode.SMSG_FEATURE_SYSTEM_STATUS, 0x15D1},
             {Opcode.SMSG_GAME_OBJECT_CUSTOM_ANIM, 0x028D},
-            {Opcode.SMSG_GAMEOBJECT_DESPAWN_ANIM, 0x0981},
+            {Opcode.SMSG_GAME_OBJECT_DESPAWN, 0x0981},
             {Opcode.SMSG_QUERY_GAME_OBJECT_RESPONSE, 0x0290},
             {Opcode.SMSG_GAME_EVENT_DEBUG_LOG, 0x0190},
             {Opcode.SMSG_GOSSIP_MESSAGE, 0x13AD},

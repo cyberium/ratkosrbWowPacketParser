@@ -99,7 +99,7 @@ namespace WowPacketParser.Enums.Version.V4_1_0_13914
             {Opcode.SMSG_FORCED_DEATH_UPDATE, 0x0DC3C}, // 4.1.0 13914
             {Opcode.SMSG_FORCE_DISPLAY_UPDATE, 0x06F7D}, // 4.1.0 13914
             {Opcode.SMSG_FRIEND_STATUS, 0x08C2C}, // 4.1.0 13914
-            {Opcode.SMSG_GAMEOBJECT_DESPAWN_ANIM, 0x00A7D}, // 4.1.0 13914
+            {Opcode.SMSG_GAME_OBJECT_DESPAWN, 0x00A7D}, // 4.1.0 13914
             {Opcode.SMSG_QUERY_GAME_OBJECT_RESPONSE, 0x0AB7C}, // 4.1.0 13914
             {Opcode.SMSG_GAME_OBJECT_RESET_STATE, 0x0B97F}, // 4.1.0 13914
             {Opcode.SMSG_GAME_SPEED_SET, 0x09A2F}, // 4.1.0 13914
@@ -150,7 +150,7 @@ namespace WowPacketParser.Enums.Version.V4_1_0_13914
             {Opcode.SMSG_MOTD, 0x0987F}, // 4.1.0 13914
             {Opcode.SMSG_MOUNT_SPECIAL_ANIM, 0x0BC2C}, // 4.1.0 13914
             {Opcode.SMSG_MULTIPLE_PACKETS_2, 0x04F2E}, // 4.1.0 13914
-            {Opcode.SMSG_NOTIFICATION, 0x0CA7C}, // 4.1.0 13914
+            {Opcode.SMSG_PRINT_NOTIFICATION, 0x0CA7C}, // 4.1.0 13914
             {Opcode.SMSG_NOTIFY_DEST_LOC_SPELL_CAST, 0x0EE3C}, // 4.1.0 13914
             {Opcode.SMSG_QUERY_NPC_TEXT_RESPONSE, 0x05E2E}, // 4.1.0 13914
             {Opcode.SMSG_OFFER_PETITION_ERROR, 0x04B2E}, // 4.1.0 13914

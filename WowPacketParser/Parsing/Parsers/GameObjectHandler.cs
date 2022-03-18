@@ -115,7 +115,7 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadGuid("GUID");
         }
 
-        [Parser(Opcode.SMSG_GAMEOBJECT_DESPAWN_ANIM)]
+        [Parser(Opcode.SMSG_GAME_OBJECT_DESPAWN)]
         public static void HandleGODespawnAnim(Packet packet)
         {
             WowGuid guid = packet.ReadGuid("GUID");

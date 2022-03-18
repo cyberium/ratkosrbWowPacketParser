@@ -38,5 +38,34 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
             packet.ReadPackedGuid128("Item GUID");
             packet.ReadPackedGuid128("Target GUID");
         }
+
+        [Parser(Opcode.CMSG_TURN_IN_PETITION)]
+        public static void HandlePetitionTurnIn(Packet packet)
+        {
+            packet.ReadPackedGuid128("Petition GUID");
+            if (packet.CanRead())
+            {
+                packet.ReadUInt32("Background Color");
+                packet.ReadInt32("Emblem Style");
+                packet.ReadUInt32("Emblem Color");
+                packet.ReadInt32("Emblem Border Style");
+                packet.ReadUInt32("Emblem Border Color");
+            }
+        }
+
+        [Parser(Opcode.SMSG_PETITION_SHOW_LIST)]
+        public static void HandlePetitionShowList(Packet packet)
+        {
+            packet.ReadPackedGuid128("GUID");
+            var counter = packet.ReadUInt32("Count");
+            for (var i = 0; i < counter; i++)
+            {
+                packet.ReadUInt32("Index", i);
+                packet.ReadUInt32("Charter Cost", i);
+                packet.ReadUInt32("Charter Entry", i);
+                packet.ReadUInt32("Is Arena", i);
+                packet.ReadUInt32("Required Signatures", i);
+            }
+        }
     }
 }

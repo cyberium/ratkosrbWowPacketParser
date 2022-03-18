@@ -351,14 +351,6 @@ namespace WowPacketParser.Parsing.Parsers
             }
         }
 
-        [Parser(Opcode.CMSG_GUILD_SET_GUILD_MASTER)]
-        public static void HandleGuildSetGuildMaster(Packet packet)
-        {
-            var nameLength = packet.ReadBits(7);
-            packet.ReadBit("Is Dethroned"); // Most probably related to guild finder inactivity
-            packet.ReadWoWString("New GuildMaster name", nameLength);
-        }
-
         [Parser(Opcode.CMSG_GUILD_SET_RANK_PERMISSIONS, ClientVersionBuild.V4_0_6_13596, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleGuildRank406(Packet packet)
         {
@@ -1038,16 +1030,16 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandlePetitionShowList(Packet packet)
         {
             packet.ReadGuid("GUID");
-            var counter = packet.ReadByte("Counter");
+            var counter = packet.ReadByte("Count");
             for (var i = 0; i < counter; i++)
             {
-                packet.ReadUInt32("Index");
-                packet.ReadUInt32("Charter Entry");
-                packet.ReadUInt32("Charter Display");
-                packet.ReadUInt32("Charter Cost");
-                packet.ReadUInt32("Unk Uint32 1");
+                packet.ReadUInt32("Index", i);
+                packet.ReadUInt32("Charter Entry", i);
+                packet.ReadUInt32("Charter Display", i);
+                packet.ReadUInt32("Charter Cost", i);
+                packet.ReadUInt32("Unk Uint32 1", i);
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
-                    packet.ReadUInt32("Required signs");
+                    packet.ReadUInt32("Required Signatures", i);
             }
         }
 
@@ -1058,7 +1050,8 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadUInt32("Unk UInt32 1");
             packet.ReadUInt64("Unk UInt64 1");
             packet.ReadCString("Name");
-            packet.ReadCString("Text");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+                packet.ReadCString("Text");
             packet.ReadUInt32("Unk UInt32 2");
             packet.ReadUInt32("Unk UInt32 3");
             packet.ReadUInt32("Unk UInt32 4");
@@ -1066,13 +1059,22 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadUInt32("Unk UInt32 6");
             packet.ReadUInt32("Unk UInt32 7");
             packet.ReadUInt32("Unk UInt32 8");
-            packet.ReadUInt16("Unk UInt16 1");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+                packet.ReadUInt16("Unk UInt16 1");
             packet.ReadUInt32("Unk UInt32 9");
             packet.ReadUInt32("Unk UInt32 10");
             packet.ReadUInt32("Unk UInt32 11");
 
-            for (var i = 0; i < 10; i++)
-                packet.ReadCString("Unk String", i);
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+            {
+                for (var i = 0; i < 10; i++)
+                    packet.ReadCString("Unk String", i);
+            }
+            else
+            {
+                packet.ReadUInt16("Unk UInt16");
+                packet.ReadByte("Unk UInt8");
+            }
 
             packet.ReadUInt32("Client Index");
             packet.ReadUInt32("Unk UInt32 12");
@@ -1132,6 +1134,14 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandlePetitionTurnIn(Packet packet)
         {
             packet.ReadGuid("Petition GUID");
+            if (packet.CanRead())
+            {
+                packet.ReadUInt32("Background Color");
+                packet.ReadInt32("Emblem Style");
+                packet.ReadUInt32("Emblem Color");
+                packet.ReadInt32("Emblem Border Style");
+                packet.ReadUInt32("Emblem Border Color");
+            }
         }
 
         [Parser(Opcode.SMSG_TURN_IN_PETITION_RESULT)]

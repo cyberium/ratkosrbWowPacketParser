@@ -42,7 +42,7 @@ namespace WowPacketParser.Parsing.Parsers
         {
             packet.ReadInt32E<AccountDataType>("Data Type");
 
-            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
                 packet.ReadTime("Login Time");
 
             var decompCount = packet.ReadInt32();

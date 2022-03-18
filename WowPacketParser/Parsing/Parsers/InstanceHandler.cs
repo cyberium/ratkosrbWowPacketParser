@@ -73,7 +73,7 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleInstanceDifficulty(Packet packet)
         {
             packet.ReadInt32E<MapDifficulty>("Difficulty");
-            if (ClientVersion.AddedInVersion(ClientType.WrathOfTheLichKing)
+            if (ClientVersion.AddedInVersion(ClientType.TheBurningCrusade)
                 && ClientVersion.RemovedInVersion(ClientType.Cataclysm))
                 packet.ReadInt32("Player Difficulty");
         }

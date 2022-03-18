@@ -471,7 +471,7 @@ namespace WowPacketParser.Enums.Version.V4_2_2_14545
             {Opcode.SMSG_FLIGHT_SPLINE_SYNC, 0x1C63},
             {Opcode.SMSG_FRIEND_STATUS, 0xD852},
             {Opcode.SMSG_GAME_OBJECT_CUSTOM_ANIM, 0x0CCE},
-            {Opcode.SMSG_GAMEOBJECT_DESPAWN_ANIM, 0x0A5E},
+            {Opcode.SMSG_GAME_OBJECT_DESPAWN, 0x0A5E},
             {Opcode.SMSG_QUERY_GAME_OBJECT_RESPONSE, 0xCCF7},
             {Opcode.SMSG_GAME_OBJECT_RESET_STATE, 0x9CF3},
             {Opcode.SMSG_GAME_SPEED_SET, 0x5ACA},
@@ -582,7 +582,7 @@ namespace WowPacketParser.Enums.Version.V4_2_2_14545
             {Opcode.SMSG_QUERY_PLAYER_NAME_RESPONSE, 0x9CE6},
             {Opcode.SMSG_NEW_TAXI_PATH, 0xC8FF}, // Might be 0x98CF
             {Opcode.SMSG_NEW_WORLD, 0x647E},
-            {Opcode.SMSG_NOTIFICATION, 0x1A56},
+            {Opcode.SMSG_PRINT_NOTIFICATION, 0x1A56},
             {Opcode.SMSG_NOTIFY_DANCE, 0xCE62},
             {Opcode.SMSG_NOTIFY_DEST_LOC_SPELL_CAST, 0x5CE2},
             {Opcode.SMSG_QUERY_NPC_TEXT_RESPONSE, 0x4C72},

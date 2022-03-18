@@ -266,7 +266,19 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadUInt32("Instance ID", i);
         }
 
-        [Parser(Opcode.SMSG_BATTLEFIELD_LIST, ClientVersionBuild.V2_0_1_6180, ClientVersionBuild.V4_0_6a_13623)]
+        [Parser(Opcode.SMSG_BATTLEFIELD_LIST, ClientVersionBuild.V2_0_1_6180, ClientVersionBuild.V3_0_2_9056)]
+        public static void HandleBattlefieldListServerTBC(Packet packet)
+        {
+            packet.ReadGuid("GUID");
+            packet.ReadInt32<BgId>("BGType");
+            packet.ReadByte("Unk");
+
+            var count = packet.ReadUInt32("BG Instance count");
+            for (var i = 0; i < count; i++)
+                packet.ReadUInt32("Instance ID", i);
+        }
+
+        [Parser(Opcode.SMSG_BATTLEFIELD_LIST, ClientVersionBuild.V3_0_2_9056, ClientVersionBuild.V4_0_6a_13623)]
         public static void HandleBattlefieldListServer(Packet packet)
         {
             packet.ReadGuid("GUID");
@@ -806,7 +818,9 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleArenaTeamRoster(Packet packet)
         {
             packet.ReadUInt32("Team Id");
-            var hiddenRating = packet.ReadBool("Send Hidden Rating");
+            var hiddenRating = false;
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_8_9464))
+                packet.ReadBool("Send Hidden Rating");
             var count = packet.ReadUInt32("Member count");
             packet.ReadUInt32("Type");
 
