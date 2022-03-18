@@ -109,11 +109,6 @@ namespace WowPacketParser.Loading
                         if (_snifferVersion >= 0x0107)
                             _startTime = DateTime.FromFileTime(BitConverter.ToInt64(optionalData, 3));
                     }
-                    else if (_snifferId == 0x15)
-                    {
-                        if (additionalLength >= 2)
-                            _snifferVersion = BitConverter.ToInt16(optionalData, 0);
-                    }
                     break;
                 }
                 default:
@@ -229,28 +224,6 @@ namespace WowPacketParser.Loading
                                 firstPartIpBytes : realIpBytes), port);
 
                             _reader.ReadBytes(additionalSize - 20);
-                        }
-                        else if ((_snifferId == 0x15 || _snifferId == 0x16) && additionalSize > 0)
-                        {
-                            // ymir
-                            var unixMilliseconds = _reader.ReadDouble();
-                            DateTime unixEpoch = Utilities.GetDateTimeFromUnixTime(0);
-                            time = unixEpoch.AddMilliseconds(unixMilliseconds);
-                            time = DateTime.SpecifyKind(time, DateTimeKind.Utc);
-                            time = TimeZoneInfo.ConvertTimeFromUtc(time, TimeZoneInfo.Local);
-                            if (_snifferVersion >= 0x101)
-                            {
-                                var commentLength = _reader.ReadByte();
-                                if (commentLength > 0)
-                                {
-                                    if (Settings.DumpFormatWithText())
-                                    {
-                                        writer = new StringBuilder();
-                                        writer.AppendLine("# " + Encoding.UTF8.GetString(_reader.ReadBytes(commentLength)));
-                                        writer.AppendLine();
-                                    }
-                                }
-                            }
                         }
                         else
                             _reader.ReadBytes(additionalSize);
