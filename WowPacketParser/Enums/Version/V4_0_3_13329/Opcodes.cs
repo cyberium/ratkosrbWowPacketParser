@@ -889,7 +889,7 @@ namespace WowPacketParser.Enums.Version.V4_0_3_13329
             {Opcode.SMSG_MONSTER_MOVE_TRANSPORT, 0xFFBF}, // NF(0x001C)(0x02AE) //
             {Opcode.SMSG_MOTD, 0x077C}, // (0x4394)(0x033D) //
             {Opcode.SMSG_MOUNT_RESULT, 0x6E7C}, // (0x82FD)(0x016E) //
-            {Opcode.SMSG_MOUNT_SPECIAL_ANIM, 0xCC5D}, // (0xAB59)(0x0172) //
+            {Opcode.SMSG_SPECIAL_MOUNT_ANIM, 0xCC5D}, // (0xAB59)(0x0172) //
             {Opcode.SMSG_MOVE_ABANDON_TRANSPORT, 0x045F}, // NF()(0x045F) //
             {Opcode.SMSG_MOVE_DISABLE_GRAVITY, 0x04CE}, // NF()(0x04CE) // // SMSG}, movement related
             {Opcode.SMSG_MOVE_ENABLE_GRAVITY, 0x04D0}, // NF()(0x04D0) // // SMSG}, movement related

@@ -782,7 +782,7 @@ namespace WowPacketParser.Enums.Version.V3_3_5a_12340
             {Opcode.SMSG_MOUNT_RESULT, 0x16E},
             {Opcode.SMSG_DISMOUNT_RESULT, 0x16F},
             {Opcode.SMSG_REMOVED_FROM_PVP_QUEUE, 0x170},
-            {Opcode.SMSG_MOUNT_SPECIAL_ANIM, 0x172},
+            {Opcode.SMSG_SPECIAL_MOUNT_ANIM, 0x172},
             {Opcode.SMSG_PET_TAME_FAILURE, 0x173},
             {Opcode.SMSG_PET_NAME_INVALID, 0x178},
             {Opcode.SMSG_PET_SPELLS_MESSAGE, 0x179},

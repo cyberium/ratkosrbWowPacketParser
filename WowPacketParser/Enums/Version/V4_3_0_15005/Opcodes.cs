@@ -697,7 +697,7 @@ namespace WowPacketParser.Enums.Version.V4_3_0_15005
             {Opcode.SMSG_MONSTER_MOVE_TRANSPORT, 3748},
             {Opcode.SMSG_MOTD, 18564},
             {Opcode.SMSG_MOUNT_RESULT, 31232},
-            {Opcode.SMSG_MOUNT_SPECIAL_ANIM, 31398},
+            {Opcode.SMSG_SPECIAL_MOUNT_ANIM, 31398},
             {Opcode.SMSG_MOVE_SET_ACTIVE_MOVER, 11914},
             {Opcode.SMSG_MOVE_SET_CAN_FLY, 17420},
             {Opcode.SMSG_MOVE_SPLINE_DISABLE_GRAVITY, 20120},

@@ -605,7 +605,7 @@ namespace WowPacketParser.Enums.Version.V1_12_1_5875
             {Opcode.SMSG_MONSTER_MOVE_TRANSPORT, 686},
             {Opcode.SMSG_MOTD, 829},
             {Opcode.SMSG_MOUNT_RESULT, 366},
-            {Opcode.SMSG_MOUNT_SPECIAL_ANIM, 370},
+            {Opcode.SMSG_SPECIAL_MOUNT_ANIM, 370},
             {Opcode.SMSG_MOVE_SET_FEATHER_FALL, 242},
             {Opcode.SMSG_MOVE_KNOCK_BACK, 239},
             {Opcode.SMSG_MOVE_SET_LAND_WALK, 223},

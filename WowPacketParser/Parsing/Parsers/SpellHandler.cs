@@ -297,6 +297,13 @@ namespace WowPacketParser.Parsing.Parsers
             Storage.StoreUnitAurasUpdate(guid, auras, packet.Time, packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_AURA_UPDATE_ALL, Direction.ServerToClient));
         }
 
+        [Parser(Opcode.SMSG_UPDATE_AURA_DURATION)]
+        public static void HandleUpdateAuraDuration(Packet packet)
+        {
+            packet.ReadByte("Slot");
+            packet.ReadInt32("Duration");
+        }
+
         [Parser(Opcode.CMSG_CAST_SPELL)]
         public static void HandleCastSpell(Packet packet)
         {

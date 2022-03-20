@@ -950,7 +950,7 @@ namespace WowPacketParser.Enums.Version.V4_0_6_13596
             {Opcode.SMSG_MONSTER_MOVE_TRANSPORT, 0x0248C},
             {Opcode.SMSG_MOTD, 0x077C0},
             {Opcode.SMSG_MOUNT_RESULT, 0x02AEC},
-            {Opcode.SMSG_MOUNT_SPECIAL_ANIM, 0x02388},
+            {Opcode.SMSG_SPECIAL_MOUNT_ANIM, 0x02388},
             {Opcode.SMSG_MOVE_ABANDON_TRANSPORT, 0x101D0}, //UnknownopcodeID
             {Opcode.SMSG_MOVE_DISABLE_GRAVITY, 0x10219}, //UnknownopcodeID
             {Opcode.SMSG_MOVE_ENABLE_GRAVITY, 0x1021B}, //UnknownopcodeID

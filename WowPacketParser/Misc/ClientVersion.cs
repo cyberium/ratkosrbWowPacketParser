@@ -897,6 +897,10 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V2_5_3_42083:
                 case ClientVersionBuild.V2_5_3_42328:
                 case ClientVersionBuild.V2_5_3_42598:
+                case ClientVersionBuild.V2_5_4_42581:
+                case ClientVersionBuild.V2_5_4_42695:
+                case ClientVersionBuild.V2_5_4_42757:
+                case ClientVersionBuild.V2_5_4_42800:
                     return ClientVersionBuild.V2_5_1_38707;
                 case ClientVersionBuild.V1_14_0_39802:
                 case ClientVersionBuild.V1_14_0_39958:
@@ -1365,6 +1369,10 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V2_5_3_42083:
                 case ClientVersionBuild.V2_5_3_42328:
                 case ClientVersionBuild.V2_5_3_42598:
+                case ClientVersionBuild.V2_5_4_42581:
+                case ClientVersionBuild.V2_5_4_42695:
+                case ClientVersionBuild.V2_5_4_42757:
+                case ClientVersionBuild.V2_5_4_42800:
                 {
                     return true;
                 }
@@ -1442,6 +1450,22 @@ namespace WowPacketParser.Misc
             }
         }
 
+        public static bool IsBurningCrusadeClassicPhase4ClientVersionBuild(ClientVersionBuild build)
+        {
+            switch (build)
+            {
+                case ClientVersionBuild.V2_5_4_42581:
+                case ClientVersionBuild.V2_5_4_42695:
+                case ClientVersionBuild.V2_5_4_42757:
+                case ClientVersionBuild.V2_5_4_42800:
+                {
+                    return true;
+                }
+                default:
+                    return false;
+            }
+        }
+
         public static int GetPowerCountForClientVersion()
         {
             if (IsClassicClientVersionBuild(Build))
@@ -1507,8 +1531,10 @@ namespace WowPacketParser.Misc
 
         public static bool IsUsingNewUpdateFieldSystem()
         {
-            return ClientVersion.AddedInVersion(ClientVersionBuild.V8_1_0_28724) &&
-                  !ClientVersion.IsClassicClientVersionBuild(ClientVersion.Build);
+            if (IsClassicClientVersionBuild(Build))
+                return AddedInClassicVersion(1, 14, 3, 2, 5, 4);
+
+            return AddedInVersion(ClientVersionBuild.V8_1_0_28724);
         }
     }
 }

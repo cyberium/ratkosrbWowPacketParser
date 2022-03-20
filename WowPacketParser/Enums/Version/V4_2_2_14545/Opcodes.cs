@@ -573,7 +573,7 @@ namespace WowPacketParser.Enums.Version.V4_2_2_14545
             {Opcode.SMSG_MODIFY_COOLDOWN, 0xD8DF},
             {Opcode.SMSG_MONSTER_MOVE_TRANSPORT, 0x88FB},
             {Opcode.SMSG_MOTD, 0xCA4B},
-            {Opcode.SMSG_MOUNT_SPECIAL_ANIM, 0x09E77},
+            {Opcode.SMSG_SPECIAL_MOUNT_ANIM, 0x09E77},
             {Opcode.SMSG_MOVE_KNOCK_BACK, 0x60FE}, // Not sure
             {Opcode.SMSG_MOVE_SPLINE_SET_RUN_SPEED, 0xB2CE},
             {Opcode.SMSG_MOVE_UPDATE, 0xF66C},

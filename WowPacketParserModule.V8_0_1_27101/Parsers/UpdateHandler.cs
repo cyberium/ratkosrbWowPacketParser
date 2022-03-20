@@ -62,6 +62,12 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                             var handler = CoreFields.UpdateFields.GetHandler();
                             using (var fieldsData = new Packet(packet.ReadBytes((int)updatefieldSize), packet.Opcode, packet.Time, packet.Direction, packet.Number, packet.Writer, packet.FileName))
                             {
+                                if (handler == null)
+                                {
+                                    packet.WriteLine("[{0}] Error: No update field handler for current build.", i);
+                                    continue;
+                                }
+
                                 WoWObject obj;
                                 Storage.Objects.TryGetValue(guid, out obj);
 
@@ -559,10 +565,16 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V8_1_0_28724))
             {
                 var updatefieldSize = packet.ReadUInt32();
+                var handler = CoreFields.UpdateFields.GetHandler();
                 using (var fieldsData = new Packet(packet.ReadBytes((int)updatefieldSize), packet.Opcode, packet.Time, packet.Direction, packet.Number, packet.Writer, packet.FileName))
                 {
+                    if (handler == null)
+                    {
+                        packet.WriteLine("[{0}] Error: No update field handler for current build.", index);
+                        return;
+                    }
+
                     var flags = fieldsData.ReadByteE<UpdateFieldFlag>("FieldFlags", index);
-                    var handler = CoreFields.UpdateFields.GetHandler();
 
                     IObjectData oldObjectData = null;
                     IGameObjectData oldGameObjectData = null;
