@@ -43,9 +43,9 @@ namespace WowPacketParser.Enums.Version.V1_13_5_34713
             {Opcode.CMSG_AUCTIONABLE_TOKEN_SELL, 0x36E5},
             {Opcode.CMSG_AUCTIONABLE_TOKEN_SELL_AT_MARKET_PRICE, 0x36E6},
             {Opcode.CMSG_AUCTION_HELLO_REQUEST, 0x34CA},
-            {Opcode.CMSG_AUCTION_LIST_BIDDER_ITEMS, 0x34D0},
+            {Opcode.CMSG_AUCTION_LIST_BIDDED_ITEMS, 0x34D0},
             {Opcode.CMSG_AUCTION_LIST_ITEMS, 0x34CD},
-            {Opcode.CMSG_AUCTION_LIST_OWNER_ITEMS, 0x34CF},
+            {Opcode.CMSG_AUCTION_LIST_OWNED_ITEMS, 0x34CF},
             {Opcode.CMSG_AUCTION_LIST_PENDING_SALES, 0x34D2},
             {Opcode.CMSG_AUCTION_PLACE_BID, 0x34D1},
             {Opcode.CMSG_AUCTION_REMOVE_ITEM, 0x34CC},
@@ -770,9 +770,9 @@ namespace WowPacketParser.Enums.Version.V1_13_5_34713
             {Opcode.SMSG_AUCTION_CLOSED_NOTIFICATION, 0x2731},
             {Opcode.SMSG_AUCTION_COMMAND_RESULT, 0x272E},
             {Opcode.SMSG_AUCTION_HELLO_RESPONSE, 0x272C}, // ok
-            {Opcode.SMSG_AUCTION_LIST_BIDDER_ITEMS_RESULT, 0x2735}, // ok
+            {Opcode.SMSG_AUCTION_LIST_BIDDED_ITEMS_RESULT, 0x2735}, // ok
             {Opcode.SMSG_AUCTION_LIST_ITEMS_RESULT, 0x2733}, // ok
-            {Opcode.SMSG_AUCTION_LIST_OWNER_ITEMS_RESULT, 0x2734}, // ok
+            {Opcode.SMSG_AUCTION_LIST_OWNED_ITEMS_RESULT, 0x2734}, // ok
             {Opcode.SMSG_AUCTION_LIST_PENDING_SALES_RESULT, 0x2736}, // ok
             {Opcode.SMSG_AUCTION_OUTBID_NOTIFICATION, 0x2730},
             {Opcode.SMSG_AUCTION_OWNER_BID_NOTIFICATION, 0x2732},

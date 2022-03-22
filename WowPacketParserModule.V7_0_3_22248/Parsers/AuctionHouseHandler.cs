@@ -123,7 +123,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             }
         }
 
-        [Parser(Opcode.CMSG_AUCTION_LIST_BIDDER_ITEMS)]
+        [Parser(Opcode.CMSG_AUCTION_LIST_BIDDED_ITEMS)]
         public static void HandleAuctionListBidderItems(Packet packet)
         {
             packet.ReadPackedGuid128("Auctioneer");
@@ -136,8 +136,8 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 packet.ReadUInt32("AuctionItemID", i);
         }
 
-        [Parser(Opcode.SMSG_AUCTION_LIST_OWNER_ITEMS_RESULT)]
-        [Parser(Opcode.SMSG_AUCTION_LIST_BIDDER_ITEMS_RESULT)]
+        [Parser(Opcode.SMSG_AUCTION_LIST_OWNED_ITEMS_RESULT)]
+        [Parser(Opcode.SMSG_AUCTION_LIST_BIDDED_ITEMS_RESULT)]
         public static void HandleAuctionListItemsResult(Packet packet)
         {
             var itemsCount = packet.ReadInt32("ItemsCount");

@@ -63,16 +63,17 @@ namespace WowPacketParser.Parsing.Parsers
                     packet.ReadGuid("GUID");
                     break;
                 case TradeStatus.OpenWindow:
-                    packet.ReadUInt32("Trade Id");
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                        packet.ReadUInt32("TradeId");
                     break;
                 case TradeStatus.CloseWindow:
-                    packet.ReadUInt32("Unk UInt32 1");
-                    packet.ReadByte("Unk Byte");
-                    packet.ReadUInt32("Unk UInt32 2");
+                    packet.ReadUInt32("InventoryResult");
+                    packet.ReadByte("IsTargetResult");
+                    packet.ReadUInt32("ItemLimitCategoryId");
                     break;
                 case TradeStatus.OnlyConjured:
                 case TradeStatus.NotEligible:
-                    packet.ReadByte("Unk Byte");
+                    packet.ReadByte("TradeSlot");
                     break;
             }
         }
@@ -157,9 +158,10 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleTradeStatusExtended(Packet packet)
         {
             packet.ReadByte("Trader");
-            packet.ReadUInt32("Trade Id");
-            packet.ReadUInt32("Unk Slot 1");
-            packet.ReadUInt32("Unk Slot 2");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadUInt32("Trade Id");
+            packet.ReadUInt32("Client State Index");
+            packet.ReadUInt32("Current State Index");
             packet.ReadUInt32("Gold");
             packet.ReadInt32<SpellId>("Spell ID");
 
@@ -172,8 +174,11 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadUInt32("Item Wrapped", slot);
                 packet.ReadGuid("Item Gift Creator GUID", slot);
                 packet.ReadUInt32("Item Perm Enchantment Id", slot);
-                for (var i = 0; i < 3; ++i)
-                    packet.ReadUInt32("Item Enchantment Id", slot, i);
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                {
+                    for (var i = 0; i < 3; ++i)
+                        packet.ReadUInt32("Item Enchantment Id", slot, i);
+                }
                 packet.ReadGuid("Item Creator GUID", slot);
                 packet.ReadInt32("Item Spell Charges", slot);
                 packet.ReadInt32("Item Suffix Factor", slot);

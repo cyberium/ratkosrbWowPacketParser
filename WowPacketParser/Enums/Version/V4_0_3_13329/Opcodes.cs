@@ -46,9 +46,9 @@ namespace WowPacketParser.Enums.Version.V4_0_3_13329
             {Opcode.CMSG_ARENA_TEAM_ROSTER, 0x034D}, // NF()(0x034D)
             {Opcode.CMSG_ATTACK_STOP, 0x1E7C}, // (0xC3B5)(0x0142) //
             {Opcode.CMSG_ATTACK_SWING, 0xE65D}, // (0x4A5C)(0x0141) //
-            {Opcode.CMSG_AUCTION_LIST_BIDDER_ITEMS, 0x0264}, // NF()(0x0264) //
+            {Opcode.CMSG_AUCTION_LIST_BIDDED_ITEMS, 0x0264}, // NF()(0x0264) //
             {Opcode.CMSG_AUCTION_LIST_ITEMS, 0x0258}, // NF()(0x0258) //
-            {Opcode.CMSG_AUCTION_LIST_OWNER_ITEMS, 0x0259}, // NF()(0x0259) //
+            {Opcode.CMSG_AUCTION_LIST_OWNED_ITEMS, 0x0259}, // NF()(0x0259) //
             {Opcode.CMSG_AUCTION_LIST_PENDING_SALES, 0x048F}, // NF()(0x048F) //
             {Opcode.CMSG_AUCTION_PLACE_BID, 0x025A}, // NF()(0x025A) //
             {Opcode.CMSG_AUCTION_REMOVE_ITEM, 0x0257}, // NF()(0x0257) //
@@ -605,10 +605,10 @@ namespace WowPacketParser.Enums.Version.V4_0_3_13329
             {Opcode.SMSG_ATTACKSWING_NOTINRANGE, 0x2F54}, // (0x4B54)(0x0145) //
             {Opcode.SMSG_AUCTION_BIDDER_NOTIFICATION, 0x3021}, // (0x4250)(0x025E) //
             {Opcode.SMSG_AUCTION_COMMAND_RESULT, 0xEB22}, // (0xAB5D)(0x025B) //
-            {Opcode.SMSG_AUCTION_LIST_BIDDER_ITEMS_RESULT, 0xEA0A}, // (0x42D5)(0x0265) //
-            {Opcode.SMSG_AUCTION_LIST_OWNER_ITEMS_RESULT, 0xDA22}, // (0x4B94)(0x025D) //
+            {Opcode.SMSG_AUCTION_LIST_BIDDED_ITEMS_RESULT, 0xEA0A}, // (0x42D5)(0x0265) //
+            {Opcode.SMSG_AUCTION_LIST_OWNED_ITEMS_RESULT, 0xDA22}, // (0x4B94)(0x025D) //
             {Opcode.SMSG_AUCTION_LIST_PENDING_SALES, 0xDB29}, // (0xE2F9)(0x0490) //
-            {Opcode.SMSG_AUCTION_LIST_RESULT, 0xAB03}, // (0x827C)(0x025C) //
+            {Opcode.SMSG_AUCTION_LIST_ITEMS_RESULT, 0xAB03}, // (0x827C)(0x025C) //
             {Opcode.SMSG_AUCTION_OWNER_NOTIFICATION, 0xC009}, // (0x42B5)(0x025F) //
             {Opcode.SMSG_AUCTION_REMOVED_NOTIFICATION, 0x0A0A}, // (0x4379)(0x028D) //
             {Opcode.SMSG_AURACASTLOG, 0x01D1}, // NF()(0x01D1) //

@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Parsers\ArenaHandler.cs" />
+    <Compile Include="Parsers\AuctionHouseHandler.cs" />
     <Compile Include="Parsers\AuthenticationHandler.cs" />
     <Compile Include="Parsers\BattlegroundHandler.cs" />
     <Compile Include="Parsers\BattlePetHandler.cs" />

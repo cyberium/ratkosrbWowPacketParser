@@ -82,15 +82,20 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadInt32("Category");
             packet.ReadInt32("Sub Category");
             packet.ReadInt32("Quality");
-            packet.ReadByte("Usable");
-            packet.ReadBool("GetAll");
+            packet.ReadByte("Only Usable");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadBool("Exact Match");
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_2_2_14545))
                 packet.ReadByte("Unk Byte");
-            var count = packet.ReadByte("Count");
-            for (var i = 0; i < count; ++i)
+
+            if(ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
             {
-                packet.ReadByte("Unk Byte 2", i);
-                packet.ReadByte("Unk Byte 3", i);
+                var count = packet.ReadByte("Sort Count");
+                for (var i = 0; i < count; ++i)
+                {
+                    packet.ReadByte("Type", i);
+                    packet.ReadByte("Direction", i);
+                }
             }
         }
 
@@ -152,13 +157,13 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadSingle("Unk float 5");
         }
 
-        [Parser(Opcode.CMSG_AUCTION_LIST_BIDDER_ITEMS)]
-        [Parser(Opcode.CMSG_AUCTION_LIST_OWNER_ITEMS)]
+        [Parser(Opcode.CMSG_AUCTION_LIST_BIDDED_ITEMS)]
+        [Parser(Opcode.CMSG_AUCTION_LIST_OWNED_ITEMS)]
         public static void HandleAuctionListBidderItems(Packet packet)
         {
             packet.ReadGuid("Auctioneer GUID");
             packet.ReadUInt32("List From");
-            if (packet.Opcode == Opcodes.GetOpcode(Opcode.CMSG_AUCTION_LIST_OWNER_ITEMS, Direction.ClientToServer))
+            if (packet.Opcode == Opcodes.GetOpcode(Opcode.CMSG_AUCTION_LIST_OWNED_ITEMS, Direction.ClientToServer))
                 return;
 
             var count = packet.ReadUInt32("Outbidded Count");
@@ -166,9 +171,9 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadUInt32("Auction Id", i);
         }
 
-        [Parser(Opcode.SMSG_AUCTION_LIST_BIDDER_ITEMS_RESULT)]
-        [Parser(Opcode.SMSG_AUCTION_LIST_OWNER_ITEMS_RESULT)]
-        [Parser(Opcode.SMSG_AUCTION_LIST_RESULT)]
+        [Parser(Opcode.SMSG_AUCTION_LIST_BIDDED_ITEMS_RESULT)]
+        [Parser(Opcode.SMSG_AUCTION_LIST_OWNED_ITEMS_RESULT)]
+        [Parser(Opcode.SMSG_AUCTION_LIST_ITEMS_RESULT)]
         public static void HandleAuctionListItemsResult(Packet packet)
         {
             var count = packet.ReadUInt32("Count");
@@ -178,19 +183,27 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadUInt32<ItemId>("Item Entry", i);
 
                 int enchantmentCount = ClientVersion.AddedInVersion(ClientVersionBuild.V4_3_0_15005) ? 10 : ClientVersion.AddedInVersion(ClientVersionBuild.V4_2_2_14545) ? 9 : ClientVersion.AddedInVersion(ClientType.WrathOfTheLichKing) ? 7 : 6;
+                if (ClientVersion.RemovedInVersion(ClientVersionBuild.V2_0_1_6180))
+                    enchantmentCount = 1;
+
                 for (var j = 0; j < enchantmentCount; ++j)
                 {
                     packet.ReadUInt32("Item Enchantment ID", i, j);
-                    packet.ReadUInt32("Item Enchantment Duration", i, j);
-                    packet.ReadUInt32("Item Enchantment Charges", i, j);
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                    {
+                        packet.ReadUInt32("Item Enchantment Duration", i, j);
+                        packet.ReadUInt32("Item Enchantment Charges", i, j);
+                    }
                 }
 
                 packet.ReadInt32("Item Random Property ID", i);
                 packet.ReadUInt32("Item Suffix", i);
                 packet.ReadUInt32("Item Count", i);
                 packet.ReadInt32("Item Spell Charges", i);
-                //packet.ReadUInt32E<ItemProtoFlags>("Item Flags", i);
-                packet.ReadUInt32("Unk UInt32 1", i);
+
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                    packet.ReadUInt32("Flags", i);
+
                 packet.ReadGuid("Owner", i);
                 packet.ReadValue("Start Bid", AuctionSize, i);
                 packet.ReadValue("Out Bid", AuctionSize, i);
@@ -201,7 +214,8 @@ namespace WowPacketParser.Parsing.Parsers
             }
 
             packet.ReadUInt32("Total item count");
-            packet.ReadUInt32("Desired delay time");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_3_0_7561 ))
+                packet.ReadUInt32("Desired delay time");
         }
 
         [Parser(Opcode.SMSG_AUCTION_REMOVED_NOTIFICATION)]
