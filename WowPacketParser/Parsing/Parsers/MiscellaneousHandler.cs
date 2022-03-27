@@ -216,7 +216,8 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleAddFriend(Packet packet)
         {
             packet.ReadCString("Name");
-            packet.ReadCString("Note");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadCString("Note");
         }
 
         [Parser(Opcode.CMSG_ADD_IGNORE)]
@@ -867,14 +868,15 @@ namespace WowPacketParser.Parsing.Parsers
         {
             packet.ReadGuid("Summoner GUID");
             packet.ReadInt32<AreaId>("Area ID");
-            packet.ReadTime("Summon Confirm Time");
+            packet.ReadUInt32("Summon Confirm Time");
         }
 
         [Parser(Opcode.CMSG_SUMMON_RESPONSE)]
         public static void HandleSummonResponse(Packet packet)
         {
             packet.ReadGuid("Summoner GUID");
-            packet.ReadBool("Accept");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadBool("Accept");
         }
 
         [Parser(Opcode.CMSG_SPELL_CLICK)]

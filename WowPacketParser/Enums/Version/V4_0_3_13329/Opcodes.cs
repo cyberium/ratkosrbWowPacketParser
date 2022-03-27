@@ -1023,7 +1023,7 @@ namespace WowPacketParser.Enums.Version.V4_0_3_13329
             {Opcode.SMSG_READ_ITEM_RESULT_OK, 0x4D7F}, // (0x6398)(0x00AE) //
             {Opcode.SMSG_REALM_SPLIT, 0x3454}, // (0x4270)(0x038B) //
             {Opcode.SMSG_REAL_GROUP_UPDATE, 0x8D5E}, // (0x237C)(0x0397) //
-            {Opcode.SMSG_RECEIVED_MAIL, 0x2122}, // (0x4A54)(0x0285) //
+            {Opcode.SMSG_NOTIFY_RECEIVED_MAIL, 0x2122}, // (0x4A54)(0x0285) //
             {Opcode.SMSG_CONNECT_TO, 0x9000}, // (0x8400)(0x050D) //}, uint16 port}, uint32 unk}, uint8[20] hash (ip + port}, seed=sessionkey)
             {Opcode.SMSG_REFER_A_FRIEND_FAILURE, 0x7F7C}, // (0xC259)(0x0421) //
             {Opcode.SMSG_REPORT_PVP_AFK_RESULT, 0xFFA7}, // NF(0x239D)(0x03E5) //
@@ -1082,7 +1082,7 @@ namespace WowPacketParser.Enums.Version.V4_0_3_13329
             {Opcode.SMSG_SPELL_STEAL_LOG, 0x9F74}, // (0x2235)(0x0333) //
             {Opcode.SMSG_SPELL_UPDATE_CHAIN_TARGETS, 0xAD76}, // (0xCA9C)(0x0330) //
             {Opcode.SMSG_SPIRIT_HEALER_CONFIRM, 0x7C57}, // (0x4AF4)(0x0222) //
-            {Opcode.SMSG_STABLE_RESULT, 0xE300}, // ()(0x0273) //
+            {Opcode.SMSG_PET_STABLE_RESULT, 0xE300}, // ()(0x0273) //
             {Opcode.SMSG_STAND_STATE_CHANGE_FAILURE_OBSOLETE, 0x455D}, // (0x8290)(0x0261) //
             {Opcode.SMSG_STAND_STATE_UPDATE, 0x0F77}, // (0xCBD1)(0x029D) //
             {Opcode.SMSG_START_MIRROR_TIMER, 0xAD74}, // (0x6A54)(0x01D9) //

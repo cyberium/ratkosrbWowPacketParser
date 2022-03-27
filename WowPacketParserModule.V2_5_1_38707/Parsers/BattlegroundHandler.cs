@@ -7,22 +7,54 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
 {
     public static class BattlegroundHandler
     {
-        [Parser(Opcode.SMSG_BATTLEFIELD_STATUS_QUEUED)]
-        [Parser(Opcode.SMSG_BATTLEFIELD_STATUS_NEED_CONFIRMATION)]
-        public static void HandleBattlefieldStatusd(Packet packet) // probably not correct
+        public static void ReadBattlefieldStatusHeader(Packet packet)
         {
             LfgHandler.ReadCliRideTicket(packet);
-            packet.ReadInt32("Unknown2");
-            packet.ReadInt16("Unknown3");
-            packet.ReadByte("Unknown4");
+
+            if (ClientVersion.AddedInVersion(2, 5, 4))
+                packet.ReadByte("Unk254");
+
+            uint queueCount = packet.ReadUInt32("QueueCount");
+            packet.ReadByte("RangeMin");
+            packet.ReadByte("RangeMax");
+            packet.ReadByte("ArenaTeamSize");
             packet.ReadInt32("BattlefieldInstanceID");
-            long queueId = packet.ReadInt64("QueueID");
-            long battleFieldListId = queueId & ~0x1F10000000000000;
-            packet.WriteLine($"BattlemasterListID: {battleFieldListId}");
-            packet.ReadByte("UnkByte");
+            for (uint i = 0; i < queueCount; i++)
+            {
+                long queueId = packet.ReadInt64("QueueID", i);
+                long battleFieldListId = queueId & ~0x1F10000000000000;
+                packet.WriteLine($"[{i}] BattlemasterListID: {battleFieldListId}");
+            }
+            packet.ReadBit("IsArena");
+            packet.ReadBit("TournamentRules");
+            packet.ResetBitReader();
+        }
+
+        [Parser(Opcode.SMSG_BATTLEFIELD_STATUS_QUEUED)]
+        public static void HandleBattlefieldStatusQueued(Packet packet)
+        {
+            ReadBattlefieldStatusHeader(packet);
             packet.ReadInt32("AverageWaitTime");
             packet.ReadInt32("WaitTime");
-            packet.ReadByte("TeamSize");
+
+            if (ClientVersion.AddedInVersion(2, 5, 4))
+                packet.ReadUInt32("Unk254");
+
+            packet.ReadBit("AsGroup");
+            packet.ReadBit("EligibleForMatchmaking");
+        }
+
+        [Parser(Opcode.SMSG_BATTLEFIELD_STATUS_NEED_CONFIRMATION)]
+        public static void HandleBattlefieldStatusNeedConfirmation(Packet packet)
+        {
+            ReadBattlefieldStatusHeader(packet);
+            packet.ReadInt32("MapId");
+            packet.ReadInt32("Timeout");
+
+            if (ClientVersion.AddedInVersion(2, 5, 4))
+                packet.ReadUInt32("Unk254");
+
+            packet.ReadByte("Role");
         }
 
         [Parser(Opcode.SMSG_PVP_MATCH_INITIALIZE)]

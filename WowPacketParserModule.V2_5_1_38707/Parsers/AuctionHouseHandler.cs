@@ -115,19 +115,6 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
                 ReadCliAuctionItem(packet, i);
         }
 
-        public static void ReadAddonInfo(Packet packet)
-        {
-            packet.ResetBitReader();
-            uint nameLength = packet.ReadBits("NameLength", 10);
-            uint versionLength = packet.ReadBits("VersionLength", 10);
-            packet.ReadBit("Loaded");
-            packet.ReadBit("Disabled");
-            if (nameLength > 1)
-                packet.ReadWoWString("Name", nameLength);
-            if (versionLength > 1)
-                packet.ReadWoWString("Version", versionLength);
-        }
-
         [Parser(Opcode.CMSG_AUCTION_SELL_ITEM)]
         public static void HandleAuctionSellItem(Packet packet)
         {
@@ -135,18 +122,41 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
             packet.ReadInt64("BidPrice");
             packet.ReadInt64("BuyoutPrice");
             packet.ReadInt32("RunTime");
-            bool hasAddonInfo = ClientVersion.AddedInVersion(2, 5,4) ? (bool)packet.ReadBit("HasAddonInfo") : false;
+            bool hasAddonInfo = ClientVersion.AddedInVersion(2, 5, 4) ? (bool)packet.ReadBit("HasAddonInfo") : false;
             var count = packet.ReadBits("ItemsCount", 6);
             packet.ResetBitReader();
 
             if (hasAddonInfo)
-                ReadAddonInfo(packet);
+                WowPacketParserModule.V9_0_1_36216.Parsers.AuctionHouseHandler.ReadAddonInfo(packet);
 
             for (var i = 0; i < count; ++i)
             {
                 packet.ReadPackedGuid128("Guid", i);
                 packet.ReadInt32("UseCount");
             }
+        }
+
+        [Parser(Opcode.CMSG_AUCTION_REMOVE_ITEM)]
+        public static void HandleAuctionRemoveItem(Packet packet)
+        {
+            packet.ReadPackedGuid128("Auctioneer");
+            packet.ReadInt32("AuctionItemID");
+            bool hasAddonInfo = packet.ReadBit("HasAddonInfo");
+
+            if (hasAddonInfo)
+                WowPacketParserModule.V9_0_1_36216.Parsers.AuctionHouseHandler.ReadAddonInfo(packet);
+        }
+
+        [Parser(Opcode.CMSG_AUCTION_PLACE_BID)]
+        public static void HandleAuctionPlaceBid(Packet packet)
+        {
+            packet.ReadPackedGuid128("Auctioneer");
+            packet.ReadInt32("AuctionItemID");
+            packet.ReadInt64("BidAmount");
+            bool hasAddonInfo = packet.ReadBit("HasAddonInfo");
+
+            if (hasAddonInfo)
+                WowPacketParserModule.V9_0_1_36216.Parsers.AuctionHouseHandler.ReadAddonInfo(packet);
         }
 
         [Parser(Opcode.SMSG_AUCTION_COMMAND_RESULT)]
@@ -176,11 +186,24 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
                 ReadCliAuctionItem(packet, "Items", i);
         }
 
+        [Parser(Opcode.SMSG_AUCTION_OUTBID_NOTIFICATION)]
+        public static void HandleAuctionOutbitNotification(Packet packet)
+        {
+            packet.ReadUInt32("AuctionItemID");
+            packet.ReadUInt64("BidAmount");
+            Substructures.ItemHandler.ReadItemInstance(packet);
+            packet.ReadByte("Unk");
+            packet.ReadUInt32("Unk2");
+        }
+
         [Parser(Opcode.SMSG_AUCTION_OWNER_BID_NOTIFICATION)]
         public static void HandleAuctionOwnerBidNotification(Packet packet)
         {
-            var count = packet.ReadUInt64("Count");
-            // TODO figure out the rest
+            var mailListCount = packet.ReadUInt32("MailListCount");
+            packet.ReadInt32("Field_04");
+
+            for (var i = 0; i < mailListCount; i++)
+                V7_0_3_22248.Parsers.MailHandler.ReadMailListEntry(packet, "MailListEntry", i);
         }
     }
 }

@@ -1089,7 +1089,7 @@ namespace WowPacketParser.Enums.Version.V4_0_6_13596
             {Opcode.SMSG_READ_ITEM_RESULT_OK, 0x0A988},
             {Opcode.SMSG_REALM_SPLIT, 0x025EC},
             {Opcode.SMSG_REAL_GROUP_UPDATE, 0x031C0},
-            {Opcode.SMSG_RECEIVED_MAIL, 0x075E4},
+            {Opcode.SMSG_NOTIFY_RECEIVED_MAIL, 0x075E4},
             {Opcode.SMSG_CONNECT_TO, 0x0201B},
             {Opcode.SMSG_REFER_A_FRIEND_FAILURE, 0x07F7C},
             //{Opcode.SMSG_REFORGE_OPEN_FROM_GOSSIP, 0x00C5C},
@@ -1154,7 +1154,7 @@ namespace WowPacketParser.Enums.Version.V4_0_6_13596
             {Opcode.SMSG_SPELL_STEAL_LOG, 0x09F74}, //4.0.3a13329-403
             {Opcode.SMSG_SPELL_UPDATE_CHAIN_TARGETS, 0x036A4},
             {Opcode.SMSG_SPIRIT_HEALER_CONFIRM, 0x067E0},
-            {Opcode.SMSG_STABLE_RESULT, 0x0EACC},
+            {Opcode.SMSG_PET_STABLE_RESULT, 0x0EACC},
             //{Opcode.SMSG_STAND_STATE_CHANGE_FAILURE_OBSOLETE, 0x06DCC},
             {Opcode.SMSG_STAND_STATE_UPDATE, 0x0E6A8},
             {Opcode.SMSG_START_MIRROR_TIMER, 0x0B4A8},

@@ -97,12 +97,6 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
                 ReadContactInfo(packet, i);
         }
 
-        [Parser(Opcode.CMSG_SEND_CONTACT_LIST)]
-        public static void HandleSendContactList(Packet packet)
-        {
-            packet.ReadInt32("Flags");
-        }
-
         [Parser(Opcode.CMSG_SET_CONTACT_NOTES)]
         public static void HandleSetContactNotes(Packet packet)
         {

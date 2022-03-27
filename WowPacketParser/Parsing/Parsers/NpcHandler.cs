@@ -506,7 +506,7 @@ namespace WowPacketParser.Parsing.Parsers
             gossip.ObjectEntry = guid.GetEntry();
 
             uint menuId = 0;
-            if (ClientVersion.AddedInVersion(ClientType.TheBurningCrusade))
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_4_0_8089))
                 menuId = packet.ReadUInt32("Menu Id");
             gossip.Entry = menuId;
 
@@ -558,12 +558,12 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadUInt32("Icon", i);
                 packet.ReadInt32("Level", i);
 
-                if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_3_3_11685))
                     packet.ReadUInt32E<QuestFlags>("Flags", i);
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V5_1_0_16309))
                     packet.ReadUInt32E<QuestFlagsEx>("Flags 2", i);
 
-                if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_3_3_11685))
                     packet.ReadBool("Change Icon", i);
 
                 packet.ReadCString("Title", i);

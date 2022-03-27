@@ -267,25 +267,47 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.MSG_LIST_STABLED_PETS)]
         public static void HandleListStabledPets(Packet packet)
         {
-            packet.ReadGuid("GUID");
+            packet.ReadGuid("StableMaster");
 
             if (packet.Direction == Direction.ClientToServer)
                 return;
 
-            var count = packet.ReadByte("Count");
-            packet.ReadByte("Stable Slots");
+            var count = packet.ReadByte("PetCount");
+            packet.ReadByte("NumStableSlots");
 
             for (var i = 0; i < count; i++)
             {
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_2_2_14545)) // not verified
-                    packet.ReadInt32("Pet Slot", i);
+                    packet.ReadInt32("PetSlot", i);
 
-                packet.ReadInt32("Pet Number", i);
-                packet.ReadUInt32<UnitId>("Pet Entry", i);
-                packet.ReadInt32("Pet Level", i);
-                packet.ReadCString("Pet Name", i);
-                packet.ReadByte("Stable Type", i); // 1 = current, 2/3 = in stable
+                packet.ReadUInt32("PetNumber", i);
+                packet.ReadUInt32<UnitId>("CreatureID", i);
+                packet.ReadUInt32("ExperienceLevel", i);
+                packet.ReadCString("PetName", i);
+                if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056))
+                    packet.ReadUInt32("LoyaltyLevel", i);
+                packet.ReadByte("PetSlot", i); // 1 = current, 2/3 = in stable
             }
+        }
+
+
+        [Parser(Opcode.CMSG_BUY_STABLE_SLOT)]
+        public static void HandleBuyStableSlot(Packet packet)
+        {
+            packet.ReadGuid("StableMaster");
+        }
+
+        [Parser(Opcode.SMSG_PET_STABLE_RESULT)]
+        public static void HandleStableResult(Packet packet)
+        {
+            packet.ReadByteE<PetStableResult>("Result");
+        }
+
+        [Parser(Opcode.CMSG_UNSTABLE_PET)]
+        public static void HandleUnstablePet(Packet packet)
+        {
+            packet.ReadGuid("StableMaster");
+            packet.ReadUInt32("PetNumber");
         }
 
         [Parser(Opcode.CMSG_SET_PET_SLOT)]

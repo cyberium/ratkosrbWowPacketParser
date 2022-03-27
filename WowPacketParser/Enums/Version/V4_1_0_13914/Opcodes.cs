@@ -191,7 +191,7 @@ namespace WowPacketParser.Enums.Version.V4_1_0_13914
             {Opcode.SMSG_QUERY_QUEST_INFO_RESPONSE, 0x04D7E}, // 4.1.0 13914
             {Opcode.SMSG_RAID_INSTANCE_MESSAGE, 0x0EA7C}, // 4.1.0 13914
             {Opcode.SMSG_REAL_GROUP_UPDATE, 0x0692F}, // 4.1.0 13914
-            {Opcode.SMSG_RECEIVED_MAIL, 0x0083C}, // 4.1.0 13914
+            {Opcode.SMSG_NOTIFY_RECEIVED_MAIL, 0x0083C}, // 4.1.0 13914
             {Opcode.SMSG_REPORT_PVP_AFK_RESULT, 0x01C6D}, // 4.1.0 13914
             {Opcode.SMSG_RESURRECT_REQUEST, 0x0EF2D}, // 4.1.0 13914
             {Opcode.SMSG_RWHOIS, 0x0AF7D}, // 4.1.0 13914
@@ -219,7 +219,7 @@ namespace WowPacketParser.Enums.Version.V4_1_0_13914
             {Opcode.SMSG_SPELL_OR_DAMAGE_IMMUNE, 0x00B2F}, // 4.1.0 13914
             {Opcode.SMSG_SPELL_START, 0xDB2F},
             {Opcode.SMSG_SPELL_UPDATE_CHAIN_TARGETS, 0x06B3C}, // 4.1.0 13914
-            {Opcode.SMSG_STABLE_RESULT, 0x0896F}, // 4.1.0 13914
+            {Opcode.SMSG_PET_STABLE_RESULT, 0x0896F}, // 4.1.0 13914
             {Opcode.SMSG_STAND_STATE_UPDATE, 0x0D87F}, // 4.1.0 13914
             {Opcode.SMSG_SUMMON_REQUEST, 0x0D87D}, // 4.1.0 13914
             {Opcode.SMSG_SUPERCEDED_SPELLS, 0x02F2E}, // 4.1.0 13914

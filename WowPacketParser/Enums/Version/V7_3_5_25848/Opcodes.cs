@@ -611,7 +611,7 @@ namespace WowPacketParser.Enums.Version.V7_3_5_25848
             {Opcode.CMSG_SCENE_TRIGGER_EVENT, 0x3217},
             {Opcode.CMSG_SELF_RES, 0x3535},
             {Opcode.CMSG_SELL_ITEM, 0x34A5},
-            {Opcode.CMSG_SEND_CONTACT_LIST, 0x36CE},
+            {Opcode.CMSG_CONTACT_LIST, 0x36CE},
             {Opcode.CMSG_SEND_MAIL, 0x35FA},
             {Opcode.CMSG_SEND_SOR_REQUEST_VIA_ADDRESS, 0x3620},
             {Opcode.CMSG_SEND_TEXT_EMOTE, 0x348A},

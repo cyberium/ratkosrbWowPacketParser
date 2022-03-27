@@ -48,6 +48,8 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
             packet.ReadUInt32("TeamRating");
             packet.ReadUInt32("PlayerRating");
             var count = packet.ReadUInt32();
+            if (ClientVersion.AddedInVersion(2, 5, 3))
+                packet.ReadBit("UnkBit");
             for (var i = 0; i < count; i++)
                 ReadArenaTeamMemberInfo(packet, i);
         }

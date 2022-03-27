@@ -17,10 +17,39 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadInt32E<Class>("Class");
         }
 
+        [Parser(Opcode.CMSG_FRIEND_LIST)]
+        public static void HandleFriendListClient(Packet packet)
+        {
+        }
+
+        [Parser(Opcode.SMSG_FRIEND_LIST)]
+        public static void HandleFriendList(Packet packet)
+        {
+            var count = packet.ReadByte("Count");
+
+            for (var i = 0; i < count; i++)
+            {
+                packet.ReadGuid("GUID");
+                ReadSingleContactBlock(packet, true);
+            }
+
+            if (packet.CanRead())
+                WardenHandler.ReadCheatCheckDecryptionBlock(packet);
+        }
+
+        [Parser(Opcode.SMSG_IGNORE_LIST)]
+        public static void HandleIgnoreList(Packet packet)
+        {
+            var count = packet.ReadByte("Count");
+
+            for (var i = 0; i < count; i++)
+                packet.ReadGuid("GUID");
+        }
+
         [Parser(Opcode.CMSG_CONTACT_LIST)]
         public static void HandleContactListClient(Packet packet)
         {
-            packet.ReadInt32E<ContactListFlag>("List Flags?");
+            packet.ReadInt32E<ContactListFlag>("Flags");
         }
 
         [Parser(Opcode.SMSG_CONTACT_LIST)]
@@ -58,11 +87,13 @@ namespace WowPacketParser.Parsing.Parsers
             switch (result)
             {
                 case ContactResult.FriendAddedOffline:
-                    packet.ReadCString("Note");
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                        packet.ReadCString("Note");
                     break;
                 case ContactResult.FriendAddedOnline:
                 {
-                    packet.ReadCString("Note");
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                        packet.ReadCString("Note");
                     ReadSingleContactBlock(packet, false);
                     break;
                 }

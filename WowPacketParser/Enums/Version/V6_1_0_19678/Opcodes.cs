@@ -316,7 +316,7 @@ namespace WowPacketParser.Enums.Version.V6_1_0_19678
             {Opcode.CMSG_SCENE_PLAYBACK_CANCELED, 0x1F94},
             {Opcode.CMSG_SCENE_PLAYBACK_COMPLETE, 0x024A},
             {Opcode.CMSG_SELL_ITEM, 0x1349},
-            {Opcode.CMSG_SEND_CONTACT_LIST, 0x15F9},
+            {Opcode.CMSG_CONTACT_LIST, 0x15F9},
             {Opcode.CMSG_SEND_TEXT_EMOTE, 0x0B2B},
             {Opcode.CMSG_SET_ACTION_BAR_TOGGLES, 0x111B},
             {Opcode.CMSG_SET_ACTION_BUTTON, 0x13BA},

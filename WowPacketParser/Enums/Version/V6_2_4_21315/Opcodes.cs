@@ -573,7 +573,7 @@ namespace WowPacketParser.Enums.Version.V6_2_4_21315
             {Opcode.CMSG_SCENE_TRIGGER_EVENT, 0x3181},
             {Opcode.CMSG_SELF_RES, 0x3497},
             {Opcode.CMSG_SELL_ITEM, 0x3416},
-            {Opcode.CMSG_SEND_CONTACT_LIST, 0x365D},
+            {Opcode.CMSG_CONTACT_LIST, 0x365D},
             {Opcode.CMSG_SEND_MAIL, 0x3579},
             {Opcode.CMSG_SEND_SOR_REQUEST_VIA_ADDRESS, 0x35A8},
             {Opcode.CMSG_SEND_TEXT_EMOTE, 0x33F9},

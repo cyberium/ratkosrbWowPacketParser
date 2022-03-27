@@ -7,7 +7,7 @@ namespace WowPacketParser.Parsing.Parsers
 {
     public static class MailHandler
     {
-        [Parser(Opcode.SMSG_RECEIVED_MAIL)]
+        [Parser(Opcode.SMSG_NOTIFY_RECEIVED_MAIL)]
         public static void HandleReceivedMail(Packet packet)
         {
             packet.ReadSingle("Time left"); // Sup with timers in float?
@@ -22,11 +22,21 @@ namespace WowPacketParser.Parsing.Parsers
 
         [Parser(Opcode.CMSG_MAIL_TAKE_MONEY)]
         [Parser(Opcode.CMSG_MAIL_MARK_AS_READ, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]
-        [Parser(Opcode.CMSG_MAIL_CREATE_TEXT_ITEM, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleTakeMoney(Packet packet)
         {
             packet.ReadGuid("Mailbox GUID");
             packet.ReadUInt32("Mail Id");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_0_6_13596)) // need correct version
+                packet.ReadUInt64("Money");
+        }
+
+        [Parser(Opcode.CMSG_MAIL_CREATE_TEXT_ITEM, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]
+        public static void HandleCreateTextItem(Packet packet)
+        {
+            packet.ReadGuid("Mailbox GUID");
+            packet.ReadUInt32("Mail Id");
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056))
+                packet.ReadUInt32("Mail Template Id");
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_0_6_13596)) // need correct version
                 packet.ReadUInt64("Money");
         }
@@ -44,7 +54,8 @@ namespace WowPacketParser.Parsing.Parsers
         {
             packet.ReadGuid("Mailbox GUID");
             packet.ReadUInt32("Mail Id");
-            packet.ReadUInt32("Template Id");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadUInt32("Template Id");
         }
 
         [Parser(Opcode.CMSG_MAIL_RETURN_TO_SENDER)]
@@ -52,7 +63,8 @@ namespace WowPacketParser.Parsing.Parsers
         {
             packet.ReadGuid("Mailbox GUID");
             packet.ReadUInt32("Mail Id");
-            packet.ReadGuid("Sender GUID");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadGuid("Sender GUID");
         }
 
         [Parser(Opcode.SMSG_MAIL_LIST_RESULT)]
@@ -214,12 +226,19 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadCString("Body");
             packet.ReadUInt32("Stationery?");
             packet.ReadUInt32("Unk Uint32");
-            var items = packet.ReadByte("Item Count");
-            for (var i = 0; i < items; ++i)
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
             {
-                packet.ReadByte("Slot", i);
-                packet.ReadGuid("Item GUID", i);
+                var items = packet.ReadByte("Item Count");
+                for (var i = 0; i < items; ++i)
+                {
+                    packet.ReadByte("Slot", i);
+                    packet.ReadGuid("Item GUID", i);
+                }
             }
+            else
+                packet.ReadGuid("Item GUID");
+
             packet.ReadUInt32("Money");
             packet.ReadUInt32("COD");
             packet.ReadUInt64("Unk Uint64");
@@ -292,7 +311,8 @@ namespace WowPacketParser.Parsing.Parsers
         {
             packet.ReadGuid("Mailbox GUID");
             packet.ReadUInt32("Mail Id");
-            packet.ReadUInt32("Item Low GUID");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadUInt32("Item Low GUID");
         }
 
         //CMSG_MAELSTROM_GM_SENT_MAIL

@@ -665,7 +665,7 @@ namespace WowPacketParser.Enums.Version.V9_0_1_36216
             {Opcode.CMSG_SELF_RES, 0x3542},
             {Opcode.CMSG_SELL_ITEM, 0x34A8},
             {Opcode.CMSG_SEND_CHARACTER_CLUB_INVITATION, 0x36FB},
-            {Opcode.CMSG_SEND_CONTACT_LIST, 0x36CF},
+            {Opcode.CMSG_CONTACT_LIST, 0x36CF},
             {Opcode.CMSG_SEND_MAIL, 0x35FA},
             {Opcode.CMSG_SEND_TEXT_EMOTE, 0x348E},
             {Opcode.CMSG_SERVER_TIME_OFFSET_REQUEST, 0x369D},

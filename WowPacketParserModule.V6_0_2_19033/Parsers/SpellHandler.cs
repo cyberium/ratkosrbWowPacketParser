@@ -1091,8 +1091,8 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         [Parser(Opcode.SMSG_SUPERCEDED_SPELLS)]
         public static void HandleSupercededSpells(Packet packet)
         {
-            var spellCount = packet.ReadInt32("");
-            var supercededCount = packet.ReadInt32("");
+            var spellCount = packet.ReadInt32("SpellCount");
+            var supercededCount = packet.ReadInt32("SupercededCount");
 
             for (int i = 0; i < spellCount; i++)
                 packet.ReadInt32("SpellID", i);

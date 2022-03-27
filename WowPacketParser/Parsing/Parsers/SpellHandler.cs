@@ -28,8 +28,16 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_SUPERCEDED_SPELLS)]
         public static void HandleSupercededSpell(Packet packet)
         {
-            packet.ReadInt32<SpellId>("Spell ID");
-            packet.ReadInt32<SpellId>("Next Spell ID");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+            {
+                packet.ReadInt32<SpellId>("Spell ID");
+                packet.ReadInt32<SpellId>("Next Spell ID");
+            }
+            else
+            {
+                packet.ReadInt16<SpellId>("Spell ID");
+                packet.ReadInt16<SpellId>("Next Spell ID");
+            }
         }
 
         [Parser(Opcode.SMSG_RESYNC_RUNES)]
@@ -1130,7 +1138,8 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleSpellInstakillLog(Packet packet)
         {
             packet.ReadGuid("Target GUID");
-            packet.ReadGuid("Caster GUID");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadGuid("Caster GUID");
             packet.ReadUInt32<SpellId>("Spell ID");
         }
 

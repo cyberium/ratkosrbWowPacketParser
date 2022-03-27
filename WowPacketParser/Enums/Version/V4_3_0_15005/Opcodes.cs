@@ -797,7 +797,7 @@ namespace WowPacketParser.Enums.Version.V4_3_0_15005
             {Opcode.SMSG_READ_ITEM_RESULT_OK, 22178},
             {Opcode.SMSG_REALM_SPLIT, 6176},
             {Opcode.SMSG_REAL_GROUP_UPDATE, 17062},
-            {Opcode.SMSG_RECEIVED_MAIL, 3232},
+            {Opcode.SMSG_NOTIFY_RECEIVED_MAIL, 3232},
             {Opcode.SMSG_CONNECT_TO, 1795},
             {Opcode.SMSG_REFER_A_FRIEND_FAILURE, 23712},
             {Opcode.SMSG_REPORT_PVP_AFK_RESULT, 16544},
@@ -851,7 +851,7 @@ namespace WowPacketParser.Enums.Version.V4_3_0_15005
             {Opcode.SMSG_SPELL_REMOVED_LOG, 3106},        // 4130?:D
             {Opcode.SMSG_SPELL_START, 8324},
             {Opcode.SMSG_SPELL_UPDATE_CHAIN_TARGETS, 10880},
-            {Opcode.SMSG_STABLE_RESULT, 21152},
+            {Opcode.SMSG_PET_STABLE_RESULT, 21152},
             {Opcode.SMSG_STAND_STATE_UPDATE, 1152},
             {Opcode.SMSG_START_MIRROR_TIMER, 5284},
             {Opcode.SMSG_STOP_DANCE, 17954},

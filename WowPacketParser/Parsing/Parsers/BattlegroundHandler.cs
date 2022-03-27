@@ -257,7 +257,7 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleBattlefieldListServerVanilla(Packet packet)
         {
             packet.ReadGuid("GUID");
-            packet.ReadInt32<BgId>("BGType");
+            packet.ReadInt32<MapId>("MapId");
             packet.ReadByte("UnkByte");
             packet.ReadUInt32("UnkInt");
             packet.ReadByte("UnkByte2");

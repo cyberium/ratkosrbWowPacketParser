@@ -112,23 +112,23 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_AUCTION_COMMAND_RESULT)]
         public static void HandleAuctionCommandResult(Packet packet)
         {
-            packet.ReadUInt32("Auction ID");
+            packet.ReadUInt32("AuctionID");
             var action = packet.ReadUInt32E<AuctionHouseAction>("Action");
             var error = packet.ReadUInt32E<AuctionHouseError>("Error");
-
-            if (error == AuctionHouseError.Inventory)
-                packet.ReadUInt32E<InventoryResult>("Equip Error");
 
             switch (error)
             {
                 case AuctionHouseError.Ok:
                     if (action == AuctionHouseAction.Bid)
-                        packet.ReadValue("Diff", AuctionSize);
+                        packet.ReadValue("MinIncrement", AuctionSize);
+                    break;
+                case AuctionHouseError.Inventory:
+                    packet.ReadUInt32E<InventoryResult>("EquipError");
                     break;
                 case AuctionHouseError.HigherBid:
                     packet.ReadGuid("Bidder");
-                    packet.ReadValue("Bid", AuctionSize);
-                    packet.ReadValue("Diff", AuctionSize);
+                    packet.ReadValue("BidAmount", AuctionSize);
+                    packet.ReadValue("MinIncrement", AuctionSize);
                     break;
             }
         }
@@ -136,25 +136,26 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.SMSG_AUCTION_BIDDER_NOTIFICATION)]
         public static void HandleAuctionBidderNotification(Packet packet)
         {
-            packet.ReadUInt32("Auction House ID");
-            packet.ReadUInt32("Auction ID");
-            packet.ReadGuid("Bidder GUID");
-            packet.ReadValue("Bid", AuctionSize);
-            packet.ReadValue("Diff", AuctionSize);
-            packet.ReadUInt32<ItemId>("Item Entry");
-            packet.ReadUInt32("Unk UInt32 1");
+            packet.ReadUInt32("AuctionHouseID");
+            packet.ReadUInt32("AuctionID");
+            packet.ReadGuid("BidderGUID");
+            packet.ReadValue("BidAmount", AuctionSize);
+            packet.ReadValue("MinIncrement", AuctionSize);
+            packet.ReadUInt32<ItemId>("ItemEntry");
+            packet.ReadUInt32("RandomPropertyID");
         }
 
         [Parser(Opcode.SMSG_AUCTION_OWNER_NOTIFICATION)]
         public static void HandleAuctionOwnerNotification(Packet packet)
         {
-            packet.ReadUInt32("Auction ID");
-            packet.ReadValue("Bid", AuctionSize);
-            packet.ReadValue("Diff", AuctionSize);
-            packet.ReadGuid("Bidder GUID");
-            packet.ReadUInt32<ItemId>("Item Entry");
-            packet.ReadUInt32("Unk UInt32 4");
-            packet.ReadSingle("Unk float 5");
+            packet.ReadUInt32("AuctionID");
+            packet.ReadValue("BidAmount", AuctionSize);
+            packet.ReadValue("MinIncrement", AuctionSize);
+            packet.ReadGuid("BidderGUID");
+            packet.ReadUInt32<ItemId>("ItemEntry");
+            packet.ReadUInt32("RandomPropertyID");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+                packet.ReadSingle("TimeLeft");
         }
 
         [Parser(Opcode.CMSG_AUCTION_LIST_BIDDED_ITEMS)]
