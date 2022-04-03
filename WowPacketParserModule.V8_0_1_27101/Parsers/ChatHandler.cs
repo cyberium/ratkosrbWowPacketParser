@@ -19,7 +19,7 @@ namespace WowPacketParserModule.V8_0_1_27101.Parsers
                 textLen = packet.ReadBits(8);
             packet.ReadBit("IsLogged", indexes);
 
-            packet.ReadInt32("Type", indexes);
+            packet.ReadInt32E<ChatMessageTypeNew>("Type", indexes);
             packet.ReadWoWString("Prefix", prefixLen, indexes);
             packet.ReadWoWString("Text", textLen, indexes);
         }

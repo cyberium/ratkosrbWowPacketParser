@@ -221,7 +221,7 @@ namespace WowPacketParser.Enums.Version.V1_12_1_5875
             {Opcode.CMSG_CHAT_JOIN_CHANNEL, 151},
             {Opcode.CMSG_LEARN_SPELL, 16},
             {Opcode.CMSG_LEARN_TALENT, 593},
-            {Opcode.CMSG_LEAVE_BATTLEFIELD, 737},
+            {Opcode.CMSG_BATTLEFIELD_LEAVE, 737},
             {Opcode.CMSG_CHAT_LEAVE_CHANNEL, 152},
             {Opcode.CMSG_LEVEL_CHEAT, 37},
             {Opcode.CMSG_LIST_INVENTORY, 414},

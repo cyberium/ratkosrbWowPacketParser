@@ -379,7 +379,7 @@ namespace WowPacketParser.Enums.Version.V3_3_5a_12340
             {Opcode.CMSG_FORCE_WALK_SPEED_CHANGE_ACK, 0x2DB},
             {Opcode.CMSG_FORCE_SWIM_BACK_SPEED_CHANGE_ACK, 0x2DD},
             {Opcode.CMSG_FORCE_TURN_RATE_CHANGE_ACK, 0x2DF},
-            {Opcode.CMSG_LEAVE_BATTLEFIELD, 0x2E1},
+            {Opcode.CMSG_BATTLEFIELD_LEAVE, 0x2E1},
             {Opcode.CMSG_AREA_SPIRIT_HEALER_QUERY, 0x2E2},
             {Opcode.CMSG_AREA_SPIRIT_HEALER_QUEUE, 0x2E3},
             {Opcode.CMSG_GM_UNTEACH, 0x2E5},

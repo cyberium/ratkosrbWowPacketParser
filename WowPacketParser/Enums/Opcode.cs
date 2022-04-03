@@ -662,7 +662,6 @@ namespace WowPacketParser.Enums
         CMSG_LEARN_SPELL,
         CMSG_LEARN_TALENT,
         CMSG_LEARN_TALENTS,
-        CMSG_LEAVE_BATTLEFIELD,
         CMSG_LEAVE_GROUP,
         CMSG_LEAVE_PET_BATTLE_QUEUE,
         CMSG_LEVEL_CHEAT,

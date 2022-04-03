@@ -7,6 +7,11 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
     public static class ArenaHandler
     {
         [Parser(Opcode.CMSG_ARENA_TEAM_ROSTER)]
+        public static void HandleArenaTeamRoster(Packet packet)
+        {
+            packet.ReadUInt32("TeamIndex");
+        }
+
         [Parser(Opcode.CMSG_ARENA_TEAM_QUERY)]
         public static void HandleArenaTeamQuery(Packet packet)
         {
@@ -39,7 +44,7 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
         [Parser(Opcode.SMSG_ARENA_TEAM_ROSTER)]
         public static void HandleArenaNoIdeaYet(Packet packet)
         {
-            packet.ReadInt32("dword20");
+            packet.ReadInt32("TeamId");
             packet.ReadUInt32("TeamSize");
             packet.ReadUInt32("TeamPlayed");
             packet.ReadUInt32("TeamWins");
@@ -52,6 +57,29 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
                 packet.ReadBit("UnkBit");
             for (var i = 0; i < count; i++)
                 ReadArenaTeamMemberInfo(packet, i);
+        }
+
+        [Parser(Opcode.SMSG_QUERY_ARENA_TEAM_RESPONSE)]
+        public static void HandleQueryArenaTeamResponse(Packet packet)
+        {
+            packet.ReadUInt32("TeamID");
+            packet.ResetBitReader();
+            bool hasData = packet.ReadBit("HasData");
+
+            if (hasData)
+            {
+                packet.ReadUInt32("TeamID");
+                packet.ReadUInt32("TeamSize");
+                packet.ReadInt32("BackgroundColor");
+                packet.ReadInt32("EmblemStyle");
+                packet.ReadInt32("EmblemColor");
+                packet.ReadInt32("BorderStyle");
+                packet.ReadInt32("BorderColor");
+
+                packet.ResetBitReader();
+                uint nameLength = packet.ReadBits("TeamNameLength", 7);
+                packet.ReadWoWString("TeamName", nameLength);
+            }
         }
     }
 }

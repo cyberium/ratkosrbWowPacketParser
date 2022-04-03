@@ -65,8 +65,28 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadUInt32("Timer");
         }
 
-        [Parser(Opcode.MSG_BATTLEGROUND_PLAYER_POSITIONS)]
-        public static void HandleBattlegrounPlayerPositions(Packet packet)
+        [Parser(Opcode.MSG_BATTLEGROUND_PLAYER_POSITIONS, ClientVersionBuild.Zero, ClientVersionBuild.V2_0_1_6180)]
+        public static void HandleBattlegrounPlayerPositionsVanilla(Packet packet)
+        {
+            if (packet.Direction == Direction.ClientToServer)
+                return;
+
+            var count = packet.ReadInt32("TeamMembersCount");
+            for (var i = 0; i < count; i++)
+            {
+                packet.ReadGuid("Team Member GUID", i);
+                packet.ReadVector2("Team Member Position", i);
+            }
+
+            if (packet.ReadBool("HasFlagCarrier"))
+            {
+                packet.ReadGuid("Flag Carrier GUID");
+                packet.ReadVector2("Flag Carrier Position");
+            }
+        }
+
+        [Parser(Opcode.MSG_BATTLEGROUND_PLAYER_POSITIONS, ClientVersionBuild.V2_0_1_6180)]
+        public static void HandleBattlegrounPlayerPositionsTBC(Packet packet)
         {
             if (packet.Direction == Direction.ClientToServer)
                 return;
@@ -258,9 +278,7 @@ namespace WowPacketParser.Parsing.Parsers
         {
             packet.ReadGuid("GUID");
             packet.ReadInt32<MapId>("MapId");
-            packet.ReadByte("UnkByte");
-            packet.ReadUInt32("UnkInt");
-            packet.ReadByte("UnkByte2");
+            packet.ReadByte("MinLevelOffset");
             var count = packet.ReadUInt32("BG Instance count");
             for (var i = 0; i < count; i++)
                 packet.ReadUInt32("Instance ID", i);
@@ -271,7 +289,7 @@ namespace WowPacketParser.Parsing.Parsers
         {
             packet.ReadGuid("GUID");
             packet.ReadInt32<BgId>("BGType");
-            packet.ReadByte("Unk");
+            packet.ReadByte("MinLevelOffset");
 
             var count = packet.ReadUInt32("BG Instance count");
             for (var i = 0; i < count; i++)
@@ -325,13 +343,15 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadBool("Join BG");
         }
 
-        [Parser(Opcode.CMSG_LEAVE_BATTLEFIELD)]
+        [Parser(Opcode.CMSG_BATTLEFIELD_LEAVE)]
         public static void HandleBattlefieldLeave(Packet packet)
         {
-            packet.ReadGuid("GUID");
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadUInt32("MapID");
+            else
+                packet.ReadGuid("GUID");
         }
 
-        [Parser(Opcode.CMSG_BATTLEFIELD_LEAVE)] // Differences from above packet?
         [Parser(Opcode.CMSG_BATTLEFIELD_STATUS)]
         public static void HandleBGZeroLengthPackets(Packet packet)
         {

@@ -288,7 +288,7 @@ namespace WowPacketParser.Enums.Version.V2_4_3_8606
             {Opcode.CMSG_KEEP_ALIVE, 1030},
             {Opcode.CMSG_LEARN_SPELL, 16},
             {Opcode.CMSG_LEARN_TALENT, 593},
-            {Opcode.CMSG_LEAVE_BATTLEFIELD, 737},
+            {Opcode.CMSG_BATTLEFIELD_LEAVE, 737},
             {Opcode.CMSG_CHAT_LEAVE_CHANNEL, 152},
             {Opcode.CMSG_LEVEL_CHEAT, 37},
             {Opcode.CMSG_LFG_CLEAR_AUTOJOIN, 861},

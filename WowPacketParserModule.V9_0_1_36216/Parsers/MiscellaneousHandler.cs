@@ -245,5 +245,21 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
             if (hasInstanceGroupSize)
                 packet.ReadUInt32("InstanceGroupSize");
         }
+
+        [Parser(Opcode.SMSG_START_TIMER)]
+        public static void HandleStartTimer(Packet packet)
+        {
+            if (ClientVersion.AddedInVersion(9, 0, 5, 1, 14, 0, 2, 5, 1))
+            {
+                packet.ReadInt64("Total time (secs)");
+                packet.ReadInt64("Time left (secs)");
+            }
+            else
+            {
+                packet.ReadInt32("Total time (secs)");
+                packet.ReadInt32("Time left (secs)");
+            }
+            packet.ReadUInt32E<TimerType>("Timer type");
+        }
     }
 }

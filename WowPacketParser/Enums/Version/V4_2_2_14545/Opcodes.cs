@@ -182,7 +182,7 @@ namespace WowPacketParser.Enums.Version.V4_2_2_14545
             {Opcode.CMSG_LEARN_PREVIEW_TALENTS, 0xDEE3},
             {Opcode.CMSG_LEARN_PREVIEW_TALENTS_PET, 0x9AFB},
             {Opcode.CMSG_LEARN_TALENT, 0x98F3},
-            {Opcode.CMSG_LEAVE_BATTLEFIELD, 0x1AE7},
+            {Opcode.CMSG_BATTLEFIELD_LEAVE, 0x1AE7},
             {Opcode.CMSG_CHAT_LEAVE_CHANNEL, 0x60C9},
             {Opcode.CMSG_LFG_JOIN, 0x58E2},
             {Opcode.CMSG_LFG_LEAVE, 0x0EF7},

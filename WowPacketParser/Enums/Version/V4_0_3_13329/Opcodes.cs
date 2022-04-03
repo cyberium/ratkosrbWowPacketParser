@@ -306,7 +306,7 @@ namespace WowPacketParser.Enums.Version.V4_0_3_13329
             {Opcode.CMSG_LEARN_PREVIEW_TALENTS, 0x4754}, // (0xC3B1)(0x04C1) //: LearnPreviewTalents (for player?)
             {Opcode.CMSG_LEARN_PREVIEW_TALENTS_PET, 0x04C2}, // NF()(0x04C2) // // CMSG}, lua: LearnPreviewTalents (for pet?)
             {Opcode.CMSG_LEARN_TALENT, 0x0251}, // NF()(0x0251) //
-            {Opcode.CMSG_LEAVE_BATTLEFIELD, 0x7757}, // (0xAA15)(0x02E1) //
+            {Opcode.CMSG_BATTLEFIELD_LEAVE, 0x7757}, // (0xAA15)(0x02E1) //
             //{Opcode.CMSG_CHAT_LEAVE_CHANNEL, 0x3A98}, // (0x9A20)(0x0098) //
             {Opcode.CMSG_LFG_JOIN, 0x035C}, // NF()(0x035C) // // CMSG JoinLFG
             {Opcode.CMSG_LFG_LEAVE, 0x035D}, // NF()(0x035D) // // CMSG LeaveLFG
