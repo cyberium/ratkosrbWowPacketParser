@@ -65,7 +65,7 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             Storage.StoreLoot(loot, lootOwner, lootObject);
         }
 
-        [Parser(Opcode.SMSG_START_LOOT_ROLL)]
+        [Parser(Opcode.SMSG_LOOT_START_ROLL)]
         public static void HandleLootStartRoll(Packet packet)
         {
             packet.ReadPackedGuid128("LootObj");

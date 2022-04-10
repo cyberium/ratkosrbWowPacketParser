@@ -1283,8 +1283,8 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadInt32("Id");
         }
 
-        [Parser(Opcode.CMSG_SHOWING_CLOAK)]
-        [Parser(Opcode.CMSG_SHOWING_HELM)]
+        [Parser(Opcode.CMSG_PLAYER_SHOWING_CLOAK)]
+        [Parser(Opcode.CMSG_PLAYER_SHOWING_HELM)]
         public static void HandleShowingCloakAndHelm434(Packet packet)
         {
             packet.ReadBool("Showing");

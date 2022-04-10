@@ -83,11 +83,11 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadByte("Unk Byte"); // Has something to do with difficulty too
         }
 
-        [Parser(Opcode.SMSG_PARTY_MEMBER_STATS, ClientVersionBuild.V4_2_2_14545)]
-        [Parser(Opcode.SMSG_PARTY_MEMBER_STATS_FULL, ClientVersionBuild.V4_2_2_14545)]
+        [Parser(Opcode.SMSG_PARTY_MEMBER_PARTIAL_STATE, ClientVersionBuild.V4_2_2_14545)]
+        [Parser(Opcode.SMSG_PARTY_MEMBER_FULL_STATE, ClientVersionBuild.V4_2_2_14545)]
         public static void HandlePartyMemberStats422(Packet packet)
         {
-            if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_PARTY_MEMBER_STATS_FULL, Direction.ServerToClient))
+            if (packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_PARTY_MEMBER_FULL_STATE, Direction.ServerToClient))
                 packet.ReadBool("Add arena opponent");
 
             packet.ReadPackedGuid("GUID");
@@ -215,12 +215,12 @@ namespace WowPacketParser.Parsing.Parsers
             }
         }
 
-        [Parser(Opcode.SMSG_PARTY_MEMBER_STATS, ClientVersionBuild.V2_0_1_6180, ClientVersionBuild.V4_2_2_14545)]
-        [Parser(Opcode.SMSG_PARTY_MEMBER_STATS_FULL, ClientVersionBuild.V2_0_1_6180, ClientVersionBuild.V4_2_2_14545)]
+        [Parser(Opcode.SMSG_PARTY_MEMBER_PARTIAL_STATE, ClientVersionBuild.V2_0_1_6180, ClientVersionBuild.V4_2_2_14545)]
+        [Parser(Opcode.SMSG_PARTY_MEMBER_FULL_STATE, ClientVersionBuild.V2_0_1_6180, ClientVersionBuild.V4_2_2_14545)]
         public static void HandlePartyMemberStats(Packet packet)
         {
             if (ClientVersion.AddedInVersion(ClientType.WrathOfTheLichKing) &&
-                packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_PARTY_MEMBER_STATS_FULL, Direction.ServerToClient))
+                packet.Opcode == Opcodes.GetOpcode(Opcode.SMSG_PARTY_MEMBER_FULL_STATE, Direction.ServerToClient))
                 packet.ReadBool("Add arena opponent");
 
             packet.ReadPackedGuid("GUID");
@@ -343,28 +343,28 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadInt32("Vehicle Seat");
         }
 
-        [Parser(Opcode.CMSG_GROUP_SET_LEADER)]
+        [Parser(Opcode.CMSG_SET_PARTY_LEADER)]
         public static void HandleGroupSetLeader(Packet packet)
         {
             packet.ReadGuid("GUID");
         }
 
-        [Parser(Opcode.SMSG_GROUP_SET_LEADER)]
+        [Parser(Opcode.SMSG_GROUP_NEW_LEADER)]
         [Parser(Opcode.SMSG_GROUP_DECLINE)]
         public static void HandleGroupDecline(Packet packet)
         {
             packet.ReadCString("Name");
         }
 
-        [Parser(Opcode.CMSG_GROUP_INVITE, ClientVersionBuild.Zero, ClientVersionBuild.V4_2_2_14545)]
+        [Parser(Opcode.CMSG_PARTY_INVITE, ClientVersionBuild.Zero, ClientVersionBuild.V4_2_2_14545)]
         public static void HandleGroupInvite(Packet packet)
         {
             packet.ReadCString("Name");
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
-                packet.ReadInt32("Unk Int32");
+                packet.ReadInt32("ProposedRoles");
         }
 
-        [Parser(Opcode.CMSG_GROUP_INVITE, ClientVersionBuild.V4_2_2_14545, ClientVersionBuild.V4_3_0_15005)]
+        [Parser(Opcode.CMSG_PARTY_INVITE, ClientVersionBuild.V4_2_2_14545, ClientVersionBuild.V4_3_0_15005)]
         public static void HandleGroupInvite422(Packet packet)
         {
             // note: this handler is different in 4.3.0, it got a bit fancy.
@@ -389,7 +389,7 @@ namespace WowPacketParser.Parsing.Parsers
             packet.WriteGuid("Guid", guidBytes); // Non-zero in cross realm parties
         }
 
-        [Parser(Opcode.CMSG_GROUP_INVITE, ClientVersionBuild.V4_3_4_15595)]
+        [Parser(Opcode.CMSG_PARTY_INVITE, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleGroupInvite434(Packet packet)
         {
             packet.ReadInt32("TargetCfgRealmID"); // Non-zero in cross realm parties (1383)
@@ -421,20 +421,26 @@ namespace WowPacketParser.Parsing.Parsers
             packet.WriteGuid("TargetGUID", guid); // Non-zero in cross realm parties
         }
 
-        [Parser(Opcode.SMSG_GROUP_INVITE, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]
+        [Parser(Opcode.SMSG_PARTY_INVITE, ClientVersionBuild.Zero, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleGroupInviteResponse(Packet packet)
         {
-            packet.ReadBool("invited/already in group flag?");
-            packet.ReadCString("Name");
-            packet.ReadInt32("Unk Int32 1");
-            var count = packet.ReadByte("Count");
-            for (var i = 0; i < count; ++i)
-                packet.ReadUInt32("Unk Uint32", i);
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+                packet.ReadBool("CanAccept");
 
-            packet.ReadInt32("Unk Int32 2");
+            packet.ReadCString("Name");
+
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+            {
+                packet.ReadInt32("ProposedRoles");
+                var count = packet.ReadByte("LfgSlotsCount");
+                for (var i = 0; i < count; ++i)
+                    packet.ReadUInt32("LfgSlots", i);
+
+                packet.ReadInt32("LfgCompletedMask");
+            }
         }
 
-        [Parser(Opcode.SMSG_GROUP_INVITE, ClientVersionBuild.V4_3_4_15595)]
+        [Parser(Opcode.SMSG_PARTY_INVITE, ClientVersionBuild.V4_3_4_15595)]
         public static void HandleGroupInviteSmsg434(Packet packet)
         {
             var guid = new byte[8];
@@ -486,13 +492,15 @@ namespace WowPacketParser.Parsing.Parsers
         public static void HandleGroupUninviteGuid(Packet packet)
         {
             packet.ReadGuid("GUID");
-            packet.ReadCString("Reason");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+                packet.ReadCString("Reason");
         }
 
         [Parser(Opcode.CMSG_GROUP_ACCEPT)]
         public static void HandleGroupAccept(Packet packet)
         {
-            packet.ReadInt32("Unk Int32");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadInt32("Unk Int32");
         }
 
         [Parser(Opcode.CMSG_GROUP_ACCEPT_DECLINE)]
@@ -566,7 +574,7 @@ namespace WowPacketParser.Parsing.Parsers
                 if (packet.CanRead())
                     packet.ReadBool("Ready");
             }
-            else
+            else if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
                 packet.ReadGuid("GUID");
         }
 
@@ -586,7 +594,7 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadVector2("Position");
         }
 
-        [Parser(Opcode.CMSG_GROUP_RAID_CONVERT)]
+        [Parser(Opcode.CMSG_CONVERT_RAID)]
         public static void HandleGroupRaidConvert(Packet packet)
         {
             if (ClientVersion.AddedInVersion(ClientType.Cataclysm))
@@ -669,7 +677,7 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadUInt32("Unk Uint32");
         }
 
-        [Parser(Opcode.CMSG_GROUP_INVITE_RESPONSE)]
+        [Parser(Opcode.CMSG_PARTY_INVITE_RESPONSE)]
         public static void HandleGroupInviteResponse434(Packet packet)
         {
             var hasRolesDesired = packet.ReadBit();

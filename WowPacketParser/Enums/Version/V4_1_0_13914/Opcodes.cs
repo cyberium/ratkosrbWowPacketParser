@@ -112,8 +112,8 @@ namespace WowPacketParser.Enums.Version.V4_1_0_13914
             {Opcode.SMSG_GROUP_CANCEL, 0x0486D}, // 4.1.0 13914
             {Opcode.SMSG_GROUP_DECLINE, 0x0AE7F}, // 4.1.0 13914
             {Opcode.SMSG_GROUP_DESTROYED, 0x0D97C}, // 4.1.0 13914
-            {Opcode.SMSG_GROUP_INVITE, 0x0AC2C}, // 4.1.0 13914
-            {Opcode.SMSG_GROUP_SET_LEADER, 0x0AD2E}, // 4.1.0 13914
+            {Opcode.SMSG_PARTY_INVITE, 0x0AC2C}, // 4.1.0 13914
+            {Opcode.SMSG_GROUP_NEW_LEADER, 0x0AD2E}, // 4.1.0 13914
             {Opcode.SMSG_GROUP_UNINVITE, 0x03A3F}, // 4.1.0 13914
             {Opcode.SMSG_GUILD_BANK_QUERY_RESULTS, 0x09C6E}, // 4.1.0 13914
             {Opcode.SMSG_GUILD_COMMAND_RESULT, 0x0FF7D}, // 4.1.0 13914
@@ -123,7 +123,7 @@ namespace WowPacketParser.Enums.Version.V4_1_0_13914
             {Opcode.SMSG_QUERY_GUILD_INFO_RESPONSE, 0x0796E}, // 4.1.0 13914
             {Opcode.SMSG_INITIALIZE_FACTIONS, 0x0F87E}, // 4.1.0 13914
             {Opcode.SMSG_SEND_KNOWN_SPELLS, 0x00A6F}, // 4.1.0 13914
-            {Opcode.SMSG_INSPECT_RESULTS_UPDATE, 0x04D7F}, // 4.1.0 13914
+            {Opcode.SMSG_INSPECT_RESULT, 0x04D7F}, // 4.1.0 13914
             {Opcode.SMSG_INSPECT_TALENT, 0x00F3E}, // 4.1.0 13914
             {Opcode.SMSG_INSTANCE_RESET, 0x0083E}, // 4.1.0 13914
             {Opcode.SMSG_INSTANCE_RESET_FAILED, 0x00B7F}, // 4.1.0 13914

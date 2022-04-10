@@ -12,12 +12,6 @@ namespace WowPacketParser.Parsing.Parsers
     [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
     public static class SpellHandler
     {
-        [Parser(Opcode.CMSG_CANCEL_CAST)]
-        public static void HandlePlayerCancelCast(Packet packet)
-        {
-            packet.ReadUInt32<SpellId>("Spell Id");
-        }
-
         [Parser(Opcode.SMSG_CAST_FAILED)]
         public static void HandleCastFailed(Packet packet)
         {

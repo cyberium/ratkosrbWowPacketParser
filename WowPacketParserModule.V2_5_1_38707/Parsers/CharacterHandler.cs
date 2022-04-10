@@ -54,6 +54,13 @@ namespace WowPacketParserModule.V2_5_1_38835.Parsers
             packet.ReadBit("UnkBit");
         }
 
+        [Parser(Opcode.CMSG_INSPECT_PVP)]
+        [Parser(Opcode.CMSG_INSPECT_HONOR_STATS)]
+        public static void HandleInspectPvP(Packet packet)
+        {
+            packet.ReadPackedGuid128("PlayerGUID");
+        }
+
         public static void ReadAzeriteEssenceData(Packet packet, params object[] idx)
         {
             packet.ReadUInt32("Index", idx);
@@ -167,6 +174,62 @@ namespace WowPacketParserModule.V2_5_1_38835.Parsers
             }
             if (hasAzeriteLevel)
                 packet.ReadInt32("AzeriteLevel");
+        }
+
+        public static void ReadPVPBracketData(Packet packet, params object[] idx)
+        {
+            packet.ReadByte("Bracket", idx);
+            packet.ReadInt32("Rating", idx);
+            packet.ReadInt32("Rank", idx);
+            packet.ReadInt32("WeeklyPlayed", idx);
+            packet.ReadInt32("WeeklyWon", idx);
+            packet.ReadInt32("SeasonPlayed", idx);
+            packet.ReadInt32("SeasonWon", idx);
+            packet.ReadInt32("WeeklyBestRating", idx);
+            packet.ReadInt32("SeasonBestRating", idx);
+            packet.ReadInt32("PvpTierID", idx);
+            packet.ReadInt32("WeeklyBestWinPvpTierID ", idx);
+            packet.ReadBool("Disqualified", idx);
+        }
+
+        public static void ReadArenaTeamData(Packet packet, params object[] idx)
+        {
+            packet.ReadPackedGuid128("Guid", idx);
+            packet.ReadInt32("Unk1", idx);
+            packet.ReadInt32("Unk2", idx);
+            packet.ReadInt32("Unk3", idx);
+            packet.ReadInt32("Unk4", idx);
+            packet.ReadInt32("Unk5", idx);
+        }
+
+        [Parser(Opcode.SMSG_INSPECT_HONOR_STATS)]
+        public static void HandleInspectHonorStats(Packet packet)
+        {
+            packet.ReadPackedGuid128("PlayerGuid");
+            packet.ReadByte("LifetimeHighestRank");
+            packet.ReadUInt16("TodayHonorableKills");
+            packet.ReadUInt16("TodayDishonorableKills");
+            packet.ReadUInt16("YesterdayHonorableKills");
+            packet.ReadUInt16("YesterdayDishonorableKills");
+            packet.ReadUInt32("LastWeekHonorableKills");
+            packet.ReadUInt32("ThisWeekHonorableKills");
+            packet.ReadUInt32("LifetimeHonorableKills");
+            packet.ReadUInt32("LifetimeDishonorableKills");
+            packet.ReadUInt32("YesterdayHonor");
+            packet.ReadByte("RankProgress");
+        }
+
+        [Parser(Opcode.SMSG_INSPECT_PVP)]
+        public static void HandleInspectPVP(Packet packet)
+        {
+            packet.ReadPackedGuid128("ClientGUID");
+            var bracketCount = packet.ReadBits(3);
+            var arenaTeamsCount = packet.ReadBits(2);
+
+            for (var i = 0; i < bracketCount; i++)
+                ReadPVPBracketData(packet, i, "PVPBracketData");
+            for (var i = 0; i < arenaTeamsCount; i++)
+                ReadArenaTeamData(packet, i, "ArenaTeamData");
         }
 
         [Parser(Opcode.SMSG_ENUM_CHARACTERS_RESULT)]

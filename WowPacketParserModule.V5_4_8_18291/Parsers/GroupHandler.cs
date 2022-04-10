@@ -6,7 +6,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
 {
     public static class GroupHandler
     {
-        [Parser(Opcode.CMSG_GROUP_INVITE)]
+        [Parser(Opcode.CMSG_PARTY_INVITE)]
         public static void HandleGroupInvite(Packet packet)
         {
             var crossRealmGuid = new byte[8];
@@ -39,7 +39,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             packet.WriteGuid("crossRealmGuid", crossRealmGuid);
         }
 
-        [Parser(Opcode.SMSG_GROUP_INVITE)]
+        [Parser(Opcode.SMSG_PARTY_INVITE)]
         public static void HandleSmsgGroupInvite(Packet packet)
         {
             var inviterGuid = new byte[8];
@@ -85,7 +85,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             packet.WriteGuid("inviterGuid", inviterGuid);
         }
 
-        [Parser(Opcode.CMSG_GROUP_INVITE_RESPONSE)]
+        [Parser(Opcode.CMSG_PARTY_INVITE_RESPONSE)]
         public static void HandleGroupInviteResponse(Packet packet)
         {
             packet.ReadByte("Byte11");
@@ -275,7 +275,7 @@ namespace WowPacketParserModule.V5_4_8_18291.Parsers
             packet.ReadCString("Player");
         }
 
-        [Parser(Opcode.SMSG_PARTY_MEMBER_STATS)]
+        [Parser(Opcode.SMSG_PARTY_MEMBER_PARTIAL_STATE)]
         public static void HandlePartyMemberStats(Packet packet)
         {
             var guid = new byte[8];

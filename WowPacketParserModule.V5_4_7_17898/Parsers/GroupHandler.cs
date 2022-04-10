@@ -62,7 +62,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             packet.WriteGuid("Guid", guid);
         }
 
-        [Parser(Opcode.CMSG_GROUP_RAID_CONVERT)]
+        [Parser(Opcode.CMSG_CONVERT_RAID)]
         public static void HandleGroupRaidConvert(Packet packet)
         {
             packet.ReadBit("Convert");
@@ -74,7 +74,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             packet.ReadByte("Byte10");
         }
 
-        [Parser(Opcode.CMSG_GROUP_SET_LEADER)]
+        [Parser(Opcode.CMSG_SET_PARTY_LEADER)]
         public static void HandleGroupSetLeader(Packet packet)
         {
             var guid = new byte[8];
@@ -197,7 +197,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             packet.ReadByte("Byte10");
         }
 
-        [Parser(Opcode.CMSG_GROUP_INVITE_RESPONSE)]
+        [Parser(Opcode.CMSG_PARTY_INVITE_RESPONSE)]
         public static void HandleGroupInviteResponse(Packet packet)
         {
             packet.ReadByte("Byte11");
@@ -207,7 +207,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
                 packet.ReadInt32("Int14");
         }
 
-        [Parser(Opcode.CMSG_GROUP_INVITE)]
+        [Parser(Opcode.CMSG_PARTY_INVITE)]
         public static void HandleGroupInvite(Packet packet)
         {
             var crossRealmGuid = new byte[8];
@@ -245,7 +245,7 @@ namespace WowPacketParserModule.V5_4_7_17898.Parsers
             packet.ReadCString();
         }
 
-        [Parser(Opcode.SMSG_GROUP_INVITE)]
+        [Parser(Opcode.SMSG_PARTY_INVITE)]
         public static void HandleSmsgGroupInvite(Packet packet)
         {
             var invitedGuid = new byte[8];

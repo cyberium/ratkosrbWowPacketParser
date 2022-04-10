@@ -26,7 +26,7 @@ namespace WowPacketParser.Enums.Version.V5_0_5_16048
             {Opcode.CMSG_COMMENTATOR_START_WARGAME, 0x0361},
             {Opcode.CMSG_QUERY_CREATURE, 0x0884},
             {Opcode.CMSG_QUERY_GAME_OBJECT, 0x0CF8},
-            {Opcode.CMSG_GROUP_RAID_CONVERT, 0x034F},
+            {Opcode.CMSG_CONVERT_RAID, 0x034F},
             {Opcode.CMSG_GUILD_DELETE, 0x0062},
             {Opcode.CMSG_GUILD_EVENT_LOG_QUERY, 0x06C3},
             {Opcode.CMSG_REALM_SPLIT, 0x0820}

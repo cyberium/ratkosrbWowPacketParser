@@ -54,9 +54,12 @@ namespace WowPacketParser.Parsing.Parsers
             if (result == InventoryResult.Ok)
                 return;
 
-            packet.ReadGuid("Item GUID1");
-            packet.ReadGuid("Item GUID2");
-            packet.ReadSByte("Bag");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+            {
+                packet.ReadGuid("Item GUID1");
+                packet.ReadGuid("Item GUID2");
+                packet.ReadSByte("Bag");
+            }
 
             switch (result)
             {
@@ -74,6 +77,13 @@ namespace WowPacketParser.Parsing.Parsers
                 case InventoryResult.ItemMaxLimitCategoryEquippedExceeded:
                     packet.ReadUInt32("Limit Category");
                     break;
+            }
+
+            if (ClientVersion.RemovedInVersion(ClientVersionBuild.V2_0_1_6180))
+            {
+                packet.ReadGuid("Item GUID1");
+                packet.ReadGuid("Item GUID2");
+                packet.ReadSByte("Bag");
             }
         }
 
@@ -361,7 +371,7 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadByte("Count");
         }
 
-        [Parser(Opcode.SMSG_SELL_ITEM)]
+        [Parser(Opcode.SMSG_SELL_RESPONSE)]
         public static void HandleSellItemResponse(Packet packet)
         {
             packet.ReadGuid("Vendor GUID");

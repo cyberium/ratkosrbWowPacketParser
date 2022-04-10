@@ -124,6 +124,8 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
             packet.ReadBit("IsXRealm");
             packet.ReadBit("MustBeBNetFriend");
             packet.ReadBit("AllowMultipleRoles");
+            if (ClientVersion.AddedInVersion(ClientType.Shadowlands))
+                packet.ReadBit("QuestSessionActive");
             var len = packet.ReadBits(6);
 
             packet.ResetBitReader();
@@ -303,9 +305,9 @@ namespace WowPacketParserModule.V7_0_3_22248.Parsers
                 packet.ReadUInt32("WmoDoodadPlacementID");
             if (positionChanged)
             {
-                packet.ReadUInt16("PositionX");
-                packet.ReadUInt16("PositionY");
-                packet.ReadUInt16("PositionZ");
+                packet.ReadInt16("PositionX");
+                packet.ReadInt16("PositionY");
+                packet.ReadInt16("PositionZ");
             }
             if (vehicleSeatRecIdChanged)
                 packet.ReadUInt32("VehicleSeatRecID");

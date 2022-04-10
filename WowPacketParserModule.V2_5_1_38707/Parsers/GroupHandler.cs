@@ -12,7 +12,7 @@ namespace WowPacketParserModule.V2_5_1_38835.Parsers
             packet.ReadByte("PartyIndex");
             if (ClientVersion.IsBurningCrusadeClassicPhase1ClientVersionBuild(ClientVersion.Build))
             {
-                packet.ReadInt32("ProposedRoles");
+                packet.ReadInt32("VirtualRealmAddress");
                 packet.ReadPackedGuid128("TargetGuid");
             }
             packet.ResetBitReader();
@@ -22,7 +22,7 @@ namespace WowPacketParserModule.V2_5_1_38835.Parsers
 
             if (!ClientVersion.IsBurningCrusadeClassicPhase1ClientVersionBuild(ClientVersion.Build))
             {
-                packet.ReadInt32("ProposedRoles");
+                packet.ReadInt32("VirtualRealmAddress");
                 packet.ReadPackedGuid128("TargetGuid");
             }
 

@@ -166,7 +166,8 @@ namespace WowPacketParser.Parsing.Parsers
             else
                 packet.ReadByte("Roll Number");
             packet.ReadByteE<LootRollType>("Roll Type");
-            packet.ReadBool("Auto Pass");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                packet.ReadBool("Auto Pass");
         }
 
         [Parser(Opcode.SMSG_LOOT_ROLL_WON)]

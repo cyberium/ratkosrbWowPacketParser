@@ -112,7 +112,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             }
         }
 
-        [Parser(Opcode.SMSG_PARTY_MEMBER_STATS)]
+        [Parser(Opcode.SMSG_PARTY_MEMBER_PARTIAL_STATE)]
         public static void HandlePartyMemberStats(Packet packet)
         {
             packet.ReadBit("ForEnemy");

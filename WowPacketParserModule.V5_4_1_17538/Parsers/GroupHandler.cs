@@ -6,7 +6,7 @@ namespace WowPacketParserModule.V5_4_1_17538.Parsers
 {
     public static class GroupHandler
     {
-        [Parser(Opcode.CMSG_GROUP_INVITE)]
+        [Parser(Opcode.CMSG_PARTY_INVITE)]
         public static void HandleGroupInvite(Packet packet)
         {
             var guid = new byte[8];
@@ -179,7 +179,7 @@ namespace WowPacketParserModule.V5_4_1_17538.Parsers
             packet.WriteGuid("GroupGUID", GroupGUID);
         }
 
-        [Parser(Opcode.SMSG_GROUP_INVITE)]
+        [Parser(Opcode.SMSG_PARTY_INVITE)]
         public static void HandleSmsgGroupInvite(Packet packet)
         {
             var guid2 = new byte[8];

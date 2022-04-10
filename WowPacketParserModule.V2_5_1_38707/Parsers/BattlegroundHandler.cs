@@ -94,6 +94,15 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
                 packet.ReadByte("TotalPlayers", i);
                 packet.ReadByte("AwaitingPlayers", i);
             }
+
+            packet.ResetBitReader();
+            packet.ReadBit("UnkBit");
+            for (int i = 0; i < 3; i ++)
+            {
+                packet.ReadByte("UnkByte1", i);
+                packet.ReadByte("UnkByte2", i);
+                packet.ReadByte("UnkByte3", i);
+            }
         }
 
         [Parser(Opcode.SMSG_BATTLEFIELD_STATUS_NONE)]

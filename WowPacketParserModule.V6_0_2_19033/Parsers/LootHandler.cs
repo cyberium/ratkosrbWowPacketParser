@@ -173,7 +173,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadByte("LootListID");
         }
 
-        [Parser(Opcode.SMSG_START_LOOT_ROLL)]
+        [Parser(Opcode.SMSG_LOOT_START_ROLL)]
         public static void HandleStartLootRoll(Packet packet)
         {
             packet.ReadPackedGuid128("LootObj");
@@ -206,6 +206,15 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
         {
             packet.ReadPackedGuid128("LootObj");
             ReadLootItem(null, packet, "LootItem");
+        }
+        
+        [Parser(Opcode.SMSG_LOOT_MASTER_LIST)]
+        public static void HandleMasterLootCandidateList(Packet packet)
+        {
+            packet.ReadPackedGuid128("LootObj");
+            uint count = packet.ReadUInt32();
+            for (uint i = 0; i < count; i++)
+                packet.ReadPackedGuid128("Player", i);
         }
     }
 }

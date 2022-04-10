@@ -1393,7 +1393,8 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.CMSG_CANCEL_CAST)]
         public static void HandlePlayerCancelCast(Packet packet)
         {
-            packet.ReadByte("Count");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+                packet.ReadByte("Count");
             packet.ReadUInt32<SpellId>("Spell Id");
         }
 

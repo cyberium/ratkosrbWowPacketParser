@@ -2213,7 +2213,10 @@ namespace WowPacketParser.Parsing.Parsers
         [Parser(Opcode.MSG_MOVE_TIME_SKIPPED)]
         public static void HandleMoveTimeSkippedMsg(Packet packet)
         {
-            packet.ReadPackedGuid("Guid");
+            if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+                packet.ReadPackedGuid("Guid");
+            else
+                packet.ReadGuid("Guid");
             packet.ReadUInt32("Time");
         }
 

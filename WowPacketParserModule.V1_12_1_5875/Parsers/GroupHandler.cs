@@ -38,8 +38,8 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadByteE<ItemQuality>("Loot Threshold");
         }
 
-        [Parser(Opcode.SMSG_PARTY_MEMBER_STATS)]
-        [Parser(Opcode.SMSG_PARTY_MEMBER_STATS_FULL)]
+        [Parser(Opcode.SMSG_PARTY_MEMBER_PARTIAL_STATE)]
+        [Parser(Opcode.SMSG_PARTY_MEMBER_FULL_STATE)]
         public static void HandlePartyMemberStats(Packet packet)
         {
             packet.ReadPackedGuid("GUID");
@@ -112,7 +112,7 @@ namespace WowPacketParser.Parsing.Parsers
                 packet.ReadCString("Pet Name");
 
             if (updateFlags.HasFlag(GroupUpdateFlagVanilla.PetModelId))
-                packet.ReadInt16("Pet Modelid");
+                packet.ReadInt16("Pet Display Id");
 
             if (updateFlags.HasFlag(GroupUpdateFlagVanilla.PetCurrentHealth))
                 packet.ReadUInt16("Pet Current Health");

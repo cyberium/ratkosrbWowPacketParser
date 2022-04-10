@@ -15,7 +15,7 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
             var lenTargetName = packet.ReadBits(9);
             var lenTargetRealm = packet.ReadBits(9);
 
-            packet.ReadInt32("ProposedRoles");
+            packet.ReadInt32("VirtualRealmAddress");
             packet.ReadPackedGuid128("TargetGuid");
 
             packet.ReadWoWString("TargetName", lenTargetName);

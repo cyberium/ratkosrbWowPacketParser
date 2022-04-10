@@ -88,7 +88,7 @@ namespace WowPacketParser.Parsing.Parsers
             }
         }
 
-        [Parser(Opcode.SMSG_INSPECT_RESULTS_UPDATE)]
+        [Parser(Opcode.SMSG_INSPECT_RESULT)]
         public static void HandleInspectResultsUpdate(Packet packet)
         {
             if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_3_4_15595)) // confirmed for 4.3.4

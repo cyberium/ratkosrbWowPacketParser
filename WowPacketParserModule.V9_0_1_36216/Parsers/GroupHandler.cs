@@ -111,9 +111,9 @@ namespace WowPacketParserModule.V9_0_1_36216.Parsers
                 packet.ReadUInt32("WmoDoodadPlacementID");
             if (positionChanged)
             {
-                packet.ReadUInt16("PositionX");
-                packet.ReadUInt16("PositionY");
-                packet.ReadUInt16("PositionZ");
+                packet.ReadInt16("PositionX");
+                packet.ReadInt16("PositionY");
+                packet.ReadInt16("PositionZ");
             }
             if (vehicleSeatRecIdChanged)
                 packet.ReadUInt32("VehicleSeatRecID");
