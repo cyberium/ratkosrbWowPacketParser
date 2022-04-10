@@ -930,7 +930,13 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V1_14_1_41243:
                 case ClientVersionBuild.V1_14_1_41511:
                 case ClientVersionBuild.V1_14_1_41794:
-                    return ClientVersionBuild.V1_14_1_40487;
+                case ClientVersionBuild.V1_14_2_41858:
+                case ClientVersionBuild.V1_14_2_41959:
+                case ClientVersionBuild.V1_14_2_42065:
+                case ClientVersionBuild.V1_14_2_42082:
+                case ClientVersionBuild.V1_14_2_42214:
+                case ClientVersionBuild.V1_14_2_42597:
+                return ClientVersionBuild.V1_14_1_40487;
                 case ClientVersionBuild.BattleNetV37165:
                     return ClientVersionBuild.BattleNetV37165;
                 case ClientVersionBuild.Zero:
@@ -1289,6 +1295,12 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V1_14_1_41243:
                 case ClientVersionBuild.V1_14_1_41511:
                 case ClientVersionBuild.V1_14_1_41794:
+                case ClientVersionBuild.V1_14_2_41858:
+                case ClientVersionBuild.V1_14_2_41959:
+                case ClientVersionBuild.V1_14_2_42065:
+                case ClientVersionBuild.V1_14_2_42082:
+                case ClientVersionBuild.V1_14_2_42214:
+                case ClientVersionBuild.V1_14_2_42597:
                 {
                     return true;
                 }
@@ -1316,6 +1328,24 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V1_14_1_41243:
                 case ClientVersionBuild.V1_14_1_41511:
                 case ClientVersionBuild.V1_14_1_41794:
+                {
+                    return true;
+                }
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsClassicSeasonOfMasteryPhase2ClientVersionBuild(ClientVersionBuild build)
+        {
+            switch (build)
+            {
+                case ClientVersionBuild.V1_14_2_41858:
+                case ClientVersionBuild.V1_14_2_41959:
+                case ClientVersionBuild.V1_14_2_42065:
+                case ClientVersionBuild.V1_14_2_42082:
+                case ClientVersionBuild.V1_14_2_42214:
+                case ClientVersionBuild.V1_14_2_42597:
                 {
                     return true;
                 }
@@ -1487,12 +1517,12 @@ namespace WowPacketParser.Misc
             {
                 if (IsClassicSeasonOfMasteryClientVersionBuild(Build))
                 {
-                    if (IsClassicSeasonOfMasteryPhase1ClientVersionBuild(Build) || AddedInVersion(ClientVersionBuild.V1_14_1_40666))
+                    if (AddedInVersion(1, 14, 1))
                         return 7;
                 }
                 else if (IsBurningCrusadeClassicClientVersionBuild(Build))
                 {
-                    if (IsBurningCrusadeClassicPhase3ClientVersionBuild(Build) || AddedInVersion(ClientVersionBuild.V2_5_3_41531))
+                    if (AddedInVersion(2, 5, 3))
                         return 7;
                 }
 

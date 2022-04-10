@@ -50,6 +50,11 @@ namespace WowPacketParser.Enums
         CommerceObj,
         ClientSession,
         Cast,
+        ClientConnection,
+        ClubFinder,
+        ToolsClient,
+        WorldLayer,
+        ArenaTeam,
         Invalid
     };
 
@@ -202,6 +207,11 @@ namespace WowPacketParser.Enums
         CommerceObj      = 45,
         ClientSession    = 46,
         Cast             = 47,
+        ClientConnection = 48,
+        ClubFinder       = 49,
+        ToolsClient      = 50,
+        WorldLayer       = 51,
+        ArenaTeam        = 52,
 
         Invalid          = 63
     }

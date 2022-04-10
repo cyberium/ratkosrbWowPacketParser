@@ -232,8 +232,7 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
                             bct.Flags = db2File.ReadByte("Flags");
                             bct.ChatBubbleDurationMs = db2File.ReadUInt32("ChatBubbleDurationMs");
 
-                            if (ClientVersion.IsClassicSeasonOfMasteryPhase1ClientVersionBuild(ClientVersion.Build) ||
-                                ClientVersion.AddedInVersion(ClientVersionBuild.V1_14_1_40666))
+                            if (ClientVersion.AddedInVersion(1, 14, 1))
                                 bct.VoiceOverPriorityID = db2File.ReadUInt32("VoiceOverPriorityID");
 
                             bct.SoundEntriesID = new uint?[2];
