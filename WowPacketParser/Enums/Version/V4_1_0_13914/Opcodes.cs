@@ -117,7 +117,7 @@ namespace WowPacketParser.Enums.Version.V4_1_0_13914
             {Opcode.SMSG_GROUP_UNINVITE, 0x03A3F}, // 4.1.0 13914
             {Opcode.SMSG_GUILD_BANK_QUERY_RESULTS, 0x09C6E}, // 4.1.0 13914
             {Opcode.SMSG_GUILD_COMMAND_RESULT, 0x0FF7D}, // 4.1.0 13914
-            {Opcode.SMSG_GUILD_DECLINE, 0x0087D}, // 4.1.0 13914
+            {Opcode.SMSG_GUILD_INVITE_DECLINED, 0x0087D}, // 4.1.0 13914
             {Opcode.SMSG_GUILD_EVENT, 0x0BC2D}, // 4.1.0 13914
             {Opcode.SMSG_GUILD_INFO, 0x03D6C}, // 4.1.0 13914
             {Opcode.SMSG_QUERY_GUILD_INFO_RESPONSE, 0x0796E}, // 4.1.0 13914

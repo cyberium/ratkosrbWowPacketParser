@@ -544,7 +544,7 @@ namespace WowPacketParser.Enums.Version.V1_12_1_5875
             {Opcode.SMSG_GROUP_NEW_LEADER, 121},
             {Opcode.SMSG_GROUP_UNINVITE, 119},
             {Opcode.SMSG_GUILD_COMMAND_RESULT, 147},
-            {Opcode.SMSG_GUILD_DECLINE, 134},
+            {Opcode.SMSG_GUILD_INVITE_DECLINED, 134},
             {Opcode.SMSG_GUILD_EVENT, 146},
             {Opcode.SMSG_GUILD_INFO, 136},
             {Opcode.SMSG_GUILD_INVITE, 131},

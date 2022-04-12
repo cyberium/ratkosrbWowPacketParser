@@ -231,9 +231,9 @@ namespace WowPacketParserModule.V2_5_1_38835.Parsers
         {
             packet.ReadPackedGuid128("TeamGuid", idx);
             packet.ReadInt32("TeamRating", idx);
-            packet.ReadInt32("GamesPlayed", idx);
-            packet.ReadInt32("GamesWon", idx);
-            packet.ReadInt32("GamesLost", idx);
+            packet.ReadInt32("TeamGamesPlayed", idx);
+            packet.ReadInt32("TeamGamesWon", idx);
+            packet.ReadInt32("PersonalGamesPlayed", idx);
             packet.ReadInt32("PersonalRating", idx);
         }
 

@@ -689,7 +689,7 @@ namespace WowPacketParser.Enums.Version.V2_4_3_8606
             {Opcode.SMSG_GROUP_UNINVITE, 119},
             {Opcode.SMSG_GUILD_BANK_QUERY_RESULTS, 999},
             {Opcode.SMSG_GUILD_COMMAND_RESULT, 147},
-            {Opcode.SMSG_GUILD_DECLINE, 134},
+            {Opcode.SMSG_GUILD_INVITE_DECLINED, 134},
             {Opcode.SMSG_GUILD_EVENT, 146},
             {Opcode.SMSG_GUILD_INFO, 136},
             {Opcode.SMSG_GUILD_INVITE, 131},

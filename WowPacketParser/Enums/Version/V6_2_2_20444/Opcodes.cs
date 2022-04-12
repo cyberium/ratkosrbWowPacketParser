@@ -1116,7 +1116,7 @@ namespace WowPacketParser.Enums.Version.V6_2_2_20444
             {Opcode.SMSG_INSTANCE_ENCOUNTER_START, 0x0D5D},
             {Opcode.SMSG_INSTANCE_ENCOUNTER_TIMER_START, 0x0864},
             {Opcode.SMSG_INSTANCE_GROUP_SIZE_CHANGED, 0x044A},
-            {Opcode.SMSG_INSTANCE_INFO, 0x08FA},
+            {Opcode.SMSG_RAID_INSTANCE_INFO, 0x08FA},
             {Opcode.SMSG_INSTANCE_RESET, 0x03B3},
             {Opcode.SMSG_INSTANCE_RESET_FAILED, 0x01FA},
             {Opcode.SMSG_INSTANCE_SAVE_CREATED, 0x0895},

@@ -846,7 +846,7 @@ namespace WowPacketParser.Enums.Version.V4_0_6_13596
             {Opcode.SMSG_GUILD_COMMAND_RESULT, 0x023C0},
             {Opcode.SMSG_GUILD_CRITERIA_DATA, 0x0400E},
             {Opcode.SMSG_GUILD_CRITERIA_DELETED, 0x0000C},
-            {Opcode.SMSG_GUILD_DECLINE, 0x0B78C},
+            {Opcode.SMSG_GUILD_INVITE_DECLINED, 0x0B78C},
             {Opcode.SMSG_GUILD_EVENT, 0x0B7C4},
             {Opcode.SMSG_GUILD_INFO, 0x020A8},
             {Opcode.SMSG_GUILD_INVITE, 0x0010C},

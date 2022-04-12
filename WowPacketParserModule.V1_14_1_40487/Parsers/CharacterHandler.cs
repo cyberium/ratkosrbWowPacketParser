@@ -176,6 +176,28 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
                 packet.ReadInt32("AzeriteLevel");
         }
 
+        [Parser(Opcode.SMSG_INSPECT_HONOR_STATS)]
+        public static void HandleInspectHonorStats(Packet packet)
+        {
+            packet.ReadPackedGuid128("PlayerGuid");
+            packet.ReadByte("LifetimeHighestRank");
+            packet.ReadUInt16("TodayHonorableKills");
+            packet.ReadUInt16("TodayDishonorableKills");
+            packet.ReadUInt16("YesterdayHonorableKills");
+            packet.ReadUInt16("YesterdayDishonorableKills");
+            packet.ReadUInt16("LastWeekHonorableKills");
+            packet.ReadUInt16("LastWeekDishonorableKills");
+            packet.ReadUInt16("ThisWeekHonorableKills");
+            packet.ReadUInt16("ThisWeekDishonorableKills");
+            packet.ReadUInt32("LifetimeHonorableKills");
+            packet.ReadUInt32("LifetimeDishonorableKills");
+            packet.ReadUInt32("YesterdayHonor");
+            packet.ReadUInt32("LastWeekHonor");
+            packet.ReadUInt32("ThisWeekHonor");
+            packet.ReadUInt32("Standing");
+            packet.ReadByte("RankProgress");
+        }
+
         public static void ReadPVPBracketData(Packet packet, params object[] idx)
         {
             packet.ReadByte("Bracket", idx);
@@ -196,44 +218,10 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
         {
             packet.ReadPackedGuid128("TeamGuid", idx);
             packet.ReadInt32("TeamRating", idx);
-            packet.ReadInt32("GamesPlayed", idx);
-            packet.ReadInt32("GamesWon", idx);
-            packet.ReadInt32("GamesLost", idx);
+            packet.ReadInt32("TeamGamesPlayed", idx);
+            packet.ReadInt32("TeamGamesWon", idx);
+            packet.ReadInt32("PersonalGamesPlayed", idx);
             packet.ReadInt32("PersonalRating", idx);
-        }
-
-        [Parser(Opcode.SMSG_INSPECT_HONOR_STATS)]
-        public static void HandleInspectHonorStats(Packet packet)
-        {
-            packet.ReadPackedGuid128("PlayerGuid");
-            packet.ReadByte("LifetimeHighestRank");
-            packet.ReadUInt16("TodayHonorableKills");
-            packet.ReadUInt16("TodayDishonorableKills");
-            packet.ReadUInt16("YesterdayHonorableKills");
-            packet.ReadUInt16("YesterdayDishonorableKills");
-            if (ClientVersion.AddedInVersion(1, 14, 2))
-            {
-                packet.ReadUInt16("LastWeekHonorableKills");
-                packet.ReadUInt16("LastWeekDishonorableKills");
-                packet.ReadUInt16("ThisWeekHonorableKills");
-                packet.ReadUInt16("ThisWeekDishonorableKills");
-                packet.ReadUInt32("LifetimeHonorableKills");
-                packet.ReadUInt32("LifetimeDishonorableKills");
-                packet.ReadUInt32("YesterdayHonor");
-                packet.ReadUInt32("LastWeekHonor");
-                packet.ReadUInt32("ThisWeekHonor");
-                packet.ReadUInt32("Standing");
-                packet.ReadByte("RankProgress");
-            }
-            else
-            {
-                packet.ReadUInt32("LastWeekHonorableKills");
-                packet.ReadUInt32("ThisWeekHonorableKills");
-                packet.ReadUInt32("LifetimeHonorableKills");
-                packet.ReadUInt32("LifetimeDishonorableKills");
-                packet.ReadUInt32("YesterdayHonor");
-                packet.ReadByte("RankProgress");
-            }
         }
 
         [Parser(Opcode.SMSG_INSPECT_PVP)]

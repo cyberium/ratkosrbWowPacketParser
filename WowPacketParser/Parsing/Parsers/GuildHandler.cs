@@ -1019,7 +1019,7 @@ namespace WowPacketParser.Parsing.Parsers
             packet.ReadUInt32("Tab Id");
         }
 
-        [Parser(Opcode.SMSG_GUILD_DECLINE)]
+        [Parser(Opcode.SMSG_GUILD_INVITE_DECLINED)]
         public static void HandleGuildDecline(Packet packet)
         {
             packet.ReadCString("Reason");

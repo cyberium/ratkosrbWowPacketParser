@@ -575,7 +575,7 @@ namespace WowPacketParser.Enums.Version.V4_2_0_14480
             {Opcode.SMSG_GROUP_UNINVITE, 0xBE6B},
             {Opcode.SMSG_GUILD_BANK_QUERY_RESULTS, 0xEA6A},
             {Opcode.SMSG_GUILD_COMMAND_RESULT, 0xF26A},
-            {Opcode.SMSG_GUILD_DECLINE, 0xF6AF},
+            {Opcode.SMSG_GUILD_INVITE_DECLINED, 0xF6AF},
             {Opcode.SMSG_GUILD_EVENT, 0x6672},
             {Opcode.SMSG_GUILD_INFO, 0x3EAF},
             {Opcode.SMSG_GUILD_INVITE, 0x9F65},

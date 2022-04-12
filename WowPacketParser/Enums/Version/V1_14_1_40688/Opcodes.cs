@@ -847,7 +847,7 @@ namespace WowPacketParser.Enums.Version.V1_14_1_40688
             {Opcode.SMSG_RANDOM_ROLL, 0x2629},
             {Opcode.SMSG_INSPECT_RESULT, 0x262A},
             {Opcode.SMSG_SCENARIO_POIS, 0x262C},
-            {Opcode.SMSG_INSTANCE_INFO, 0x262D},
+            {Opcode.SMSG_RAID_INSTANCE_INFO, 0x262D},
             {Opcode.SMSG_CONSOLE_WRITE, 0x262E},
             {Opcode.SMSG_PLAY_SCENE, 0x262F},
             {Opcode.SMSG_CANCEL_SCENE, 0x2630},

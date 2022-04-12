@@ -695,7 +695,7 @@ namespace WowPacketParser.Enums.Version.V3_3_5a_12340
             {Opcode.SMSG_PARTY_MEMBER_PARTIAL_STATE, 0x7E},
             {Opcode.SMSG_PARTY_COMMAND_RESULT, 0x7F},
             {Opcode.SMSG_GUILD_INVITE, 0x83},
-            {Opcode.SMSG_GUILD_DECLINE, 0x86},
+            {Opcode.SMSG_GUILD_INVITE_DECLINED, 0x86},
             {Opcode.SMSG_GUILD_INFO, 0x88},
             {Opcode.SMSG_GUILD_ROSTER, 0x8A},
             {Opcode.SMSG_GUILD_EVENT, 0x92},

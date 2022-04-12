@@ -496,7 +496,7 @@ namespace WowPacketParser.Enums.Version.V4_2_2_14545
             {Opcode.SMSG_GUILD_BANK_QUERY_RESULTS, 0x5EFB},
             {Opcode.SMSG_GUILD_CANCEL, 0x08C3}, // New 4.x?
             {Opcode.SMSG_GUILD_COMMAND_RESULT, 56023},
-            {Opcode.SMSG_GUILD_DECLINE, 0x1E5B},
+            {Opcode.SMSG_GUILD_INVITE_DECLINED, 0x1E5B},
             {Opcode.SMSG_GUILD_EVENT, 0x8AC2},
             {Opcode.SMSG_GUILD_INFO, 0x5876},
             {Opcode.SMSG_GUILD_NEWS_UPDATE, 0xA2DE},

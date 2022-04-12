@@ -238,13 +238,28 @@ namespace WowPacketParser.Parsing.Parsers
             for (var i = 0; i < counter; ++i)
             {
                 packet.ReadInt32<MapId>("Map ID", i);
-                packet.ReadUInt32E<MapDifficulty>("Map Difficulty", i);
+
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+                    packet.ReadUInt32E<MapDifficulty>("Map Difficulty", i);
+
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_0_6a_13623))
                     packet.ReadUInt32("Heroic", i);
-                packet.ReadGuid("Instance GUID", i);
-                packet.ReadBool("Expired", i);
-                packet.ReadBool("Extended", i);
-                packet.ReadUInt32("Reset Time", i);
+
+                if (ClientVersion.AddedInVersion(ClientVersionBuild.V3_0_2_9056))
+                {
+                    packet.ReadGuid("Instance GUID", i);
+                    packet.ReadBool("Expired", i);
+                    packet.ReadBool("Extended", i);
+                    packet.ReadUInt32("Reset Time", i);
+                } 
+                else
+                {
+                    packet.ReadUInt32("Reset Time", i);
+                    packet.ReadUInt32("Instance ID", i);
+
+                    if (ClientVersion.AddedInVersion(ClientVersionBuild.V2_0_1_6180))
+                        packet.ReadUInt32("Counter", i);
+                }
 
                 if (ClientVersion.AddedInVersion(ClientVersionBuild.V4_0_6a_13623))
                     packet.ReadUInt32("Completed Encounters Mask", i);

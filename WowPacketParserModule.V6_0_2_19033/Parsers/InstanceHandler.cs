@@ -91,7 +91,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadByte("Force");
         }
 
-        [Parser(Opcode.SMSG_INSTANCE_INFO)]
+        [Parser(Opcode.SMSG_RAID_INSTANCE_INFO)]
         public static void HandleInstanceInfo(Packet packet)
         {
             var int16 = packet.ReadInt32("LocksCount");
