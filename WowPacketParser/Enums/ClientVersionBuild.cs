@@ -478,6 +478,7 @@ namespace WowPacketParser.Enums
         V1_14_1_41243 = 41243, // both live and ptr
         V1_14_1_41511 = 41511, // both live and ptr (issue: bugged timestamps in sniffer)
         V1_14_1_41794 = 41794, // both live and ptr
+        V1_14_1_42032 = 42032, // live
 
         V1_14_2_41858 = 41858, // ptr
         V1_14_2_41959 = 41959, // ptr
