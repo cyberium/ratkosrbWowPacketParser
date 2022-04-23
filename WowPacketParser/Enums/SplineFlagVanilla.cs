@@ -27,7 +27,7 @@ namespace WowPacketParser.Enums
         FinalOrientation = 0x00040000,
         Unknown19    = 0x00080000,           // exists, but unknown what it does
         Cyclic       = 0x00100000,           // Movement by cycled spline
-        EnterCicle   = 0x00200000,           // Everytimes appears with cyclic flag in monster move packet, erases first spline vertex after first cycle done
+        EnterCycle   = 0x00200000,           // Everytimes appears with cyclic flag in monster move packet, erases first spline vertex after first cycle done
         Frozen       = 0x00400000,           // Will never arrive
         Unknown23    = 0x00800000,
         Unknown24    = 0x01000000,

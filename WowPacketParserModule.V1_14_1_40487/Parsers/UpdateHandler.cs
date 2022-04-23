@@ -20,6 +20,12 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
         [Parser(Opcode.SMSG_UPDATE_OBJECT)]
         public static void HandleUpdateObject(Packet packet)
         {
+            if (ClientVersion.IsUsingNewUpdateFieldSystem())
+            {
+                WowPacketParserModule.V8_0_1_27101.Parsers.UpdateHandler.HandleUpdateObject(packet);
+                return;
+            }
+
             var count = packet.ReadUInt32("NumObjUpdates");
             uint map = packet.ReadUInt16<MapId>("MapID");
             packet.ResetBitReader();

@@ -246,9 +246,13 @@ namespace WowPacketParserModule.V1_14_1_40487.Parsers
             gameObject.CastCaption = packet.ReadCString("Cast Caption");
             gameObject.UnkString = packet.ReadCString("Unk String");
 
-            gameObject.Data = new int?[35];
-            for (int i = 0; i < gameObject.Data.Length; i++)
-                gameObject.Data[i] = packet.ReadInt32("Data", i);
+            gameObject.Data = new int?[34];
+            for (int i = 0; i < 35; i++)
+            {
+                int data = packet.ReadInt32("Data", i);
+                if (i < gameObject.Data.Length)
+                    gameObject.Data[i] = data;
+            }
 
             gameObject.Size = packet.ReadSingle("Size");
 

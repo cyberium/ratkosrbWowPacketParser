@@ -21,7 +21,7 @@ namespace WowPacketParser.Enums
         FinalOrientation = 0x00004000,
         CatmullRom       = 0x00008000,
         Cyclic           = 0x00010000,
-        EnterCicle       = 0x00020000,
+        EnterCycle       = 0x00020000,
         AnimationTier    = 0x00040000,
         Frozen           = 0x00080000,
         Unknown5         = 0x00100000,

@@ -937,7 +937,12 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V1_14_2_42082:
                 case ClientVersionBuild.V1_14_2_42214:
                 case ClientVersionBuild.V1_14_2_42597:
-                return ClientVersionBuild.V1_14_1_40487;
+                case ClientVersionBuild.V1_14_3_42770:
+                case ClientVersionBuild.V1_14_3_42926:
+                case ClientVersionBuild.V1_14_3_43037:
+                case ClientVersionBuild.V1_14_3_43086:
+                case ClientVersionBuild.V1_14_3_43154:
+                    return ClientVersionBuild.V1_14_1_40487;
                 case ClientVersionBuild.BattleNetV37165:
                     return ClientVersionBuild.BattleNetV37165;
                 case ClientVersionBuild.Zero:
@@ -1303,6 +1308,11 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V1_14_2_42082:
                 case ClientVersionBuild.V1_14_2_42214:
                 case ClientVersionBuild.V1_14_2_42597:
+                case ClientVersionBuild.V1_14_3_42770:
+                case ClientVersionBuild.V1_14_3_42926:
+                case ClientVersionBuild.V1_14_3_43037:
+                case ClientVersionBuild.V1_14_3_43086:
+                case ClientVersionBuild.V1_14_3_43154:
                 {
                     return true;
                 }
@@ -1349,6 +1359,23 @@ namespace WowPacketParser.Misc
                 case ClientVersionBuild.V1_14_2_42082:
                 case ClientVersionBuild.V1_14_2_42214:
                 case ClientVersionBuild.V1_14_2_42597:
+                {
+                    return true;
+                }
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsClassicSeasonOfMasteryPhase3ClientVersionBuild(ClientVersionBuild build)
+        {
+            switch (build)
+            {
+                case ClientVersionBuild.V1_14_3_42770:
+                case ClientVersionBuild.V1_14_3_42926:
+                case ClientVersionBuild.V1_14_3_43037:
+                case ClientVersionBuild.V1_14_3_43086:
+                case ClientVersionBuild.V1_14_3_43154:
                 {
                     return true;
                 }

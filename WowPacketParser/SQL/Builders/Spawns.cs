@@ -534,7 +534,8 @@ namespace WowPacketParser.SQL.Builders
                         }
                     }
                 }
-                
+
+                bool isFlyingOrCyclic = true;
                 if (creature.Waypoints != null && creature.OriginalMovement.Position != null)
                 {
                     float maxDistanceFromSpawn = 0;
@@ -555,16 +556,52 @@ namespace WowPacketParser.SQL.Builders
                         float distanceFromSpawn = Utilities.GetDistance3D(creature.OriginalMovement.Position.X, creature.OriginalMovement.Position.Y, creature.OriginalMovement.Position.Z, posX, posY, posZ);
                         if (distanceFromSpawn > maxDistanceFromSpawn)
                             maxDistanceFromSpawn = distanceFromSpawn;
+
+                        if (ClientVersion.RemovedInVersion(ClientVersionBuild.V2_0_1_6180))
+                        {
+                            if (!waypoint.SplineFlags.HasAnyFlag(SplineFlagVanilla.Flying | SplineFlagVanilla.Cyclic | SplineFlagVanilla.EnterCycle))
+                                isFlyingOrCyclic = false;
+                        }
+                        else if (ClientVersion.RemovedInVersion(ClientVersionBuild.V3_0_2_9056))
+                        {
+                            if (!waypoint.SplineFlags.HasAnyFlag(SplineFlagTBC.Flying | SplineFlagTBC.Cyclic | SplineFlagTBC.EnterCycle))
+                                isFlyingOrCyclic = false;
+                        }
+                        else if (ClientVersion.RemovedInVersion(ClientVersionBuild.V4_2_2_14545))
+                        {
+                            if (!waypoint.SplineFlags.HasAnyFlag(SplineFlag.Cyclic | SplineFlag.EnterCycle) &&
+                                !((SplineFlag)waypoint.SplineFlags).HasFlag(SplineFlag.Flying | SplineFlag.CatmullRom | SplineFlag.UncompressedPath))
+                                isFlyingOrCyclic = false;
+                        }
+                        else if (ClientVersion.RemovedInVersion(ClientVersionBuild.V4_3_4_15595))
+                        {
+                            if (!waypoint.SplineFlags.HasAnyFlag(SplineFlag422.Cyclic | SplineFlag422.EnterCycle) &&
+                                !((SplineFlag422)waypoint.SplineFlags).HasFlag(SplineFlag422.Flying | SplineFlag422.CatmullRom | SplineFlag422.UncompressedPath))
+                                isFlyingOrCyclic = false;
+                        }
+                        else if (ClientVersion.RemovedInVersion(ClientVersionBuild.V7_0_3_22248))
+                        {
+                            if (!waypoint.SplineFlags.HasAnyFlag(SplineFlag434.Cyclic | SplineFlag434.EnterCycle) &&
+                                !((SplineFlag434)waypoint.SplineFlags).HasFlag(SplineFlag434.Flying | SplineFlag434.CatmullRom | SplineFlag434.UncompressedPath))
+                                isFlyingOrCyclic = false;
+                        }
+                        else
+                        {
+                            if (!waypoint.SplineFlags.HasAnyFlag(SplineFlag703.Cyclic | SplineFlag703.EnterCycle) &&
+                                !((SplineFlag703)waypoint.SplineFlags).HasFlag(SplineFlag703.Flying | SplineFlag703.CatmullRom | SplineFlag703.UncompressedPath))
+                                isFlyingOrCyclic = false;
+                        }
                     }
                     row.Data.WaypointCount = (uint)creature.Waypoints.Count;
                     row.Data.WanderDistance = maxDistanceFromSpawn;
 
                     // Likely to be waypoints if distance is big
                     if (row.Data.WanderDistance > 20)
-                        row.Data.MovementType = 2;
+                        row.Data.MovementType = (uint)(isFlyingOrCyclic ? 3 : 2);
+
 
                     if (Settings.SqlTables.creature_movement_server &&
-                       (row.Data.MovementType == 2 || Settings.TargetedDbType == TargetedDbType.WPP))
+                       (row.Data.MovementType >= 2 || Settings.TargetedDbType == TargetedDbType.WPP))
                     {
                         if (creature.WaypointSplines != null)
                         {
@@ -599,7 +636,7 @@ namespace WowPacketParser.SQL.Builders
                 if (Settings.SqlTables.creature_addon)
                 {
                     addonRow.Data.GUID = "@CGUID+" + creature.DbGuid;
-                    addonRow.Data.PathID = row.Data.MovementType == 2 ? "@CGUID+" + creature.DbGuid : "0";
+                    addonRow.Data.PathID = row.Data.MovementType >= 2 ? "@CGUID+" + creature.DbGuid : "0";
                     addonRow.Data.Mount = (uint)unitData.MountDisplayID;
                     addonRow.Data.Bytes1 = creature.Bytes1;
                     addonRow.Data.Bytes2 = creature.Bytes2;

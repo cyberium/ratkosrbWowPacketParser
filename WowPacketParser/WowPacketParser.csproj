@@ -297,6 +297,7 @@
     <Compile Include="Enums\SecureAddonStatus.cs" />
     <Compile Include="Enums\SetPlayerDifficultyResults.cs" />
     <Compile Include="Enums\SkillType.cs" />
+    <Compile Include="Enums\SplineFlag703.cs" />
     <Compile Include="Enums\SplineFlagTBC.cs" />
     <Compile Include="Enums\SplineFlagVanilla.cs" />
     <Compile Include="Enums\StandState.cs" />
