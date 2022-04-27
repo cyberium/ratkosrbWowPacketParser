@@ -81,5 +81,31 @@ namespace WowPacketParserModule.V2_5_1_38707.Parsers
                 packet.ReadWoWString("TeamName", nameLength);
             }
         }
+
+        [Parser(Opcode.CMSG_BATTLEMASTER_JOIN_ARENA)]
+        public static void HandleBattlemasterJoinArena(Packet packet)
+        {
+            packet.ReadPackedGuid128("BattlemasterGuid");
+            packet.ReadByte("TeamIndex");
+            packet.ReadByteE<LfgRoleFlag>("Roles");
+        }
+
+        [Parser(Opcode.CMSG_BATTLEMASTER_JOIN_SKIRMISH)]
+        public static void HandleBattlemasterJoinSkirmish(Packet packet)
+        {
+            packet.ReadPackedGuid128("BattlemasterGuid");
+            packet.ReadByteE<LfgRoleFlag>("Roles");
+            packet.ReadByte("TeamSize");
+            packet.ReadBit("JoinAsGroup");
+            packet.ReadBit("IsRequeue");
+        }
+
+        [Parser(Opcode.CMSG_ARENA_TEAM_REMOVE)]
+        [Parser(Opcode.CMSG_ARENA_TEAM_LEADER)]
+        public static void HandleArenaTeamRemove(Packet packet)
+        {
+            packet.ReadUInt32("TeamId");
+            packet.ReadPackedGuid128("PlayerGUID");
+        }
     }
 }

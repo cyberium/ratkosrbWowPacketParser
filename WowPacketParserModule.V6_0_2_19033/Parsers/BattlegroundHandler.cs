@@ -96,7 +96,7 @@ namespace WowPacketParserModule.V6_0_2_19033.Parsers
             packet.ReadByte("TeamSizeIndex");
         }
 
-        [Parser(Opcode.CMSG_BATTLEMASTER_JOIN_ARENA_SKIRMISH)]
+        [Parser(Opcode.CMSG_BATTLEMASTER_JOIN_SKIRMISH)]
         public static void HandleBattlemasterJoinArenaSkirmish(Packet packet)
         {
             packet.ReadByte("Bracket");
