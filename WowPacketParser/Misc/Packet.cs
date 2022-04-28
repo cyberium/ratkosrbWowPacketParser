@@ -311,5 +311,11 @@ namespace WowPacketParser.Misc
             WriteLine("{0}{1}: {2:F20}", GetIndexString(indexes), name, obj);
             return obj;
         }
+
+        public float AddValue(string name, float obj, params object[] indexes)
+        {
+            WriteLine("{0}{1}: {2:F20}", GetIndexString(indexes), name, (double) obj);
+            return obj;
+        }
     }
 }
